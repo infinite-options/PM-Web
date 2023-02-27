@@ -256,10 +256,8 @@ export default function UpcomingOwnerPayments(props) {
                           tabIndex={-1}
                           key={row.purchase_uid}
                         >
-                          <TableCell align="right">
-                            {row.purchase_uid}
-                          </TableCell>
-                          <TableCell align="right" style={{ width: "300px" }}>
+                          <TableCell align="left">{row.purchase_uid}</TableCell>
+                          <TableCell align="left">
                             {row.address +
                               " " +
                               row.unit +

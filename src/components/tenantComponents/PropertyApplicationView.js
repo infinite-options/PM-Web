@@ -182,7 +182,7 @@ function PropertyApplicationView(props) {
           </div>
         )}
 
-        <div className="w-100 overflow-scroll">
+        <div className="w-100">
           {forPropertyLease ? (
             ""
           ) : (

@@ -923,6 +923,226 @@ export default function TenantDashboard() {
                 </Table>
               </Row>
             </div>
+
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="m-3">
+                <Col>
+                  <h3>Manifest Your Next Place</h3>
+                </Col>
+                <Col>
+                  <img
+                    src={SearchProperties_Black}
+                    alt="Search Icon"
+                    onClick={() => {
+                      navigate("/tenantAvailableProperties");
+                      window.scrollTo(0, 0);
+                    }}
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      float: "right",
+                      marginRight: "3rem",
+                    }}
+                  />
+                </Col>
+              </Row>
+              {applications.length > 0 ? (
+                <Row className="m-3">
+                  <Row style={{ overflow: "scroll" }}>
+                    <Table
+                      responsive="xl"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <EnhancedTableHeadApplications
+                        orderApplications={orderApplications}
+                        orderApplicationsBy={orderApplicationsBy}
+                        onRequestSort={handleRequestSortApplications}
+                        rowCount={applications.length}
+                      />{" "}
+                      <TableBody>
+                        {stableSortApplications(
+                          applications,
+                          getComparatorApplications(
+                            orderApplications,
+                            orderApplicationsBy
+                          )
+                        ).map((application, index) => {
+                          return (
+                            <TableRow
+                              hover
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={application.application_uid}
+                              onClick={() =>
+                                goToReviewPropertyLease(application)
+                              }
+                            >
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {JSON.parse(application.images).length > 0 ? (
+                                  <img
+                                    src={`${
+                                      JSON.parse(application.images)[0]
+                                    }?${Date.now()}`}
+                                    alt="application"
+                                    style={{
+                                      borderRadius: "4px",
+                                      objectFit: "cover",
+                                      width: "100px",
+                                      height: "100px",
+                                    }}
+                                  />
+                                ) : (
+                                  <img
+                                    src={PropertyIcon}
+                                    alt="application"
+                                    style={{
+                                      borderRadius: "4px",
+                                      objectFit: "cover",
+                                      width: "100px",
+                                      height: "100px",
+                                    }}
+                                  />
+                                )}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.address}
+                                {application.unit !== ""
+                                  ? " " + application.unit
+                                  : ""}{" "}
+                                {application.city}, {application.state}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.city}, {application.state}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.zip}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.business_name}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.property_type}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.num_beds +
+                                  "/" +
+                                  application.num_baths}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                ${application.listed_rent}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.application_status === "NEW" ? (
+                                  <h6 style={{ mediumBold, color: "blue" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "REJECTED" ? (
+                                  <h6 style={{ mediumBold, color: "red" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "REFUSED" ? (
+                                  <h6 style={{ mediumBold, color: "red" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "PM END EARLY" ? (
+                                  <h6 style={{ mediumBold, color: "#E4CD05" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "TENANT END EARLY" ? (
+                                  <h6 style={{ mediumBold, color: "#E4CD05" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "RENTED" ? (
+                                  <h6 style={{ mediumBold, color: "green" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "FORWARDED" ? (
+                                  <h6 style={{ mediumBold, color: "green" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "ACCEPTED" ? (
+                                  <h6 style={{ mediumBold, color: "green" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "LEASE EXTENSION" ? (
+                                  <h6 style={{ mediumBold, color: "blue" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "TENANT LEASE EXTENSION" ? (
+                                  <h6 style={{ mediumBold, color: "blue" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : (
+                                  ""
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                </Row>
+              ) : (
+                ""
+              )}
+            </div>
             <div
               className="mx-3 my-3 p-2"
               style={{
@@ -1181,7 +1401,7 @@ export default function TenantDashboard() {
                   <h3>Property Manager Info</h3>
                 </Col>
               </Row>
-              <Row className="m-3">
+              <Row className="m-3" style={{ overflow: "scroll" }}>
                 <Table>
                   <TableHead>
                     <TableRow>
@@ -1223,225 +1443,6 @@ export default function TenantDashboard() {
                   </TableBody>
                 </Table>
               </Row>
-            </div>
-            <div
-              className="mx-3 my-3 p-2"
-              style={{
-                background: "#E9E9E9 0% 0% no-repeat padding-box",
-                borderRadius: "10px",
-                opacity: 1,
-              }}
-            >
-              <Row className="m-3">
-                <Col>
-                  <h3>Manifest Your Next Place</h3>
-                </Col>
-                <Col>
-                  <img
-                    src={SearchProperties_Black}
-                    alt="Search Icon"
-                    onClick={() => {
-                      navigate("/tenantAvailableProperties");
-                      window.scrollTo(0, 0);
-                    }}
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      float: "right",
-                      marginRight: "3rem",
-                    }}
-                  />
-                </Col>
-              </Row>
-              {applications.length > 0 ? (
-                <Row className="m-3">
-                  <Row style={{ overflow: "scroll" }}>
-                    <Table
-                      responsive="xl"
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                    >
-                      <EnhancedTableHeadApplications
-                        orderApplications={orderApplications}
-                        orderApplicationsBy={orderApplicationsBy}
-                        onRequestSort={handleRequestSortApplications}
-                        rowCount={applications.length}
-                      />{" "}
-                      <TableBody>
-                        {stableSortApplications(
-                          applications,
-                          getComparatorApplications(
-                            orderApplications,
-                            orderApplicationsBy
-                          )
-                        ).map((application, index) => {
-                          return (
-                            <TableRow
-                              hover
-                              role="checkbox"
-                              tabIndex={-1}
-                              key={application.application_uid}
-                              onClick={() =>
-                                goToReviewPropertyLease(application)
-                              }
-                            >
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {JSON.parse(application.images).length > 0 ? (
-                                  <img
-                                    src={`${
-                                      JSON.parse(application.images)[0]
-                                    }?${Date.now()}`}
-                                    alt="application"
-                                    style={{
-                                      borderRadius: "4px",
-                                      objectFit: "cover",
-                                      width: "100px",
-                                      height: "100px",
-                                    }}
-                                  />
-                                ) : (
-                                  <img
-                                    src={PropertyIcon}
-                                    alt="application"
-                                    style={{
-                                      borderRadius: "4px",
-                                      objectFit: "cover",
-                                      width: "100px",
-                                      height: "100px",
-                                    }}
-                                  />
-                                )}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {application.address}
-                                {application.unit !== ""
-                                  ? " " + application.unit
-                                  : ""}{" "}
-                                {application.city}, {application.state}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {application.city}, {application.state}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {application.zip}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {application.business_name}
-                              </TableCell>
-
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {application.property_type}
-                              </TableCell>
-
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {application.num_beds +
-                                  "/" +
-                                  application.num_baths}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                ${application.listed_rent}
-                              </TableCell>
-
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {application.application_status === "NEW" ? (
-                                  <h6 style={{ mediumBold, color: "blue" }}>
-                                    {application.application_status}
-                                  </h6>
-                                ) : application.application_status ===
-                                  "REJECTED" ? (
-                                  <h6 style={{ mediumBold, color: "red" }}>
-                                    {application.application_status}
-                                  </h6>
-                                ) : application.application_status ===
-                                  "REFUSED" ? (
-                                  <h6 style={{ mediumBold, color: "red" }}>
-                                    {application.application_status}
-                                  </h6>
-                                ) : application.application_status ===
-                                  "PM END EARLY" ? (
-                                  <h6 style={{ mediumBold, color: "#E4CD05" }}>
-                                    {application.application_status}
-                                  </h6>
-                                ) : application.application_status ===
-                                  "TENANT END EARLY" ? (
-                                  <h6 style={{ mediumBold, color: "#E4CD05" }}>
-                                    {application.application_status}
-                                  </h6>
-                                ) : application.application_status ===
-                                  "RENTED" ? (
-                                  <h6 style={{ mediumBold, color: "green" }}>
-                                    {application.application_status}
-                                  </h6>
-                                ) : application.application_status ===
-                                  "FORWARDED" ? (
-                                  <h6 style={{ mediumBold, color: "green" }}>
-                                    {application.application_status}
-                                  </h6>
-                                ) : application.application_status ===
-                                  "ACCEPTED" ? (
-                                  <h6 style={{ mediumBold, color: "green" }}>
-                                    {application.application_status}
-                                  </h6>
-                                ) : application.application_status ===
-                                  "LEASE EXTENSION" ? (
-                                  <h6 style={{ mediumBold, color: "blue" }}>
-                                    {application.application_status}
-                                  </h6>
-                                ) : application.application_status ===
-                                  "TENANT LEASE EXTENSION" ? (
-                                  <h6 style={{ mediumBold, color: "blue" }}>
-                                    {application.application_status}
-                                  </h6>
-                                ) : (
-                                  ""
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </Row>
-                </Row>
-              ) : (
-                ""
-              )}
             </div>
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <TenantFooter />

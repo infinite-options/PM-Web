@@ -17,6 +17,7 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import Header from "../Header";
 import OwnerFooter from "./OwnerFooter";
+import PropertyAppliances from "../PropertyAppliances";
 import OwnerPropertyForm from "./OwnerPropertyForm";
 import OwnerCreateExpense from "./OwnerCreateExpense";
 import CreateRevenue from "../CreateRevenue";
@@ -281,6 +282,10 @@ function OwnerPropertyView(props) {
   const headerBack = () => {
     if (editAppliances && editProperty) {
       setEditAppliances(false);
+    } else if (editAppliances) {
+      // reloadProperty();
+      setEditAppliances(false);
+      setEditProperty(true);
     } else {
       editProperty
         ? reloadProperty()
@@ -738,6 +743,25 @@ function OwnerPropertyView(props) {
                   editAppliances={editAppliances}
                   setEditAppliances={setEditAppliances}
                 />
+              ) : editAppliances ? (
+                <div className="d-flex flex-column w-100 overflow-hidden p-2">
+                  <div
+                    className="mx-3 my-3 p-0"
+                    style={{
+                      background: "#E9E9E9 0% 0% no-repeat padding-box",
+                      borderRadius: "10px",
+                      opacity: 1,
+                    }}
+                  >
+                    <PropertyAppliances
+                      state={applianceState}
+                      property={property}
+                      editAppliances={editAppliances}
+                      setEditAppliances={setEditAppliances}
+                      edit={true}
+                    />
+                  </div>
+                </div>
               ) : searchPM ? (
                 <PropertyManagersList
                   property={property}
@@ -1289,7 +1313,8 @@ function OwnerPropertyView(props) {
                           src={EditIconNew}
                           alt="Edit Icon"
                           onClick={() => {
-                            window.scrollTo(0, 1000);
+                            window.scrollTo(0, 0);
+                            setEditAppliances(true);
                             setEditProperty(true);
                           }}
                           style={{
@@ -1310,9 +1335,7 @@ function OwnerPropertyView(props) {
                             applianceState[0][appliance]["available"] == "True"
                         ).length === 0 ? (
                           <Row className="m-3">
-                            <div className="m-3">
-                              No maintenance or repair requests
-                            </div>
+                            <div className="m-3">Add Appliance Information</div>
                           </Row>
                         ) : (
                           <Table

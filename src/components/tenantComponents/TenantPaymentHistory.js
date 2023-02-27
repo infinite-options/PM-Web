@@ -165,7 +165,7 @@ export default function TenantPaymentHistory(props) {
     <div className="payment-history">
       <Row className="mx-3">
         <Col>
-          <h3>Payment History (Last 30 Days)</h3>
+          <h4>Payment History (Last 30 Days)</h4>
         </Col>
       </Row>
 
@@ -199,8 +199,8 @@ export default function TenantPaymentHistory(props) {
                       tabIndex={-1}
                       key={row.purchase_uid}
                     >
-                      <TableCell align="right">{row.purchase_uid}</TableCell>
-                      <TableCell align="right" style={{ width: "300px" }}>
+                      <TableCell align="left">{row.purchase_uid}</TableCell>
+                      <TableCell align="left">
                         {row.address +
                           " " +
                           row.unit +

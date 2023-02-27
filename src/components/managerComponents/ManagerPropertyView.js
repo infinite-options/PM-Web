@@ -341,8 +341,9 @@ function ManagerPropertyView(props) {
     if (editAppliances && editProperty) {
       setEditAppliances(false);
     } else if (editAppliances) {
-      reloadProperty();
+      // reloadProperty();
       setEditAppliances(false);
+      setEditProperty(true);
     } else {
       editProperty
         ? reloadProperty()
@@ -1186,6 +1187,7 @@ function ManagerPropertyView(props) {
                           onClick={() => {
                             window.scrollTo(0, 0);
                             setEditAppliances(true);
+                            setEditProperty(true);
                           }}
                           style={{
                             width: "30px",
@@ -1201,132 +1203,134 @@ function ManagerPropertyView(props) {
                   </Row>
                   <Row className="m-3" style={{ overflow: "scroll" }}>
                     <div>
-                      <Table
-                        responsive="md"
-                        classes={{ root: classes.customTable }}
-                        size="small"
-                      >
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Appliance</TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Purchased From</TableCell>
-                            <TableCell>Purchased On</TableCell>
-                            <TableCell>Purchase Order Number</TableCell>
-                            <TableCell>Installed On</TableCell>
-                            <TableCell>Serial Number</TableCell>
-                            <TableCell>Model Number</TableCell>
-                            <TableCell>Warranty Till</TableCell>
-                            <TableCell>Warranty Info</TableCell>
-                            <TableCell>Images</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        {/* {console.log("appliances", appliances, applianceState)} */}
-
-                        <TableBody>
-                          {appliances.map((appliance, i) => {
-                            return applianceState[0][appliance]["available"] ==
-                              true ||
-                              applianceState[0][appliance]["available"] ==
-                                "True" ? (
-                              <TableRow
-                                onClick={
-                                  property.management_status === "ACCEPTED"
-                                    ? () => {
-                                        window.scrollTo(0, 1000);
-                                        setEditProperty(true);
-                                      }
-                                    : () => {}
-                                }
-                              >
-                                <TableCell>{appliance}</TableCell>
-                                <TableCell>
-                                  {applianceState[0][appliance]["name"]}
-                                </TableCell>
-                                <TableCell>
-                                  {
-                                    applianceState[0][appliance][
-                                      "purchased_from"
-                                    ]
-                                  }
-                                </TableCell>
-                                <TableCell>
-                                  {applianceState[0][appliance]["purchased"]}
-                                </TableCell>
-                                <TableCell>
-                                  {
-                                    applianceState[0][appliance][
-                                      "purchased_order"
-                                    ]
-                                  }
-                                </TableCell>
-                                <TableCell>
-                                  {applianceState[0][appliance]["installed"]}
-                                </TableCell>
-                                <TableCell>
-                                  {applianceState[0][appliance]["serial_num"]}
-                                </TableCell>
-                                <TableCell>
-                                  {applianceState[0][appliance]["model_num"]}
-                                </TableCell>
-                                <TableCell>
-                                  {
-                                    applianceState[0][appliance][
-                                      "warranty_till"
-                                    ]
-                                  }
-                                </TableCell>
-                                <TableCell>
-                                  {
-                                    applianceState[0][appliance][
-                                      "warranty_info"
-                                    ]
-                                  }
-                                </TableCell>
-
-                                {applianceState[0][appliance]["images"] !==
-                                  undefined &&
-                                applianceState[0][appliance]["images"].length >
-                                  0 ? (
-                                  <TableCell>
-                                    <Row className="d-flex justify-content-center align-items-center p-1">
-                                      <Col className="d-flex justify-content-center align-items-center p-0 m-0">
-                                        <img
-                                          key={Date.now()}
-                                          src={`${
-                                            applianceState[0][appliance][
-                                              "images"
-                                            ][0]
-                                          }?${Date.now()}`}
-                                          style={{
-                                            borderRadius: "4px",
-                                            objectFit: "contain",
-                                            width: "50px",
-                                            height: "50px",
-                                          }}
-                                          alt="Property"
-                                        />
-                                      </Col>
-                                    </Row>
-                                  </TableCell>
-                                ) : (
-                                  <TableCell>None</TableCell>
-                                )}
-                              </TableRow>
-                            ) : (
-                              ""
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
                       {appliances.filter(
-                        (appliance, i) =>
-                          applianceState[0][appliance]["available"] == true ||
+                        (appliance) =>
+                          applianceState[0][appliance]["available"] === true ||
                           applianceState[0][appliance]["available"] == "True"
-                      ) ? (
-                        <Row className="m-3">Add Appliance Information</Row>
+                      ).length === 0 ? (
+                        <Row className="m-3">
+                          <div className="m-3">Add Appliance Information</div>
+                        </Row>
                       ) : (
-                        ""
+                        <Table
+                          responsive="md"
+                          classes={{ root: classes.customTable }}
+                          size="small"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Appliance</TableCell>
+                              <TableCell>Name</TableCell>
+                              <TableCell>Purchased From</TableCell>
+                              <TableCell>Purchased On</TableCell>
+                              <TableCell>Purchase Order Number</TableCell>
+                              <TableCell>Installed On</TableCell>
+                              <TableCell>Serial Number</TableCell>
+                              <TableCell>Model Number</TableCell>
+                              <TableCell>Warranty Till</TableCell>
+                              <TableCell>Warranty Info</TableCell>
+                              <TableCell>Images</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          {/* {console.log("appliances", appliances, applianceState)} */}
+
+                          <TableBody>
+                            {appliances.map((appliance, i) => {
+                              return applianceState[0][appliance][
+                                "available"
+                              ] == true ||
+                                applianceState[0][appliance]["available"] ==
+                                  "True" ? (
+                                <TableRow
+                                  onClick={
+                                    property.management_status === "ACCEPTED"
+                                      ? () => {
+                                          window.scrollTo(0, 1000);
+                                          setEditProperty(true);
+                                        }
+                                      : () => {}
+                                  }
+                                >
+                                  <TableCell>{appliance}</TableCell>
+                                  <TableCell>
+                                    {applianceState[0][appliance]["name"]}
+                                  </TableCell>
+                                  <TableCell>
+                                    {
+                                      applianceState[0][appliance][
+                                        "purchased_from"
+                                      ]
+                                    }
+                                  </TableCell>
+                                  <TableCell>
+                                    {applianceState[0][appliance]["purchased"]}
+                                  </TableCell>
+                                  <TableCell>
+                                    {
+                                      applianceState[0][appliance][
+                                        "purchased_order"
+                                      ]
+                                    }
+                                  </TableCell>
+                                  <TableCell>
+                                    {applianceState[0][appliance]["installed"]}
+                                  </TableCell>
+                                  <TableCell>
+                                    {applianceState[0][appliance]["serial_num"]}
+                                  </TableCell>
+                                  <TableCell>
+                                    {applianceState[0][appliance]["model_num"]}
+                                  </TableCell>
+                                  <TableCell>
+                                    {
+                                      applianceState[0][appliance][
+                                        "warranty_till"
+                                      ]
+                                    }
+                                  </TableCell>
+                                  <TableCell>
+                                    {
+                                      applianceState[0][appliance][
+                                        "warranty_info"
+                                      ]
+                                    }
+                                  </TableCell>
+
+                                  {applianceState[0][appliance]["images"] !==
+                                    undefined &&
+                                  applianceState[0][appliance]["images"]
+                                    .length > 0 ? (
+                                    <TableCell>
+                                      <Row className="d-flex justify-content-center align-items-center p-1">
+                                        <Col className="d-flex justify-content-center align-items-center p-0 m-0">
+                                          <img
+                                            key={Date.now()}
+                                            src={`${
+                                              applianceState[0][appliance][
+                                                "images"
+                                              ][0]
+                                            }?${Date.now()}`}
+                                            style={{
+                                              borderRadius: "4px",
+                                              objectFit: "contain",
+                                              width: "50px",
+                                              height: "50px",
+                                            }}
+                                            alt="Property"
+                                          />
+                                        </Col>
+                                      </Row>
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell>None</TableCell>
+                                  )}
+                                </TableRow>
+                              ) : (
+                                ""
+                              );
+                            })}
+                          </TableBody>
+                        </Table>
                       )}
                     </div>
                   </Row>

@@ -46,11 +46,7 @@ function ReviewTenantProfile(props) {
   const [files, setFiles] = useState([]);
   const [filesCopy, setFilesCopy] = useState([]);
   const [message, setMessage] = useState("");
-  const [numAdults, setNumAdults] = useState(0);
-  const [numChildren, setNumChildren] = useState(0);
-  const [numPets, setNumPets] = useState(0);
-  const [numVehicles, setNumVehicles] = useState(0);
-  const [numReferences, setNumReferences] = useState(0);
+
   const [adultsApplication, setAdultsApplication] = useState([]);
   const [childrenApplication, setChildrenApplication] = useState([]);
   const [petsApplication, setPetsApplication] = useState([]);
@@ -210,19 +206,10 @@ function ReviewTenantProfile(props) {
         : [];
       // setFiles(documents);
       setFilesCopy(documents);
-      setNumAdults(
-        JSON.parse(response.result[0].tenant_adult_occupants).length
-      );
       setAdults(JSON.parse(response.result[0].tenant_adult_occupants));
-      setNumChildren(
-        JSON.parse(response.result[0].tenant_children_occupants).length
-      );
       setChildren(JSON.parse(response.result[0].tenant_children_occupants));
-      setNumPets(JSON.parse(response.result[0].tenant_pet_occupants).length);
       setPets(JSON.parse(response.result[0].tenant_pet_occupants));
-      setNumVehicles(JSON.parse(response.result[0].tenant_vehicle_info).length);
       setVehicles(JSON.parse(response.result[0].tenant_vehicle_info));
-      setNumReferences(JSON.parse(response.result[0].tenant_references).length);
       setReferences(JSON.parse(response.result[0].tenant_references));
       let fo = JSON.parse(JSON.stringify(documents));
       setFilesOriginal(fo);
@@ -887,7 +874,7 @@ function ReviewTenantProfile(props) {
           {/* =======================================Application Message================================================ */}
           <Row className="m-3">
             <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
+              <Form.Label as="h6" className="mb-2 ms-2">
                 Application Message
               </Form.Label>
               <Form.Control

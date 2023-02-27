@@ -217,7 +217,7 @@ export default function TenantUpcomingPayments(props) {
     <div className="upcoming-payments">
       <Row className="mx-3">
         <Col>
-          <h3>Upcoming Payments</h3>
+          <h4>Upcoming Payments</h4>
         </Col>
       </Row>
       <div
@@ -251,10 +251,8 @@ export default function TenantUpcomingPayments(props) {
                           tabIndex={-1}
                           key={row.purchase_uid}
                         >
-                          <TableCell align="right">
-                            {row.purchase_uid}
-                          </TableCell>
-                          <TableCell align="right" style={{ width: "300px" }}>
+                          <TableCell align="left">{row.purchase_uid}</TableCell>
+                          <TableCell align="left">
                             {row.address +
                               " " +
                               row.unit +

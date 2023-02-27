@@ -382,7 +382,7 @@ export default function UpcomingManagerPayments(props) {
         {" "}
         <Row className="m-3" style={subHeading}>
           {" "}
-          Outgoing Payments
+          <h5> Outgoing Payments</h5>
         </Row>
         <Row className="m-3" style={{ overflow: "scroll" }}>
           <Table
@@ -409,10 +409,8 @@ export default function UpcomingManagerPayments(props) {
                           tabIndex={-1}
                           key={index}
                         >
-                          <TableCell align="right">
-                            {row.purchase_uid}
-                          </TableCell>
-                          <TableCell align="right" style={{ width: "300px" }}>
+                          <TableCell align="left">{row.purchase_uid}</TableCell>
+                          <TableCell align="left" style={{ width: "300px" }}>
                             {row.address +
                               " " +
                               row.unit +
@@ -518,7 +516,7 @@ export default function UpcomingManagerPayments(props) {
       >
         <Row className="m-3" style={subHeading}>
           {" "}
-          Incoming Payments
+          <h5> Incoming Payments</h5>
         </Row>
         <Row className="m-3" style={{ overflow: "scroll" }}>
           <Table
@@ -558,8 +556,8 @@ export default function UpcomingManagerPayments(props) {
                               : "none",
                         }}
                       >
-                        <TableCell align="right">{row.purchase_uid}</TableCell>
-                        <TableCell align="right" style={{ width: "300px" }}>
+                        <TableCell align="left">{row.purchase_uid}</TableCell>
+                        <TableCell align="left" style={{ width: "300px" }}>
                           {row.address +
                             " " +
                             row.unit +
