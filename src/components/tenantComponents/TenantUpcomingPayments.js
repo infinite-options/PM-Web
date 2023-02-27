@@ -145,7 +145,7 @@ export default function TenantUpcomingPayments(props) {
     {
       id: "linked_bill_id",
       numeric: true,
-      label: "Split Payment",
+      label: "Split",
     },
 
     {
@@ -178,7 +178,7 @@ export default function TenantUpcomingPayments(props) {
           {paymentsHeadCell.map((headCell) => (
             <TableCell
               key={headCell.id}
-              align="right"
+              align="center"
               size="small"
               sortDirection={orderBy === headCell.id ? order : false}
             >
@@ -263,17 +263,15 @@ export default function TenantUpcomingPayments(props) {
                               " " +
                               row.zip}
                           </TableCell>
-                          <TableCell align="right" style={{ width: "200px" }}>
-                            {row.description}
-                          </TableCell>
-                          <TableCell align="right">
+                          <TableCell align="left">{row.description}</TableCell>
+                          <TableCell align="left">
                             {row.purchase_type}
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align="center">
                             {row.linked_bill_id === null ? "No" : "Yes"}
                           </TableCell>
                           <TableCell
-                            align="right"
+                            align="center"
                             style={{
                               color:
                                 new Date(row.next_payment) < new Date()

@@ -93,7 +93,7 @@ export default function TenantPaymentHistory(props) {
     {
       id: "linked_bill_id",
       numeric: true,
-      label: "Split Payment",
+      label: "Split",
     },
 
     {
@@ -126,7 +126,7 @@ export default function TenantPaymentHistory(props) {
           {paymentsHeadCell.map((headCell) => (
             <TableCell
               key={headCell.id}
-              align="right"
+              align="center"
               size="small"
               sortDirection={orderBy === headCell.id ? order : false}
             >
@@ -200,7 +200,12 @@ export default function TenantPaymentHistory(props) {
                       key={row.purchase_uid}
                     >
                       <TableCell align="left">{row.purchase_uid}</TableCell>
-                      <TableCell align="left">
+                      <TableCell
+                        align="left"
+                        style={{
+                          width: 'Dimensions.get("window").width * 0.7 ',
+                        }}
+                      >
                         {row.address +
                           " " +
                           row.unit +
@@ -218,14 +223,12 @@ export default function TenantPaymentHistory(props) {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell align="right" style={{ width: "200px" }}>
-                        {row.description}
-                      </TableCell>
-                      <TableCell align="right">{row.purchase_type}</TableCell>
-                      <TableCell align="right">
+                      <TableCell align="left">{row.description}</TableCell>
+                      <TableCell align="left">{row.purchase_type}</TableCell>
+                      <TableCell align="center">
                         {row.linked_bill_id === null ? "No" : "Yes"}
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="center">
                         {row.payment_date !== null
                           ? row.payment_date.substring(0, 10)
                           : "Not Available"}
