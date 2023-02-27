@@ -73,11 +73,12 @@ function ManagerPropertyView(props) {
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
-      breakpoint: { max: 4000, min: 3000 },
-      items: 4,
+      breakpoint: { max: 1920, min: 1560 },
+      items: 5,
     },
+
     desktop: {
-      breakpoint: { max: 3000, min: 1024 },
+      breakpoint: { max: 1560, min: 1024 },
       items: 4,
     },
     tablet: {
@@ -661,6 +662,7 @@ function ManagerPropertyView(props) {
                       responsive={responsive}
                       infinite={true}
                       arrows={true}
+                      partialVisible={false}
                       className=" d-flex align-items-center justify-content-center"
                     >
                       {imagesProperty.map((imagesGroup) => {

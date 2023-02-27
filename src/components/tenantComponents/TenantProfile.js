@@ -977,7 +977,7 @@ function TenantProfile(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        <div className="w-100 mb-5">
           <Header
             title="Profile"
             leftText={editProfile ? "Cancel" : ""}
@@ -1589,12 +1589,13 @@ function TenantProfile(props) {
               </Row>
               <div>
                 {adults && Object.values(adults).length > 0 ? (
-                  <div className="mx-3 " style={{ overflow: "scroll" }}>
+                  <div className="mx-3 ">
                     <Row style={subHeading}>Adults</Row>
                     <Table
                       responsive="md"
                       classes={{ root: classes.customTable }}
                       size="small"
+                      style={{ overflow: "scroll" }}
                     >
                       <TableHead>
                         <TableRow>
@@ -1627,12 +1628,13 @@ function TenantProfile(props) {
               </div>
               <div>
                 {children && Object.values(children).length > 0 ? (
-                  <div className="mx-3 " style={{ overflow: "scroll" }}>
+                  <div className="mx-3 ">
                     <Row style={subHeading}>Children</Row>
                     <Table
                       responsive="md"
                       classes={{ root: classes.customTable }}
                       size="small"
+                      style={{ overflow: "scroll" }}
                     >
                       <TableHead>
                         <TableRow>
@@ -1665,12 +1667,13 @@ function TenantProfile(props) {
               </div>
               <div>
                 {pets && Object.values(pets).length > 0 ? (
-                  <div className="mx-3 " style={{ overflow: "scroll" }}>
+                  <div className="mx-3 ">
                     <Row style={subHeading}>Pets</Row>
                     <Table
                       responsive="md"
                       classes={{ root: classes.customTable }}
                       size="small"
+                      style={{ overflow: "scroll" }}
                     >
                       <TableHead>
                         {" "}
@@ -1707,12 +1710,13 @@ function TenantProfile(props) {
               </div>
               <div>
                 {vehicles && Object.values(vehicles).length > 0 ? (
-                  <div className="mx-3 " style={{ overflow: "scroll" }}>
+                  <div className="mx-3 ">
                     <Row style={subHeading}>Vehicles</Row>
                     <Table
                       responsive="md"
                       classes={{ root: classes.customTable }}
                       size="small"
+                      style={{ overflow: "scroll" }}
                     >
                       <TableHead>
                         <TableRow style={subHeading}>
@@ -1749,12 +1753,13 @@ function TenantProfile(props) {
               </div>
               <div>
                 {references && Object.values(references).length > 0 ? (
-                  <div className="mx-3 " style={{ overflow: "scroll" }}>
+                  <div className="mx-3 ">
                     <Row style={subHeading}>References</Row>
                     <Table
                       responsive="md"
                       classes={{ root: classes.customTable }}
                       size="small"
+                      style={{ overflow: "scroll" }}
                     >
                       <TableHead>
                         <TableRow style={subHeading}>

@@ -76,11 +76,11 @@ function OwnerPropertyView(props) {
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
-      breakpoint: { max: 4000, min: 3000 },
-      items: 4,
+      breakpoint: { max: 1920, min: 1560 },
+      items: 5,
     },
     desktop: {
-      breakpoint: { max: 3000, min: 1024 },
+      breakpoint: { max: 1560, min: 1024 },
       items: 4,
     },
     tablet: {
@@ -794,21 +794,20 @@ function OwnerPropertyView(props) {
                         responsive={responsive}
                         infinite={true}
                         arrows={true}
-                        className=" d-flex align-items-center justify-content-center"
+                        partialVisible={false}
+                        className=" d-flex justify-content-center"
                       >
                         {imagesProperty.map((imagesGroup) => {
                           return (
-                            <div className="d-flex align-items-center justify-content-center">
-                              <img
-                                key={Date.now()}
-                                src={`${imagesGroup}?${Date.now()}`}
-                                style={{
-                                  width: "200px",
-                                  height: "200px",
-                                  objectFit: "cover",
-                                }}
-                              />
-                            </div>
+                            <img
+                              key={Date.now()}
+                              src={`${imagesGroup}?${Date.now()}`}
+                              style={{
+                                width: "200px",
+                                height: "200px",
+                                objectFit: "cover",
+                              }}
+                            />
                           );
                         })}
                       </Carousel>

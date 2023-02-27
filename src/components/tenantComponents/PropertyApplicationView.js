@@ -123,11 +123,11 @@ function PropertyApplicationView(props) {
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
-      breakpoint: { max: 4000, min: 3000 },
-      items: 4,
+      breakpoint: { max: 3000, min: 1920 },
+      items: 5,
     },
     desktop: {
-      breakpoint: { max: 3000, min: 1024 },
+      breakpoint: { max: 1920, min: 1024 },
       items: 4,
     },
     tablet: {
@@ -164,9 +164,21 @@ function PropertyApplicationView(props) {
     fetchProperty();
   }, []);
   // console.log("propertyApplicationView", property);
+  console.log(forPropertyLease, property, width);
   return (
     <div className="w-100 overflow-hidden p-0 m-0">
-      <div className="flex-1 mb-5">
+      <div
+        className="flex-1 mb-5"
+        style={{
+          maxWidth: forPropertyLease
+            ? "100%"
+            : width < 1024 && !forPropertyLease
+            ? "100%"
+            : property !== null && JSON.parse(property.images).length < 4
+            ? "100%"
+            : "86%",
+        }}
+      >
         {forPropertyLease ? (
           ""
         ) : (
@@ -203,28 +215,28 @@ function PropertyApplicationView(props) {
               </p>
             </div>
           )}
-          <div className="m-0 p-0" style={{ maxWidth: "100%" }}>
+          <div className="m-0 p-0">
             {property && JSON.parse(property.images).length > 0 ? (
               <Row className=" d-flex align-items-center justify-content-center m-3">
                 <Carousel
                   responsive={responsive}
                   infinite={true}
                   arrows={true}
-                  className=" d-flex align-items-center justify-content-center"
+                  // className=" d-flex align-items-center justify-content-center"
                 >
                   {JSON.parse(property.images).map((imagesGroup) => {
                     return (
-                      <div className="d-flex align-items-center justify-content-center">
-                        <img
-                          key={Date.now()}
-                          src={`${imagesGroup}?${Date.now()}`}
-                          style={{
-                            width: "200px",
-                            height: "200px",
-                            objectFit: "cover",
-                          }}
-                        />
-                      </div>
+                      // <div className="d-flex align-items-center justify-content-center">
+                      <img
+                        key={Date.now()}
+                        src={`${imagesGroup}?${Date.now()}`}
+                        style={{
+                          width: "200px",
+                          height: "200px",
+                          objectFit: "cover",
+                        }}
+                      />
+                      // </div>
                     );
                   })}
                 </Carousel>
