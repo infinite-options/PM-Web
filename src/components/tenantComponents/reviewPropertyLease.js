@@ -682,7 +682,8 @@ function ReviewPropertyLease(props) {
           ) : application_status_1 === "FORWARDED" ||
             application_status_1 === "RENTED" ||
             application_status_1 === "LEASE EXTENSION" ||
-            application_status_1 === "TENANT LEASE EXTENSION" ? (
+            application_status_1 === "TENANT LEASE EXTENSION" ||
+            application_status_1 === "REFUSED" ? (
             <div
               className="mx-3 my-3 p-2"
               style={{
@@ -931,7 +932,8 @@ function ReviewPropertyLease(props) {
                     <TableBody>
                       {rentals.map((rental) => {
                         return rental.rental_status === "PROCESSING" ||
-                          rental.rental_status === "ACTIVE" ? (
+                          rental.rental_status === "ACTIVE" ||
+                          rental.rental_status === "REFUSED" ? (
                           <TableRow>
                             <TableCell>{rental.lease_start}</TableCell>
 
