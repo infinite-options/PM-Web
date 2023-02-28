@@ -47,9 +47,13 @@ import {
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
-      padding: "6px 6px 6px 6px",
+      padding: "2px 2px",
       border: "0.5px solid grey ",
     },
+    width: "100%",
+    tableLayout: "fixed",
+    wordBreak: "break-word",
+    textOverflow: "scroll",
   },
 });
 function TenantProfile(props) {
