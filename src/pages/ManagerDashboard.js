@@ -21,6 +21,7 @@ import AppContext from "../AppContext";
 import ManagerCreateExpense from "../components/managerComponents/ManagerCreateExpense";
 import ManagerRepairRequest from "../components/managerComponents/ManagerRepairRequest";
 import ManagerFooter from "../components/managerComponents/ManagerFooter";
+import ImageModal from "../components/ImageModal";
 import SortDown from "../icons/Sort-down.svg";
 import SortLeft from "../icons/Sort-left.svg";
 import AddIcon from "../icons/AddIcon.svg";
@@ -60,6 +61,9 @@ export default function ManagerDashboard() {
   const [orderMaintenance, setOrderMaintenance] = useState("asc");
   const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
 
+  const [openImage, setOpenImage] = useState(false);
+  const [imageSrc, setImageSrc] = useState(null);
+
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -73,6 +77,14 @@ export default function ManagerDashboard() {
   };
   const responsive = {
     showSidebar: width > 1023,
+  };
+  const showImage = (src) => {
+    setOpenImage(true);
+    setImageSrc(src);
+  };
+  const unShowImage = () => {
+    setOpenImage(false);
+    setImageSrc(null);
   };
   const fetchManagerDashboard = async () => {
     if (access_token === null || user.role.indexOf("MANAGER") === -1) {
@@ -168,31 +180,6 @@ export default function ManagerDashboard() {
         activeProperties.push(property);
       }
     });
-    // activeProperties.forEach((property) => {
-    //   const forwarded = property.management_status.filter(
-    //     (item) => item.management_status === "FORWARDED"
-    //   );
-    //   const sent = property.management_status.filter(
-    //     (item) => item.management_status === "SENT"
-    //   );
-    //   const refused = property.management_status.filter(
-    //     (item) => item.management_status === "REFUSED"
-    //   );
-
-    //   const pmendearly = property.management_status.filter(
-    //     (item) => item.management_status === "PM END EARLY"
-    //   );
-    //   const ownerendearly = property.management_status.filter(
-    //     (item) => item.management_status === "OWNER END EARLY"
-    //   );
-    //   property.management = {
-    //     forwarded: forwarded.length,
-    //     sent: sent.length,
-    //     refused: refused.length,
-    //     pmendearly: pmendearly.length,
-    //     ownerendearly: ownerendearly.length,
-    //   };
-    // });
 
     // console.log(activeProperties);
     setManagerData(activeProperties);
@@ -595,6 +582,7 @@ export default function ManagerDashboard() {
 
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
+      <ImageModal src={imageSrc} isOpen={openImage} onCancel={unShowImage} />
       {!isLoading &&
       (managerData.length > 0 || processingManagerData.length > 0) ? (
         <div className="flex-1">
@@ -716,17 +704,6 @@ export default function ManagerDashboard() {
                                   padding="none"
                                   size="small"
                                   align="center"
-                                  onClick={() => {
-                                    navigate(
-                                      `/managerPropertyDetails/${property.property_uid}`,
-                                      {
-                                        state: {
-                                          property: property,
-                                          property_uid: property.property_uid,
-                                        },
-                                      }
-                                    );
-                                  }}
                                 >
                                   {JSON.parse(property.images).length > 0 ? (
                                     <img
@@ -740,6 +717,11 @@ export default function ManagerDashboard() {
                                         width: "100px",
                                         height: "100px",
                                       }}
+                                      onClick={() =>
+                                        showImage(
+                                          JSON.parse(property.images)[0]
+                                        )
+                                      }
                                     />
                                   ) : (
                                     <img
