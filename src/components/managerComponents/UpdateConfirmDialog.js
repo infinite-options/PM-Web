@@ -523,7 +523,7 @@ function UpdateConfirmDialog(props) {
                                 (temp) => fee.fee_name === temp.fee_name
                               ).perDay_late_fee != fee.perDay_late_fee ? (
                                 <div style={{ color: "red" }}>
-                                  ${fee.perDay_late_fee}
+                                  ${fee.perDay_late_fee} /day
                                 </div>
                               ) : (
                                 <div style={{ color: "black" }}>
@@ -532,10 +532,10 @@ function UpdateConfirmDialog(props) {
                                     oldAgreement.rent_payments.find(
                                       (temp) => fee.fee_name === temp.fee_name
                                     ).perDay_late_fee
-                                  }
+                                  }{" "}
+                                  /day
                                 </div>
                               )}
-                              /day
                             </TableCell>
                           </TableRow>
                         ) : !oldAgreement.rent_payments.includesObj(fee) ? (
@@ -704,26 +704,54 @@ function UpdateConfirmDialog(props) {
                       </TableHead>
                       <TableBody>
                         {updatedAgreement.rent_payments.map((fee) => {
-                          return oldAgreement.rent_payments.includesObj(fee) ? (
+                          return (
                             <TableRow>
-                              <TableCell>{fee.fee_name}</TableCell>
-                              <TableCell>{fee.charge}</TableCell>
-                            </TableRow>
-                          ) : !oldAgreement.rent_payments.includesObj(fee) ? (
-                            <TableRow>
-                              <TableCell style={{ color: "red" }}>
-                                {fee.fee_name}
+                              <TableCell>
+                                {oldAgreement.rent_payments.find(
+                                  (temp) => fee.fee_name === temp.fee_name
+                                ).fee_name !== fee.fee_name ? (
+                                  <div style={{ color: "red" }}>
+                                    {fee.fee_name}
+                                  </div>
+                                ) : (
+                                  <div style={{ color: "black" }}>
+                                    {
+                                      oldAgreement.rent_payments.find(
+                                        (temp) => fee.fee_name === temp.fee_name
+                                      ).fee_name
+                                    }
+                                  </div>
+                                )}
                               </TableCell>
-                              <TableCell style={{ color: "red" }}>
-                                {fee.charge}
+                              <TableCell>
+                                {oldAgreement.rent_payments.find(
+                                  (temp) => fee.fee_name === temp.fee_name
+                                ).charge !== fee.charge ? (
+                                  <div style={{ color: "red" }}>
+                                    {fee.fee_type === "%"
+                                      ? `${fee.charge}%`
+                                      : `$${fee.charge}`}
+                                  </div>
+                                ) : (
+                                  <div style={{ color: "black" }}>
+                                    {oldAgreement.rent_payments.find(
+                                      (temp) => fee.fee_name === temp.fee_name
+                                    ).fee_type === "%"
+                                      ? `${
+                                          oldAgreement.rent_payments.find(
+                                            (temp) =>
+                                              fee.fee_name === temp.fee_name
+                                          ).charge
+                                        }%`
+                                      : `$${
+                                          oldAgreement.rent_payments.find(
+                                            (temp) =>
+                                              fee.fee_name === temp.fee_name
+                                          ).charge
+                                        }`}
+                                  </div>
+                                )}
                               </TableCell>
-                            </TableRow>
-                          ) : (
-                            <TableRow>
-                              <TableCell style={{ color: "red" }}>
-                                {fee.fee_name}
-                              </TableCell>
-                              <TableCell>{fee.charge}</TableCell>
                             </TableRow>
                           );
                         })}
@@ -732,7 +760,7 @@ function UpdateConfirmDialog(props) {
                             fee
                           ) &&
                             updatedAgreement.rent_payments.some(
-                              (e) => fee.fee_name === e.fee_name
+                              (e) => fee.fee_charge !== e.fee_charge
                             ) ? (
                             <TableRow>
                               <TableCell

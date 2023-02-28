@@ -622,74 +622,136 @@ function ManagerTenantAgreement(props) {
         }
       }
     }
-    const newAgreement = {
-      rental_property_id: property.property_uid,
-      tenant_id: null,
-      lease_start: startDate,
-      lease_end: endDate,
-      rent_payments: JSON.stringify(feeState),
-      assigned_contacts: JSON.stringify(contactState[0]),
-      rental_status: "PENDING",
-      available_topay: available,
-      due_by: dueDate,
-      late_by: lateAfter,
-      late_fee: lateFee,
-      perDay_late_fee: lateFeePer,
-    };
-    const newFiles = [...files];
+    if (rentalStatus === "REFUSED" || rentalStatus === "PROCESSING") {
+      // console.log(agreement.linked_application_id);
+      for (const application of JSON.parse(agreement.linked_application_id)) {
+        // console.log(application);
 
-    for (let i = 0; i < newFiles.length; i++) {
-      let key = `doc_${i}`;
-      if (newFiles[i].file !== undefined) {
-        newAgreement[key] = newFiles[i].file;
-      } else {
-        newAgreement[key] = newFiles[i].link;
+        const request_body = {
+          application_uid: application,
+          message: "Lease details forwarded for review",
+          application_status: "FORWARDED",
+        };
+        // console.log(request_body)
+        const update_application = await put("/applications", request_body);
+      }
+      let newAgreement = {
+        rental_property_id: property.property_uid,
+        lease_start: startDate,
+        lease_end: endDate,
+        rental_status: "PROCESSING",
+        rent_payments: JSON.stringify(feeState),
+        available_topay: available,
+        due_by: dueDate,
+        late_by: lateAfter,
+        late_fee: lateFee,
+        perDay_late_fee: lateFeePer,
+        assigned_contacts: JSON.stringify(contactState[0]),
+        adults: JSON.stringify(adults),
+        children: JSON.stringify(children),
+        pets: JSON.stringify(pets),
+        vehicles: JSON.stringify(vehicles),
+        referred: JSON.stringify(referred),
+        effective_date: effectiveDate,
+      };
+      // console.log(newAgreement);
+      const newFiles = [...files];
+
+      for (let i = 0; i < newFiles.length; i++) {
+        let key = `doc_${i}`;
+        if (newFiles[i].file !== undefined) {
+          newAgreement[key] = newFiles[i].file;
+        } else {
+          newAgreement[key] = newFiles[i].link;
+        }
+
+        delete newFiles[i].file;
+      }
+      newAgreement.documents = JSON.stringify(newFiles);
+
+      // console.log("in if");
+      newAgreement.rental_uid = agreement.rental_uid;
+      // console.log(newAgreement);
+      const response = await put(`/rentals`, newAgreement, null, newFiles);
+
+      setShowSpinner(false);
+
+      navigate("../manager");
+    } else {
+      const newAgreement = {
+        rental_property_id: property.property_uid,
+        tenant_id: null,
+        lease_start: startDate,
+        lease_end: endDate,
+        rent_payments: JSON.stringify(feeState),
+        assigned_contacts: JSON.stringify(contactState[0]),
+        rental_status: "PENDING",
+        available_topay: available,
+        due_by: dueDate,
+        late_by: lateAfter,
+        late_fee: lateFee,
+        perDay_late_fee: lateFeePer,
+      };
+      const newFiles = [...files];
+
+      for (let i = 0; i < newFiles.length; i++) {
+        let key = `doc_${i}`;
+        if (newFiles[i].file !== undefined) {
+          newAgreement[key] = newFiles[i].file;
+        } else {
+          newAgreement[key] = newFiles[i].link;
+        }
+
+        delete newFiles[i].file;
+      }
+      newAgreement.documents = JSON.stringify(newFiles);
+      newAgreement.tenant_id = JSON.stringify(
+        acceptedTenantApplications.map((application) => application.tenant_id)
+      );
+      newAgreement.linked_application_id = JSON.stringify(
+        acceptedTenantApplications.map(
+          (application) => application.application_uid
+        )
+      );
+      // console.log(newAgreement);
+      const create_rental = await post(
+        "/extendLease",
+        newAgreement,
+        null,
+        files
+      );
+      const extendObject = {
+        application_status: "LEASE EXTENSION",
+        property_uid: property.property_uid,
+        message: "Requesting to Extend Lease",
+      };
+      let apps = property.applications.filter(
+        (a) => a.application_status === "RENTED"
+      );
+      // console.log(property.applications);
+      extendObject.application_uid =
+        apps.length > 0 ? apps[0].application_uid : null;
+      // console.log(apps);
+      if (apps.length > 0) {
+        const response6 = await put("/extendLease", extendObject);
       }
 
-      delete newFiles[i].file;
+      const newMessage = {
+        sender_name: property.managerInfo.manager_business_name,
+        sender_email: property.managerInfo.manager_email,
+        sender_phone: property.managerInfo.manager_phone_number,
+        message_subject: "Extend Lease",
+        message_details: "PM has started the extend lease process",
+        message_created_by: property.managerInfo.manager_id,
+        user_messaged: property.rentalInfo[0].tenant_id,
+        message_status: "PENDING",
+        receiver_email: property.rentalInfo[0].tenant_email,
+      };
+      // console.log(newMessage);
+      const responseMsg = await post("/message", newMessage);
+      setShowSpinner(false);
+      back();
     }
-    newAgreement.documents = JSON.stringify(newFiles);
-    newAgreement.tenant_id = JSON.stringify(
-      acceptedTenantApplications.map((application) => application.tenant_id)
-    );
-    newAgreement.linked_application_id = JSON.stringify(
-      acceptedTenantApplications.map(
-        (application) => application.application_uid
-      )
-    );
-    // console.log(newAgreement);
-    const create_rental = await post("/extendLease", newAgreement, null, files);
-    const extendObject = {
-      application_status: "LEASE EXTENSION",
-      property_uid: property.property_uid,
-      message: "Requesting to Extend Lease",
-    };
-    let apps = property.applications.filter(
-      (a) => a.application_status === "RENTED"
-    );
-    // console.log(property.applications);
-    extendObject.application_uid =
-      apps.length > 0 ? apps[0].application_uid : null;
-    // console.log(apps);
-    if (apps.length > 0) {
-      const response6 = await put("/extendLease", extendObject);
-    }
-
-    const newMessage = {
-      sender_name: property.managerInfo.manager_business_name,
-      sender_email: property.managerInfo.manager_email,
-      sender_phone: property.managerInfo.manager_phone_number,
-      message_subject: "Extend Lease",
-      message_details: "PM has started the extend lease process",
-      message_created_by: property.managerInfo.manager_id,
-      user_messaged: property.rentalInfo[0].tenant_id,
-      message_status: "PENDING",
-      receiver_email: property.rentalInfo[0].tenant_email,
-    };
-    // console.log(newMessage);
-    const responseMsg = await post("/message", newMessage);
-    setShowSpinner(false);
-    back();
   };
   // console.log(acceptedTenantApplications.children);
   return (

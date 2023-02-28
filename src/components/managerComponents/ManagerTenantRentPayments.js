@@ -269,8 +269,6 @@ function ManagerTenantRentPayments(props) {
                   onClick={() => deleteFee(i)}
                 />
               </TableCell>
-
-              <p style={gray} className="mb-1"></p>
             </TableRow>
           ))}
         </TableBody>

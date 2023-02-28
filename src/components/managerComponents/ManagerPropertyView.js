@@ -310,7 +310,8 @@ function ManagerPropertyView(props) {
     property_details.rentalInfo.forEach((rental) => {
       if (
         rental.rental_status === "PENDING" ||
-        rental.rental_status === "TENANT APPROVED"
+        rental.rental_status === "TENANT APPROVED" ||
+        rental.rental_status === "REFUSED"
       ) {
         setExtendedAgreement(rental);
       }

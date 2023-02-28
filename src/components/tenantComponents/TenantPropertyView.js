@@ -489,7 +489,8 @@ function TenantPropertyView(props) {
       }
       if (
         rental.rental_status === "PENDING" ||
-        rental.rental_status === "TENANT APPROVED"
+        rental.rental_status === "TENANT APPROVED" ||
+        rental.rental_status === "REFUSED"
       ) {
         setLeaseExtended(true);
         setExtendedAgreement(rental);
@@ -1900,6 +1901,7 @@ function TenantPropertyView(props) {
                             <TableRow>
                               <TableCell>Lease Start</TableCell>
                               <TableCell>Lease End</TableCell>
+                              <TableCell>Status</TableCell>
                               <TableCell>Rent Due</TableCell>
                               <TableCell>Later Fees After (days)</TableCell>
                               <TableCell>Late Fee (one-time)</TableCell>
@@ -1915,7 +1917,9 @@ function TenantPropertyView(props) {
                               <TableCell>
                                 {extendedAgreement.lease_end}
                               </TableCell>
-
+                              <TableCell>
+                                {extendedAgreement.rental_status}
+                              </TableCell>
                               <TableCell>
                                 {`${ordinal_suffix_of(
                                   extendedAgreement.due_by

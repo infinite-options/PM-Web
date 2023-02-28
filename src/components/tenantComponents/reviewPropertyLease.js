@@ -265,19 +265,53 @@ function ReviewPropertyLease(props) {
     navigate("/tenant");
   };
   const rejectLease = async () => {
-    // const updatedRental = {
-    //   // rental_uid: filteredRentals[0].rental_uid,
-    //   rental_uid: rentals[0].rental_uid,
-    //   rental_status: "REFUSED",
-    // };
-    // const response = await put("/rentals", updatedRental, null, []);
-    const updatedApplication = {
-      application_uid: application_uid,
-      application_status: "REFUSED",
-      property_uid: property_uid,
-    };
-    const response2 = await put("/applications", updatedApplication, null);
-    navigate("/tenant");
+    if (rentals.length > 0) {
+      console.log("in approvelease", rentals);
+      if (rentals.some((rental) => rental.rental_status === "PROCESSING")) {
+        let i = rentals.findIndex(
+          (rental) => rental.rental_status === "PROCESSING"
+        );
+        const updatedApplication = {
+          application_uid: application_uid,
+          application_status: "REFUSED",
+          property_uid: property_uid,
+        };
+        const response2 = await put("/applications", updatedApplication, null);
+        navigate("/tenant");
+      } else if (rentals.some((rental) => rental.rental_status === "PENDING")) {
+        let i = rentals.findIndex(
+          (rental) => rental.rental_status === "PENDING"
+        );
+        let request_body = {
+          application_status: "REFUSED",
+          property_uid: rentals[i].rental_property_id,
+        };
+
+        const response = await put("/extendLease", request_body);
+        // const newMessage = {
+        //   sender_name: property.managerInfo.manager_business_name,
+        //   sender_email: property.managerInfo.manager_email,
+        //   sender_phone: property.managerInfo.manager_phone_number,
+        //   message_subject: "Extend Lease Request Declined",
+        //   message_details: "Tenant has refused to extend the lease",
+        //   message_created_by: property.managerInfo.manager_id,
+        //   user_messaged: property.rentalInfo[0].tenant_id,
+        //   message_status: "PENDING",
+        //   receiver_email: property.rentalInfo[0].tenant_email,
+        // };
+        // // console.log(newMessage);
+        // const responseMsg = await post("/message", newMessage);
+        navigate("/tenant");
+      }
+    } else {
+      const updatedApplication = {
+        application_uid: application_uid,
+        application_status: "REFUSED",
+        property_uid: property_uid,
+      };
+      const response2 = await put("/applications", updatedApplication, null);
+      navigate("/tenant");
+    }
   };
 
   const parseDate = () => {
