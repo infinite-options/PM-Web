@@ -108,7 +108,7 @@ function ManagerTenantApplications(props) {
   };
 
   const toggleApplications = (application) => {
-    const selected = [...newApplications];
+    const selected = [...applications];
     const index = selected.findIndex(
       (a) => a.application_uid === application.application_uid
     );
