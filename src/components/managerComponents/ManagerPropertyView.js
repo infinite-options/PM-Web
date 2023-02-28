@@ -73,11 +73,12 @@ function ManagerPropertyView(props) {
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
-      breakpoint: { max: 4000, min: 3000 },
-      items: 4,
+      breakpoint: { max: 3000, min: 1560 },
+      items: 5,
     },
+
     desktop: {
-      breakpoint: { max: 3000, min: 1024 },
+      breakpoint: { max: 1560, min: 1024 },
       items: 4,
     },
     tablet: {
@@ -656,11 +657,46 @@ function ManagerPropertyView(props) {
             ) : (
               <div className="w-100 my-5">
                 <Row className=" d-flex align-items-center justify-content-center m-3">
-                  {imagesProperty.length > 0 ? (
+                  {imagesProperty.length === 0 ? (
+                    <img
+                      src={PropertyIcon}
+                      alt="Property"
+                      style={{
+                        width: "200px",
+                        height: "200px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  ) : imagesProperty.length > 4 ? (
                     <Carousel
                       responsive={responsive}
                       infinite={true}
                       arrows={true}
+                      partialVisible={false}
+                      // className=" d-flex align-items-center justify-content-center"
+                    >
+                      {imagesProperty.map((imagesGroup) => {
+                        return (
+                          // <div className="d-flex align-items-center justify-content-center">
+                          <img
+                            key={Date.now()}
+                            src={`${imagesGroup}?${Date.now()}`}
+                            style={{
+                              width: "200px",
+                              height: "200px",
+                              objectFit: "cover",
+                            }}
+                          />
+                          // </div>
+                        );
+                      })}
+                    </Carousel>
+                  ) : imagesProperty.length < 4 ? (
+                    <Carousel
+                      responsive={responsive}
+                      infinite={true}
+                      arrows={true}
+                      partialVisible={false}
                       className=" d-flex align-items-center justify-content-center"
                     >
                       {imagesProperty.map((imagesGroup) => {

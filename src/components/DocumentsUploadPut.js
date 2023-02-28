@@ -119,7 +119,7 @@ function DocumentsUploadPut(props) {
 
   // ======================================<Return function>=======================================
   return (
-    <Row className="m-3">
+    <Row className="m-3" style={{ overflow: "scroll" }}>
       {files.length > 0 ? (
         <Table
           responsive="md"

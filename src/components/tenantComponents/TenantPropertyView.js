@@ -680,11 +680,46 @@ function TenantPropertyView(props) {
           ) : (
             <div className="w-100 my-5">
               <Row className=" d-flex align-items-center justify-content-center m-3">
-                {imagesProperty.length > 0 ? (
+                {imagesProperty.length === 0 ? (
+                  <img
+                    src={PropertyIcon}
+                    alt="Property"
+                    style={{
+                      width: "200px",
+                      height: "200px",
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : imagesProperty.length > 4 ? (
                   <Carousel
                     responsive={responsive}
                     infinite={true}
                     arrows={true}
+                    partialVisible={false}
+                    // className=" d-flex align-items-center justify-content-center"
+                  >
+                    {imagesProperty.map((imagesGroup) => {
+                      return (
+                        // <div className="d-flex align-items-center justify-content-center">
+                        <img
+                          key={Date.now()}
+                          src={`${imagesGroup}?${Date.now()}`}
+                          style={{
+                            width: "200px",
+                            height: "200px",
+                            objectFit: "cover",
+                          }}
+                        />
+                        // </div>
+                      );
+                    })}
+                  </Carousel>
+                ) : imagesProperty.length < 4 ? (
+                  <Carousel
+                    responsive={responsive}
+                    infinite={true}
+                    arrows={true}
+                    partialVisible={false}
                     className=" d-flex align-items-center justify-content-center"
                   >
                     {imagesProperty.map((imagesGroup) => {
@@ -859,147 +894,149 @@ function TenantPropertyView(props) {
                     />
                   </Col>
                 </Row>
-                <Row className="m-3" style={{ overflow: "scroll" }}>
+                <Row className="m-3">
                   {property.maintenanceRequests.length > 0 ? (
-                    <Table
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                      responsive="md"
-                    >
-                      <EnhancedTableHeadMaintenance
-                        order={order}
-                        orderBy={orderBy}
-                        onRequestSort={handleRequestSort}
-                        rowCount={property.maintenanceRequests.length}
-                      />{" "}
-                      <TableBody>
-                        {stableSort(
-                          property.maintenanceRequests,
-                          getComparator(order, orderBy)
-                        ).map((request, index) => {
-                          return (
-                            <TableRow
-                              hover
-                              role="checkbox"
-                              tabIndex={-1}
-                              key={request.maintenance_request_uid}
-                              onClick={() =>
-                                navigate(
-                                  `/tenant-repairs/${request.maintenance_request_uid}`,
-                                  {
-                                    state: {
-                                      repair: request,
-                                      property: request.address,
-                                    },
-                                  }
-                                )
-                              }
-                            >
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
+                    <div style={{ overflow: "scroll" }}>
+                      <Table
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                        responsive="md"
+                      >
+                        <EnhancedTableHeadMaintenance
+                          order={order}
+                          orderBy={orderBy}
+                          onRequestSort={handleRequestSort}
+                          rowCount={property.maintenanceRequests.length}
+                        />{" "}
+                        <TableBody>
+                          {stableSort(
+                            property.maintenanceRequests,
+                            getComparator(order, orderBy)
+                          ).map((request, index) => {
+                            return (
+                              <TableRow
+                                hover
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={request.maintenance_request_uid}
+                                onClick={() =>
+                                  navigate(
+                                    `/tenant-repairs/${request.maintenance_request_uid}`,
+                                    {
+                                      state: {
+                                        repair: request,
+                                        property: request.address,
+                                      },
+                                    }
+                                  )
+                                }
                               >
-                                {JSON.parse(request.images).length > 0 ? (
-                                  <img
-                                    src={JSON.parse(request.images)[0]}
-                                    alt="Repair"
-                                    style={{
-                                      borderRadius: "4px",
-                                      objectFit: "cover",
-                                      width: "100px",
-                                      height: "100px",
-                                    }}
-                                  />
-                                ) : (
-                                  <img
-                                    src={RepairImg}
-                                    alt="Repair"
-                                    style={{
-                                      borderRadius: "4px",
-                                      objectFit: "cover",
-                                      width: "100px",
-                                      height: "100px",
-                                    }}
-                                  />
-                                )}
-                              </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {JSON.parse(request.images).length > 0 ? (
+                                    <img
+                                      src={JSON.parse(request.images)[0]}
+                                      alt="Repair"
+                                      style={{
+                                        borderRadius: "4px",
+                                        objectFit: "cover",
+                                        width: "100px",
+                                        height: "100px",
+                                      }}
+                                    />
+                                  ) : (
+                                    <img
+                                      src={RepairImg}
+                                      alt="Repair"
+                                      style={{
+                                        borderRadius: "4px",
+                                        objectFit: "cover",
+                                        width: "100px",
+                                        height: "100px",
+                                      }}
+                                    />
+                                  )}
+                                </TableCell>
 
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {" "}
-                                {request.title}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {" "}
-                                {request.request_created_date}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {request.days_open} days
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {request.request_type !== null
-                                  ? request.request_type
-                                  : "None"}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {request.priority}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {request.assigned_business !== null ||
-                                request.assigned_business !== "null"
-                                  ? request.assigned_business
-                                  : "None"}
-                              </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {" "}
+                                  {request.title}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {" "}
+                                  {request.request_created_date}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {request.days_open} days
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {request.request_type !== null
+                                    ? request.request_type
+                                    : "None"}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {request.priority}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {request.assigned_business !== null ||
+                                  request.assigned_business !== "null"
+                                    ? request.assigned_business
+                                    : "None"}
+                                </TableCell>
 
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {request.scheduled_date !== null &&
-                                request.scheduled_date !== "null"
-                                  ? request.scheduled_date
-                                  : "Not Scheduled"}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {request.scheduled_time !== null &&
-                                request.scheduled_time !== "null"
-                                  ? request.scheduled_time.split(" ")[0]
-                                  : "Not Scheduled"}
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {request.scheduled_date !== null &&
+                                  request.scheduled_date !== "null"
+                                    ? request.scheduled_date
+                                    : "Not Scheduled"}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {request.scheduled_time !== null &&
+                                  request.scheduled_time !== "null"
+                                    ? request.scheduled_time.split(" ")[0]
+                                    : "Not Scheduled"}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </div>
                   ) : (
                     <Row className="m-3">
                       <div className="m-3">
