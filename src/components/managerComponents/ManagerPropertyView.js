@@ -301,8 +301,7 @@ function ManagerPropertyView(props) {
     property_details.rentalInfo.forEach((rental) => {
       if (
         rental.rental_status === "ACTIVE" ||
-        rental.rental_status === "PROCESSING" ||
-        rental.rental_status === "REFUSED"
+        rental.rental_status === "PROCESSING"
       ) {
         setSelectedAgreement(rental);
       }
