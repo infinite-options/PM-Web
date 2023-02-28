@@ -103,7 +103,7 @@ function ManagerTenantAgreement(props) {
   };
 
   const loadAgreement = () => {
-    // console.log(agreement);
+    console.log(agreement);
     // setOldAgreement(agreement);
     setTenantID(agreement.tenant_id);
     setStartDate(agreement.lease_start);
@@ -274,26 +274,48 @@ function ManagerTenantAgreement(props) {
         const update_application = await put("/applications", request_body);
         // console.log(update_application);
       }
-
-      const newAgreement = {
-        rental_property_id: property.property_uid,
-        lease_start: startDate,
-        lease_end: endDate,
-        rental_status: rentalStatus,
-        rent_payments: JSON.stringify(feeState),
-        available_topay: available,
-        due_by: dueDate,
-        late_by: lateAfter,
-        late_fee: lateFee,
-        perDay_late_fee: lateFeePer,
-        assigned_contacts: JSON.stringify(contactState[0]),
-        adults: JSON.stringify(adults),
-        children: JSON.stringify(children),
-        pets: JSON.stringify(pets),
-        vehicles: JSON.stringify(vehicles),
-        referred: JSON.stringify(referred),
-        effective_date: effectiveDate,
-      };
+      let newAgreement = {};
+      if (rentalStatus === "REFUSED") {
+        newAgreement = {
+          rental_property_id: property.property_uid,
+          lease_start: startDate,
+          lease_end: endDate,
+          rental_status: "PROCESSING",
+          rent_payments: JSON.stringify(feeState),
+          available_topay: available,
+          due_by: dueDate,
+          late_by: lateAfter,
+          late_fee: lateFee,
+          perDay_late_fee: lateFeePer,
+          assigned_contacts: JSON.stringify(contactState[0]),
+          adults: JSON.stringify(adults),
+          children: JSON.stringify(children),
+          pets: JSON.stringify(pets),
+          vehicles: JSON.stringify(vehicles),
+          referred: JSON.stringify(referred),
+          effective_date: effectiveDate,
+        };
+      } else {
+        newAgreement = {
+          rental_property_id: property.property_uid,
+          lease_start: startDate,
+          lease_end: endDate,
+          rental_status: rentalStatus,
+          rent_payments: JSON.stringify(feeState),
+          available_topay: available,
+          due_by: dueDate,
+          late_by: lateAfter,
+          late_fee: lateFee,
+          perDay_late_fee: lateFeePer,
+          assigned_contacts: JSON.stringify(contactState[0]),
+          adults: JSON.stringify(adults),
+          children: JSON.stringify(children),
+          pets: JSON.stringify(pets),
+          vehicles: JSON.stringify(vehicles),
+          referred: JSON.stringify(referred),
+          effective_date: effectiveDate,
+        };
+      }
 
       // console.log(newAgreement);
       const newFiles = [...files];
@@ -1242,7 +1264,9 @@ function ManagerTenantAgreement(props) {
                     acceptedTenantApplications[0].application_status !==
                       "LEASE EXTENSION" &&
                     acceptedTenantApplications[0].application_status !==
-                      "TENANT LEASE EXTENSION"
+                      "TENANT LEASE EXTENSION" &&
+                    acceptedTenantApplications[0].application_status !==
+                      "REFUSED"
                   }
                 >
                   Review Changes to the Lease

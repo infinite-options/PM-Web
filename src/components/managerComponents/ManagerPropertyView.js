@@ -298,7 +298,8 @@ function ManagerPropertyView(props) {
     property_details.rentalInfo.forEach((rental) => {
       if (
         rental.rental_status === "ACTIVE" ||
-        rental.rental_status === "PROCESSING"
+        rental.rental_status === "PROCESSING" ||
+        rental.rental_status === "REFUSED"
       ) {
         setSelectedAgreement(rental);
       }
@@ -318,7 +319,8 @@ function ManagerPropertyView(props) {
         application.application_status === "PM END EARLY" ||
         application.application_status === "TENANT END EARLY" ||
         application.application_status === "LEASE EXTENSION" ||
-        application.application_status === "TENANT LEASE EXTENSION"
+        application.application_status === "TENANT LEASE EXTENSION" ||
+        application.application_status === "REFUSED"
       ) {
         setAcceptedTenantApplications([application]);
       }
