@@ -480,6 +480,7 @@ function ManagerTenantExtendedAgreementView(props) {
                   <TableRow>
                     <TableCell>Lease Start</TableCell>
                     <TableCell>Lease End</TableCell>
+                    <TableCell>Status</TableCell>
                     <TableCell>Rent Due</TableCell>
                     <TableCell>Late Fees After (days)</TableCell>
                     <TableCell>Late Fee (one-time)</TableCell>
@@ -488,14 +489,12 @@ function ManagerTenantExtendedAgreementView(props) {
                 </TableHead>
                 <TableBody>
                   <TableRow>
-                    <TableCell>{agreement.lease_start}</TableCell>
-
+                    <TableCell>{agreement.lease_start}</TableCell>{" "}
                     <TableCell>{agreement.lease_end}</TableCell>
-
+                    <TableCell>{agreement.rental_status}</TableCell>
                     <TableCell>
                       {`${ordinal_suffix_of(agreement.due_by)} of the month`}
                     </TableCell>
-
                     <TableCell>{agreement.late_by} days</TableCell>
                     <TableCell> ${agreement.late_fee}</TableCell>
                     <TableCell> ${agreement.perDay_late_fee}</TableCell>

@@ -109,7 +109,16 @@ function ManagerTenantApplications(props) {
   const onCancel = () => {
     setShowDialog(false);
   };
-
+  const rejectdialog = (application) => {
+    const selected_applications = newApplications.filter(
+      (a) => a.application_selected
+    );
+    if (selected_applications.length === 0) {
+      alert("Please select at least one application");
+      return;
+    }
+    setShowDialog(true);
+  };
   const toggleApplications = (application) => {
     const selected = [...applications];
     const index = selected.findIndex(
@@ -391,7 +400,7 @@ function ManagerTenantApplications(props) {
               <Col className="d-flex justify-content-evenly">
                 <Button
                   style={redPillButton}
-                  onClick={() => setShowDialog(true)}
+                  onClick={rejectdialog}
                   // hidden={forwardedApplications.length > 0}
                 >
                   Reject Application
