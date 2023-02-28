@@ -887,6 +887,13 @@ function ManagerPropertyForm(props) {
           >
             <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
           </div>
+          {showSpinner ? (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
+            </div>
+          ) : (
+            ""
+          )}
           <div className="text-center my-5">
             <Button
               variant="outline-primary"
