@@ -30,9 +30,12 @@ import { post, put } from "../../utils/api";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
-      padding: "6px 6px 6px 6px",
+      padding: "2px 2px",
       border: "0.5px solid grey ",
+      wordBreak: "break-word",
     },
+    width: "100%",
+    tableLayout: "fixed",
   },
 });
 function ManagerPropertyForm(props) {
@@ -887,6 +890,13 @@ function ManagerPropertyForm(props) {
           >
             <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
           </div>
+          {showSpinner ? (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
+            </div>
+          ) : (
+            ""
+          )}
           <div className="text-center my-5">
             <Button
               variant="outline-primary"

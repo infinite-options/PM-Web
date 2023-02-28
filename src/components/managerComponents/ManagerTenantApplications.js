@@ -18,9 +18,12 @@ import { get, put } from "../../utils/api";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
-      padding: "6px 6px 6px 6px",
+      padding: "2px 2px",
       border: "0.5px solid grey ",
+      wordBreak: "break-word",
     },
+    width: "100%",
+    tableLayout: "fixed",
   },
 });
 function ManagerTenantApplications(props) {
