@@ -687,7 +687,7 @@ function UpdateConfirmDialog(props) {
               ""
             )}
 
-            {oldAgreement.length !== 0 && updatedAgreement.length !== 0 ? (
+            {/* {oldAgreement.length !== 0 && updatedAgreement.length !== 0 ? (
               <Row className="m-3">
                 <h5 style={mediumBold}>Payments Summary</h5>
                 {updatedAgreement.rent_payments.length > 0 ? (
@@ -788,7 +788,7 @@ function UpdateConfirmDialog(props) {
               </Row>
             ) : (
               ""
-            )}
+            )} */}
             {oldAgreement.length !== 0 && updatedAgreement.length !== 0 ? (
               <Row className="m-3">
                 <h5 style={mediumBold}>Lease Documents</h5>
