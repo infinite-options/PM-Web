@@ -381,9 +381,7 @@ function ManagerTenantApplications(props) {
           {applications.some(
             (app) =>
               app.application_status === "RENTED" ||
-              app.application_status === "FORWARDED" ||
-              app.application_status === "LEASE EXTENSION" ||
-              app.application_status === "TENANT LEASE EXTENSION"
+              app.application_status === "FORWARDED"
           ) ? (
             <Row></Row>
           ) : (
