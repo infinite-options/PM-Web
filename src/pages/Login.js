@@ -27,12 +27,12 @@ function Login(props) {
     }
   }, []);
   const submitForm = async () => {
+    setShowSpinner(true);
     if (email === "" || password === "") {
       setErrorMessage("Please fill out all fields");
       return;
     }
 
-    setShowSpinner(true);
     const user = {
       email: email,
       password: password,
@@ -40,6 +40,7 @@ function Login(props) {
     const response = await post("/login", user);
     if (response.code !== 200) {
       setErrorMessage(response.message);
+      setShowSpinner(false);
       return;
       // add validation
     }

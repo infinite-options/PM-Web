@@ -26,6 +26,7 @@ const useStyles = makeStyles({
       padding: "2px 2px",
       border: "0.5px solid grey ",
       wordBreak: "break-word",
+      fontSize: "16px",
     },
     width: "100%",
     tableLayout: "fixed",
