@@ -38,7 +38,7 @@ import {
   bluePillButton,
   redPillButton,
 } from "../../utils/styles";
-import { ordinal_suffix_of } from "../../utils/helper";
+import { ordinal_suffix_of, days } from "../../utils/helper";
 import { get, put, post } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
 
@@ -228,11 +228,6 @@ function TenantPropertyView(props) {
     setImageSrc(null);
   };
 
-  const days = (date_1, date_2) => {
-    let difference = date_2.getTime() - date_1.getTime();
-    let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
-    return TotalDays;
-  };
   const extendLease = async () => {
     // console.log("Extending Lease");
     setShowSpinner(true);
@@ -1147,7 +1142,9 @@ function TenantPropertyView(props) {
                                   <Col className="d-flex justify-content-center align-items-center p-0 m-0">
                                     <img
                                       src={`${
-                                        applianceState[appliance]["images"][0]
+                                        applianceState[0][appliance][
+                                          "images"
+                                        ][0]
                                       }?${Date.now()}`}
                                       style={{
                                         borderRadius: "4px",

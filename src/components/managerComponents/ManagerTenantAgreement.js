@@ -16,11 +16,13 @@ import ManagerTenantRentPayments from "./ManagerTenantRentPayments";
 import ManagerFooter from "./ManagerFooter";
 import SideBar from "./SideBar";
 import UpdateConfirmDialog from "./UpdateConfirmDialog";
+import DocumentsUploadPost from "../DocumentsUploadPost";
 import ArrowDown from "../../icons/ArrowDown.svg";
 import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import { put, post } from "../../utils/api";
+import { days } from "../../utils/helper";
 import {
   small,
   hidden,
@@ -33,7 +35,6 @@ import {
   subHeading,
   gray,
 } from "../../utils/styles";
-import DocumentsUploadPost from "../DocumentsUploadPost";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -57,7 +58,7 @@ function ManagerTenantAgreement(props) {
     acceptedTenantApplications,
     setAcceptedTenantApplications,
   } = props;
-  // console.log("here", acceptedTenantApplications[0]);
+  console.log("here", acceptedTenantApplications[0]);
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
@@ -170,8 +171,10 @@ function ManagerTenantAgreement(props) {
     }
   }, [agreement]);
 
+  // save
   const save = async () => {
     setShowSpinner(true);
+    // update properties table if change in rent or deposit
     for (let i = 0; i < feeState.length; i++) {
       if (feeState[i]["fee_name"] === "Rent") {
         if (
@@ -218,6 +221,7 @@ function ManagerTenantAgreement(props) {
         }
       }
     }
+    // lease status is processing to active
     if (agreement.rental_status === "PROCESSING") {
       // console.log(lateFee);
       const newAgreement = {
@@ -264,20 +268,28 @@ function ManagerTenantAgreement(props) {
 
       navigate("../manager");
     } else {
-      // console.log(agreement.linked_application_id);
-      for (const application of JSON.parse(agreement.linked_application_id)) {
-        // console.log(application);
+      // lease status is not PROCESSING
+      console.log(
+        acceptedTenantApplications.map(
+          (application) => application.application_uid
+        )
+      );
+      for (const application of acceptedTenantApplications.map(
+        (application) => application.application_uid
+      )) {
+        console.log(application);
 
         const request_body = {
           application_uid: application,
           message: "Lease details forwarded for review",
           application_status: "FORWARDED",
         };
-        // console.log(request_body)
+        console.log(request_body);
         const update_application = await put("/applications", request_body);
         // console.log(update_application);
       }
       let newAgreement = {};
+      // if rental status is REFUSED
       if (rentalStatus === "REFUSED") {
         newAgreement = {
           rental_property_id: property.property_uid,
@@ -320,7 +332,15 @@ function ManagerTenantAgreement(props) {
         };
       }
 
-      // console.log(newAgreement);
+      console.log(newAgreement);
+      newAgreement.linked_application_id = JSON.stringify(
+        acceptedTenantApplications.map(
+          (application) => application.application_uid
+        )
+      );
+      newAgreement.tenant_id = JSON.stringify(
+        acceptedTenantApplications.map((application) => application.tenant_id)
+      );
       const newFiles = [...files];
 
       for (let i = 0; i < newFiles.length; i++) {
@@ -337,7 +357,7 @@ function ManagerTenantAgreement(props) {
 
       // console.log("in if");
       newAgreement.rental_uid = agreement.rental_uid;
-      // console.log(newAgreement);
+      console.log(newAgreement);
       const response = await put(`/rentals`, newAgreement, null, newFiles);
 
       setShowSpinner(false);
@@ -512,11 +532,6 @@ function ManagerTenantAgreement(props) {
     setShowSpinner(false);
     back();
   };
-  const days = (date_1, date_2) => {
-    let difference = date_2.getTime() - date_1.getTime();
-    let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
-    return TotalDays;
-  };
 
   const filterAgreement = () => {
     if (effectiveDate === "") {
@@ -552,6 +567,8 @@ function ManagerTenantAgreement(props) {
     setUpdatedAgreement(up);
     setShowDialog(true);
   };
+
+  // on lease renewal
   const renewLease = async () => {
     if (startDate === "" || endDate === "") {
       setErrorMessage("Please fill out all fields");
@@ -622,17 +639,20 @@ function ManagerTenantAgreement(props) {
         }
       }
     }
+    // if refused or processing and change in start date
     if (rentalStatus === "REFUSED" || rentalStatus === "PROCESSING") {
       // console.log(agreement.linked_application_id);
-      for (const application of JSON.parse(agreement.linked_application_id)) {
-        // console.log(application);
+      for (const application of acceptedTenantApplications.map(
+        (application) => application.application_uid
+      )) {
+        console.log(application);
 
         const request_body = {
           application_uid: application,
           message: "Lease details forwarded for review",
           application_status: "FORWARDED",
         };
-        // console.log(request_body)
+        console.log(request_body);
         const update_application = await put("/applications", request_body);
       }
       let newAgreement = {
@@ -654,7 +674,7 @@ function ManagerTenantAgreement(props) {
         referred: JSON.stringify(referred),
         effective_date: effectiveDate,
       };
-      // console.log(newAgreement);
+      console.log(newAgreement);
       const newFiles = [...files];
 
       for (let i = 0; i < newFiles.length; i++) {
@@ -668,7 +688,14 @@ function ManagerTenantAgreement(props) {
         delete newFiles[i].file;
       }
       newAgreement.documents = JSON.stringify(newFiles);
-
+      newAgreement.linked_application_id = JSON.stringify(
+        acceptedTenantApplications.map(
+          (application) => application.application_uid
+        )
+      );
+      newAgreement.tenant_id = JSON.stringify(
+        acceptedTenantApplications.map((application) => application.tenant_id)
+      );
       // console.log("in if");
       newAgreement.rental_uid = agreement.rental_uid;
       // console.log(newAgreement);
@@ -678,6 +705,7 @@ function ManagerTenantAgreement(props) {
 
       navigate("../manager");
     } else {
+      // full renewal
       const newAgreement = {
         rental_property_id: property.property_uid,
         tenant_id: null,
@@ -720,35 +748,52 @@ function ManagerTenantAgreement(props) {
         null,
         files
       );
-      const extendObject = {
-        application_status: "LEASE EXTENSION",
-        property_uid: property.property_uid,
-        message: "Requesting to Extend Lease",
-      };
       let apps = property.applications.filter(
         (a) => a.application_status === "RENTED"
       );
-      // console.log(property.applications);
-      extendObject.application_uid =
-        apps.length > 0 ? apps[0].application_uid : null;
-      // console.log(apps);
+      let extendObject = {};
+      if (
+        apps[0].application_uid ==
+        acceptedTenantApplications.map(
+          (application) => application.application_uid
+        )
+      ) {
+        extendObject = {
+          application_status: "LEASE EXTENSION",
+          property_uid: property.property_uid,
+          message: "Requesting to Extend Lease",
+        };
+        extendObject.application_uid =
+          apps.length > 0 ? apps[0].application_uid : null;
+        const newMessage = {
+          sender_name: property.managerInfo.manager_business_name,
+          sender_email: property.managerInfo.manager_email,
+          sender_phone: property.managerInfo.manager_phone_number,
+          message_subject: "Extend Lease",
+          message_details: "PM has started the extend lease process",
+          message_created_by: property.managerInfo.manager_id,
+          user_messaged: property.rentalInfo[0].tenant_id,
+          message_status: "PENDING",
+          receiver_email: property.rentalInfo[0].tenant_email,
+        };
+        // console.log(newMessage);
+        const responseMsg = await post("/message", newMessage);
+      } else {
+        extendObject = {
+          application_status: "FORWARDED",
+          property_uid: property.property_uid,
+          message: "Lease details forwarded for review",
+        };
+        extendObject.application_uid = acceptedTenantApplications.map(
+          (application) => application.application_uid
+        );
+      }
+
+      console.log(extendObject);
       if (apps.length > 0) {
         const response6 = await put("/extendLease", extendObject);
       }
 
-      const newMessage = {
-        sender_name: property.managerInfo.manager_business_name,
-        sender_email: property.managerInfo.manager_email,
-        sender_phone: property.managerInfo.manager_phone_number,
-        message_subject: "Extend Lease",
-        message_details: "PM has started the extend lease process",
-        message_created_by: property.managerInfo.manager_id,
-        user_messaged: property.rentalInfo[0].tenant_id,
-        message_status: "PENDING",
-        receiver_email: property.rentalInfo[0].tenant_email,
-      };
-      // console.log(newMessage);
-      const responseMsg = await post("/message", newMessage);
       setShowSpinner(false);
       back();
     }
@@ -1321,18 +1366,18 @@ function ManagerTenantAgreement(props) {
                   // onClick={save}
                   onClick={filterAgreement}
                   on
-                  hidden={
-                    acceptedTenantApplications[0].application_status !==
-                      "RENTED" &&
-                    acceptedTenantApplications[0].application_status !==
-                      "FORWARDED" &&
-                    acceptedTenantApplications[0].application_status !==
-                      "LEASE EXTENSION" &&
-                    acceptedTenantApplications[0].application_status !==
-                      "TENANT LEASE EXTENSION" &&
-                    acceptedTenantApplications[0].application_status !==
-                      "REFUSED"
-                  }
+                  // hidden={
+                  //   acceptedTenantApplications[0].application_status !==
+                  //     "RENTED" &&
+                  //   acceptedTenantApplications[0].application_status !==
+                  //     "FORWARDED" &&
+                  //   acceptedTenantApplications[0].application_status !==
+                  //     "LEASE EXTENSION" &&
+                  //   acceptedTenantApplications[0].application_status !==
+                  //     "TENANT LEASE EXTENSION" &&
+                  //   acceptedTenantApplications[0].application_status !==
+                  //     "REFUSED"
+                  // }
                 >
                   Review Changes to the Lease
                 </Button>

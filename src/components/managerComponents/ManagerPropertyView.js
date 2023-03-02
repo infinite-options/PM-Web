@@ -22,6 +22,7 @@ import ManagerFooter from "./ManagerFooter";
 import ImageModal from "../ImageModal";
 import ManagerCreateExpense from "./ManagerCreateExpense";
 import CreateRevenue from "../CreateRevenue";
+import ManagerTenantRefusedAgreementView from "./ManagerTenantRefusedAgreementView";
 import ManagerTenantApplications from "./ManagerTenantApplications";
 import ManagerTenantProfileView from "./ManagerTenantProfileView";
 import PropertyManagerDocs from "./PropertyManagerDocs";
@@ -34,6 +35,7 @@ import ConfirmDialog from "../ConfirmDialog";
 import ManagerRepairRequest from "./ManagerRepairRequest";
 import ManagerPropertyForm from "./ManagerPropertyForm";
 import ManagerTenantAgreement from "./ManagerTenantAgreement";
+import ManagerCashflow from "./ManagerCashflow";
 import SideBar from "./SideBar";
 import EditIconNew from "../../icons/EditIconNew.svg";
 import AddIcon from "../../icons/AddIcon.svg";
@@ -43,9 +45,8 @@ import PropertyIcon from "../../icons/PropertyIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import { green, red } from "../../utils/styles";
 import { get, put } from "../../utils/api";
+import { days } from "../../utils/helper";
 import "react-multi-carousel/lib/styles.css";
-import ManagerCashflow from "./ManagerCashflow";
-
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -206,7 +207,7 @@ function ManagerPropertyView(props) {
   const [showTenantAgreementEdit, setShowTenantAgreementEdit] = useState(false);
   const [selectedContract, setSelectedContract] = useState(null);
   const [selectedAgreement, setSelectedAgreement] = useState(null);
-
+  const [refusedAgreement, setRefusedAgreement] = useState(null);
   const [extendedAgreement, setExtendedAgreement] = useState(null);
   const [acceptedTenantApplications, setAcceptedTenantApplications] = useState(
     []
@@ -220,11 +221,6 @@ function ManagerPropertyView(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
 
-  const days = (date_1, date_2) => {
-    let difference = date_2.getTime() - date_1.getTime();
-    let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
-    return TotalDays;
-  };
   const showImage = (src) => {
     setOpenImage(true);
     setImageSrc(src);
@@ -320,9 +316,27 @@ function ManagerPropertyView(props) {
     });
     property_details.rentalInfo.forEach((rental) => {
       if (
+        rental.rental_status === "REFUSED" &&
+        property_details.rentalInfo.some(
+          (uid) => uid.rental_status == "REFUSED"
+        ).linked_application_uid !=
+          property_details.rentalInfo.some(
+            (uid) => uid.rental_status === "ACTIVE"
+          ).linked_application_uid
+      ) {
+        setRefusedAgreement(rental);
+      }
+    });
+    property_details.rentalInfo.forEach((rental) => {
+      if (
         rental.rental_status === "PENDING" ||
         rental.rental_status === "TENANT APPROVED" ||
-        rental.rental_status === "REFUSED"
+        property_details.rentalInfo.some(
+          (uid) => uid.rental_status === "REFUSED"
+        ).linked_application_uid ==
+          property_details.rentalInfo.some(
+            (uid) => uid.rental_status === "ACTIVE"
+          ).linked_application_uid
       ) {
         setExtendedAgreement(rental);
       }
@@ -1623,6 +1637,7 @@ function ManagerPropertyView(props) {
                     <ManagerTenantApplications
                       property={property}
                       reload={reloadProperty}
+                      agreement={selectedAgreement}
                       createNewTenantAgreement={createNewTenantAgreement}
                       selectTenantApplication={selectTenantApplication}
                       selectedTenantApplication={selectedTenantApplication}
@@ -1667,6 +1682,32 @@ function ManagerPropertyView(props) {
                         property={property}
                         closeAgreement={closeAgreement}
                         selectedAgreement={extendedAgreement}
+                        selectAgreement={selectAgreement}
+                        renewLease={renewLease}
+                        acceptedTenantApplications={acceptedTenantApplications}
+                        setAcceptedTenantApplications={
+                          setAcceptedTenantApplications
+                        }
+                      />
+                    </Row>
+                  </div>
+                ) : (
+                  ""
+                )}
+                {refusedAgreement ? (
+                  <div
+                    className="mx-3 my-3 p-2"
+                    style={{
+                      background: "#E9E9E9 0% 0% no-repeat padding-box",
+                      borderRadius: "10px",
+                      opacity: 1,
+                    }}
+                  >
+                    <Row>
+                      <ManagerTenantRefusedAgreementView
+                        property={property}
+                        closeAgreement={closeAgreement}
+                        selectedAgreement={refusedAgreement}
                         selectAgreement={selectAgreement}
                         renewLease={renewLease}
                         acceptedTenantApplications={acceptedTenantApplications}
