@@ -314,9 +314,16 @@ function ManagerPropertyView(props) {
         setSelectedAgreement(rental);
       }
     });
+    console.log(
+      property_details.rentalInfo.some((uid) => uid.rental_status == "REFUSED")
+        .linked_application_uid !=
+        property_details.rentalInfo.some(
+          (uid) => uid.rental_status === "ACTIVE"
+        ).linked_application_uid
+    );
     property_details.rentalInfo.forEach((rental) => {
       if (
-        rental.rental_status === "REFUSED" &&
+        rental.rental_status === "REFUSED" ||
         property_details.rentalInfo.some(
           (uid) => uid.rental_status == "REFUSED"
         ).linked_application_uid !=
@@ -327,16 +334,18 @@ function ManagerPropertyView(props) {
         setRefusedAgreement(rental);
       }
     });
+
     property_details.rentalInfo.forEach((rental) => {
       if (
         rental.rental_status === "PENDING" ||
         rental.rental_status === "TENANT APPROVED" ||
-        property_details.rentalInfo.some(
-          (uid) => uid.rental_status === "REFUSED"
-        ).linked_application_uid ==
+        (property_details.rentalInfo.length > 1 &&
           property_details.rentalInfo.some(
-            (uid) => uid.rental_status === "ACTIVE"
-          ).linked_application_uid
+            (uid) => uid.rental_status === "REFUSED"
+          ).linked_application_uid ==
+            property_details.rentalInfo.some(
+              (uid) => uid.rental_status === "ACTIVE"
+            ).linked_application_uid)
       ) {
         setExtendedAgreement(rental);
       }
@@ -368,6 +377,9 @@ function ManagerPropertyView(props) {
     // console.log(recent_mr, past_mr);
     setIsLoading(false);
   };
+  console.log("selected", selectedAgreement);
+  console.log("refused", refusedAgreement);
+  console.log("extended", extendedAgreement);
   // console.log(acceptedTenantApplications);
   const headerBack = () => {
     if (editAppliances && editProperty) {
@@ -601,7 +613,9 @@ function ManagerPropertyView(props) {
       <ManagerTenantAgreement
         back={closeAgreement}
         property={property}
-        agreement={selectedAgreement}
+        agreement={
+          selectedAgreement == null ? refusedAgreement : selectedAgreement
+        }
         acceptedTenantApplications={acceptedTenantApplications}
         setAcceptedTenantApplications={setAcceptedTenantApplications}
       />
@@ -1637,7 +1651,11 @@ function ManagerPropertyView(props) {
                     <ManagerTenantApplications
                       property={property}
                       reload={reloadProperty}
-                      agreement={selectedAgreement}
+                      agreement={
+                        selectedAgreement == null
+                          ? refusedAgreement
+                          : selectedAgreement
+                      }
                       createNewTenantAgreement={createNewTenantAgreement}
                       selectTenantApplication={selectTenantApplication}
                       selectedTenantApplication={selectedTenantApplication}
