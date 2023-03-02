@@ -13,6 +13,7 @@ import * as ReactBootStrap from "react-bootstrap";
 import Checkbox from "./Checkbox";
 import ApplianceImages from "./ApplianceImages";
 import ConfirmDialog from "../components/ConfirmDialog";
+import ImageModal from "./ImageModal";
 import AddIcon from "../icons/AddIcon.svg";
 import MinusIcon from "../icons/MinusIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
@@ -62,6 +63,8 @@ function PropertyAppliances(props) {
   const [addApplianceInfo, setAddApplianceInfo] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
+  const [openImage, setOpenImage] = useState(false);
+  const [imageSrc, setImageSrc] = useState(null);
   const toggleAppliance = (appliance) => {
     const newApplianceState = { ...applianceState };
     newApplianceState[appliance]["available"] =
@@ -69,7 +72,14 @@ function PropertyAppliances(props) {
     setApplianceType(appliance);
     setApplianceState(newApplianceState);
   };
-
+  const showImage = (src) => {
+    setOpenImage(true);
+    setImageSrc(src);
+  };
+  const unShowImage = () => {
+    setOpenImage(false);
+    setImageSrc(null);
+  };
   const showApplianceDetail = (appliance) => {
     setApplianceType(appliance);
     setShowDetails(!showDetails);
@@ -290,6 +300,7 @@ function PropertyAppliances(props) {
         onConfirm={removeappliance}
         onCancel={onCancel}
       />
+      <ImageModal src={imageSrc} isOpen={openImage} onCancel={unShowImage} />
       {property !== undefined ? (
         <div>
           <h5 className="mx-3 mt-2">
@@ -608,7 +619,7 @@ function PropertyAppliances(props) {
                           <Row className="d-flex justify-content-center align-items-center ">
                             <Col className="d-flex justify-content-center align-items-center">
                               <img
-                                key={Date.now()}
+                                // key={Date.now()}
                                 src={`${
                                   applianceState[appliance]["images"][0]
                                 }?${Date.now()}`}
@@ -618,6 +629,13 @@ function PropertyAppliances(props) {
                                   width: "50px",
                                   height: "50px",
                                 }}
+                                onClick={() =>
+                                  showImage(
+                                    `${
+                                      applianceState[appliance]["images"][0]
+                                    }?${Date.now()}`
+                                  )
+                                }
                                 alt="Property"
                               />
                             </Col>

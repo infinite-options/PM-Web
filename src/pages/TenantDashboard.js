@@ -23,7 +23,6 @@ import TenantUpcomingPayments from "../components/tenantComponents/TenantUpcomin
 import TenantPaymentHistory from "../components/tenantComponents/TenantPaymentHistory";
 import TenantRepairRequest from "../components/tenantComponents/TenantRepairRequest";
 import ConfirmDialog2 from "../components/ConfirmDialog2";
-import ImageModal from "../components/ImageModal";
 import SearchProperties_Black from "../icons/SearchProperties_Black.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
@@ -75,9 +74,6 @@ export default function TenantDashboard() {
   const [orderApplications, setOrderApplications] = useState("asc");
   const [orderApplicationsBy, setOrderApplicationsBy] = useState("calories");
 
-  const [openImage, setOpenImage] = useState(false);
-  const [imageSrc, setImageSrc] = useState(null);
-
   const [showDialog, setShowDialog] = useState(false);
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
@@ -91,15 +87,6 @@ export default function TenantDashboard() {
   };
   const responsive = {
     showSidebar: width > 1023,
-  };
-
-  const showImage = (src) => {
-    setOpenImage(true);
-    setImageSrc(src);
-  };
-  const unShowImage = () => {
-    setOpenImage(false);
-    setImageSrc(null);
   };
 
   const days = (date_1, date_2) => {
@@ -690,7 +677,6 @@ export default function TenantDashboard() {
 
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
-      <ImageModal src={imageSrc} isOpen={openImage} onCancel={unShowImage} />
       <ConfirmDialog2
         title={"Please Complete your Profile"}
         isOpen={showDialog}
@@ -823,6 +809,17 @@ export default function TenantDashboard() {
                             role="checkbox"
                             tabIndex={-1}
                             key={property.property_uid}
+                            onClick={() => {
+                              navigate(
+                                `/tenantPropertyDetails/${property.property_uid}`,
+                                {
+                                  state: {
+                                    property: property,
+                                    property_uid: property.property_uid,
+                                  },
+                                }
+                              );
+                            }}
                           >
                             <TableCell
                               padding="none"
@@ -841,9 +838,6 @@ export default function TenantDashboard() {
                                     width: "100px",
                                     height: "100px",
                                   }}
-                                  onClick={() =>
-                                    showImage(JSON.parse(property.images)[0])
-                                  }
                                 />
                               ) : (
                                 <img
@@ -859,17 +853,6 @@ export default function TenantDashboard() {
                               )}
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/tenantPropertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property: property,
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -881,17 +864,6 @@ export default function TenantDashboard() {
                               {property.city}, {property.state}
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/tenantPropertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property: property,
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -899,17 +871,6 @@ export default function TenantDashboard() {
                               {property.city}, {property.state}
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/tenantPropertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property: property,
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -917,17 +878,6 @@ export default function TenantDashboard() {
                               {property.zip}
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/tenantPropertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property: property,
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -939,17 +889,6 @@ export default function TenantDashboard() {
                             </TableCell>
 
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/tenantPropertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property: property,
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -958,17 +897,6 @@ export default function TenantDashboard() {
                             </TableCell>
 
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/tenantPropertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property: property,
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -976,17 +904,6 @@ export default function TenantDashboard() {
                               {property.num_beds + "/" + property.num_baths}
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/tenantPropertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property: property,
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -994,17 +911,6 @@ export default function TenantDashboard() {
                               ${property.listed_rent}
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/tenantPropertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property: property,
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -1076,6 +982,9 @@ export default function TenantDashboard() {
                               role="checkbox"
                               tabIndex={-1}
                               key={application.application_uid}
+                              onClick={() =>
+                                goToReviewPropertyLease(application)
+                              }
                             >
                               <TableCell
                                 padding="none"
@@ -1094,11 +1003,6 @@ export default function TenantDashboard() {
                                       width: "100px",
                                       height: "100px",
                                     }}
-                                    onClick={() =>
-                                      showImage(
-                                        JSON.parse(application.images)[0]
-                                      )
-                                    }
                                   />
                                 ) : (
                                   <img
@@ -1114,9 +1018,6 @@ export default function TenantDashboard() {
                                 )}
                               </TableCell>
                               <TableCell
-                                onClick={() =>
-                                  goToReviewPropertyLease(application)
-                                }
                                 padding="none"
                                 size="small"
                                 align="center"
@@ -1128,9 +1029,6 @@ export default function TenantDashboard() {
                                 {application.city}, {application.state}
                               </TableCell>
                               <TableCell
-                                onClick={() =>
-                                  goToReviewPropertyLease(application)
-                                }
                                 padding="none"
                                 size="small"
                                 align="center"
@@ -1138,9 +1036,6 @@ export default function TenantDashboard() {
                                 {application.city}, {application.state}
                               </TableCell>
                               <TableCell
-                                onClick={() =>
-                                  goToReviewPropertyLease(application)
-                                }
                                 padding="none"
                                 size="small"
                                 align="center"
@@ -1148,9 +1043,6 @@ export default function TenantDashboard() {
                                 {application.zip}
                               </TableCell>
                               <TableCell
-                                onClick={() =>
-                                  goToReviewPropertyLease(application)
-                                }
                                 padding="none"
                                 size="small"
                                 align="center"
@@ -1159,9 +1051,6 @@ export default function TenantDashboard() {
                               </TableCell>
 
                               <TableCell
-                                onClick={() =>
-                                  goToReviewPropertyLease(application)
-                                }
                                 padding="none"
                                 size="small"
                                 align="center"
@@ -1170,9 +1059,6 @@ export default function TenantDashboard() {
                               </TableCell>
 
                               <TableCell
-                                onClick={() =>
-                                  goToReviewPropertyLease(application)
-                                }
                                 padding="none"
                                 size="small"
                                 align="center"
@@ -1182,9 +1068,6 @@ export default function TenantDashboard() {
                                   application.num_baths}
                               </TableCell>
                               <TableCell
-                                onClick={() =>
-                                  goToReviewPropertyLease(application)
-                                }
                                 padding="none"
                                 size="small"
                                 align="center"
@@ -1193,9 +1076,6 @@ export default function TenantDashboard() {
                               </TableCell>
 
                               <TableCell
-                                onClick={() =>
-                                  goToReviewPropertyLease(application)
-                                }
                                 padding="none"
                                 size="small"
                                 align="center"

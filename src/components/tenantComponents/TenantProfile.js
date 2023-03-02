@@ -1371,36 +1371,40 @@ function TenantProfile(props) {
                 opacity: 1,
               }}
             >
-              <Row className="mb-4" style={headings}>
-                <div>Current Address</div>
-              </Row>
-              <AddressForm
-                editProfile={editProfile}
-                hideRentingCheckbox="false"
-                state={currentAddressState}
-                selectedState={selectedState}
-                setSelectedState={setSelectedState}
-                diff={diff}
-                setDiff={setDiff}
-                usePreviousAddress={usePreviousAddress}
-                setUsePreviousAddress={setUsePreviousAddress}
-                // previousAddressState={previousAddressState}
-              />
-              {diff > 0 && diff < 24 ? (
-                <div>
-                  <h5 className="mx-2 my-3">Previous Address</h5>
+              <div className="mx-3">
+                <Row className="mb-4" style={headings}>
+                  <div>Current Address</div>
+                </Row>
+                <Row>
                   <AddressForm
                     editProfile={editProfile}
-                    hideRentingCheckbox="true"
-                    errorMessage={errorMessage}
-                    state={previousAddressState}
-                    selectedState={selectedPrevState}
-                    setSelectedState={setSelectedPrevState}
+                    hideRentingCheckbox="false"
+                    state={currentAddressState}
+                    selectedState={selectedState}
+                    setSelectedState={setSelectedState}
+                    diff={diff}
+                    setDiff={setDiff}
+                    usePreviousAddress={usePreviousAddress}
+                    setUsePreviousAddress={setUsePreviousAddress}
+                    // previousAddressState={previousAddressState}
                   />
-                </div>
-              ) : (
-                ""
-              )}
+                  {diff > 0 && diff < 24 ? (
+                    <div>
+                      <h5 className="mx-2 my-3">Previous Address</h5>
+                      <AddressForm
+                        editProfile={editProfile}
+                        hideRentingCheckbox="true"
+                        errorMessage={errorMessage}
+                        state={previousAddressState}
+                        selectedState={selectedPrevState}
+                        setSelectedState={setSelectedPrevState}
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </Row>
+              </div>
             </div>
           ) : (
             <div

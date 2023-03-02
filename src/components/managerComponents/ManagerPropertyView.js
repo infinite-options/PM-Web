@@ -19,8 +19,10 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import Header from "../Header";
 import ManagerFooter from "./ManagerFooter";
+import ImageModal from "../ImageModal";
 import ManagerCreateExpense from "./ManagerCreateExpense";
 import CreateRevenue from "../CreateRevenue";
+import ManagerTenantRefusedAgreementView from "./ManagerTenantRefusedAgreementView";
 import ManagerTenantApplications from "./ManagerTenantApplications";
 import ManagerTenantProfileView from "./ManagerTenantProfileView";
 import PropertyManagerDocs from "./PropertyManagerDocs";
@@ -33,6 +35,7 @@ import ConfirmDialog from "../ConfirmDialog";
 import ManagerRepairRequest from "./ManagerRepairRequest";
 import ManagerPropertyForm from "./ManagerPropertyForm";
 import ManagerTenantAgreement from "./ManagerTenantAgreement";
+import ManagerCashflow from "./ManagerCashflow";
 import SideBar from "./SideBar";
 import EditIconNew from "../../icons/EditIconNew.svg";
 import AddIcon from "../../icons/AddIcon.svg";
@@ -42,9 +45,8 @@ import PropertyIcon from "../../icons/PropertyIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import { green, red } from "../../utils/styles";
 import { get, put } from "../../utils/api";
+import { days } from "../../utils/helper";
 import "react-multi-carousel/lib/styles.css";
-import ManagerCashflow from "./ManagerCashflow";
-
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -72,6 +74,9 @@ function ManagerPropertyView(props) {
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [property, setProperty] = useState({ images: "[]" });
   const [hideEdit, setHideEdit] = useState(true);
+  const [openImage, setOpenImage] = useState(false);
+  const [imageSrc, setImageSrc] = useState(null);
+
   const [editAppliances, setEditAppliances] = useState(false);
   const responsive = {
     superLargeDesktop: {
@@ -202,7 +207,7 @@ function ManagerPropertyView(props) {
   const [showTenantAgreementEdit, setShowTenantAgreementEdit] = useState(false);
   const [selectedContract, setSelectedContract] = useState(null);
   const [selectedAgreement, setSelectedAgreement] = useState(null);
-
+  const [refusedAgreement, setRefusedAgreement] = useState(null);
   const [extendedAgreement, setExtendedAgreement] = useState(null);
   const [acceptedTenantApplications, setAcceptedTenantApplications] = useState(
     []
@@ -216,10 +221,13 @@ function ManagerPropertyView(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
 
-  const days = (date_1, date_2) => {
-    let difference = date_2.getTime() - date_1.getTime();
-    let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
-    return TotalDays;
+  const showImage = (src) => {
+    setOpenImage(true);
+    setImageSrc(src);
+  };
+  const unShowImage = () => {
+    setOpenImage(false);
+    setImageSrc(null);
   };
   const cancelAgreement = async () => {
     const files = JSON.parse(property.images);
@@ -308,9 +316,27 @@ function ManagerPropertyView(props) {
     });
     property_details.rentalInfo.forEach((rental) => {
       if (
+        rental.rental_status === "REFUSED" &&
+        property_details.rentalInfo.some(
+          (uid) => uid.rental_status == "REFUSED"
+        ).linked_application_uid !=
+          property_details.rentalInfo.some(
+            (uid) => uid.rental_status === "ACTIVE"
+          ).linked_application_uid
+      ) {
+        setRefusedAgreement(rental);
+      }
+    });
+    property_details.rentalInfo.forEach((rental) => {
+      if (
         rental.rental_status === "PENDING" ||
         rental.rental_status === "TENANT APPROVED" ||
-        rental.rental_status === "REFUSED"
+        property_details.rentalInfo.some(
+          (uid) => uid.rental_status === "REFUSED"
+        ).linked_application_uid ==
+          property_details.rentalInfo.some(
+            (uid) => uid.rental_status === "ACTIVE"
+          ).linked_application_uid
       ) {
         setExtendedAgreement(rental);
       }
@@ -661,6 +687,11 @@ function ManagerPropertyView(props) {
               />
             ) : (
               <div className="w-100 my-5">
+                <ImageModal
+                  src={imageSrc}
+                  isOpen={openImage}
+                  onCancel={unShowImage}
+                />
                 <Row className=" d-flex align-items-center justify-content-center m-3">
                   {imagesProperty.length === 0 ? (
                     <img
@@ -680,17 +711,19 @@ function ManagerPropertyView(props) {
                       partialVisible={false}
                       // className=" d-flex align-items-center justify-content-center"
                     >
-                      {imagesProperty.map((imagesGroup) => {
+                      {imagesProperty.map((image) => {
                         return (
                           // <div className="d-flex align-items-center justify-content-center">
                           <img
-                            key={Date.now()}
-                            src={`${imagesGroup}?${Date.now()}`}
+                            // key={Date.now()}
+                            src={`${image}?${Date.now()}`}
+                            // src={image}
                             style={{
                               width: "200px",
                               height: "200px",
                               objectFit: "cover",
                             }}
+                            onClick={() => showImage(`${image}?${Date.now()}`)}
                           />
                           // </div>
                         );
@@ -704,17 +737,21 @@ function ManagerPropertyView(props) {
                       partialVisible={false}
                       className=" d-flex align-items-center justify-content-center"
                     >
-                      {imagesProperty.map((imagesGroup) => {
+                      {imagesProperty.map((image) => {
                         return (
                           <div className="d-flex align-items-center justify-content-center">
                             <img
-                              key={Date.now()}
-                              src={`${imagesGroup}?${Date.now()}`}
+                              // key={Date.now()}
+                              src={`${image}?${Date.now()}`}
+                              // src={image}
                               style={{
                                 width: "200px",
                                 height: "200px",
                                 objectFit: "cover",
                               }}
+                              onClick={() =>
+                                showImage(`${image}?${Date.now()}`)
+                              }
                             />
                           </div>
                         );
@@ -823,16 +860,16 @@ function ManagerPropertyView(props) {
                             >
                               {JSON.parse(property.images).length > 0 ? (
                                 <img
-                                  key={Date.now()}
+                                  // key={Date.now()}
                                   src={`${
                                     JSON.parse(property.images)[0]
                                   }?${Date.now()}`}
                                   alt="Property"
                                   style={{
                                     borderRadius: "4px",
-                                    objectFit: "cover",
-                                    width: "100px",
-                                    height: "100px",
+                                    objectFit: "contain",
+                                    maxWidth: "80px",
+                                    maxHeight: "80px",
                                   }}
                                 />
                               ) : (
@@ -841,9 +878,9 @@ function ManagerPropertyView(props) {
                                   alt="Property"
                                   style={{
                                     borderRadius: "4px",
-                                    objectFit: "cover",
-                                    width: "100px",
-                                    height: "100px",
+                                    objectFit: "contain",
+                                    maxWidth: "80px",
+                                    maxHeight: "80px",
                                   }}
                                 />
                               )}
@@ -1282,54 +1319,137 @@ function ManagerPropertyView(props) {
                               ] == true ||
                                 applianceState[0][appliance]["available"] ==
                                   "True" ? (
-                                <TableRow
-                                  onClick={
-                                    property.management_status === "ACCEPTED"
-                                      ? () => {
-                                          window.scrollTo(0, 1000);
-                                          setEditProperty(true);
-                                        }
-                                      : () => {}
-                                  }
-                                >
-                                  <TableCell>{appliance}</TableCell>
-                                  <TableCell>
+                                <TableRow>
+                                  <TableCell
+                                    onClick={
+                                      property.management_status === "ACCEPTED"
+                                        ? () => {
+                                            window.scrollTo(0, 1000);
+                                            setEditProperty(true);
+                                          }
+                                        : () => {}
+                                    }
+                                  >
+                                    {appliance}
+                                  </TableCell>
+                                  <TableCell
+                                    onClick={
+                                      property.management_status === "ACCEPTED"
+                                        ? () => {
+                                            window.scrollTo(0, 1000);
+                                            setEditProperty(true);
+                                          }
+                                        : () => {}
+                                    }
+                                  >
                                     {applianceState[0][appliance]["name"]}
                                   </TableCell>
-                                  <TableCell>
+                                  <TableCell
+                                    onClick={
+                                      property.management_status === "ACCEPTED"
+                                        ? () => {
+                                            window.scrollTo(0, 1000);
+                                            setEditProperty(true);
+                                          }
+                                        : () => {}
+                                    }
+                                  >
                                     {
                                       applianceState[0][appliance][
                                         "purchased_from"
                                       ]
                                     }
                                   </TableCell>
-                                  <TableCell>
+                                  <TableCell
+                                    onClick={
+                                      property.management_status === "ACCEPTED"
+                                        ? () => {
+                                            window.scrollTo(0, 1000);
+                                            setEditProperty(true);
+                                          }
+                                        : () => {}
+                                    }
+                                  >
                                     {applianceState[0][appliance]["purchased"]}
                                   </TableCell>
-                                  <TableCell>
+                                  <TableCell
+                                    onClick={
+                                      property.management_status === "ACCEPTED"
+                                        ? () => {
+                                            window.scrollTo(0, 1000);
+                                            setEditProperty(true);
+                                          }
+                                        : () => {}
+                                    }
+                                  >
                                     {
                                       applianceState[0][appliance][
                                         "purchased_order"
                                       ]
                                     }
                                   </TableCell>
-                                  <TableCell>
+                                  <TableCell
+                                    onClick={
+                                      property.management_status === "ACCEPTED"
+                                        ? () => {
+                                            window.scrollTo(0, 1000);
+                                            setEditProperty(true);
+                                          }
+                                        : () => {}
+                                    }
+                                  >
                                     {applianceState[0][appliance]["installed"]}
                                   </TableCell>
-                                  <TableCell>
+                                  <TableCell
+                                    onClick={
+                                      property.management_status === "ACCEPTED"
+                                        ? () => {
+                                            window.scrollTo(0, 1000);
+                                            setEditProperty(true);
+                                          }
+                                        : () => {}
+                                    }
+                                  >
                                     {applianceState[0][appliance]["serial_num"]}
                                   </TableCell>
-                                  <TableCell>
+                                  <TableCell
+                                    onClick={
+                                      property.management_status === "ACCEPTED"
+                                        ? () => {
+                                            window.scrollTo(0, 1000);
+                                            setEditProperty(true);
+                                          }
+                                        : () => {}
+                                    }
+                                  >
                                     {applianceState[0][appliance]["model_num"]}
                                   </TableCell>
-                                  <TableCell>
+                                  <TableCell
+                                    onClick={
+                                      property.management_status === "ACCEPTED"
+                                        ? () => {
+                                            window.scrollTo(0, 1000);
+                                            setEditProperty(true);
+                                          }
+                                        : () => {}
+                                    }
+                                  >
                                     {
                                       applianceState[0][appliance][
                                         "warranty_till"
                                       ]
                                     }
                                   </TableCell>
-                                  <TableCell>
+                                  <TableCell
+                                    onClick={
+                                      property.management_status === "ACCEPTED"
+                                        ? () => {
+                                            window.scrollTo(0, 1000);
+                                            setEditProperty(true);
+                                          }
+                                        : () => {}
+                                    }
+                                  >
                                     {
                                       applianceState[0][appliance][
                                         "warranty_info"
@@ -1345,12 +1465,21 @@ function ManagerPropertyView(props) {
                                       <Row className="d-flex justify-content-center align-items-center p-1">
                                         <Col className="d-flex justify-content-center align-items-center p-0 m-0">
                                           <img
-                                            key={Date.now()}
+                                            // key={Date.now()}
                                             src={`${
                                               applianceState[0][appliance][
                                                 "images"
                                               ][0]
                                             }?${Date.now()}`}
+                                            onClick={() =>
+                                              showImage(
+                                                `${
+                                                  applianceState[0][appliance][
+                                                    "images"
+                                                  ][0]
+                                                }?${Date.now()}`
+                                              )
+                                            }
                                             style={{
                                               borderRadius: "4px",
                                               objectFit: "contain",
@@ -1508,6 +1637,7 @@ function ManagerPropertyView(props) {
                     <ManagerTenantApplications
                       property={property}
                       reload={reloadProperty}
+                      agreement={selectedAgreement}
                       createNewTenantAgreement={createNewTenantAgreement}
                       selectTenantApplication={selectTenantApplication}
                       selectedTenantApplication={selectedTenantApplication}
@@ -1552,6 +1682,32 @@ function ManagerPropertyView(props) {
                         property={property}
                         closeAgreement={closeAgreement}
                         selectedAgreement={extendedAgreement}
+                        selectAgreement={selectAgreement}
+                        renewLease={renewLease}
+                        acceptedTenantApplications={acceptedTenantApplications}
+                        setAcceptedTenantApplications={
+                          setAcceptedTenantApplications
+                        }
+                      />
+                    </Row>
+                  </div>
+                ) : (
+                  ""
+                )}
+                {refusedAgreement ? (
+                  <div
+                    className="mx-3 my-3 p-2"
+                    style={{
+                      background: "#E9E9E9 0% 0% no-repeat padding-box",
+                      borderRadius: "10px",
+                      opacity: 1,
+                    }}
+                  >
+                    <Row>
+                      <ManagerTenantRefusedAgreementView
+                        property={property}
+                        closeAgreement={closeAgreement}
+                        selectedAgreement={refusedAgreement}
                         selectAgreement={selectAgreement}
                         renewLease={renewLease}
                         acceptedTenantApplications={acceptedTenantApplications}

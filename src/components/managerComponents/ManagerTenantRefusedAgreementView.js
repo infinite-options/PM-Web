@@ -41,7 +41,7 @@ const useStyles = makeStyles({
     tableLayout: "fixed",
   },
 });
-function ManagerTenantAgreementView(props) {
+function ManagerTenantRefusedAgreementView(props) {
   const navigate = useNavigate();
   const classes = useStyles();
   const {
@@ -51,7 +51,6 @@ function ManagerTenantAgreementView(props) {
     acceptedTenantApplications,
     selectAgreement,
     closeAgreement,
-    extendedAgreement,
   } = props;
   // console.log(property);
   const { userData, refresh } = useContext(AppContext);
@@ -100,40 +99,40 @@ function ManagerTenantAgreementView(props) {
     // loadAgreement(agg);
     let tenant = [];
     let ti = {};
-    console.log("selectedagg", agg);
-    if (agg !== null) {
-      if (agg.tenant_first_name.includes(",")) {
-        let tenant_ids = agg.tenant_id.split(",");
-        let tenant_fns = agg.tenant_first_name.split(",");
-        let tenant_lns = agg.tenant_last_name.split(",");
-        let tenant_emails = agg.tenant_email.split(",");
-        let tenant_phones = agg.tenant_phone_number.split(",");
-        for (let i = 0; i < tenant_fns.length; i++) {
-          ti["tenantID"] = tenant_ids[i];
-          ti["tenantFirstName"] = tenant_fns[i];
-          ti["tenantLastName"] = tenant_lns[i];
-          ti["tenantEmail"] = tenant_emails[i];
-          ti["tenantPhoneNumber"] = tenant_phones[i];
-          tenant.push(ti);
-          ti = {};
-        }
-      } else {
-        ti = {
-          tenantID: agg.tenant_id,
-          tenantFirstName: agg.tenant_first_name,
-          tenantLastName: agg.tenant_last_name,
-          tenantEmail: agg.tenant_email,
-          tenantPhoneNumber: agg.tenant_phone_number,
-        };
+    // console.log("selectedagg", agg);
+
+    if (agg.tenant_first_name.includes(",")) {
+      let tenant_ids = agg.tenant_id.split(",");
+      let tenant_fns = agg.tenant_first_name.split(",");
+      let tenant_lns = agg.tenant_last_name.split(",");
+      let tenant_emails = agg.tenant_email.split(",");
+      let tenant_phones = agg.tenant_phone_number.split(",");
+      for (let i = 0; i < tenant_fns.length; i++) {
+        ti["tenantID"] = tenant_ids[i];
+        ti["tenantFirstName"] = tenant_fns[i];
+        ti["tenantLastName"] = tenant_lns[i];
+        ti["tenantEmail"] = tenant_emails[i];
+        ti["tenantPhoneNumber"] = tenant_phones[i];
         tenant.push(ti);
+        ti = {};
       }
-      setTenantInfo(tenant);
-      setSelectedTenant(tenantInfo);
-      setFeeState(JSON.parse(agg.rent_payments));
-      // contactState[1](JSON.parse(agg.assigned_contacts));
-      setContactState(JSON.parse(agg.assigned_contacts));
-      setFiles(JSON.parse(agg.documents));
+    } else {
+      ti = {
+        tenantID: agg.tenant_id,
+        tenantFirstName: agg.tenant_first_name,
+        tenantLastName: agg.tenant_last_name,
+        tenantEmail: agg.tenant_email,
+        tenantPhoneNumber: agg.tenant_phone_number,
+      };
+      tenant.push(ti);
     }
+
+    setTenantInfo(tenant);
+    setSelectedTenant(tenantInfo);
+    setFeeState(JSON.parse(agg.rent_payments));
+    // contactState[1](JSON.parse(agg.assigned_contacts));
+    setContactState(JSON.parse(agg.assigned_contacts));
+    setFiles(JSON.parse(agg.documents));
 
     let app = property.applications.filter(
       (a) => a.application_status === "TENANT END EARLY"
@@ -362,7 +361,7 @@ function ManagerTenantAgreementView(props) {
             {agreement !== null ? (
               <Row className="m-3">
                 <Col>
-                  <h3>Tenant Info</h3>
+                  <h3>Refused Lease Agreement</h3>
                 </Col>
                 {property.management_status === "ACCEPTED" ||
                 property.management_status === "OWNER END EARLY" ||
@@ -372,12 +371,7 @@ function ManagerTenantAgreementView(props) {
                       src={EditIconNew}
                       alt="Edit Icon"
                       hidden={
-                        extendedAgreement !== null
-                        // Math.floor(
-                        //   (new Date(selectedAgreement.lease_end).getTime() -
-                        //     new Date().getTime()) /
-                        //     (1000 * 60 * 60 * 24)
-                        // ) < 60
+                        selectedAgreement.rental_status === "TENANT APPROVED"
                       }
                       style={{
                         width: "30px",
@@ -396,8 +390,8 @@ function ManagerTenantAgreementView(props) {
               <Col xs={2}></Col>
             )}
           </Row>
-          <Row className="m-3 mb-4">
-            <div style={{ overflow: "scroll" }}>
+          <Row className="m-3 mb-4" style={{ overflow: "scroll" }}>
+            <div>
               <Table
                 responsive="md"
                 classes={{ root: classes.customTable }}
@@ -473,9 +467,9 @@ function ManagerTenantAgreementView(props) {
               </Table>
             </div>
           </Row>
-          <Row className="mb-4 m-3">
+          <Row className="mb-4 m-3" style={{ overflow: "scroll" }}>
             <h5>Lease Details</h5>
-            <div style={{ overflow: "scroll" }}>
+            <div>
               <Table
                 responsive="md"
                 classes={{ root: classes.customTable }}
@@ -486,6 +480,7 @@ function ManagerTenantAgreementView(props) {
                   <TableRow>
                     <TableCell>Lease Start</TableCell>
                     <TableCell>Lease End</TableCell>
+                    <TableCell>Status</TableCell>
                     <TableCell>Rent Due</TableCell>
                     <TableCell>Late Fees After (days)</TableCell>
                     <TableCell>Late Fee (one-time)</TableCell>
@@ -494,14 +489,12 @@ function ManagerTenantAgreementView(props) {
                 </TableHead>
                 <TableBody>
                   <TableRow>
-                    <TableCell>{agreement.lease_start}</TableCell>
-
+                    <TableCell>{agreement.lease_start}</TableCell>{" "}
                     <TableCell>{agreement.lease_end}</TableCell>
-
+                    <TableCell>{agreement.rental_status}</TableCell>
                     <TableCell>
                       {`${ordinal_suffix_of(agreement.due_by)} of the month`}
                     </TableCell>
-
                     <TableCell>{agreement.late_by} days</TableCell>
                     <TableCell> ${agreement.late_fee}</TableCell>
                     <TableCell> ${agreement.perDay_late_fee}</TableCell>
@@ -510,9 +503,10 @@ function ManagerTenantAgreementView(props) {
               </Table>
             </div>
           </Row>
-          <Row className="mb-4 m-3">
+
+          <Row className="mb-4 m-3" style={{ overflow: "scroll" }}>
             <h5>Lease Payments</h5>
-            <div style={{ overflow: "scroll" }}>
+            <div>
               <Table
                 responsive="md"
                 classes={{ root: classes.customTable }}
@@ -569,9 +563,10 @@ function ManagerTenantAgreementView(props) {
               </Table>
             </div>
           </Row>
+
           <Row className="mb-4 m-3" hidden={contactState.length === 0}>
             <h5 style={mediumBold}>Contact Details</h5>
-            <div style={{ overflow: "scroll" }}>
+            <div>
               <Table classes={{ root: classes.customTable }} size="small">
                 <TableHead>
                   <TableRow>
@@ -614,7 +609,7 @@ function ManagerTenantAgreementView(props) {
           <Row className="m-3">
             <h5 style={mediumBold}>Lease Documents</h5>
           </Row>
-          <div className="mx-3" style={{ overflow: "scroll" }}>
+          <div>
             <DocumentsUploadPut
               files={files}
               setFiles={setFiles}
@@ -626,7 +621,7 @@ function ManagerTenantAgreementView(props) {
               id={agreement.rental_uid}
             />
           </div>
-          {/* {pmExtendLease ? (
+          {pmExtendLease ? (
             <div className="my-4">
               <h5 style={mediumBold}>You requested to extend the lease</h5>
               {property.management_status === "ACCEPTED" ||
@@ -655,8 +650,8 @@ function ManagerTenantAgreementView(props) {
             </div>
           ) : (
             ""
-          )} */}
-          {tenantExtendLease && extendedAgreement === null ? (
+          )}
+          {tenantExtendLease && selectedAgreement === null ? (
             <div className="my-4">
               <h5 style={mediumBold}>Tenant Requests to extend the lease</h5>
               {property.management_status === "ACCEPTED" ||
@@ -695,12 +690,9 @@ function ManagerTenantAgreementView(props) {
           ) : (
             ""
           )}
-
-          {(property.management_status === "ACCEPTED" ||
-            property.management_status === "OWNER END EARLY" ||
-            property.management_status === "PM END EARLY") &&
-          pmExtendLease === false &&
-          tenantExtendLease === false ? (
+          {property.management_status === "ACCEPTED" ||
+          property.management_status === "OWNER END EARLY" ||
+          property.management_status === "PM END EARLY" ? (
             Math.floor(
               (new Date(agreement.lease_end).getTime() - new Date().getTime()) /
                 (1000 * 60 * 60 * 24)
@@ -711,8 +703,7 @@ function ManagerTenantAgreementView(props) {
                   agreement === null ||
                   tenantEndEarly ||
                   pmEndEarly ||
-                  tenantExtendLease ||
-                  extendedAgreement !== null
+                  tenantExtendLease
                 }
               >
                 <Col className="d-flex flex-row justify-content-evenly">
@@ -731,7 +722,8 @@ function ManagerTenantAgreementView(props) {
           ) : (
             ""
           )}
-          {terminateLease ? (
+
+          {/* {terminateLease ? (
             <div hidden={agreement === null || tenantEndEarly || pmEndEarly}>
               <Row>
                 <Col className="d-flex flex-row justify-content-evenly">
@@ -782,14 +774,7 @@ function ManagerTenantAgreementView(props) {
               </Row>
             </div>
           ) : (
-            <Row
-              hidden={
-                agreement === null ||
-                tenantEndEarly ||
-                pmEndEarly ||
-                extendedAgreement !== null
-              }
-            >
+            <Row hidden={agreement === null || tenantEndEarly || pmEndEarly}>
               {property.management_status === "ACCEPTED" ||
               property.management_status === "OWNER END EARLY" ||
               property.management_status === "PM END EARLY" ? (
@@ -806,8 +791,9 @@ function ManagerTenantAgreementView(props) {
                 ""
               )}
             </Row>
-          )}
-          {tenantEndEarly ? (
+          )} */}
+
+          {/* {tenantEndEarly ? (
             <div className="my-4">
               <h5 style={mediumBold}>
                 Tenant Requests to end lease early on {agreement.early_end_date}
@@ -838,8 +824,8 @@ function ManagerTenantAgreementView(props) {
             </div>
           ) : (
             ""
-          )}
-          {pmEndEarly ? (
+          )} */}
+          {/* {pmEndEarly ? (
             <div className="my-4 ">
               <h5
                 style={mediumBold}
@@ -848,15 +834,6 @@ function ManagerTenantAgreementView(props) {
                 You requested to end lease early on {agreement.early_end_date}
               </h5>
               <Row className="my-4">
-                {/* <Col className="d-flex flex-row justify-content-evenly">
-                  <Button
-                    style={bluePillButton}
-                    variant="outline-primary"
-                    onClick={() => endEarlyRequestResponse(true)}
-                  >
-                    Terminate Lease
-                  </Button>
-                </Col> */}
                 <Col className="d-flex flex-row justify-content-evenly">
                   <Button
                     style={redPillButton}
@@ -870,7 +847,7 @@ function ManagerTenantAgreementView(props) {
             </div>
           ) : (
             ""
-          )}
+          )} */}
           {showSpinner ? (
             <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
               <ReactBootStrap.Spinner animation="border" role="status" />
@@ -880,13 +857,10 @@ function ManagerTenantAgreementView(props) {
           )}
         </div>
       ) : (
-        <Row className="m-3">
-          <h3>Lease Agreement </h3>
-          <Row className="m-4"> No Active Lease Agreements</Row>
-        </Row>
+        <Row className="mx-5">No Active Lease Agreements</Row>
       )}
     </div>
   );
 }
 
-export default ManagerTenantAgreementView;
+export default ManagerTenantRefusedAgreementView;

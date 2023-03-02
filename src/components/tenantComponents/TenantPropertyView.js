@@ -20,6 +20,7 @@ import Header from "../Header";
 import TenantFooter from "./TenantFooter";
 import TenantRepairRequest from "./TenantRepairRequest";
 import AppContext from "../../AppContext";
+import ImageModal from "../ImageModal";
 import ConfirmDialog from "../ConfirmDialog";
 import DocumentsUploadPut from "../DocumentsUploadPut";
 import SideBar from "./SideBar";
@@ -37,7 +38,7 @@ import {
   bluePillButton,
   redPillButton,
 } from "../../utils/styles";
-import { ordinal_suffix_of } from "../../utils/helper";
+import { ordinal_suffix_of, days } from "../../utils/helper";
 import { get, put, post } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
 
@@ -92,6 +93,8 @@ function TenantPropertyView(props) {
   // sorting variables
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
+  const [openImage, setOpenImage] = useState(false);
+  const [imageSrc, setImageSrc] = useState(null);
   const applianceState = useState({
     Microwave: {
       available: false,
@@ -216,12 +219,15 @@ function TenantPropertyView(props) {
   const responsiveSidebar = {
     showSidebar: width > 1023,
   };
-
-  const days = (date_1, date_2) => {
-    let difference = date_2.getTime() - date_1.getTime();
-    let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
-    return TotalDays;
+  const showImage = (src) => {
+    setOpenImage(true);
+    setImageSrc(src);
   };
+  const unShowImage = () => {
+    setOpenImage(false);
+    setImageSrc(null);
+  };
+
   const extendLease = async () => {
     // console.log("Extending Lease");
     setShowSpinner(true);
@@ -684,6 +690,11 @@ function TenantPropertyView(props) {
             />
           ) : (
             <div className="w-100 my-5">
+              <ImageModal
+                src={imageSrc}
+                isOpen={openImage}
+                onCancel={unShowImage}
+              />
               <Row className=" d-flex align-items-center justify-content-center m-3">
                 {imagesProperty.length === 0 ? (
                   <img
@@ -703,12 +714,13 @@ function TenantPropertyView(props) {
                     partialVisible={false}
                     // className=" d-flex align-items-center justify-content-center"
                   >
-                    {imagesProperty.map((imagesGroup) => {
+                    {imagesProperty.map((image) => {
                       return (
                         // <div className="d-flex align-items-center justify-content-center">
                         <img
-                          key={Date.now()}
-                          src={`${imagesGroup}?${Date.now()}`}
+                          // key={Date.now()}
+                          src={`${image}?${Date.now()}`}
+                          onClick={() => showImage(`${image}?${Date.now()}`)}
                           style={{
                             width: "200px",
                             height: "200px",
@@ -727,12 +739,13 @@ function TenantPropertyView(props) {
                     partialVisible={false}
                     className=" d-flex align-items-center justify-content-center"
                   >
-                    {imagesProperty.map((imagesGroup) => {
+                    {imagesProperty.map((image) => {
                       return (
                         <div className="d-flex align-items-center justify-content-center">
                           <img
-                            key={Date.now()}
-                            src={`${imagesGroup}?${Date.now()}`}
+                            // key={Date.now()}
+                            src={`${image}?${Date.now()}`}
+                            onClick={() => showImage(`${image}?${Date.now()}`)}
                             style={{
                               width: "200px",
                               height: "200px",
@@ -791,16 +804,16 @@ function TenantPropertyView(props) {
                         <TableCell padding="none" size="small" align="center">
                           {JSON.parse(property.images).length > 0 ? (
                             <img
-                              key={Date.now()}
+                              // key={Date.now()}
                               src={`${
                                 JSON.parse(property.images)[0]
                               }?${Date.now()}`}
                               alt="Property"
                               style={{
                                 borderRadius: "4px",
-                                objectFit: "cover",
-                                width: "100px",
-                                height: "100px",
+                                objectFit: "contain",
+                                maxWidth: "80px",
+                                maxHeight: "80px",
                               }}
                             />
                           ) : (
@@ -809,9 +822,9 @@ function TenantPropertyView(props) {
                               alt="Property"
                               style={{
                                 borderRadius: "4px",
-                                objectFit: "cover",
-                                width: "100px",
-                                height: "100px",
+                                objectFit: "contain",
+                                maxWidth: "80px",
+                                maxHeight: "80px",
                               }}
                             />
                           )}
@@ -1128,7 +1141,6 @@ function TenantPropertyView(props) {
                                 <Row className="d-flex justify-content-center align-items-center p-1">
                                   <Col className="d-flex justify-content-center align-items-center p-0 m-0">
                                     <img
-                                      key={Date.now()}
                                       src={`${
                                         applianceState[0][appliance][
                                           "images"
@@ -1140,6 +1152,15 @@ function TenantPropertyView(props) {
                                         width: "50px",
                                         height: "50px",
                                       }}
+                                      onClick={() =>
+                                        showImage(
+                                          `${
+                                            applianceState[appliance][
+                                              "images"
+                                            ][0]
+                                          }?${Date.now()}`
+                                        )
+                                      }
                                       alt="Property"
                                     />
                                   </Col>

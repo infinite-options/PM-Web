@@ -279,15 +279,35 @@ function ReviewPropertyLease(props) {
         const response2 = await put("/applications", updatedApplication, null);
         navigate("/tenant");
       } else if (rentals.some((rental) => rental.rental_status === "PENDING")) {
-        let i = rentals.findIndex(
-          (rental) => rental.rental_status === "PENDING"
-        );
-        let request_body = {
-          application_status: "REFUSED",
-          property_uid: rentals[i].rental_property_id,
-        };
+        if (rentals.length > 1) {
+          let i = rentals.findIndex(
+            (rental) => rental.rental_status === "PENDING"
+          );
+          let request_body = {
+            application_status: "REFUSED",
+            property_uid: rentals[i].rental_property_id,
+          };
 
-        const response = await put("/extendLease", request_body);
+          const response = await put("/extendLease", request_body);
+        } else {
+          let request_body = {
+            application_status: "REFUSED",
+            property_uid: rentals[0].rental_property_id,
+          };
+
+          const response = await put("/extendLease", request_body);
+          const updatedApplication = {
+            application_uid: application_uid,
+            application_status: "REFUSED",
+            property_uid: property_uid,
+          };
+          const response2 = await put(
+            "/applications",
+            updatedApplication,
+            null
+          );
+        }
+
         // const newMessage = {
         //   sender_name: property.managerInfo.manager_business_name,
         //   sender_email: property.managerInfo.manager_email,

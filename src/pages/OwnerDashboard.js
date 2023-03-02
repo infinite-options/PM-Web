@@ -22,7 +22,6 @@ import OwnerPropertyForm from "../components/ownerComponents/OwnerPropertyForm";
 import OwnerCreateExpense from "../components/ownerComponents/OwnerCreateExpense";
 import OwnerRepairRequest from "../components/ownerComponents/OwnerRepairRequest";
 import OwnerFooter from "../components/ownerComponents/OwnerFooter";
-import ImageModal from "../components/ImageModal";
 import AddIcon from "../icons/AddIcon.svg";
 import PropertyIcon from "../icons/PropertyIcon.svg";
 import RepairImg from "../icons/RepairImg.svg";
@@ -57,8 +56,6 @@ export default function OwnerDashboard2() {
 
   const [orderMaintenance, setOrderMaintenance] = useState("asc");
   const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
-  const [openImage, setOpenImage] = useState(false);
-  const [imageSrc, setImageSrc] = useState(null);
 
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
@@ -74,14 +71,7 @@ export default function OwnerDashboard2() {
   const responsive = {
     showSidebar: width > 1023,
   };
-  const showImage = (src) => {
-    setOpenImage(true);
-    setImageSrc(src);
-  };
-  const unShowImage = () => {
-    setOpenImage(false);
-    setImageSrc(null);
-  };
+
   const headerBack = () => {
     if (editAppliances && stage === "NEW") {
       setEditAppliances(false);
@@ -456,7 +446,6 @@ export default function OwnerDashboard2() {
 
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
-      <ImageModal src={imageSrc} isOpen={openImage} onCancel={unShowImage} />
       {!isLoading && ownerData.length > 0 ? (
         <div className="flex-1">
           <div
@@ -568,6 +557,16 @@ export default function OwnerDashboard2() {
                             role="checkbox"
                             tabIndex={-1}
                             key={property.property_uid}
+                            onClick={() => {
+                              navigate(
+                                `/propertyDetails/${property.property_uid}`,
+                                {
+                                  state: {
+                                    property_uid: property.property_uid,
+                                  },
+                                }
+                              );
+                            }}
                           >
                             <TableCell
                               padding="none"
@@ -586,9 +585,6 @@ export default function OwnerDashboard2() {
                                     width: "100px",
                                     height: "100px",
                                   }}
-                                  onClick={() =>
-                                    showImage(JSON.parse(property.images)[0])
-                                  }
                                 />
                               ) : (
                                 <img
@@ -604,16 +600,6 @@ export default function OwnerDashboard2() {
                               )}
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/propertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -622,16 +608,6 @@ export default function OwnerDashboard2() {
                               {property.unit !== "" ? " " + property.unit : ""}
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/propertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -639,16 +615,6 @@ export default function OwnerDashboard2() {
                               {property.city}, {property.state}
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/propertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -656,16 +622,6 @@ export default function OwnerDashboard2() {
                               {property.zip}
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/propertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -676,16 +632,6 @@ export default function OwnerDashboard2() {
                             </TableCell>
 
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/propertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -709,16 +655,6 @@ export default function OwnerDashboard2() {
                               )}
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/propertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -726,16 +662,6 @@ export default function OwnerDashboard2() {
                               {"$" + property.listed_rent}
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/propertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -743,16 +669,6 @@ export default function OwnerDashboard2() {
                               ${property.per_sqft}
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/propertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -761,16 +677,6 @@ export default function OwnerDashboard2() {
                             </TableCell>
 
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/propertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -778,16 +684,6 @@ export default function OwnerDashboard2() {
                               {property.num_beds + "/" + property.num_baths}
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/propertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"
@@ -875,16 +771,6 @@ export default function OwnerDashboard2() {
                               </div>
                             </TableCell>
                             <TableCell
-                              onClick={() => {
-                                navigate(
-                                  `/propertyDetails/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
                               padding="none"
                               size="small"
                               align="center"

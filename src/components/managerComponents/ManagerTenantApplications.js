@@ -15,6 +15,7 @@ import ConfirmDialog from "../ConfirmDialog";
 import File from "../../icons/File.svg";
 import { mediumBold, redPillButton, bluePillButton } from "../../utils/styles";
 import { get, put } from "../../utils/api";
+import { days } from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -35,12 +36,13 @@ function ManagerTenantApplications(props) {
     createNewTenantAgreement,
     selectTenantApplication,
     selectedTenantApplication,
+    agreement,
     reload,
   } = props;
 
   const [applications, setApplications] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
-  const [newApplications, setNewApplications] = useState([]);
+  // const [newApplications, setNewApplications] = useState([]);
   // const [selectedApplications, setSelectedApplications] = useState([])
   // const [forwardedApplications, setForwardedApplications] = useState([]);
   // const [rejectedApplications, setRejectedApplications] = useState([]);
@@ -74,9 +76,9 @@ function ManagerTenantApplications(props) {
     });
     // console.log(resArr);
     setApplications(resArr);
-    setNewApplications(
-      applications.filter((a) => a.application_status === "NEW")
-    );
+    // setNewApplications(
+    //   applications.filter((a) => a.application_status === "NEW")
+    // );
     setIsLoading(false);
     // setForwardedApplications(
     //   applications.filter((a) => a.application_status === "FORWARDED")
@@ -89,7 +91,10 @@ function ManagerTenantApplications(props) {
   useEffect(fetchApplications, [property]);
 
   const rejectApplication = async (application) => {
-    const selected_applications = newApplications.filter(
+    // const selected_applications = newApplications.filter(
+    //   (a) => a.application_selected
+    // );
+    const selected_applications = applications.filter(
       (a) => a.application_selected
     );
     if (selected_applications.length === 0) {
@@ -110,7 +115,10 @@ function ManagerTenantApplications(props) {
     setShowDialog(false);
   };
   const rejectdialog = (application) => {
-    const selected_applications = newApplications.filter(
+    // const selected_applications = newApplications.filter(
+    //   (a) => a.application_selected
+    // );
+    const selected_applications = applications.filter(
       (a) => a.application_selected
     );
     if (selected_applications.length === 0) {
@@ -126,11 +134,15 @@ function ManagerTenantApplications(props) {
     );
     selected[index].application_selected =
       !selected[index].application_selected;
-    setNewApplications(selected);
+    // setNewApplications(selected);
+    setApplications(selected);
   };
 
   const applicationsResponse = async () => {
-    const selected_applications = newApplications.filter(
+    // const selected_applications = newApplications.filter(
+    //   (a) => a.application_selected
+    // );
+    const selected_applications = applications.filter(
       (a) => a.application_selected
     );
     if (selected_applications.length === 0) {
@@ -194,10 +206,12 @@ function ManagerTenantApplications(props) {
                 <TableRow>
                   {applications.some(
                     (app) =>
-                      app.application_status === "RENTED" ||
-                      app.application_status === "FORWARDED" ||
-                      app.application_status === "LEASE EXTENSION" ||
-                      app.application_status === "TENANT LEASE EXTENSION"
+                      (app.application_status === "RENTED" ||
+                        app.application_status === "FORWARDED" ||
+                        app.application_status === "LEASE EXTENSION" ||
+                        app.application_status === "TENANT LEASE EXTENSION") &&
+                      agreement !== null &&
+                      days(new Date(agreement.lease_end), new Date()) > 60
                   ) ? (
                     ""
                   ) : (
@@ -222,10 +236,13 @@ function ManagerTenantApplications(props) {
                   <TableRow className="mt-2" key={i}>
                     {applications.some(
                       (app) =>
-                        app.application_status === "RENTED" ||
-                        app.application_status === "FORWARDED" ||
-                        app.application_status === "LEASE EXTENSION" ||
-                        app.application_status === "TENANT LEASE EXTENSION"
+                        (app.application_status === "RENTED" ||
+                          app.application_status === "FORWARDED" ||
+                          app.application_status === "LEASE EXTENSION" ||
+                          app.application_status ===
+                            "TENANT LEASE EXTENSION") &&
+                        agreement !== null &&
+                        days(new Date(agreement.lease_end), new Date()) > 60
                     ) ? (
                       ""
                     ) : (
@@ -380,10 +397,12 @@ function ManagerTenantApplications(props) {
 
           {applications.some(
             (app) =>
-              app.application_status === "RENTED" ||
-              app.application_status === "FORWARDED" ||
-              app.application_status === "LEASE EXTENSION" ||
-              app.application_status === "TENANT LEASE EXTENSION"
+              (app.application_status === "RENTED" ||
+                app.application_status === "FORWARDED" ||
+                app.application_status === "LEASE EXTENSION" ||
+                app.application_status === "TENANT LEASE EXTENSION") &&
+              agreement !== null &&
+              days(new Date(agreement.lease_end), new Date()) > 60
           ) ? (
             <Row></Row>
           ) : (

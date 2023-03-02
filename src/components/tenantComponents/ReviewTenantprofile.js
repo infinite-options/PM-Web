@@ -875,19 +875,19 @@ function ReviewTenantProfile(props) {
             </Row>
           </Row> */}
           {/* =======================================Application Message================================================ */}
-          <Row className="m-3">
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-2 ms-2">
-                Application Message
-              </Form.Label>
+          <div className="mx-4">
+            <div className="mx-3">
+              <Row style={subHeading}> Application Message</Row>
+
               <Form.Control
                 style={squareForm}
                 placeholder="Message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               />
-            </Form.Group>
-          </Row>
+            </div>
+          </div>
+
           {/* =======================================Send Button================================================ */}
           <Row className="m-3">
             <Col

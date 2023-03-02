@@ -18,6 +18,7 @@ import * as ReactBootStrap from "react-bootstrap";
 import Header from "../Header";
 import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
+import ImageModal from "../ImageModal";
 import PropertyIcon from "../../icons/PropertyIcon.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
@@ -42,6 +43,8 @@ function PropertyApplicationView(props) {
   const { forPropertyLease } = props;
   const navigate = useNavigate();
   const [property, setProperty] = React.useState(null);
+  const [openImage, setOpenImage] = useState(false);
+  const [imageSrc, setImageSrc] = useState(null);
   const applianceState = useState({
     Microwave: {
       available: false,
@@ -158,7 +161,14 @@ function PropertyApplicationView(props) {
   const responsiveSidebar = {
     showSidebar: width > 1023,
   };
-
+  const showImage = (src) => {
+    setOpenImage(true);
+    setImageSrc(src);
+  };
+  const unShowImage = () => {
+    setOpenImage(false);
+    setImageSrc(null);
+  };
   useEffect(() => {
     const fetchProperty = async () => {
       const response = await get(`/propertyInfo?property_uid=${property_uid}`);
@@ -219,6 +229,11 @@ function PropertyApplicationView(props) {
               </p>
             </div>
           )}
+          <ImageModal
+            src={imageSrc}
+            isOpen={openImage}
+            onCancel={unShowImage}
+          />
 
           <Row className=" d-flex align-items-center justify-content-center m-3">
             {property && JSON.parse(property.images).length === 0 ? (
@@ -239,12 +254,13 @@ function PropertyApplicationView(props) {
                 partialVisible={false}
                 // className=" d-flex align-items-center justify-content-center"
               >
-                {JSON.parse(property.images).map((imagesGroup) => {
+                {JSON.parse(property.images).map((image) => {
                   return (
                     // <div className="d-flex align-items-center justify-content-center">
                     <img
-                      key={Date.now()}
-                      src={`${imagesGroup}?${Date.now()}`}
+                      // key={Date.now()}
+                      src={`${image}?${Date.now()}`}
+                      onClick={() => showImage(`${image}?${Date.now()}`)}
                       style={{
                         width: "200px",
                         height: "200px",
@@ -263,12 +279,13 @@ function PropertyApplicationView(props) {
                 partialVisible={false}
                 className=" d-flex align-items-center justify-content-center"
               >
-                {JSON.parse(property.images).map((imagesGroup) => {
+                {JSON.parse(property.images).map((image) => {
                   return (
                     <div className="d-flex align-items-center justify-content-center">
                       <img
-                        key={Date.now()}
-                        src={`${imagesGroup}?${Date.now()}`}
+                        // key={Date.now()}
+                        src={`${image}?${Date.now()}`}
+                        onClick={() => showImage(`${image}?${Date.now()}`)}
                         style={{
                           width: "200px",
                           height: "200px",
@@ -440,6 +457,15 @@ function PropertyApplicationView(props) {
                                       width: "50px",
                                       height: "50px",
                                     }}
+                                    onClick={() =>
+                                      showImage(
+                                        `${
+                                          applianceState[0][appliance][
+                                            "images"
+                                          ][0]
+                                        }?${Date.now()}`
+                                      )
+                                    }
                                     alt="Property"
                                   />
                                 </Col>
