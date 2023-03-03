@@ -687,108 +687,151 @@ function UpdateConfirmDialog(props) {
               ""
             )}
 
-            {/* {oldAgreement.length !== 0 && updatedAgreement.length !== 0 ? (
-              <Row className="m-3">
-                <h5 style={mediumBold}>Payments Summary</h5>
-                {updatedAgreement.rent_payments.length > 0 ? (
-                  <div>
-                    <Table
-                      responsive="md"
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Payment Type</TableCell>
-                          <TableCell>Amount</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {updatedAgreement.rent_payments.map((fee) => {
-                          return (
-                            <TableRow>
-                              <TableCell>
-                                {oldAgreement.rent_payments.find(
-                                  (temp) => fee.fee_name === temp.fee_name
-                                ).fee_name !== fee.fee_name ? (
-                                  <div style={{ color: "red" }}>
-                                    {fee.fee_name}
-                                  </div>
-                                ) : (
-                                  <div style={{ color: "black" }}>
-                                    {
-                                      oldAgreement.rent_payments.find(
-                                        (temp) => fee.fee_name === temp.fee_name
-                                      ).fee_name
-                                    }
-                                  </div>
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                {oldAgreement.rent_payments.find(
-                                  (temp) => fee.fee_name === temp.fee_name
-                                ).charge !== fee.charge ? (
-                                  <div style={{ color: "red" }}>
-                                    {fee.fee_type === "%"
-                                      ? `${fee.charge}%`
-                                      : `$${fee.charge}`}
-                                  </div>
-                                ) : (
-                                  <div style={{ color: "black" }}>
-                                    {oldAgreement.rent_payments.find(
+            {oldAgreement.length !== 0 && updatedAgreement.length !== 0 ? (
+              <Row className="mb-4 m-3" style={{ overflow: "scroll" }}>
+                <h5>Payment Summary</h5>
+                <div>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Fee Name</TableCell>
+                        <TableCell>Amount</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {updatedAgreement.rent_payments.map((fee) => {
+                        return oldAgreement.rent_payments.includesObj(fee) ? (
+                          <TableRow>
+                            <TableCell
+                              style={{
+                                color: oldAgreement.rent_payments.includesObj(
+                                  fee
+                                )
+                                  ? "black"
+                                  : "red",
+                              }}
+                            >
+                              {fee.fee_name}
+                            </TableCell>
+
+                            <TableCell
+                              style={{
+                                color: oldAgreement.rent_payments.includesObj(
+                                  fee
+                                )
+                                  ? "black"
+                                  : "red",
+                              }}
+                            >
+                              {fee.fee_type === "%"
+                                ? `${fee.charge}%`
+                                : `$${fee.charge}`}
+                            </TableCell>
+                          </TableRow>
+                        ) : !oldAgreement.rent_payments.includesObj(fee) &&
+                          oldAgreement.rent_payments.some(
+                            (e) => fee.fee_name === e.fee_name
+                          ) ? (
+                          <TableRow>
+                            <TableCell>
+                              {oldAgreement.rent_payments.find(
+                                (temp) => fee.fee_name === temp.fee_name
+                              ).fee_name !== fee.fee_name ? (
+                                <div style={{ color: "red" }}>
+                                  {fee.fee_name}
+                                </div>
+                              ) : (
+                                <div style={{ color: "black" }}>
+                                  {
+                                    oldAgreement.rent_payments.find(
                                       (temp) => fee.fee_name === temp.fee_name
-                                    ).fee_type === "%"
-                                      ? `${
-                                          oldAgreement.rent_payments.find(
-                                            (temp) =>
-                                              fee.fee_name === temp.fee_name
-                                          ).charge
-                                        }%`
-                                      : `$${
-                                          oldAgreement.rent_payments.find(
-                                            (temp) =>
-                                              fee.fee_name === temp.fee_name
-                                          ).charge
-                                        }`}
-                                  </div>
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                        {oldAgreement.rent_payments.map((fee) => {
-                          return !updatedAgreement.rent_payments.includesObj(
-                            fee
-                          ) &&
-                            updatedAgreement.rent_payments.some(
-                              (e) => fee.fee_charge !== e.fee_charge
-                            ) ? (
-                            <TableRow>
-                              <TableCell
-                                style={{ textDecoration: "line-through" }}
-                              >
-                                {fee.fee_name}
-                              </TableCell>
-                              <TableCell
-                                style={{ textDecoration: "line-through" }}
-                              >
-                                {fee.charge}
-                              </TableCell>
-                            </TableRow>
-                          ) : (
-                            ""
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </div>
-                ) : (
-                  <div>No documents uploaded</div>
-                )}
+                                    ).fee_name
+                                  }
+                                </div>
+                              )}
+                            </TableCell>
+
+                            <TableCell>
+                              {oldAgreement.rent_payments.find(
+                                (temp) => fee.fee_name === temp.fee_name
+                              ).charge !== fee.charge ? (
+                                <div style={{ color: "red" }}>
+                                  {fee.fee_type === "%"
+                                    ? `${fee.charge}%`
+                                    : `$${fee.charge}`}
+                                </div>
+                              ) : (
+                                <div style={{ color: "black" }}>
+                                  {oldAgreement.rent_payments.find(
+                                    (temp) => fee.fee_name === temp.fee_name
+                                  ).fee_type === "%"
+                                    ? `${
+                                        oldAgreement.rent_payments.find(
+                                          (temp) =>
+                                            fee.fee_name === temp.fee_name
+                                        ).charge
+                                      }%`
+                                    : `$${
+                                        oldAgreement.rent_payments.find(
+                                          (temp) =>
+                                            fee.fee_name === temp.fee_name
+                                        ).charge
+                                      }`}
+                                </div>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ) : !oldAgreement.rent_payments.includesObj(fee) ? (
+                          <TableRow>
+                            <TableCell style={{ color: "red" }}>
+                              {fee.fee_name}
+                            </TableCell>
+
+                            <TableCell style={{ color: "red" }}>
+                              {fee.fee_type === "%"
+                                ? `${fee.charge}%`
+                                : `$${fee.charge}`}
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      })}
+                      {oldAgreement.rent_payments.map((fee) => {
+                        return updatedAgreement.rent_payments.some(
+                          (e) =>
+                            fee.charge != e.charge && fee.fee_name == e.fee_name
+                        ) ? (
+                          <TableRow>
+                            <TableCell
+                              style={{ textDecoration: "line-through" }}
+                            >
+                              {fee.fee_name}
+                            </TableCell>
+
+                            <TableCell
+                              style={{ textDecoration: "line-through" }}
+                            >
+                              {fee.fee_type === "%"
+                                ? `${fee.charge}%`
+                                : `$${fee.charge}`}
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
               </Row>
             ) : (
               ""
-            )} */}
+            )}
             {oldAgreement.length !== 0 && updatedAgreement.length !== 0 ? (
               <Row className="m-3">
                 <h5 style={mediumBold}>Lease Documents</h5>

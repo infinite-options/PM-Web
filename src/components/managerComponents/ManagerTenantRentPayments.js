@@ -50,7 +50,6 @@ function ManagerTenantRentPayments(props) {
     available,
     agreement,
   } = props;
-  // console.log(agreement);
   const [newFee, setNewFee] = useState(null);
   const [oneTimeFee, setOneTimeFee] = useState(startDate);
   const [defaultFee, setDefaultFee] = useState([null]);
