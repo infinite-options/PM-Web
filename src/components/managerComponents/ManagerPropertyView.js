@@ -314,13 +314,7 @@ function ManagerPropertyView(props) {
         setSelectedAgreement(rental);
       }
     });
-    console.log(
-      property_details.rentalInfo.some((uid) => uid.rental_status == "REFUSED")
-        .linked_application_uid !=
-        property_details.rentalInfo.some(
-          (uid) => uid.rental_status === "ACTIVE"
-        ).linked_application_uid
-    );
+
     property_details.rentalInfo.forEach((rental) => {
       if (
         rental.rental_status === "REFUSED" ||
@@ -357,9 +351,10 @@ function ManagerPropertyView(props) {
         application.application_status === "PM END EARLY" ||
         application.application_status === "TENANT END EARLY" ||
         application.application_status === "LEASE EXTENSION" ||
-        application.application_status === "TENANT LEASE EXTENSION" ||
-        application.application_status === "REFUSED"
+        application.application_status === "TENANT LEASE EXTENSION"
       ) {
+        setAcceptedTenantApplications([application]);
+      } else if (application.application_status === "NEW") {
         setAcceptedTenantApplications([application]);
       }
     });
@@ -377,9 +372,9 @@ function ManagerPropertyView(props) {
     // console.log(recent_mr, past_mr);
     setIsLoading(false);
   };
-  console.log("selected", selectedAgreement);
-  console.log("refused", refusedAgreement);
-  console.log("extended", extendedAgreement);
+  // console.log("selected", selectedAgreement);
+  // console.log("refused", refusedAgreement);
+  // console.log("extended", extendedAgreement);
   // console.log(acceptedTenantApplications);
   const headerBack = () => {
     if (editAppliances && editProperty) {
@@ -434,6 +429,7 @@ function ManagerPropertyView(props) {
     setShowTenantAgreement(true);
   };
   const selectAgreement = (agreement) => {
+    console.log("agreement in selectagreement", agreement);
     setSelectedAgreement(agreement);
     setShowTenantAgreement(true);
   };

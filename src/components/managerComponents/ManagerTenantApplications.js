@@ -40,6 +40,7 @@ function ManagerTenantApplications(props) {
     reload,
   } = props;
 
+  console.log(selectedTenantApplication);
   const [applications, setApplications] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
   // const [newApplications, setNewApplications] = useState([]);

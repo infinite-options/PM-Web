@@ -58,7 +58,11 @@ function ManagerTenantAgreement(props) {
     acceptedTenantApplications,
     setAcceptedTenantApplications,
   } = props;
-  console.log("here", acceptedTenantApplications[0]);
+  console.log(
+    "acceptedTenantApplications in managertenantagreement",
+    acceptedTenantApplications[0]
+  );
+  console.log("agreement in managertenantagreement", agreement.rental_status);
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
@@ -114,6 +118,7 @@ function ManagerTenantAgreement(props) {
     setEndDate(agreement.lease_end);
     // setEffectiveDate(agreement.effective_date);
     setFeeState(JSON.parse(agreement.rent_payments));
+    console.log(agreement.rent_payments);
     contactState[1](JSON.parse(agreement.assigned_contacts));
     setFiles(JSON.parse(agreement.documents));
     setAvailable(agreement.available_topay);
@@ -149,7 +154,7 @@ function ManagerTenantAgreement(props) {
     setOldAgreement(newAgreement);
   };
   useEffect(() => {
-    // console.log("in useeffect", acceptedTenantApplications);
+    console.log("in useeffect", agreement);
     if (agreement) {
       loadAgreement();
     }
@@ -169,214 +174,9 @@ function ManagerTenantAgreement(props) {
     if (acceptedTenantApplications[0].referred) {
       setReferences(JSON.parse(acceptedTenantApplications[0].referred));
     }
-  }, [agreement]);
+  }, []);
 
-  // save
-  const save = async () => {
-    setShowSpinner(true);
-    // update properties table if change in rent or deposit
-    for (let i = 0; i < feeState.length; i++) {
-      if (feeState[i]["fee_name"] === "Rent") {
-        if (
-          parseInt(feeState[i]["charge"]) !== parseInt(property.listed_rent)
-        ) {
-          const updateRent = {
-            property_uid: property.property_uid,
-            listed_rent: feeState[i]["charge"],
-          };
-
-          const images = JSON.parse(property.images);
-          for (let i = -1; i < images.length - 1; i++) {
-            let key = `img_${i}`;
-            if (i === -1) {
-              key = "img_cover";
-            }
-            updateRent[key] = images[i + 1];
-          }
-
-          const response = await put("/properties", updateRent, null, images);
-        }
-      } else if (feeState[i]["fee_name"] === "Deposit") {
-        if (parseInt(feeState[i]["charge"]) !== parseInt(property.deposit)) {
-          const updateDeposit = {
-            property_uid: property.property_uid,
-            deposit: feeState[i]["charge"],
-          };
-
-          const images = JSON.parse(property.images);
-          for (let i = -1; i < images.length - 1; i++) {
-            let key = `img_${i}`;
-            if (i === -1) {
-              key = "img_cover";
-            }
-            updateDeposit[key] = images[i + 1];
-          }
-
-          const response = await put(
-            "/properties",
-            updateDeposit,
-            null,
-            images
-          );
-        }
-      }
-    }
-    // lease status is processing to active
-    if (agreement.rental_status === "PROCESSING") {
-      // console.log(lateFee);
-      const newAgreement = {
-        rental_property_id: property.property_uid,
-        lease_start: startDate,
-        lease_end: endDate,
-        rental_status: rentalStatus,
-        rent_payments: JSON.stringify(feeState),
-        available_topay: available,
-        due_by: dueDate,
-        late_by: lateAfter,
-        late_fee: lateFee,
-        perDay_late_fee: lateFeePer,
-        assigned_contacts: JSON.stringify(contactState[0]),
-        adults: JSON.stringify(adults),
-        children: JSON.stringify(children),
-        pets: JSON.stringify(pets),
-        vehicles: JSON.stringify(vehicles),
-        referred: JSON.stringify(referred),
-        effective_date: effectiveDate,
-      };
-
-      // console.log(newAgreement);
-      const newFiles = [...files];
-
-      for (let i = 0; i < newFiles.length; i++) {
-        let key = `doc_${i}`;
-        if (newFiles[i].file !== undefined) {
-          newAgreement[key] = newFiles[i].file;
-        } else {
-          newAgreement[key] = newFiles[i].link;
-        }
-
-        delete newFiles[i].file;
-      }
-      newAgreement.documents = JSON.stringify(newFiles);
-
-      // console.log("in if");
-      newAgreement.rental_uid = agreement.rental_uid;
-      // console.log(newAgreement);
-      const response = await put(`/rentals`, newAgreement, null, newFiles);
-
-      setShowSpinner(false);
-
-      navigate("../manager");
-    } else {
-      // lease status is not PROCESSING
-      console.log(
-        acceptedTenantApplications.map(
-          (application) => application.application_uid
-        )
-      );
-      for (const application of acceptedTenantApplications.map(
-        (application) => application.application_uid
-      )) {
-        console.log(application);
-
-        const request_body = {
-          application_uid: application,
-          message: "Lease details forwarded for review",
-          application_status: "FORWARDED",
-        };
-        console.log(request_body);
-        const update_application = await put("/applications", request_body);
-        // console.log(update_application);
-      }
-      let newAgreement = {};
-      // if rental status is REFUSED
-      if (rentalStatus === "REFUSED") {
-        newAgreement = {
-          rental_property_id: property.property_uid,
-          lease_start: startDate,
-          lease_end: endDate,
-          rental_status: "PROCESSING",
-          rent_payments: JSON.stringify(feeState),
-          available_topay: available,
-          due_by: dueDate,
-          late_by: lateAfter,
-          late_fee: lateFee,
-          perDay_late_fee: lateFeePer,
-          assigned_contacts: JSON.stringify(contactState[0]),
-          adults: JSON.stringify(adults),
-          children: JSON.stringify(children),
-          pets: JSON.stringify(pets),
-          vehicles: JSON.stringify(vehicles),
-          referred: JSON.stringify(referred),
-          effective_date: effectiveDate,
-        };
-      } else {
-        newAgreement = {
-          rental_property_id: property.property_uid,
-          lease_start: startDate,
-          lease_end: endDate,
-          rental_status: rentalStatus,
-          rent_payments: JSON.stringify(feeState),
-          available_topay: available,
-          due_by: dueDate,
-          late_by: lateAfter,
-          late_fee: lateFee,
-          perDay_late_fee: lateFeePer,
-          assigned_contacts: JSON.stringify(contactState[0]),
-          adults: JSON.stringify(adults),
-          children: JSON.stringify(children),
-          pets: JSON.stringify(pets),
-          vehicles: JSON.stringify(vehicles),
-          referred: JSON.stringify(referred),
-          effective_date: effectiveDate,
-        };
-      }
-
-      console.log(newAgreement);
-      newAgreement.linked_application_id = JSON.stringify(
-        acceptedTenantApplications.map(
-          (application) => application.application_uid
-        )
-      );
-      newAgreement.tenant_id = JSON.stringify(
-        acceptedTenantApplications.map((application) => application.tenant_id)
-      );
-      const newFiles = [...files];
-
-      for (let i = 0; i < newFiles.length; i++) {
-        let key = `doc_${i}`;
-        if (newFiles[i].file !== undefined) {
-          newAgreement[key] = newFiles[i].file;
-        } else {
-          newAgreement[key] = newFiles[i].link;
-        }
-
-        delete newFiles[i].file;
-      }
-      newAgreement.documents = JSON.stringify(newFiles);
-
-      // console.log("in if");
-      newAgreement.rental_uid = agreement.rental_uid;
-      console.log(newAgreement);
-      const response = await put(`/rentals`, newAgreement, null, newFiles);
-
-      setShowSpinner(false);
-
-      navigate("../manager");
-    }
-  };
-  const [errorMessage, setErrorMessage] = useState("");
-  const required =
-    errorMessage === "Please fill out all fields" ||
-    errorMessage === "Please fill out the effective date" ? (
-      <span style={red} className="ms-1">
-        *
-      </span>
-    ) : (
-      ""
-    );
-  // console.log("feeState in tenantagreemnt", feeState);
-  // console.log(startDate, startDate.split("-")[2]);
+  // first time lease creation
   const forwardLeaseAgreement = async () => {
     if (startDate === "" || endDate === "") {
       setErrorMessage("Please fill out all fields");
@@ -532,40 +332,254 @@ function ManagerTenantAgreement(props) {
     setShowSpinner(false);
     back();
   };
+  // save
+  const save = async () => {
+    setShowSpinner(true);
+    // update properties table if change in rent or deposit
+    for (let i = 0; i < feeState.length; i++) {
+      if (feeState[i]["fee_name"] === "Rent") {
+        if (
+          parseInt(feeState[i]["charge"]) !== parseInt(property.listed_rent)
+        ) {
+          const updateRent = {
+            property_uid: property.property_uid,
+            listed_rent: feeState[i]["charge"],
+          };
 
-  const filterAgreement = () => {
-    if (effectiveDate === "") {
-      setErrorMessage("Please fill out the effective date");
-      return;
-    } else {
-      setErrorMessage("");
+          const images = JSON.parse(property.images);
+          for (let i = -1; i < images.length - 1; i++) {
+            let key = `img_${i}`;
+            if (i === -1) {
+              key = "img_cover";
+            }
+            updateRent[key] = images[i + 1];
+          }
+
+          const response = await put("/properties", updateRent, null, images);
+        }
+      } else if (feeState[i]["fee_name"] === "Deposit") {
+        if (parseInt(feeState[i]["charge"]) !== parseInt(property.deposit)) {
+          const updateDeposit = {
+            property_uid: property.property_uid,
+            deposit: feeState[i]["charge"],
+          };
+
+          const images = JSON.parse(property.images);
+          for (let i = -1; i < images.length - 1; i++) {
+            let key = `img_${i}`;
+            if (i === -1) {
+              key = "img_cover";
+            }
+            updateDeposit[key] = images[i + 1];
+          }
+
+          const response = await put(
+            "/properties",
+            updateDeposit,
+            null,
+            images
+          );
+        }
+      }
     }
-    let og = oldAgreement;
-    const newAgreement = {
-      rental_property_id: property.property_uid,
-      lease_start: startDate,
-      lease_end: endDate,
-      rental_status: rentalStatus,
-      rent_payments: feeState,
-      available_topay: available,
-      due_by: dueDate,
-      late_by: lateAfter,
-      late_fee: lateFee,
-      perDay_late_fee: lateFeePer,
-      assigned_contacts: contactState[0],
-      adults: adults,
-      children: children,
-      pets: pets,
-      vehicles: vehicles,
-      referred: referred,
-      documents: files,
-      effective_date: effectiveDate,
-    };
-    let up = newAgreement;
-    // console.log("og", oldAgreement);
-    // console.log("up", up);
-    setUpdatedAgreement(up);
-    setShowDialog(true);
+    // lease status is processing to active
+    if (agreement.rental_status === "PROCESSING") {
+      // console.log(lateFee);
+      const newAgreement = {
+        rental_property_id: property.property_uid,
+        lease_start: startDate,
+        lease_end: endDate,
+        rental_status: rentalStatus,
+        rent_payments: JSON.stringify(feeState),
+        available_topay: available,
+        due_by: dueDate,
+        late_by: lateAfter,
+        late_fee: lateFee,
+        perDay_late_fee: lateFeePer,
+        assigned_contacts: JSON.stringify(contactState[0]),
+        adults: JSON.stringify(adults),
+        children: JSON.stringify(children),
+        pets: JSON.stringify(pets),
+        vehicles: JSON.stringify(vehicles),
+        referred: JSON.stringify(referred),
+        effective_date: effectiveDate,
+      };
+
+      // console.log(newAgreement);
+      const newFiles = [...files];
+
+      for (let i = 0; i < newFiles.length; i++) {
+        let key = `doc_${i}`;
+        if (newFiles[i].file !== undefined) {
+          newAgreement[key] = newFiles[i].file;
+        } else {
+          newAgreement[key] = newFiles[i].link;
+        }
+
+        delete newFiles[i].file;
+      }
+      newAgreement.documents = JSON.stringify(newFiles);
+      newAgreement.linked_application_id = JSON.stringify(
+        acceptedTenantApplications.map(
+          (application) => application.application_uid
+        )
+      );
+      newAgreement.tenant_id = JSON.stringify(
+        acceptedTenantApplications.map((application) => application.tenant_id)
+      );
+      // console.log("in if");
+      newAgreement.rental_uid = agreement.rental_uid;
+      // console.log(newAgreement);
+      const response = await put(`/rentals`, newAgreement, null, newFiles);
+
+      setShowSpinner(false);
+
+      navigate("../manager");
+    } else if (agreement.rental_status === "PENDING") {
+      let newAgreement = {
+        rental_property_id: property.property_uid,
+        lease_start: startDate,
+        lease_end: endDate,
+        rental_status: rentalStatus,
+        rent_payments: JSON.stringify(feeState),
+        available_topay: available,
+        due_by: dueDate,
+        late_by: lateAfter,
+        late_fee: lateFee,
+        perDay_late_fee: lateFeePer,
+        assigned_contacts: JSON.stringify(contactState[0]),
+        adults: JSON.stringify(adults),
+        children: JSON.stringify(children),
+        pets: JSON.stringify(pets),
+        vehicles: JSON.stringify(vehicles),
+        referred: JSON.stringify(referred),
+        effective_date: effectiveDate,
+      };
+
+      console.log(newAgreement);
+      newAgreement.linked_application_id = JSON.stringify(
+        acceptedTenantApplications.map(
+          (application) => application.application_uid
+        )
+      );
+      newAgreement.tenant_id = JSON.stringify(
+        acceptedTenantApplications.map((application) => application.tenant_id)
+      );
+      const newFiles = [...files];
+
+      for (let i = 0; i < newFiles.length; i++) {
+        let key = `doc_${i}`;
+        if (newFiles[i].file !== undefined) {
+          newAgreement[key] = newFiles[i].file;
+        } else {
+          newAgreement[key] = newFiles[i].link;
+        }
+
+        delete newFiles[i].file;
+      }
+      newAgreement.documents = JSON.stringify(newFiles);
+
+      // console.log("in if");
+      newAgreement.rental_uid = agreement.rental_uid;
+      console.log(newAgreement);
+      const response = await put(`/rentals`, newAgreement, null, newFiles);
+
+      setShowSpinner(false);
+
+      navigate("../manager");
+    } else {
+      // lease status is not PROCESSING
+
+      for (const application of acceptedTenantApplications.map(
+        (application) => application.application_uid
+      )) {
+        console.log(application);
+
+        const request_body = {
+          application_uid: application,
+          message: "Lease details forwarded for review",
+          application_status: "FORWARDED",
+        };
+        console.log(request_body);
+        const update_application = await put("/applications", request_body);
+        // console.log(update_application);
+      }
+      let newAgreement = {};
+      // if rental status is REFUSED
+      if (rentalStatus === "REFUSED") {
+        newAgreement = {
+          rental_property_id: property.property_uid,
+          lease_start: startDate,
+          lease_end: endDate,
+          rental_status: "PROCESSING",
+          rent_payments: JSON.stringify(feeState),
+          available_topay: available,
+          due_by: dueDate,
+          late_by: lateAfter,
+          late_fee: lateFee,
+          perDay_late_fee: lateFeePer,
+          assigned_contacts: JSON.stringify(contactState[0]),
+          adults: JSON.stringify(adults),
+          children: JSON.stringify(children),
+          pets: JSON.stringify(pets),
+          vehicles: JSON.stringify(vehicles),
+          referred: JSON.stringify(referred),
+          effective_date: effectiveDate,
+        };
+      } else {
+        newAgreement = {
+          rental_property_id: property.property_uid,
+          lease_start: startDate,
+          lease_end: endDate,
+          rental_status: rentalStatus,
+          rent_payments: JSON.stringify(feeState),
+          available_topay: available,
+          due_by: dueDate,
+          late_by: lateAfter,
+          late_fee: lateFee,
+          perDay_late_fee: lateFeePer,
+          assigned_contacts: JSON.stringify(contactState[0]),
+          adults: JSON.stringify(adults),
+          children: JSON.stringify(children),
+          pets: JSON.stringify(pets),
+          vehicles: JSON.stringify(vehicles),
+          referred: JSON.stringify(referred),
+          effective_date: effectiveDate,
+        };
+      }
+
+      console.log(newAgreement);
+      newAgreement.linked_application_id = JSON.stringify(
+        acceptedTenantApplications.map(
+          (application) => application.application_uid
+        )
+      );
+      newAgreement.tenant_id = JSON.stringify(
+        acceptedTenantApplications.map((application) => application.tenant_id)
+      );
+      const newFiles = [...files];
+
+      for (let i = 0; i < newFiles.length; i++) {
+        let key = `doc_${i}`;
+        if (newFiles[i].file !== undefined) {
+          newAgreement[key] = newFiles[i].file;
+        } else {
+          newAgreement[key] = newFiles[i].link;
+        }
+
+        delete newFiles[i].file;
+      }
+      newAgreement.documents = JSON.stringify(newFiles);
+
+      // console.log("in if");
+      newAgreement.rental_uid = agreement.rental_uid;
+      console.log(newAgreement);
+      const response = await put(`/rentals`, newAgreement, null, newFiles);
+
+      setShowSpinner(false);
+
+      navigate("../manager");
+    }
   };
 
   // on lease renewal
@@ -798,7 +812,53 @@ function ManagerTenantAgreement(props) {
       back();
     }
   };
-  // console.log(acceptedTenantApplications.children);
+
+  // filter old and new lease agreements
+  const filterAgreement = () => {
+    if (effectiveDate === "") {
+      setErrorMessage("Please fill out the effective date");
+      return;
+    } else {
+      setErrorMessage("");
+    }
+    let og = oldAgreement;
+    const newAgreement = {
+      rental_property_id: property.property_uid,
+      lease_start: startDate,
+      lease_end: endDate,
+      rental_status: rentalStatus,
+      rent_payments: feeState,
+      available_topay: available,
+      due_by: dueDate,
+      late_by: lateAfter,
+      late_fee: lateFee,
+      perDay_late_fee: lateFeePer,
+      assigned_contacts: contactState[0],
+      adults: adults,
+      children: children,
+      pets: pets,
+      vehicles: vehicles,
+      referred: referred,
+      documents: files,
+      effective_date: effectiveDate,
+    };
+    let up = newAgreement;
+    // console.log("og", oldAgreement);
+    // console.log("up", up);
+    setUpdatedAgreement(up);
+    setShowDialog(true);
+  };
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const required =
+    errorMessage === "Please fill out all fields" ||
+    errorMessage === "Please fill out the effective date" ? (
+      <span style={red} className="ms-1">
+        *
+      </span>
+    ) : (
+      ""
+    );
   return (
     <div className="flex-1">
       <UpdateConfirmDialog
