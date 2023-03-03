@@ -354,8 +354,6 @@ function ManagerPropertyView(props) {
         application.application_status === "TENANT LEASE EXTENSION"
       ) {
         setAcceptedTenantApplications([application]);
-      } else if (application.application_status === "NEW") {
-        setAcceptedTenantApplications([application]);
       }
     });
     let recent_mr = [];
@@ -372,10 +370,10 @@ function ManagerPropertyView(props) {
     // console.log(recent_mr, past_mr);
     setIsLoading(false);
   };
-  // console.log("selected", selectedAgreement);
-  // console.log("refused", refusedAgreement);
-  // console.log("extended", extendedAgreement);
-  // console.log(acceptedTenantApplications);
+  console.log("selected", selectedAgreement);
+  console.log("refused", refusedAgreement);
+  console.log("extended", extendedAgreement);
+  console.log(acceptedTenantApplications);
   const headerBack = () => {
     if (editAppliances && editProperty) {
       setEditAppliances(false);
@@ -438,7 +436,10 @@ function ManagerPropertyView(props) {
     setShowTenantAgreement(false);
     setShowTenantProfile(false);
     setAcceptedTenantApplications([]);
-    reloadProperty();
+    setSelectedAgreement(null);
+    window.scrollTo(0, 0);
+
+    fetchProperty();
   };
 
   const reloadProperty = () => {
@@ -450,6 +451,7 @@ function ManagerPropertyView(props) {
 
   const createNewTenantAgreement = (selected_applications) => {
     setAcceptedTenantApplications(selected_applications);
+
     setShowTenantAgreement(true);
   };
 
@@ -595,7 +597,6 @@ function ManagerPropertyView(props) {
     rowCount: PropTypes.number.isRequired,
   };
 
-  // console.log(acceptedTenantApplications);
   return Object.keys(property).length > 1 ? (
     showManagementContract ? (
       <ManagerManagementContract
@@ -610,7 +611,12 @@ function ManagerPropertyView(props) {
         back={closeAgreement}
         property={property}
         agreement={
-          selectedAgreement == null ? refusedAgreement : selectedAgreement
+          selectedAgreement == null
+            ? refusedAgreement
+            : acceptedTenantApplications[0].application_uid !==
+              JSON.parse(selectedAgreement.linked_application_id)[0]
+            ? refusedAgreement
+            : selectedAgreement
         }
         acceptedTenantApplications={acceptedTenantApplications}
         setAcceptedTenantApplications={setAcceptedTenantApplications}

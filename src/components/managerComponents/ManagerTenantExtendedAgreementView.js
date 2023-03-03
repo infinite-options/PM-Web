@@ -90,7 +90,7 @@ function ManagerTenantExtendedAgreementView(props) {
   useEffect(() => {
     closeAgreement();
   }, [addDoc]);
-  console.log("selected extended Agreement", selectedAgreement);
+  // console.log("selected extended Agreement", selectedAgreement);
   const loadAgreement = async (agg) => {
     // console.log("load agreement");
 

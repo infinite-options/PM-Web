@@ -719,7 +719,7 @@ function ManagerTenantAgreementView(props) {
                   <Button
                     style={bluePillButton}
                     variant="outline-primary"
-                    onClick={() => renewLease(agreement)}
+                    onClick={() => renewLease(selectedAgreement)}
                   >
                     Renew Lease
                   </Button>
