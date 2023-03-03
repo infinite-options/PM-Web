@@ -62,10 +62,7 @@ function ManagerTenantAgreement(props) {
     e.stopPropagation();
   };
   console.log(property, agreement, acceptedTenantApplications);
-  console.log(
-    property.rentalInfo.some((rent) => rent.rental_status !== "ACTIVE"),
-    agreement.rental_status
-  );
+
   const [tenantID, setTenantID] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -489,21 +486,59 @@ function ManagerTenantAgreement(props) {
       navigate("../manager");
     } else {
       // lease status is not PROCESSING
-
-      for (const application of acceptedTenantApplications.map(
-        (application) => application.application_uid
-      )) {
-        console.log(application);
-
-        const request_body = {
-          application_uid: application,
-          message: "Lease details forwarded for review",
-          application_status: "FORWARDED",
-        };
-        console.log(request_body);
-        const update_application = await put("/applications", request_body);
-        // console.log(update_application);
+      {
+        for (const application of acceptedTenantApplications.map(
+          (application) => application.application_uid
+        )) {
+          console.log(application);
+          if (
+            property.rentalInfo.some((rent) => rent.rental_status === "ACTIVE")
+          ) {
+            if (
+              application ==
+              JSON.parse(
+                property.rentalInfo.find(
+                  (rent) => rent.rental_status === "ACTIVE"
+                ).linked_application_id
+              )[0]
+            ) {
+              const request_body = {
+                application_uid: application,
+                message: "Requesting to Extend Lease",
+                application_status: "LEASE EXTENSION",
+              };
+              console.log(request_body);
+              const update_application = await put(
+                "/applications",
+                request_body
+              );
+              // console.log(update_application);
+            } else {
+              const request_body = {
+                application_uid: application,
+                message: "Lease details forwarded for review",
+                application_status: "FORWARDED",
+              };
+              console.log(request_body);
+              const update_application = await put(
+                "/applications",
+                request_body
+              );
+              // console.log(update_application);
+            }
+          } else {
+            const request_body = {
+              application_uid: application,
+              message: "Lease details forwarded for review",
+              application_status: "FORWARDED",
+            };
+            console.log(request_body);
+            const update_application = await put("/applications", request_body);
+            // console.log(update_application);
+          }
+        }
       }
+
       let newAgreement = {};
       // if rental status is REFUSED
       console.log(
