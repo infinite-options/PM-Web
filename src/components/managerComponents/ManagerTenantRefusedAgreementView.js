@@ -49,6 +49,7 @@ function ManagerTenantRefusedAgreementView(props) {
     renewLease,
     selectedAgreement,
     acceptedTenantApplications,
+    setAcceptedTenantApplications,
     selectAgreement,
     closeAgreement,
   } = props;
@@ -157,6 +158,12 @@ function ManagerTenantRefusedAgreementView(props) {
     );
     if (appPMEL.length > 0) {
       setPmExtendLease(true);
+    }
+    let appRef = property.applications.filter(
+      (a) => a.application_status === "REFUSED"
+    );
+    if (appRef.length > 0) {
+      setAcceptedTenantApplications(appRef);
     }
   };
   useEffect(() => {

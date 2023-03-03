@@ -58,14 +58,14 @@ function ManagerTenantAgreement(props) {
     acceptedTenantApplications,
     setAcceptedTenantApplications,
   } = props;
-  console.log(
-    "acceptedTenantApplications in managertenantagreement",
-    acceptedTenantApplications[0]
-  );
-  console.log("agreement in managertenantagreement", agreement.rental_status);
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
+  console.log(property, agreement, acceptedTenantApplications);
+  console.log(
+    property.rentalInfo.some((rent) => rent.rental_status !== "ACTIVE"),
+    agreement.rental_status
+  );
   const [tenantID, setTenantID] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -111,14 +111,14 @@ function ManagerTenantAgreement(props) {
   };
 
   const loadAgreement = () => {
-    console.log(agreement);
+    // console.log(agreement);
     // setOldAgreement(agreement);
     setTenantID(agreement.tenant_id);
     setStartDate(agreement.lease_start);
     setEndDate(agreement.lease_end);
     // setEffectiveDate(agreement.effective_date);
     setFeeState(JSON.parse(agreement.rent_payments));
-    console.log(agreement.rent_payments);
+    // console.log(agreement.rent_payments);
     contactState[1](JSON.parse(agreement.assigned_contacts));
     setFiles(JSON.parse(agreement.documents));
     setAvailable(agreement.available_topay);
@@ -154,7 +154,7 @@ function ManagerTenantAgreement(props) {
     setOldAgreement(newAgreement);
   };
   useEffect(() => {
-    console.log("in useeffect", agreement);
+    // console.log("in useeffect", agreement);
     if (agreement) {
       loadAgreement();
     }
@@ -506,7 +506,34 @@ function ManagerTenantAgreement(props) {
       }
       let newAgreement = {};
       // if rental status is REFUSED
-      if (rentalStatus === "REFUSED") {
+      console.log(
+        rentalStatus === "REFUSED" &&
+          property.rentalInfo.some((rent) => rent.rental_status !== "ACTIVE")
+      );
+      if (
+        rentalStatus === "REFUSED" &&
+        property.rentalInfo.some((rent) => rent.rental_status === "ACTIVE")
+      ) {
+        newAgreement = {
+          rental_property_id: property.property_uid,
+          lease_start: startDate,
+          lease_end: endDate,
+          rental_status: "PENDING",
+          rent_payments: JSON.stringify(feeState),
+          available_topay: available,
+          due_by: dueDate,
+          late_by: lateAfter,
+          late_fee: lateFee,
+          perDay_late_fee: lateFeePer,
+          assigned_contacts: JSON.stringify(contactState[0]),
+          adults: JSON.stringify(adults),
+          children: JSON.stringify(children),
+          pets: JSON.stringify(pets),
+          vehicles: JSON.stringify(vehicles),
+          referred: JSON.stringify(referred),
+          effective_date: effectiveDate,
+        };
+      } else if (rentalStatus === "REFUSED") {
         newAgreement = {
           rental_property_id: property.property_uid,
           lease_start: startDate,
