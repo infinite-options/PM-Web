@@ -277,336 +277,225 @@ function ManagerTenantProfileView(props) {
               )
             )
           : ""}
+        <div
+          className="mx-3 my-3 p-2"
+          style={{
+            background: "#E9E9E9 0% 0% no-repeat padding-box",
+            borderRadius: "10px",
+            opacity: 1,
+          }}
+        >
+          {" "}
+          {application.applicant_info.length > 1 ? (
+            <Row className="m-3">
+              <Row className="mb-4">
+                <h5 style={mediumBold}>Personal Details</h5>
 
-        {application.applicant_info.length > 1 ? (
-          <Row className="m-3">
-            <Row className="mb-4">
-              <h5 style={mediumBold}>Personal Details</h5>
-
-              <Table
-                classes={{ root: classes.customTableDetail }}
-                size="small"
-                responsive="md"
-              >
-                <TableHead>
-                  <TableRow>
-                    <TableCell> First Name</TableCell>
-                    <TableCell> Last Name</TableCell>
-                    <TableCell> Address</TableCell>
-                    <TableCell> Phone Number</TableCell>
-                    <TableCell> Email</TableCell>
-                    <TableCell> Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {application.applicant_info.map((applicant) =>
-                    applicant.application_uid !==
-                    application.application_uid ? (
-                      <TableRow>
-                        <TableCell>
-                          {" "}
-                          {applicant.tenant_first_name &&
-                          applicant.tenant_first_name !== "NULL"
-                            ? applicant.tenant_first_name
-                            : "No First Name Provided"}
-                        </TableCell>
-                        <TableCell>
-                          {" "}
-                          {applicant.tenant_last_name &&
-                          applicant.tenant_last_name !== "NULL"
-                            ? applicant.tenant_last_name
-                            : "No Last Name Provided"}
-                        </TableCell>
-                        <TableCell>
-                          {applicant.address}
-                          {applicant.unit !== "" ? " " + applicant.unit : ""}
-                          , <br />
-                          {applicant.city}, {applicant.state} {applicant.zip}
-                        </TableCell>
-                        <TableCell>
-                          {applicant.tenant_phone_number &&
-                          applicant.tenant_phone_number !== "NULL"
-                            ? applicant.tenant_phone_number
-                            : "No Phone Number Provided"}
-                        </TableCell>
-                        <TableCell>
-                          {applicant.tenant_email &&
-                          applicant.tenant_email !== "NULL"
-                            ? applicant.tenant_email
-                            : "No Email Provided"}
-                        </TableCell>
-                        <TableCell>
-                          <div className="d-flex  justify-content-end ">
-                            <div
-                              style={applicant.tenant_id ? {} : hidden}
-                              onClick={stopPropagation}
-                            >
-                              <a href={`tel:${applicant.tenant_phone_number}`}>
-                                <img src={Phone} alt="Phone" style={smallImg} />
-                              </a>
-                              <a href={`mailto:${applicant.tenant_email}`}>
-                                <img
-                                  src={Message}
-                                  alt="Message"
-                                  style={smallImg}
-                                />
-                              </a>
-                            </div>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      ""
-                    )
-                  )}
-                </TableBody>
-              </Table>
-            </Row>
-
-            <Row className="mb-4">
-              <h5 style={mediumBold}>Current Job Details</h5>
-
-              <Table
-                classes={{ root: classes.customTableDetail }}
-                size="small"
-                responsive="md"
-              >
-                <TableHead>
-                  <TableRow>
-                    <TableCell> Current Salary</TableCell>
-                    <TableCell>Salary Frequency</TableCell>
-                    <TableCell> Current Job Title</TableCell>
-                    <TableCell> Current Company Name</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {application.applicant_info.map((applicant) =>
-                    applicant.application_uid !==
-                    application.application_uid ? (
-                      <TableRow>
-                        <TableCell>
-                          {applicant.tenant_current_salary &&
-                          applicant.tenant_current_salary !== "NULL"
-                            ? applicant.tenant_current_salary
-                            : "No Salary Info Provided"}
-                        </TableCell>
-                        <TableCell>
-                          {applicant.tenant_salary_frequency &&
-                          applicant.tenant_salary_frequency !== "NULL"
-                            ? applicant.tenant_salary_frequency
-                            : "No Salary Info Provided"}
-                        </TableCell>
-                        <TableCell>
-                          {" "}
-                          {applicant.tenant_current_job_title &&
-                          applicant.tenant_current_job_title !== "NULL"
-                            ? applicant.tenant_current_job_title
-                            : "No Job Title Provided"}
-                        </TableCell>
-                        <TableCell>
-                          {" "}
-                          {applicant.tenant_current_job_company &&
-                          applicant.tenant_current_job_company !== "NULL"
-                            ? applicant.tenant_current_job_company
-                            : "No Company Provided"}
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      ""
-                    )
-                  )}
-                </TableBody>
-              </Table>
-            </Row>
-            <Row className="mb-4">
-              <h5 style={mediumBold}>Identification Details</h5>
-
-              <Table
-                classes={{ root: classes.customTableDetail }}
-                size="small"
-                responsive="md"
-              >
-                <TableHead>
-                  <TableRow>
-                    <TableCell> SSN</TableCell>
-                    <TableCell> Driver's Licence Number</TableCell>
-                    <TableCell> Driver's Licence State</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {application.applicant_info.map((applicant) =>
-                    applicant.application_uid !==
-                    application.application_uid ? (
-                      <TableRow>
-                        <TableCell onClick={() => setShowSSN(!showSSN)}>
-                          {" "}
-                          {showSSN ? (
-                            <div>
-                              {MaskCharacter(applicant.tenant_ssn, "*")}
-                            </div>
-                          ) : (
-                            <div>{applicant.tenant_ssn}</div>
-                          )}
-                        </TableCell>
-                        <TableCell onClick={() => setShowDL(!showDL)}>
-                          {showDL ? (
-                            <div>
-                              {MaskCharacter(
-                                applicant.tenant_drivers_license_number,
-                                "*"
-                              )}
-                            </div>
-                          ) : (
-                            <div>{applicant.tenant_drivers_license_number}</div>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {applicant.tenant_drivers_license_state &&
-                          applicant.tenant_drivers_license_state !== "NULL"
-                            ? applicant.tenant_drivers_license_state
-                            : "No DL state Provided"}
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      ""
-                    )
-                  )}
-                </TableBody>
-              </Table>
-            </Row>
-          </Row>
-        ) : (
-          ""
-        )}
-        {application.applicant_info.length > 0
-          ? application.applicant_info.map((applicant) =>
-              applicant.application_uid !== application.application_uid ? (
-                <div
-                  style={{
-                    background: "#FFFFFF 0% 0% no-repeat padding-box",
-                    boxShadow: "0px 3px 6px #00000029",
-                    border: "0.5px solid #707070",
-                    borderRadius: "5px",
-                    maxHeight: "500px",
-                    overflow: "scroll",
-                  }}
+                <Table
+                  classes={{ root: classes.customTableDetail }}
+                  size="small"
+                  responsive="md"
                 >
-                  <Row className="p-1">
-                    <Col>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <h5 className="mb-0" style={mediumBold}>
-                          {applicant.tenant_first_name}{" "}
-                          {applicant.tenant_last_name}
-                        </h5>
-                      </div>
-                    </Col>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell> First Name</TableCell>
+                      <TableCell> Last Name</TableCell>
+                      <TableCell> Address</TableCell>
+                      <TableCell> Phone Number</TableCell>
+                      <TableCell> Email</TableCell>
+                      <TableCell> Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {application.applicant_info.map((applicant) =>
+                      applicant.application_uid !==
+                      application.application_uid ? (
+                        <TableRow>
+                          <TableCell>
+                            {" "}
+                            {applicant.tenant_first_name &&
+                            applicant.tenant_first_name !== "NULL"
+                              ? applicant.tenant_first_name
+                              : "No First Name Provided"}
+                          </TableCell>
+                          <TableCell>
+                            {" "}
+                            {applicant.tenant_last_name &&
+                            applicant.tenant_last_name !== "NULL"
+                              ? applicant.tenant_last_name
+                              : "No Last Name Provided"}
+                          </TableCell>
+                          <TableCell>
+                            {applicant.address}
+                            {applicant.unit !== "" ? " " + applicant.unit : ""}
+                            , <br />
+                            {applicant.city}, {applicant.state} {applicant.zip}
+                          </TableCell>
+                          <TableCell>
+                            {applicant.tenant_phone_number &&
+                            applicant.tenant_phone_number !== "NULL"
+                              ? applicant.tenant_phone_number
+                              : "No Phone Number Provided"}
+                          </TableCell>
+                          <TableCell>
+                            {applicant.tenant_email &&
+                            applicant.tenant_email !== "NULL"
+                              ? applicant.tenant_email
+                              : "No Email Provided"}
+                          </TableCell>
+                          <TableCell>
+                            <div className="d-flex  justify-content-end ">
+                              <div
+                                style={applicant.tenant_id ? {} : hidden}
+                                onClick={stopPropagation}
+                              >
+                                <a
+                                  href={`tel:${applicant.tenant_phone_number}`}
+                                >
+                                  <img
+                                    src={Phone}
+                                    alt="Phone"
+                                    style={smallImg}
+                                  />
+                                </a>
+                                <a href={`mailto:${applicant.tenant_email}`}>
+                                  <img
+                                    src={Message}
+                                    alt="Message"
+                                    style={smallImg}
+                                  />
+                                </a>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        ""
+                      )
+                    )}
+                  </TableBody>
+                </Table>
+              </Row>
 
-                    <Col>
-                      <div className="d-flex  justify-content-end ">
-                        <div
-                          style={applicant.tenant_id ? {} : hidden}
-                          onClick={stopPropagation}
-                        >
-                          <a href={`tel:${applicant.tenant_phone_number}`}>
-                            <img src={Phone} alt="Phone" style={smallImg} />
-                          </a>
-                          <a href={`mailto:${applicant.tenant_email}`}>
-                            <img src={Message} alt="Message" style={smallImg} />
-                          </a>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                  <div
-                    className="my-3 p-2"
-                    style={{
-                      boxShadow: " 0px 1px 6px #00000029",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <Row className="mx-2">
-                      Current Job Details
-                      <Row className="mx-2">
-                        <Col style={subText}>Job Company</Col>
-                        <Col style={subText}>
-                          {applicant.tenant_current_job_company}
-                        </Col>
-                      </Row>
-                      <Row className="mx-2">
-                        <Col style={subText}>Job Title</Col>
-                        <Col style={subText}>
-                          {applicant.tenant_current_job_title}
-                        </Col>
-                      </Row>
-                      <Row className="mx-2">
-                        <Col style={subText}>Job Salary</Col>
-                        <Col style={subText}>
-                          {applicant.tenant_current_salary}/{" "}
-                          {applicant.tenant_salary_frequency}
-                        </Col>
-                      </Row>
-                    </Row>
-                  </div>
-                  <div
-                    className="my-3 p-2"
-                    style={{
-                      boxShadow: " 0px 1px 6px #00000029",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <Row className="mx-2">
-                      Personal Details
-                      <Row className="mx-2">
-                        <Col style={subText}>DL Number</Col>
-                        <Col style={subText} onClick={() => setShowDL(!showDL)}>
-                          {showDL ? (
-                            <div>
-                              {MaskCharacter(
-                                applicant.tenant_drivers_license_number,
-                                "*"
-                              )}
-                            </div>
-                          ) : (
-                            <div>{applicant.tenant_drivers_license_number}</div>
-                          )}
-                        </Col>
-                      </Row>
-                      <Row className="mx-2">
-                        <Col style={subText}>SSN</Col>
-                        <Col
-                          style={subText}
-                          onClick={() => setShowSSN(!showSSN)}
-                        >
-                          {showSSN ? (
-                            <div>
-                              {MaskCharacter(applicant.tenant_ssn, "*")}
-                            </div>
-                          ) : (
-                            <div>{applicant.tenant_ssn}</div>
-                          )}
-                          {}
-                        </Col>
-                      </Row>
-                      <Row className="mx-2">
-                        <Col style={subText}>Email</Col>
-                        <Col style={subText}>{applicant.tenant_email}</Col>
-                      </Row>
-                      <Row className="mx-2">
-                        <Col style={subText}>Phone Number</Col>
-                        <Col style={subText}>
-                          {applicant.tenant_phone_number}
-                        </Col>
-                      </Row>
-                    </Row>
-                  </div>
-                </div>
-              ) : (
-                ""
-              )
-            )
-          : ""}
+              <Row className="mb-4">
+                <h5 style={mediumBold}>Current Job Details</h5>
+
+                <Table
+                  classes={{ root: classes.customTableDetail }}
+                  size="small"
+                  responsive="md"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell> Current Salary</TableCell>
+                      <TableCell>Salary Frequency</TableCell>
+                      <TableCell> Current Job Title</TableCell>
+                      <TableCell> Current Company Name</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {application.applicant_info.map((applicant) =>
+                      applicant.application_uid !==
+                      application.application_uid ? (
+                        <TableRow>
+                          <TableCell>
+                            {applicant.tenant_current_salary &&
+                            applicant.tenant_current_salary !== "NULL"
+                              ? applicant.tenant_current_salary
+                              : "No Salary Info Provided"}
+                          </TableCell>
+                          <TableCell>
+                            {applicant.tenant_salary_frequency &&
+                            applicant.tenant_salary_frequency !== "NULL"
+                              ? applicant.tenant_salary_frequency
+                              : "No Salary Info Provided"}
+                          </TableCell>
+                          <TableCell>
+                            {" "}
+                            {applicant.tenant_current_job_title &&
+                            applicant.tenant_current_job_title !== "NULL"
+                              ? applicant.tenant_current_job_title
+                              : "No Job Title Provided"}
+                          </TableCell>
+                          <TableCell>
+                            {" "}
+                            {applicant.tenant_current_job_company &&
+                            applicant.tenant_current_job_company !== "NULL"
+                              ? applicant.tenant_current_job_company
+                              : "No Company Provided"}
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        ""
+                      )
+                    )}
+                  </TableBody>
+                </Table>
+              </Row>
+              <Row className="mb-4">
+                <h5 style={mediumBold}>Identification Details</h5>
+
+                <Table
+                  classes={{ root: classes.customTableDetail }}
+                  size="small"
+                  responsive="md"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell> SSN</TableCell>
+                      <TableCell> Driver's Licence Number</TableCell>
+                      <TableCell> Driver's Licence State</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {application.applicant_info.map((applicant) =>
+                      applicant.application_uid !==
+                      application.application_uid ? (
+                        <TableRow>
+                          <TableCell onClick={() => setShowSSN(!showSSN)}>
+                            {" "}
+                            {showSSN ? (
+                              <div>
+                                {MaskCharacter(applicant.tenant_ssn, "*")}
+                              </div>
+                            ) : (
+                              <div>{applicant.tenant_ssn}</div>
+                            )}
+                          </TableCell>
+                          <TableCell onClick={() => setShowDL(!showDL)}>
+                            {showDL ? (
+                              <div>
+                                {MaskCharacter(
+                                  applicant.tenant_drivers_license_number,
+                                  "*"
+                                )}
+                              </div>
+                            ) : (
+                              <div>
+                                {applicant.tenant_drivers_license_number}
+                              </div>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {applicant.tenant_drivers_license_state &&
+                            applicant.tenant_drivers_license_state !== "NULL"
+                              ? applicant.tenant_drivers_license_state
+                              : "No DL state Provided"}
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        ""
+                      )
+                    )}
+                  </TableBody>
+                </Table>
+              </Row>
+            </Row>
+          ) : (
+            ""
+          )}
+        </div>
+
         <Row className="d-flex justify-content-center my-2" style={mediumBold}>
           Application Details
         </Row>
