@@ -120,6 +120,7 @@ function BusinessProfileInfo(props) {
     };
     fetchProfileInfo();
   }, []);
+  console.log(errorMessage, serviceState);
   const submitInfo = async () => {
     const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
       paymentState[0];
@@ -131,7 +132,7 @@ function BusinessProfileInfo(props) {
       setErrorMessage("Please add at least one fee");
       return;
     }
-    if (businessType === "MAINTENANCE" && serviceState[0].length === 0) {
+    if (businessType === "MAINTENANCE" && serviceState.length === 0) {
       setErrorMessage("Please add at least one service");
       return;
     }

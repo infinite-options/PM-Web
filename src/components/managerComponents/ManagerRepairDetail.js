@@ -47,10 +47,15 @@ import { get, post, put } from "../../utils/api";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
-      padding: "6px 6px 6px 6px", // <-- arbitrary value
+      padding: "2px 2px",
+      border: "0.5px solid grey ",
+      wordBreak: "break-word",
     },
+    width: "100%",
+    tableLayout: "fixed",
   },
 });
+
 function ManagerRepairDetail(props) {
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token } = userData;
@@ -373,7 +378,7 @@ function ManagerRepairDetail(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        <div className="w-100 mb-5 ">
           <Header
             title="Repairs"
             leftText={
@@ -393,52 +398,75 @@ function ManagerRepairDetail(props) {
 
           <div className="mx-2 my-4 p-3" hidden={requestQuote}>
             <Row style={headings}>
-              {JSON.parse(repair.images).length === 0 ? (
-                <Row className=" m-3">
+              <Row className=" d-flex align-items-center justify-content-center m-3">
+                {JSON.parse(repair.images).length === 0 ? (
                   <img
                     src={RepairImg}
+                    alt="Property"
                     style={{
-                      objectFit: "contain",
-                      width: "350px",
-                      height: " 198px",
+                      width: "200px",
+                      height: "200px",
+                      objectFit: "cover",
                     }}
-                    alt="repair"
                   />
-                </Row>
-              ) : JSON.parse(repair.images).length > 1 ? (
-                <Row className=" m-3">
-                  <Carousel responsive={responsive}>
-                    {JSON.parse(repair.images).map((images) => {
+                ) : JSON.parse(repair.images).length > 4 ? (
+                  <Carousel
+                    responsive={responsive}
+                    infinite={true}
+                    arrows={true}
+                    partialVisible={false}
+                    // className=" d-flex align-items-center justify-content-center"
+                  >
+                    {JSON.parse(repair.images).map((image) => {
                       return (
+                        // <div className="d-flex align-items-center justify-content-center">
                         <img
-                          src={`${images}?${Date.now()}`}
+                          // key={Date.now()}
+                          src={`${image}?${Date.now()}`}
+                          // onClick={() =>
+                          //   showImage(`${image}?${Date.now()}`)
+                          // }
                           style={{
                             width: "200px",
                             height: "200px",
-                            objectFit: "contain",
+                            objectFit: "cover",
                           }}
-                          alt="repair"
                         />
+                        // </div>
                       );
                     })}
                   </Carousel>
-                </Row>
-              ) : (
-                <Row className=" m-3">
-                  <img
-                    src={JSON.parse(repair.images)}
-                    //className="w-100 h-100"
-                    style={{
-                      objectFit: "cover",
-                      width: "350px",
-                      height: " 198px",
-                      border: "1px solid #C4C4C4",
-                      borderRadius: "5px",
-                    }}
-                    alt="repair"
-                  />
-                </Row>
-              )}
+                ) : JSON.parse(repair.images).length < 4 ? (
+                  <Carousel
+                    responsive={responsive}
+                    infinite={true}
+                    arrows={true}
+                    partialVisible={false}
+                    className=" d-flex align-items-center justify-content-center"
+                  >
+                    {JSON.parse(repair.images).map((image) => {
+                      return (
+                        <div className="d-flex align-items-center justify-content-center">
+                          <img
+                            // key={Date.now()}
+                            src={`${image}?${Date.now()}`}
+                            // onClick={() =>
+                            //   showImage(`${image}?${Date.now()}`)
+                            // }
+                            style={{
+                              width: "200px",
+                              height: "200px",
+                              objectFit: "cover",
+                            }}
+                          />
+                        </div>
+                      );
+                    })}
+                  </Carousel>
+                ) : (
+                  ""
+                )}
+              </Row>
               <Col>{title}</Col>
               <Col xs={4}>
                 {priority === "High" ? (
@@ -1012,7 +1040,7 @@ function ManagerRepairDetail(props) {
             <Row style={subHeading}>
               <div>Select businesses to request a quote:</div>
             </Row>
-
+            {console.log(businesses)}
             <div>
               {businesses.length > 0 &&
                 businesses.map((business, i) => (
@@ -1028,7 +1056,7 @@ function ManagerRepairDetail(props) {
                       opacity: 1,
                     }}
                   >
-                    <Col xs={2} className="mt-2">
+                    <Col xs={1} className="mt-2">
                       <Row>
                         <Checkbox
                           type="BOX"
@@ -1039,11 +1067,40 @@ function ManagerRepairDetail(props) {
                     </Col>
                     <Col>
                       <Row style={mediumBold}>{business.business_name}</Row>
-                      <Row style={subText}>
-                        Services: Toilet repair, Plumbing, Kitchen repair
+                      <Row className="m-3" style={subText}>
+                        {JSON.parse(business.business_services_fees).length >
+                        0 ? (
+                          <Table
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Fee Name</TableCell>
+                                <TableCell>Amount</TableCell>
+                                <TableCell>Per</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {JSON.parse(business.business_services_fees).map(
+                                (service, i) => (
+                                  <TableRow key={i}>
+                                    <TableCell>
+                                      {service.service_name}
+                                    </TableCell>
+                                    <TableCell>${service.charge}</TableCell>
+
+                                    <TableCell>{service.per}</TableCell>
+                                  </TableRow>
+                                )
+                              )}
+                            </TableBody>
+                          </Table>
+                        ) : (
+                          ""
+                        )}
                       </Row>
                       <Row className="d-flex flex-row align-items-center justify-content-evenly">
-                        <Col style={blue}> Manager: Jane Doe</Col>
                         <Col className="d-flex flex-row align-items-center justify-content-end">
                           <a href={`tel:${businesses.business_phone_number}`}>
                             <img
@@ -1233,7 +1290,7 @@ function ManagerRepairDetail(props) {
                             : quote.quote_status === "REJECTED"
                             ? "You've Rejected the Quote"
                             : quote.quote_status === "ACCEPTED" &&
-                              quote.request_status === "SCHEDULE"
+                              quote.request_status === "PROCESSING"
                             ? "You've Accepted the Quote"
                             : quote.quote_status === "SENT"
                             ? "Waiting for quote from business"
