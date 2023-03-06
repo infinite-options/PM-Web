@@ -1176,7 +1176,7 @@ function OwnerUtilities(props) {
                         </Form.Label>
                         <Form.Control
                           style={squareForm}
-                          placeholder="Electricity"
+                          placeholder="Utility Name"
                           value={newUtility.service_name}
                           onChange={(e) => changeNewUtility(e, "service_name")}
                         />
@@ -1191,7 +1191,7 @@ function OwnerUtilities(props) {
                         <Form.Control
                           style={squareForm}
                           type="number"
-                          placeholder="20"
+                          placeholder="Amount($)"
                           value={newUtility.charge}
                           onChange={(e) => changeNewUtility(e, "charge")}
                         />
@@ -1206,7 +1206,7 @@ function OwnerUtilities(props) {
                         </Form.Label>
                         <Form.Control
                           style={squareForm}
-                          placeholder="Electricity"
+                          placeholder="Utility Provider"
                           value={newUtility.provider}
                           onChange={(e) => changeNewUtility(e, "provider")}
                         />

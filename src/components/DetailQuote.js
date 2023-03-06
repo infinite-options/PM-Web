@@ -113,7 +113,7 @@ function DetailQuote(props) {
                 <Form.Control
                   style={{ borderRadius: 0 }}
                   //ref={requestTitleRef}
-                  placeholder="Shower labor cost"
+                  placeholder="Notes"
                 />
               </Form.Group>
 
@@ -132,7 +132,7 @@ function DetailQuote(props) {
                     <Form.Control
                       style={{ borderRadius: 0 }}
                       //ref={requestTitleRef}
-                      placeholder="$20.00"
+                      placeholder="Amount($)"
                     />
                   </Form.Group>
                 </Col>

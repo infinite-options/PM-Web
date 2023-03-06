@@ -177,7 +177,10 @@ export default function TenantDashboard() {
         (item) => item.request_status === "PROCESSING"
       );
       const scheduled_repairs = property.maintenanceRequests.filter(
-        (item) => item.request_status === "SCHEDULED"
+        (item) =>
+          item.request_status === "SCHEDULED" ||
+          item.request_status === "RESCHEDULE" ||
+          item.request_status === "SCHEDULE"
       );
       const completed_repairs = property.maintenanceRequests.filter(
         (item) => item.request_status === "COMPLETE"

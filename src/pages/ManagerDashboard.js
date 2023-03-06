@@ -121,7 +121,10 @@ export default function ManagerDashboard() {
         (item) => item.request_status === "PROCESSING"
       );
       const scheduled_repairs = property.maintenanceRequests.filter(
-        (item) => item.request_status === "SCHEDULED"
+        (item) =>
+          item.request_status === "SCHEDULED" ||
+          item.request_status === "RESCHEDULE" ||
+          item.request_status === "SCHEDULE"
       );
       const completed_repairs = property.maintenanceRequests.filter(
         (item) => item.request_status === "COMPLETE"
@@ -1004,7 +1007,7 @@ export default function ManagerDashboard() {
                                       >
                                         {property.tenant_refused_applications
                                           .length > 0
-                                          ? "Tenant refused the lease"
+                                          ? `${property.forwarded_applications.length} Tenat(s) refused to pay`
                                           : ""}
                                       </p>
                                     </div>

@@ -129,7 +129,10 @@ function TenantRepairDetails(props) {
     setDescription(request_response.result[0].description);
     setPriority(request_response.result[0].priority);
     setIssueType(request_response.result[0].request_type);
-    if (request_response.result[0].request_status === "SCHEDULED") {
+    if (
+      request_response.result[0].request_status === "SCHEDULE" ||
+      request_response.result[0].request_status === "RESCHEDULE"
+    ) {
       setReDate(request_response.result[0].scheduled_date);
       setReTime(request_response.result[0].scheduled_time);
     }
@@ -202,6 +205,8 @@ function TenantRepairDetails(props) {
   const rescheduleRepair = async () => {
     const body = {
       maintenance_request_uid: repair.maintenance_request_uid,
+      request_status: "RESCHEDULE",
+      notes: "Request to reschedule",
       scheduled_date: reDate,
       scheduled_time: reTime,
     };
@@ -216,6 +221,36 @@ function TenantRepairDetails(props) {
       }
     }
     const response = await put("/maintenanceRequests", body, null, files);
+
+    fetchBusinesses();
+    setScheduleMaintenance(false);
+    setIsEditing(false);
+  };
+  const acceptSchedule = async (quote) => {
+    const body = {
+      maintenance_request_uid: repair.maintenance_request_uid,
+      request_status: "SCHEDULED",
+      notes: "Maintenance Scheduled",
+      scheduled_date: reDate,
+      scheduled_time: reTime,
+    };
+    const files = imageState[0];
+    let i = 0;
+    for (const file of imageState[0]) {
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      if (file.file !== null) {
+        body[key] = file.file;
+      } else {
+        body[key] = file.image;
+      }
+    }
+    const responseMR = await put("/maintenanceRequests", body, null, files);
+
+    const updatedQuote = {
+      maintenance_quote_uid: quote.maintenance_quote_uid,
+      quote_status: "AGREED",
+    };
+    const responseMQ = await put("/maintenanceQuotes", updatedQuote);
 
     fetchBusinesses();
     setScheduleMaintenance(false);
@@ -752,30 +787,44 @@ function TenantRepairDetails(props) {
                     >
                       <Col className="d-flex flex-row justify-content-evenly">
                         <Button style={orangePill}>
-                          {quote.quote_status === "REQUESTED"
+                           {quote.quote_status === "REQUESTED"
                             ? "Waiting for quote from business"
                             : quote.quote_status === "REJECTED"
                             ? "You've Rejected the Quote"
-                            : quote.quote_status === "ACCEPTED"
+                            : quote.quote_status === "ACCEPTED" &&
+                              quote.request_status !== "SCHEDULED"
                             ? "You've Accepted the Quote"
                             : quote.quote_status === "SENT"
                             ? "Waiting for quote from business"
                             : quote.quote_status === "REFUSED"
                             ? "Business refused to send a quote"
+                            : quote.quote_status === "ACCEPTED" &&
+                              quote.request_status === "SCHEDULED"
+                            ? "Maintenace Scheduled"
                             : "Another quote accepted"}
                         </Button>
                       </Col>
                     </Row> */}
                     {!scheduleMaintenance &&
                     repair.can_reschedule &&
+                    (quote.request_status === "SCHEDULE" ||
+                      quote.request_status === "RESCHEDULE") &&
                     quote.quote_status === "ACCEPTED" ? (
                       <Row className="pt-1">
                         <Col className="d-flex flex-row justify-content-evenly">
                           <Button
                             style={bluePillButton}
+                            onClick={() => acceptSchedule(quote)}
+                          >
+                            Accept
+                          </Button>
+                        </Col>
+                        <Col className="d-flex flex-row justify-content-evenly">
+                          <Button
+                            style={bluePillButton}
                             onClick={() => setScheduleMaintenance(true)}
                           >
-                            Reschedule Maintenance
+                            Reschedule
                           </Button>
                         </Col>
                       </Row>

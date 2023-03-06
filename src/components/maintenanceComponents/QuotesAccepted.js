@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import Header from "../components/Header";
-import ArrowUp from "../icons/ArrowUp.svg";
-import ArrowDown from "../icons/ArrowDown.svg";
-import HighPriority from "../icons/highPriority.svg";
-import MediumPriority from "../icons/mediumPriority.svg";
-import LowPriority from "../icons/lowPriority.svg";
+import Header from "../Header";
+import ArrowUp from "../../icons/ArrowUp.svg";
+import ArrowDown from "../../icons/ArrowDown.svg";
+import HighPriority from "../../icons/highPriority.svg";
+import MediumPriority from "../../icons/mediumPriority.svg";
+import LowPriority from "../../icons/lowPriority.svg";
 
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
 import {
   headings,
   subHeading,
@@ -19,7 +19,7 @@ import {
   blueBorderButton,
   bluePillButton,
   blueLarge,
-} from "../utils/styles";
+} from "../../utils/styles";
 
 function QuotesAccepted(props) {
   const navigate = useNavigate();

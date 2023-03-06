@@ -684,7 +684,7 @@ function TenantPropertyView(props) {
           />
           {showAddRequest ? (
             <TenantRepairRequest
-              properties={property}
+              properties={[property]}
               cancel={() => setShowAddRequest(false)}
               onSubmit={reloadProperty}
             />

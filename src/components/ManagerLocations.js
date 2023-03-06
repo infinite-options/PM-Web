@@ -126,7 +126,7 @@ function ManagerLocations(props) {
                     </Form.Label>
                     <Form.Control
                       style={squareForm}
-                      placeholder="5"
+                      placeholder="miles"
                       value={newLocation.distance}
                       onChange={(e) => changeNewLocation(e, "distance")}
                     />

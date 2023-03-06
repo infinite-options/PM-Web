@@ -14,12 +14,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import * as ReactBootStrap from "react-bootstrap";
 import { visuallyHidden } from "@mui/utils";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import HighPriority from "../icons/highPriority.svg";
-import MediumPriority from "../icons/mediumPriority.svg";
-import LowPriority from "../icons/lowPriority.svg";
-import RepairImg from "../icons/RepairImg.svg";
+import Header from "../Header";
+import Footer from "../Footer";
+import AppContext from "../../AppContext";
+import HighPriority from "../../icons/highPriority.svg";
+import MediumPriority from "../../icons/mediumPriority.svg";
+import LowPriority from "../../icons/lowPriority.svg";
+import RepairImg from "../../icons/RepairImg.svg";
 import {
   headings,
   subHeading,
@@ -27,10 +28,9 @@ import {
   blue,
   hidden,
   tileImg,
-} from "../utils/styles";
-import { get } from "../utils/api";
-import AppContext from "../AppContext";
-import moment from "moment";
+} from "../../utils/styles";
+import { get } from "../../utils/api";
+
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -39,7 +39,7 @@ const useStyles = makeStyles({
   },
 });
 
-function ScheduledJobs(props) {
+function MaintenanceQuotesRequested(props) {
   const navigate = useNavigate();
   const classes = useStyles();
   const { userData } = useContext(AppContext);
@@ -441,4 +441,4 @@ function ScheduledJobs(props) {
   );
 }
 
-export default ScheduledJobs;
+export default MaintenanceQuotesRequested;

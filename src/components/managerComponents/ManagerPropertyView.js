@@ -332,14 +332,7 @@ function ManagerPropertyView(props) {
     property_details.rentalInfo.forEach((rental) => {
       if (
         rental.rental_status === "PENDING" ||
-        rental.rental_status === "TENANT APPROVED" ||
-        (property_details.rentalInfo.length > 1 &&
-          property_details.rentalInfo.some(
-            (uid) => uid.rental_status === "REFUSED"
-          ).linked_application_uid ==
-            property_details.rentalInfo.some(
-              (uid) => uid.rental_status === "ACTIVE"
-            ).linked_application_uid)
+        rental.rental_status === "TENANT APPROVED"
       ) {
         setExtendedAgreement(rental);
       }

@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "../Header";
+import Footer from "../Footer";
+import ConfirmDialog from "../ConfirmDialog";
+import ServicesProvidedQuotes from "../ServicesProvidedQuotes";
+import No_Image from "../../icons/No_Image_Available.jpeg";
+import HighPriority from "../../icons/highPriority.svg";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
 import {
   headings,
   subText,
@@ -20,15 +26,8 @@ import {
   squareForm,
   pillButton,
   red,
-} from "../utils/styles";
-import No_Image from "../icons/No_Image_Available.jpeg";
-import HighPriority from "../icons/highPriority.svg";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
-import { put } from "../utils/api";
-import ServicesProvided from "../components/ServicesProvided";
-import ConfirmDialog from "../components/ConfirmDialog";
-import ServicesProvidedQuotes from "../components/ServicesProvidedQuotes";
+} from "../../utils/styles";
+import { put } from "../../utils/api";
 
 function MaintenanceQuoteSentDetail(props) {
   const navigate = useNavigate();

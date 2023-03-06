@@ -188,7 +188,9 @@ function ManagerFees(props) {
                     </Form.Label>
                     <Form.Control
                       style={squareForm}
-                      placeholder={newFee.fee_type === "%" ? "10" : "100"}
+                      placeholder={
+                        newFee.fee_type === "%" ? "amount(%)" : "amount($)"
+                      }
                       value={newFee.charge}
                       onChange={(e) => changeNewFee(e, "charge")}
                     />

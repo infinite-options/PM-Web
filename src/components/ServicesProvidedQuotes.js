@@ -1,7 +1,16 @@
 import React from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import {
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Table,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
+import ArrowDown from "../icons/ArrowDown.svg";
 import {
   pillButton,
   smallPillButton,
@@ -14,10 +23,20 @@ import {
   subText,
   formLabel,
 } from "../utils/styles";
-import ArrowDown from "../icons/ArrowDown.svg";
 
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "2px 2px",
+      border: "0.5px solid grey ",
+      wordBreak: "break-word",
+    },
+    width: "100%",
+    tableLayout: "fixed",
+  },
+});
 function ServicesProvidedQuotes(props) {
-  // const [serviceState, setServiceState] = props.state;
+  const classes = useStyles();
   const {
     serviceState,
     setServiceState,
@@ -116,34 +135,45 @@ function ServicesProvidedQuotes(props) {
     );
   return (
     <Container className="px-2">
-      {serviceState.length > 0 &&
-        serviceState.map((service, i) => (
-          <div key={i}>
-            <div className="d-flex">
-              <div className="flex-grow-1">
-                <h6 className="mb-1">{service.service_name}</h6>
-              </div>
-              <div>
-                <img
-                  src={EditIcon}
-                  alt="Edit"
-                  className="px-1 mx-2"
-                  onClick={() => editService(i)}
-                />
-                <img
-                  src={DeleteIcon}
-                  alt="Delete Icon"
-                  className="px-1 mx-2"
-                  onClick={() => deleteService(i)}
-                />
-              </div>
-            </div>
-            <p style={gray} className="mb-1">
-              ${service.charge} / {service.per}
-            </p>
-            <hr className="mt-1" />
-          </div>
-        ))}
+      {serviceState.length > 0 ? (
+        <Table classes={{ root: classes.customTable }} size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Fee Name</TableCell>
+              <TableCell>Amount</TableCell>
+              <TableCell>Per</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {serviceState.map((service, i) => (
+              <TableRow key={i}>
+                <TableCell>{service.service_name}</TableCell>
+                <TableCell>${service.charge}</TableCell>
+
+                <TableCell>{service.per}</TableCell>
+
+                <TableCell>
+                  <img
+                    src={EditIcon}
+                    alt="Edit"
+                    className="px-1 mx-2"
+                    onClick={() => editService(i)}
+                  />
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete Icon"
+                    className="px-1 mx-2"
+                    onClick={() => deleteService(i)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        ""
+      )}
       {newService !== null ? (
         <div>
           <Form.Group className="mx-2 my-3">
@@ -152,7 +182,7 @@ function ServicesProvidedQuotes(props) {
             </Form.Label>
             <Form.Control
               style={squareForm}
-              placeholder="Toilet Plumbing"
+              placeholder="Service Name"
               value={newService.service_name}
               onChange={(e) => changeNewService(e, "service_name")}
             />
@@ -166,7 +196,7 @@ function ServicesProvidedQuotes(props) {
                 <Form.Control
                   style={squareForm}
                   type="number"
-                  placeholder="20"
+                  placeholder="Amount($)"
                   value={newService.charge}
                   onChange={(e) => changeNewService(e, "charge")}
                 />
@@ -205,6 +235,7 @@ function ServicesProvidedQuotes(props) {
       )}
       {newService === null ? (
         <Button
+          className="mt-2"
           variant="outline-primary"
           style={smallPillButton}
           onClick={() => setNewService({ ...emptyService })}

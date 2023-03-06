@@ -91,7 +91,7 @@ function CreateRevenue(props) {
         </Form.Label>
         <Form.Control
           style={squareForm}
-          placeholder="200"
+          placeholder="Amount($)"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
@@ -155,7 +155,7 @@ function CreateRevenue(props) {
           </Form.Label>
           <Form.Control
             style={squareForm}
-            placeholder="200"
+            placeholder="Date"
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
