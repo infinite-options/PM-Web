@@ -752,16 +752,20 @@ function TenantRepairDetails(props) {
                     >
                       <Col className="d-flex flex-row justify-content-evenly">
                         <Button style={orangePill}>
-                          {quote.quote_status === "REQUESTED"
+                           {quote.quote_status === "REQUESTED"
                             ? "Waiting for quote from business"
                             : quote.quote_status === "REJECTED"
                             ? "You've Rejected the Quote"
-                            : quote.quote_status === "ACCEPTED"
+                            : quote.quote_status === "ACCEPTED" &&
+                              quote.request_status !== "SCHEDULED"
                             ? "You've Accepted the Quote"
                             : quote.quote_status === "SENT"
                             ? "Waiting for quote from business"
                             : quote.quote_status === "REFUSED"
                             ? "Business refused to send a quote"
+                            : quote.quote_status === "ACCEPTED" &&
+                              quote.request_status === "SCHEDULED"
+                            ? "Maintenace Scheduled"
                             : "Another quote accepted"}
                         </Button>
                       </Col>

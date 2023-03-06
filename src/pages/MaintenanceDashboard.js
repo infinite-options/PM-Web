@@ -95,7 +95,7 @@ function MaintenanceDashboard(props) {
   useEffect(fetchProfile, []);
 
   const goToQuotesRequested = () => {
-    navigate("/ScheduledJobs");
+    navigate("/quotes-requested");
   };
   const goToJobsCompleted = () => {
     const quotes_rejected = quotes.filter(
@@ -115,7 +115,7 @@ function MaintenanceDashboard(props) {
     );
     navigate(`/quotesRejectedM`, { state: { quotes: quotes_rejected } });
   };
-  const goToScheduledJobs = () => {
+  const goToMaintenanceQuotesRequested = () => {
     const quotes_accepted = quotes.filter(
       (quote) => quote.quote_status === "ACCEPTED"
     );
@@ -200,7 +200,7 @@ function MaintenanceDashboard(props) {
             <img
               style={{ width: "50px", height: "50px", cursor: "pointer" }}
               src={RepairStatus}
-              onClick={goToScheduledJobs}
+              onClick={goToMaintenanceQuotesRequested}
             />
             <div>Scheduled Jobs</div>
           </Col>

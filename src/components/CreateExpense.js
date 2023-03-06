@@ -22,7 +22,7 @@ function CreateExpense(props) {
     }
     if (category === "Mortgage") {
       let mortgage = [];
-      const files = property.images;
+
       const newMortgage = {
         category: category,
         title: title,
@@ -40,14 +40,22 @@ function CreateExpense(props) {
         mortgages: JSON.stringify(newMortgage),
       };
 
-      const response = await put("/properties", updateMortgage, null, files);
+      const images = JSON.parse(property.images);
+      for (let i = -1; i < images.length - 1; i++) {
+        let key = `img_${i}`;
+        if (i === -1) {
+          key = "img_cover";
+        }
+        updateMortgage[key] = images[i + 1];
+      }
+      const response = await put("/properties", updateMortgage, null, images);
       reload();
       props.back();
     } else if (category === "Insurance") {
       let insurance =
         property.insurance === null ? [] : JSON.parse(property.insurance);
       // console.log(insurance);
-      const files = property.images;
+
       const newInsurance = {
         category: category,
         title: title,
@@ -64,13 +72,20 @@ function CreateExpense(props) {
         insurance: JSON.stringify(insurance),
       };
 
-      const response = await put("/properties", updateInsurance, null, files);
+      const images = JSON.parse(property.images);
+      for (let i = -1; i < images.length - 1; i++) {
+        let key = `img_${i}`;
+        if (i === -1) {
+          key = "img_cover";
+        }
+        updateMortgage[key] = images[i + 1];
+      }
+      const response = await put("/properties", updateMortgage, null, images);
       reload();
       props.back();
     } else if (category === "Tax") {
       let taxes = property.taxes === null ? [] : JSON.parse(property.taxes);
       // console.log(taxes);
-      const files = property.images;
       const newTax = {
         category: category,
         title: title,
@@ -86,7 +101,15 @@ function CreateExpense(props) {
         property_uid: property.property_uid,
         taxes: JSON.stringify(taxes),
       };
-      const response = await put("/properties", updateTaxes, null, files);
+      const images = JSON.parse(property.images);
+      for (let i = -1; i < images.length - 1; i++) {
+        let key = `img_${i}`;
+        if (i === -1) {
+          key = "img_cover";
+        }
+        updateMortgage[key] = images[i + 1];
+      }
+      const response = await put("/properties", updateMortgage, null, images);
       reload();
       props.back();
     } else {
@@ -172,7 +195,7 @@ function CreateExpense(props) {
         </Form.Label>
         <Form.Control
           style={squareForm}
-          placeholder="200"
+          placeholder="Amount($)"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
@@ -327,7 +350,7 @@ function CreateExpense(props) {
           </Form.Label>
           <Form.Control
             style={squareForm}
-            placeholder="200"
+            placeholder="Date"
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}

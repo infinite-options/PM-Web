@@ -1004,7 +1004,7 @@ export default function ManagerDashboard() {
                                       >
                                         {property.tenant_refused_applications
                                           .length > 0
-                                          ? "Tenant refused the lease"
+                                          ? `${property.forwarded_applications.length} Tenat(s) refused to pay`
                                           : ""}
                                       </p>
                                     </div>

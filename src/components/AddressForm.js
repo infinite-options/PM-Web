@@ -538,7 +538,7 @@ function AddressForm(props) {
                     </Form.Label>
                     <Form.Control
                       style={squareForm}
-                      placeholder="800"
+                      placeholder="Amount($)"
                       value={rent}
                       onChange={(e) => updateAddressState(e, "rent")}
                     />

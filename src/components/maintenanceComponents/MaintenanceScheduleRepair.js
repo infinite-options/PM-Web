@@ -3,14 +3,12 @@ import axios from "axios";
 import moment from "moment";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Row, Col, Button } from "react-bootstrap";
-import { put } from "../utils/api";
 import Grid from "@mui/material/Grid";
-import AppContext from "../AppContext";
-import Header from "../components/Header";
+import AppContext from "../../AppContext";
+import Header from "../Header";
 import Calendar from "react-calendar";
-import "./calendar.css";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
 import {
   headings,
   subHeading,
@@ -18,12 +16,16 @@ import {
   activeTimeSlotButton,
   bluePillButton,
   subText,
-} from "../utils/styles";
+} from "../../utils/styles";
+import { put } from "../../utils/api";
+import "../calendar.css";
 
 function MaintenanceScheduleRepair(props) {
   const { userData } = useContext(AppContext);
   const { user } = userData;
+  const imageState = useState([]);
 
+  const navigate = useNavigate();
   const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
   const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
   const CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
@@ -31,6 +33,12 @@ function MaintenanceScheduleRepair(props) {
 
   const location = useLocation();
   const quotes = location.state.quote;
+  const user_book =
+    quotes.rentalInfo.length > 0
+      ? quotes.rentalInfo[0].tenant_id
+      : quotes.property_manager.length > 0
+      ? quotes.property_manager[0].manager_id
+      : quotes.owner_id;
   const [date, setDate] = useState(new Date());
   const [minDate, setMinDate] = useState(
     new Date(moment(quotes.earliest_availability))
@@ -88,88 +96,172 @@ function MaintenanceScheduleRepair(props) {
     );
   };
   useEffect(() => {
-    axios
-      .get(BASE_URL + `/UserDetails/${quotes.rentalInfo[0].tenant_id}`)
-      .then((response) => {
-        // console.log(response.data);
-        setAccessTokenTenant(response.data.result[0].google_auth_token);
-        setUserEmail(response.data.result[0].email);
-        setAttendees([{ email: response.data.result[0].email }]);
+    if (quotes.rentalInfo.lenght > 0) {
+      axios
+        .get(BASE_URL + `/UserDetails/${quotes.rentalInfo[0].tenant_id}`)
+        .then((response) => {
+          // console.log(response.data);
+          setAccessTokenTenant(response.data.result[0].google_auth_token);
+          setUserEmail(response.data.result[0].email);
+          setAttendees([{ email: response.data.result[0].email }]);
 
-        var old_at = response.data.result[0].google_auth_token;
-        var refresh_token = response.data.result[0].google_refresh_token;
-        fetch(
-          `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${old_at}`,
-          {
-            method: "GET",
-          }
-        ).then((response) => {
-          //console.log('in events', response);
-          if (response["status"] === 400) {
-            //console.log('in events if');
-            let authorization_url =
-              "https://accounts.google.com/o/oauth2/token";
-
-            var details = {
-              refresh_token: refresh_token,
-              client_id: CLIENT_ID,
-              client_secret: CLIENT_SECRET,
-              grant_type: "refresh_token",
-            };
-            //console.log(details);
-            var formBody = [];
-            for (var property in details) {
-              var encodedKey = encodeURIComponent(property);
-              var encodedValue = encodeURIComponent(details[property]);
-              formBody.push(encodedKey + "=" + encodedValue);
+          var old_at = response.data.result[0].google_auth_token;
+          var refresh_token = response.data.result[0].google_refresh_token;
+          fetch(
+            `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${old_at}`,
+            {
+              method: "GET",
             }
-            formBody = formBody.join("&");
+          ).then((response) => {
+            //console.log('in events', response);
+            if (response["status"] === 400) {
+              //console.log('in events if');
+              let authorization_url =
+                "https://accounts.google.com/o/oauth2/token";
 
-            fetch(authorization_url, {
-              method: "POST",
-              headers: {
-                "Content-Type":
-                  "application/x-www-form-urlencoded;charset=UTF-8",
-              },
-              body: formBody,
-            })
-              .then((response) => {
-                return response.json();
+              var details = {
+                refresh_token: refresh_token,
+                client_id: CLIENT_ID,
+                client_secret: CLIENT_SECRET,
+                grant_type: "refresh_token",
+              };
+              //console.log(details);
+              var formBody = [];
+              for (var property in details) {
+                var encodedKey = encodeURIComponent(property);
+                var encodedValue = encodeURIComponent(details[property]);
+                formBody.push(encodedKey + "=" + encodedValue);
+              }
+              formBody = formBody.join("&");
+
+              fetch(authorization_url, {
+                method: "POST",
+                headers: {
+                  "Content-Type":
+                    "application/x-www-form-urlencoded;charset=UTF-8",
+                },
+                body: formBody,
               })
-              .then((responseData) => {
-                // console.log(responseData);
-                return responseData;
-              })
-              .then((data) => {
-                //console.log(data);
-                let at = data["access_token"];
-                setAccessTokenTenant(at);
-                //console.log('in events', at);
-                let url =
-                  BASE_URL +
-                  `/UpdateAccessToken/${quotes.rentalInfo[0].tenant_id}`;
-                axios
-                  .post(url, {
-                    google_auth_token: at,
-                  })
-                  .then((response) => {})
-                  .catch((err) => {
-                    console.log(err);
-                  });
-                return accessTokenTenant;
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          } else {
-            setAccessTokenTenant(old_at);
-            //console.log(old_at);
-          }
+                .then((response) => {
+                  return response.json();
+                })
+                .then((responseData) => {
+                  // console.log(responseData);
+                  return responseData;
+                })
+                .then((data) => {
+                  //console.log(data);
+                  let at = data["access_token"];
+                  setAccessTokenTenant(at);
+                  //console.log('in events', at);
+                  let url =
+                    BASE_URL +
+                    `/UpdateAccessToken/${quotes.rentalInfo[0].tenant_id}`;
+                  axios
+                    .post(url, {
+                      google_auth_token: at,
+                    })
+                    .then((response) => {})
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                  return accessTokenTenant;
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            } else {
+              setAccessTokenTenant(old_at);
+              //console.log(old_at);
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    } else if (quotes.property_manager.length > 0) {
+    } else {
+      axios
+        .get(BASE_URL + `/UserDetails/${quotes.owner_id}`)
+        .then((response) => {
+          // console.log(response.data);
+          setAccessTokenTenant(response.data.result[0].google_auth_token);
+          setUserEmail(response.data.result[0].email);
+          setAttendees([{ email: response.data.result[0].email }]);
+
+          var old_at = response.data.result[0].google_auth_token;
+          var refresh_token = response.data.result[0].google_refresh_token;
+          fetch(
+            `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${old_at}`,
+            {
+              method: "GET",
+            }
+          ).then((response) => {
+            //console.log('in events', response);
+            if (response["status"] === 400) {
+              //console.log('in events if');
+              let authorization_url =
+                "https://accounts.google.com/o/oauth2/token";
+
+              var details = {
+                refresh_token: refresh_token,
+                client_id: CLIENT_ID,
+                client_secret: CLIENT_SECRET,
+                grant_type: "refresh_token",
+              };
+              //console.log(details);
+              var formBody = [];
+              for (var property in details) {
+                var encodedKey = encodeURIComponent(property);
+                var encodedValue = encodeURIComponent(details[property]);
+                formBody.push(encodedKey + "=" + encodedValue);
+              }
+              formBody = formBody.join("&");
+
+              fetch(authorization_url, {
+                method: "POST",
+                headers: {
+                  "Content-Type":
+                    "application/x-www-form-urlencoded;charset=UTF-8",
+                },
+                body: formBody,
+              })
+                .then((response) => {
+                  return response.json();
+                })
+                .then((responseData) => {
+                  // console.log(responseData);
+                  return responseData;
+                })
+                .then((data) => {
+                  //console.log(data);
+                  let at = data["access_token"];
+                  setAccessTokenTenant(at);
+                  //console.log('in events', at);
+                  let url = BASE_URL + `/UpdateAccessToken/${quotes.owner_id}`;
+                  axios
+                    .post(url, {
+                      google_auth_token: at,
+                    })
+                    .then((response) => {})
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                  return accessTokenTenant;
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            } else {
+              setAccessTokenTenant(old_at);
+              //console.log(old_at);
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }, []);
 
   useEffect(() => {
@@ -416,7 +508,7 @@ function MaintenanceScheduleRepair(props) {
             "/" +
             quotes.event_duration +
             "/" +
-            quotes.rentalInfo[0].tenant_id +
+            user_book +
             "/" +
             "08:00" +
             "," +
@@ -561,14 +653,23 @@ function MaintenanceScheduleRepair(props) {
 
   const scheduleRequest = async () => {
     // console.log("selected", meetTime, dateString);
+
     let meeting = {
       maintenance_request_uid: quotes.maintenance_request_uid,
       request_status: "SCHEDULED",
       scheduled_date: meetDate,
       scheduled_time: meetTime,
     };
+    const images = JSON.parse(quotes.images);
+    for (let i = -1; i < images.length - 1; i++) {
+      let key = `img_${i}`;
+      if (i === -1) {
+        key = "img_cover";
+      }
+      meeting[key] = images[i + 1];
+    }
 
-    const response = await put("/maintenanceRequests", meeting, null, meeting);
+    const response = await put("/maintenanceRequests", meeting, null, images);
   };
 
   function createMeet() {
@@ -629,8 +730,9 @@ function MaintenanceScheduleRepair(props) {
       });
 
     setAttendees([{ email: "" }]);
+    navigate("../maintenance");
   }
-
+  console.log(quotes);
   return (
     <div className="d-flex flex-column" style={{ overflow: "auto" }}>
       <Header
@@ -741,35 +843,68 @@ function MaintenanceScheduleRepair(props) {
         </Col>
       </div>
 
-      <div className="d-flex align-items-center fixed-bottom flex-grow-1">
-        <Row style={{ background: "white" }}>
-          <hr />
-          <Col>
-            <div style={headings}>
-              {quotes.property_manager[0].manager_business_name}
-            </div>
-            <div style={subText}>Property Manager</div>
-          </Col>
-          <Col xs={2} className="mt-1 mb-1">
-            <img
-              onClick={() =>
-                (window.location.href = `tel:${quotes.property_manager[0].manager_phone_number}`)
-              }
-              src={Phone}
-              alt="Phone"
-            />
-          </Col>
-          <Col xs={2} className="mt-1 mb-1">
-            <img
-              onClick={() =>
-                (window.location.href = `mailto:${quotes.property_manager[0].manager_email}`)
-              }
-              src={Message}
-              alt="Message"
-            />
-          </Col>
-        </Row>
-      </div>
+      {quotes.property_manager.length > 0 ? (
+        <div className="d-flex align-items-center fixed-bottom flex-grow-1">
+          <Row style={{ background: "white" }}>
+            <hr />
+            <Col>
+              <div style={headings}>
+                {quotes.property_manager[0].manager_business_name}
+              </div>
+              <div style={subText}>Property Manager</div>
+            </Col>
+            <Col xs={2} className="mt-1 mb-1">
+              <img
+                onClick={() =>
+                  (window.location.href = `tel:${quotes.property_manager[0].manager_phone_number}`)
+                }
+                src={Phone}
+                alt="Phone"
+              />
+            </Col>
+            <Col xs={2} className="mt-1 mb-1">
+              <img
+                onClick={() =>
+                  (window.location.href = `mailto:${quotes.property_manager[0].manager_email}`)
+                }
+                src={Message}
+                alt="Message"
+              />
+            </Col>
+          </Row>
+        </div>
+      ) : (
+        <div className="d-flex align-items-center fixed-bottom flex-grow-1">
+          <Row style={{ background: "white" }}>
+            <hr />
+            <Col>
+              <div style={headings}>
+                {quotes.owner[0].owner_first_name}{" "}
+                {quotes.owner[0].owner_last_name}
+              </div>
+              <div style={subText}>Property Owner</div>
+            </Col>
+            <Col xs={2} className="mt-1 mb-1">
+              <img
+                onClick={() =>
+                  (window.location.href = `tel:${quotes.owner[0].owner_phone_number}`)
+                }
+                src={Phone}
+                alt="Phone"
+              />
+            </Col>
+            <Col xs={2} className="mt-1 mb-1">
+              <img
+                onClick={() =>
+                  (window.location.href = `mailto:${quotes.owner[0].manager_email}`)
+                }
+                src={Message}
+                alt="Message"
+              />
+            </Col>
+          </Row>
+        </div>
+      )}
     </div>
   );
 }

@@ -1190,12 +1190,16 @@ function ManagerRepairDetail(props) {
                             ? "Waiting for quote from business"
                             : quote.quote_status === "REJECTED"
                             ? "You've Rejected the Quote"
-                            : quote.quote_status === "ACCEPTED"
+                            : quote.quote_status === "ACCEPTED" &&
+                              quote.request_status !== "SCHEDULED"
                             ? "You've Accepted the Quote"
                             : quote.quote_status === "SENT"
                             ? "Waiting for quote from business"
                             : quote.quote_status === "REFUSED"
                             ? "Business refused to send a quote"
+                            : quote.quote_status === "ACCEPTED" &&
+                              quote.request_status === "SCHEDULED"
+                            ? "Maintenace Scheduled"
                             : "Another quote accepted"}
                         </Button>
                       </Col>

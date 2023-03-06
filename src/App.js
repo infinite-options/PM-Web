@@ -24,16 +24,16 @@ import ScheduleRepairs from "./components/ScheduleRepairs";
 import { get } from "./utils/api";
 import DetailRepairStatus from "./components/DetailRepairStatus";
 import MaintenanceHome from "./pages/MaintenanceHome";
-import ScheduledJobs from "./components/ScheduledJobs";
+import MaintenanceQuotesRequested from "./components/maintenanceComponents/MaintenanceQuotesRequested";
 import DetailQuote from "./components/DetailQuote";
 import ManagerDetailAnnouncement from "./components/managerComponents/ManagerDetailAnnouncement";
 import RescheduleRepair from "./components/RescheduleRepair";
 import JobsCompleted from "./components/JobsCompleted";
-import QuotesRejectedM from "./components/QuotesRejectedM";
-import QuotesRejectedPM from "./components/QuotesRejectedPM";
-import DetailQuoteRequest from "./components/DetailQuoteRequest";
-import QuotesAccepted from "./components/QuotesAccepted";
-import MaintenanceScheduleRepair from "./components/MaintenanceScheduleRepair";
+import QuotesRejectedM from "./components/maintenanceComponents/QuotesRejectedM";
+import QuotesRejectedPM from "./components/maintenanceComponents/QuotesRejectedPM";
+import DetailQuoteRequest from "./components/maintenanceComponents/DetailQuoteRequest";
+import QuotesAccepted from "./components/maintenanceComponents/QuotesAccepted";
+import MaintenanceScheduleRepair from "./components/maintenanceComponents/MaintenanceScheduleRepair";
 import ReviewTenantProfile from "./components/tenantComponents/ReviewTenantprofile";
 import PropertyApplicationView from "./components/tenantComponents/PropertyApplicationView";
 import ReviewPropertyLease from "./components/tenantComponents/reviewPropertyLease";
@@ -43,9 +43,10 @@ import ManagerPropertyView from "./components/managerComponents/ManagerPropertyV
 import ManagerRepairDetail from "./components/managerComponents/ManagerRepairDetail";
 import SignupExisting from "./pages/SignUpExisiting";
 import ManagerRepairsOverview from "./components/managerComponents/ManagerRepairsOverview";
-import MaintenanceQuotesSent from "./pages/MaintenanceQuotesSent";
-import MaintenanceQuoteSentDetail from "./pages/MaintenanceQuoteSentDetail";
-import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
+import MaintenanceQuotesSent from "./components/maintenanceComponents/MaintenanceQuotesSent";
+import MaintenanceQuoteSentDetail from "./components/maintenanceComponents/MaintenanceQuoteSentDetail";
+import MaintenanceQuoteScheduledDetail from "./components/maintenanceComponents/MaintenanceQuoteScheduledDetail";
+import MaintenanceQuotesScheduled from "./components/maintenanceComponents/MaintenanceQuotesScheduled";
 import ManagerUtilities from "./components/managerComponents/ManagerUtilities";
 import OwnerUtilities from "./components/ownerComponents/OwnerUtilities";
 import TenantDuePayments from "./components/tenantComponents/TenantDuePayments";
@@ -138,7 +139,10 @@ function App() {
             <Route path="profileInfo" element={<ProfileInfo />} />
             <Route path="owner" element={<OwnerDashboard />} />
             <Route path="maintenance" element={<MaintenanceHome />} />
-            <Route path="scheduledJobs" element={<ScheduledJobs />} />
+            <Route
+              path="quotes-requested"
+              element={<MaintenanceQuotesRequested />}
+            />
             <Route path="detailQuote" element={<DetailQuote />} />
             <Route path="search-pm" element={<OwnerContacts />} />
             <Route
@@ -286,6 +290,10 @@ function App() {
             <Route
               path="quotes-scheduled"
               element={<MaintenanceQuotesScheduled />}
+            />
+            <Route
+              path="quotes-scheduled/:q_id"
+              element={<MaintenanceQuoteScheduledDetail />}
             />
             <Route path="manager-utilities" element={<ManagerUtilities />} />
             <Route path="manager-profile" element={<ManagerProfile />} />

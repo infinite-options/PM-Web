@@ -2,17 +2,18 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import { useParams } from "react-router";
-import Header from "../components/Header";
-import ArrowUp from "../icons/ArrowUp.svg";
-import ArrowDown from "../icons/ArrowDown.svg";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
-import HighPriority from "../icons/highPriority.svg";
-import MediumPriority from "../icons/mediumPriority.svg";
-import LowPriority from "../icons/lowPriority.svg";
-import EditIcon from "../icons/EditIcon.svg";
-import DeleteIcon from "../icons/DeleteIcon.svg";
-import { get, put } from "../utils/api";
+import Header from "../Header";
+import ServicesProvidedQuotes from "../ServicesProvidedQuotes";
+import ArrowUp from "../../icons/ArrowUp.svg";
+import ArrowDown from "../../icons/ArrowDown.svg";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
+import HighPriority from "../../icons/highPriority.svg";
+import MediumPriority from "../../icons/mediumPriority.svg";
+import LowPriority from "../../icons/lowPriority.svg";
+import EditIcon from "../../icons/EditIcon.svg";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
+import { get, put } from "../../utils/api";
 import {
   headings,
   subHeading,
@@ -24,9 +25,7 @@ import {
   redPillButton,
   tileImg,
   squareForm,
-} from "../utils/styles";
-import ServicesProvided from "../components/ServicesProvided";
-import ServicesProvidedQuotes from "./ServicesProvidedQuotes";
+} from "../../utils/styles";
 
 function DetailQuote(props) {
   const navigate = useNavigate();
@@ -69,7 +68,7 @@ function DetailQuote(props) {
     );
     if (response.result.length === 0) {
       // console.log("quote not found");
-      navigate("/ScheduledJobs");
+      navigate("/quotes-requested");
       return;
     }
     setQuote(response.result[0]);
@@ -94,7 +93,7 @@ function DetailQuote(props) {
       event_type: eventType,
     };
     const response = await put("/maintenanceQuotes", updatedQuote);
-    navigate("/ScheduledJobs");
+    navigate("/quotes-requested");
   };
 
   const rejectQuote = async () => {
@@ -103,7 +102,7 @@ function DetailQuote(props) {
       quote_status: "REFUSED",
     };
     const response = await put("/maintenanceQuotes", updatedQuote);
-    navigate("/ScheduledJobs");
+    navigate("/quotes-requested");
   };
 
   // console.log(addService, showAddService);
@@ -112,7 +111,7 @@ function DetailQuote(props) {
       <Header
         title="Repairs"
         leftText="< Back"
-        leftFn={() => navigate("/ScheduledJobs")}
+        leftFn={() => navigate("/quotes-requested")}
       />
       <Container className="pt-1 mb-4" hidden={quoteAccepted || quoteRejected}>
         <Row>

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import {
@@ -14,8 +14,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import * as ReactBootStrap from "react-bootstrap";
 import { visuallyHidden } from "@mui/utils";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "../Header";
+import Footer from "../Footer";
 import {
   headings,
   subText,
@@ -23,14 +23,12 @@ import {
   greenPill,
   orangePill,
   redPill,
-  blue,
-  xSmall,
-} from "../utils/styles";
-import No_Image from "../icons/No_Image_Available.jpeg";
-import RepairImg from "../icons/RepairImg.svg";
-import HighPriority from "../icons/highPriority.svg";
-import MediumPriority from "../icons/mediumPriority.svg";
-import LowPriority from "../icons/lowPriority.svg";
+} from "../../utils/styles";
+import HighPriority from "../../icons/highPriority.svg";
+import MediumPriority from "../../icons/mediumPriority.svg";
+import LowPriority from "../../icons/lowPriority.svg";
+import RepairImg from "../../icons/RepairImg.svg";
+
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -38,11 +36,12 @@ const useStyles = makeStyles({
     },
   },
 });
-function MaintenanceQuotesSent(props) {
+
+function QuotesRejectedM(props) {
+  const classes = useStyles();
   const navigate = useNavigate();
   const location = useLocation();
   const quotes = location.state.quotes;
-  const classes = useStyles();
   const [isLoading, setIsLoading] = useState(true); // search variables
   const [search, setSearch] = useState("");
   // sorting variables
@@ -148,6 +147,7 @@ function MaintenanceQuotesSent(props) {
     const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
     };
+
     return (
       <TableHead>
         <TableRow>
@@ -187,29 +187,24 @@ function MaintenanceQuotesSent(props) {
     orderBy: PropTypes.string.isRequired,
     // rowCount: PropTypes.number.isRequired,
   };
-
   return (
     <div className="h-100 d-flex flex-column">
-      <div className="w-100 mb-5 overflow-scroll">
-        <Header
-          title="Requested"
-          leftText="< Back"
-          leftFn={() => navigate("/maintenance")}
-        />
+      <Header
+        title="Quotes Rejected"
+        leftText="< Back"
+        leftFn={() => navigate("/maintenance")}
+        rightText="Sort by"
+      />
+
+      <Container className="pt-1 mb-5">
         <Row className="m-3">
           <Col>
-            <h3>Quotes Sent</h3>
+            <h3>Quotes Rejected</h3>
           </Col>
           <Col></Col>
         </Row>
 
-        {!quotes ? (
-          <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
-            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
-              <ReactBootStrap.Spinner animation="border" role="status" />
-            </div>
-          </div>
-        ) : quotes.length > 0 ? (
+        {quotes.length > 0 ? (
           <div
             className="mx-3 my-3 p-2"
             style={{
@@ -239,9 +234,12 @@ function MaintenanceQuotesSent(props) {
                         tabIndex={-1}
                         key={j}
                         onClick={() =>
-                          navigate(`./${quote.maintenance_quote_uid}`, {
-                            state: { quote: quote },
-                          })
+                          navigate(
+                            `../quotes-sent/${quote.maintenance_quote_uid}`,
+                            {
+                              state: { quote: quote },
+                            }
+                          )
                         }
                       >
                         <TableCell padding="none" size="small" align="center">
@@ -329,14 +327,13 @@ function MaintenanceQuotesSent(props) {
           </div>
         ) : (
           <Row className="m-3">
-            <div className="m-3">No quotes sent</div>
+            <div className="m-3">No maintenance and repairs</div>
           </Row>
         )}
-      </div>
-
+      </Container>
       <Footer tab={"DASHBOARD"} />
     </div>
   );
 }
 
-export default MaintenanceQuotesSent;
+export default QuotesRejectedM;
