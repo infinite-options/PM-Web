@@ -163,7 +163,7 @@ function DetailRepairStatus(props) {
   const putRepairAppt = async () => {
     const payload = {
       maintenance_request_uid: maintenance_request_uid,
-      request_status: "SCHEDULED",
+      request_status: "SCHEDULE",
       scheduled_date: apiDateString,
       scheduled_time: scheduledTime,
     };
@@ -492,7 +492,7 @@ function DetailRepairStatus(props) {
 
                 {repair.status === "NEW" ? (
                   <Row></Row>
-                ) : repair.status === "SCHEDULED" ? (
+                ) : repair.status === "SCHEDULE" ? (
                   <Row className="mt-4">
                     <div style={headings}>Scheduled for</div>
                     <div style={subHeading}>

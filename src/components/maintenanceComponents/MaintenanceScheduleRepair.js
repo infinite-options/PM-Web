@@ -656,7 +656,7 @@ function MaintenanceScheduleRepair(props) {
 
     let meeting = {
       maintenance_request_uid: quotes.maintenance_request_uid,
-      request_status: "SCHEDULED",
+      request_status: "SCHEDULE",
       scheduled_date: meetDate,
       scheduled_time: meetTime,
     };
@@ -737,8 +737,9 @@ function MaintenanceScheduleRepair(props) {
     <div className="d-flex flex-column" style={{ overflow: "auto" }}>
       <Header
         title="Schedule Repair"
-        // leftText="< Back"
-        // leftFn={() => navigate("/quotes-scheduled")}
+        leftText="< Back"
+        leftFn={() => navigate("../maintenance")}
+
         //rightText="Sort by"
         // rightFn={() => {
         //   submitInfo();
@@ -838,7 +839,7 @@ function MaintenanceScheduleRepair(props) {
               createMeet();
             }}
           >
-            Share schedule with tenant
+            Share Schedule
           </Button>
         </Col>
       </div>

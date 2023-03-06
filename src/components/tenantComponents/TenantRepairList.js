@@ -108,7 +108,10 @@ function TenantRepairList(props) {
       (item) => item.request_status === "PROCESSING"
     );
     const scheduled_repairs = repairs_sorted.filter(
-      (item) => item.request_status === "SCHEDULED"
+      (item) =>
+        item.request_status === "SCHEDULED" ||
+        item.request_status === "RESCHEDULE" ||
+        item.request_status === "SCHEDULE"
     );
     const completed_repairs = repairs_sorted.filter(
       (item) => item.request_status === "COMPLETE"

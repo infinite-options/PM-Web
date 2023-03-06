@@ -209,9 +209,6 @@ function RescheduleRepair(props) {
         style={{ display: "flex", flexDirection: "column" }}
         className="pt-1 mb-2"
       >
-        <div>
-          <div style={headings}>Schedule the repair with Joe’s Plumbing</div>
-        </div>
         <div
           style={{
             display: "flex",

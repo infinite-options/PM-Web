@@ -128,6 +128,11 @@ function ManagerRepairDetail(props) {
     const request_response = await get(
       `/maintenanceRequests?maintenance_request_uid=${repair.maintenance_request_uid}`
     );
+    const response = await get(
+      `/maintenanceQuotes?linked_request_uid=${repair.maintenance_request_uid}`
+    );
+    // console.log(response.result);
+
     if (businesses_request.msg === "Token has expired") {
       refresh();
       return;
@@ -141,13 +146,17 @@ function ManagerRepairDetail(props) {
     // console.log("request_response.result[0]", request_response.result[0]);
     // console.log(businesses)
     setBusinesses(businesses);
+    setQuotes(response.result);
     setTitle(request_response.result[0].title);
     setDescription(request_response.result[0].description);
     setIssueType(request_response.result[0].request_type);
     setNotes(request_response.result[0].notes);
     setPriority(request_response.result[0].priority);
     setCanReschedule(request_response.result[0].can_reschedule === 1);
-    if (request_response.result[0].request_status === "SCHEDULED") {
+    if (
+      request_response.result[0].request_status === "SCHEDULE" ||
+      request_response.result[0].request_status === "RESCHEDULE"
+    ) {
       setReDate(request_response.result[0].scheduled_date);
       setReTime(request_response.result[0].scheduled_time);
     }
@@ -192,15 +201,9 @@ function ManagerRepairDetail(props) {
       });
     }
     imageState[1](files);
-
-    const response = await get(
-      `/maintenanceQuotes?linked_request_uid=${repair.maintenance_request_uid}`
-    );
-    // console.log(response.result);
-    setQuotes(response.result);
   };
 
-  React.useEffect(fetchBusinesses, [access_token]);
+  useEffect(fetchBusinesses, [access_token]);
 
   const toggleBusiness = (index) => {
     const newBusinesses = [...businesses];
@@ -211,6 +214,8 @@ function ManagerRepairDetail(props) {
   const rescheduleRepair = async () => {
     const body = {
       maintenance_request_uid: repair.maintenance_request_uid,
+      request_status: "RESCHEDULE",
+      notes: "Request to reschedule",
       scheduled_date: reDate,
       scheduled_time: reTime,
     };
@@ -225,6 +230,36 @@ function ManagerRepairDetail(props) {
       }
     }
     const response = await put("/maintenanceRequests", body, null, files);
+
+    fetchBusinesses();
+    setScheduleMaintenance(false);
+    setEdit(false);
+  };
+  const acceptSchedule = async (quote) => {
+    const body = {
+      maintenance_request_uid: repair.maintenance_request_uid,
+      request_status: "SCHEDULED",
+      notes: "Maintenance Scheduled",
+      scheduled_date: reDate,
+      scheduled_time: reTime,
+    };
+    const files = imageState[0];
+    let i = 0;
+    for (const file of imageState[0]) {
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      if (file.file !== null) {
+        body[key] = file.file;
+      } else {
+        body[key] = file.image;
+      }
+    }
+    const responseMR = await put("/maintenanceRequests", body, null, files);
+
+    const updatedQuote = {
+      maintenance_quote_uid: quote.maintenance_quote_uid,
+      quote_status: "AGREED",
+    };
+    const responseMQ = await put("/maintenanceQuotes", updatedQuote);
 
     fetchBusinesses();
     setScheduleMaintenance(false);
@@ -247,6 +282,12 @@ function ManagerRepairDetail(props) {
     const response = await post("/maintenanceQuotes", quote_details);
     const result = response.result;
     setRequestQuote(false);
+    if (
+      repair.request_status === "SCHEDULE" ||
+      repair.request_status === "RESCHEDULE"
+    ) {
+      setScheduleMaintenance(true);
+    }
 
     fetchBusinesses();
   };
@@ -1060,7 +1101,8 @@ function ManagerRepairDetail(props) {
                     <Row className="mx-2 my-2" style={headings}>
                       <div>{quote.business_name}</div>
                     </Row>
-                    {quote.quote_status === "ACCEPTED" ||
+                    {quote.quote_status === "AGREED" ||
+                    quote.quote_status === "ACCEPTED" ||
                     quote.quote_status === "SENT" ||
                     quote.quote_status === "REJECTED" ? (
                       <div className="mx-2 my-2 p-3">
@@ -1191,13 +1233,19 @@ function ManagerRepairDetail(props) {
                             : quote.quote_status === "REJECTED"
                             ? "You've Rejected the Quote"
                             : quote.quote_status === "ACCEPTED" &&
-                              quote.request_status !== "SCHEDULED"
+                              quote.request_status === "SCHEDULE"
                             ? "You've Accepted the Quote"
                             : quote.quote_status === "SENT"
                             ? "Waiting for quote from business"
                             : quote.quote_status === "REFUSED"
                             ? "Business refused to send a quote"
                             : quote.quote_status === "ACCEPTED" &&
+                              quote.request_status === "SCHEDULE"
+                            ? "Maintenace Sent Schedule"
+                            : quote.quote_status === "ACCEPTED" &&
+                              quote.request_status === "RESCHEDULE"
+                            ? "Reschedule Requested"
+                            : quote.quote_status === "AGREED" &&
                               quote.request_status === "SCHEDULED"
                             ? "Maintenace Scheduled"
                             : "Another quote accepted"}
@@ -1205,25 +1253,37 @@ function ManagerRepairDetail(props) {
                       </Col>
                     </Row>
                     {!scheduleMaintenance &&
-                    repair.rentalInfo === "Not Rented" &&
+                    (quote.request_status === "SCHEDULE" ||
+                      quote.request_status === "RESCHEDULE") &&
                     quote.quote_status === "ACCEPTED" ? (
                       <Row className="pt-1">
                         <Col className="d-flex flex-row justify-content-evenly">
                           <Button
                             style={bluePillButton}
+                            onClick={() => acceptSchedule(quote)}
+                          >
+                            Accept
+                          </Button>
+                        </Col>
+                        <Col className="d-flex flex-row justify-content-evenly">
+                          <Button
+                            style={bluePillButton}
                             onClick={() => setScheduleMaintenance(true)}
                           >
-                            Reschedule Maintenance
+                            Reschedule
                           </Button>
                         </Col>
                       </Row>
                     ) : (
                       <Row></Row>
                     )}
-                    {scheduleMaintenance ? (
+                    {scheduleMaintenance &&
+                    (quote.request_status === "SCHEDULE" ||
+                      quote.request_status === "RESCHEDULE") &&
+                    quote.quote_status === "ACCEPTED" ? (
                       <Row className="mx-2 my-2 p-3">
                         <Row>
-                          <div style={headings}>Schedule Maintenace</div>
+                          <div style={headings}>Reschedule Maintenace</div>
                         </Row>
                         <Form.Group className="mt-3 mb-2">
                           <Form.Label
@@ -1261,7 +1321,7 @@ function ManagerRepairDetail(props) {
                               style={bluePillButton}
                               onClick={rescheduleRepair}
                             >
-                              Schedule Maintenance
+                              Reschedule Maintenance
                             </Button>
                           </Col>
                         </Row>

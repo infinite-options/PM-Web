@@ -158,7 +158,11 @@ function OwnerRepairList(props) {
         } else if (repair_sorted.request_status === "PROCESSING") {
           processingrepairs = repair_sorted;
           processing_repairs.push(processingrepairs);
-        } else if (repair_sorted.request_status === "SCHEDULED") {
+        } else if (
+          repair_sorted.request_status === "SCHEDULED" ||
+          repair_sorted.request_status === "RESCHEDULE" ||
+          repair_sorted.request_status === "SCHEDULE"
+        ) {
           scheduledrepairs = repair_sorted;
           scheduled_repairs.push(scheduledrepairs);
         } else {

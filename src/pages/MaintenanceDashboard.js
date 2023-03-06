@@ -117,10 +117,16 @@ function MaintenanceDashboard(props) {
   };
   const goToMaintenanceQuotesRequested = () => {
     const quotes_accepted = quotes.filter(
-      (quote) => quote.quote_status === "ACCEPTED"
+      (quote) =>
+        quote.quote_status === "ACCEPTED" &&
+        quote.request_status === "PROCESSING"
     );
     const quotes_scheduled = quotes.filter(
-      (quote) => quote.quote_status === "SCHEDULED"
+      (quote) =>
+        (quote.request_status === "SCHEDULED" ||
+          quote.request_status === "RESCHEDULE" ||
+          quote.request_status === "SCHEDULE") &&
+        (quote.quote_status === "ACCEPTED" || quote.quote_status === "AGREED")
     );
     const quotes_total = [...quotes_accepted, ...quotes_scheduled];
     navigate(`/quotes-scheduled`, { state: { quotes: quotes_total } });

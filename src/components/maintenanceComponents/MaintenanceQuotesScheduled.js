@@ -21,16 +21,7 @@ import HighPriority from "../../icons/highPriority.svg";
 import MediumPriority from "../../icons/mediumPriority.svg";
 import LowPriority from "../../icons/lowPriority.svg";
 import No_Image from "../../icons/No_Image_Available.jpeg";
-import {
-  headings,
-  subText,
-  tileImg,
-  greenPill,
-  orangePill,
-  redPill,
-  blue,
-  xSmall,
-} from "../../utils/styles";
+import { red, blue, xSmall } from "../../utils/styles";
 import { days } from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
@@ -56,8 +47,14 @@ function MaintenanceQuotesScheduled(props) {
       quote.quote_status === "ACCEPTED" && quote.request_status === "PROCESSING"
   );
   const quotes_scheduled = quotes.filter(
-    (quote) => quote.request_status === "SCHEDULED"
+    (quote) =>
+      (quote.request_status === "SCHEDULED" ||
+        quote.request_status === "RESCHEDULE" ||
+        quote.request_status === "SCHEDULE") &&
+      (quote.quote_status === "ACCEPTED" || quote.quote_status === "AGREED")
   );
+  console.log(quotes);
+  console.log(quotes_scheduled);
 
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
@@ -253,12 +250,13 @@ function MaintenanceQuotesScheduled(props) {
                       role="checkbox"
                       tabIndex={-1}
                       key={j}
-                      // onClick={() =>
-                      //   navigate(`./${quote.maintenance_quote_uid}`, {
-                      //     state: { quote: quote },
-                      //   })
-                      // }
+                      onClick={() =>
+                        navigate(`./${quote.maintenance_quote_uid}`, {
+                          state: { quote: quote },
+                        })
+                      }
                     >
+                      {console.log(quote)}
                       <TableCell padding="none" size="small" align="center">
                         {JSON.parse(quote.images).length > 0 ? (
                           <img
@@ -294,6 +292,16 @@ function MaintenanceQuotesScheduled(props) {
                         }}
                       >
                         {quote.request_status}
+                        {console.log(quote.notes, quote.request_status)}
+                        <div className="d-flex">
+                          <div className="d-flex align-items-end">
+                            <p style={{ ...red, ...xSmall }} className="mb-0">
+                              {quote.request_status === "RESCHEDULE"
+                                ? quote["mr.notes"]
+                                : ""}
+                            </p>
+                          </div>
+                        </div>
                       </TableCell>
                       <TableCell padding="none" size="small" align="center">
                         {quote.title}

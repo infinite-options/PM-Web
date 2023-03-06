@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import moment from "moment";
 import Header from "../Header";
 import Footer from "../Footer";
 import ConfirmDialog from "../ConfirmDialog";
@@ -16,7 +17,7 @@ import {
   greenPill,
   orangePill,
   redPill,
-  blueLarge,
+  subHeading,
   bluePillButton,
   formLabel,
   mediumBold,
@@ -34,20 +35,23 @@ function MaintenanceQuoteScheduledDetail(props) {
   const location = useLocation();
   const quote = location.state.quote;
 
-  const [currentImg, setCurrentImg] = React.useState(0);
-  const [serviceState, setServiceState] = React.useState([]);
-  const [totalEstimate, setTotalEstimate] = React.useState(0);
-  const [tenants, setTenants] = React.useState([]);
-  const [propertyManager, setPropertyManager] = React.useState([]);
-  const [earliestAvailability, setEarliestAvailability] = React.useState("");
-  const [eventType, setEventType] = React.useState("1 Hour Job");
-
+  const [reDate, setReDate] = useState("");
+  const [reTime, setReTime] = useState("");
+  const [currentImg, setCurrentImg] = useState(0);
+  const [serviceState, setServiceState] = useState([]);
+  const [totalEstimate, setTotalEstimate] = useState(0);
+  const [tenants, setTenants] = useState([]);
+  const [propertyManager, setPropertyManager] = useState([]);
+  const [earliestAvailability, setEarliestAvailability] = useState("");
+  const [eventType, setEventType] = useState("1 Hour Job");
+  const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
+  const [edit, setEdit] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [dialogText, setDialogText] = useState("");
   const [onConfirm, setOnConfirm] = useState(null);
   const onCancel = () => setShowDialog(false);
   // const onConfirm = () => setShowDialog(false);
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -117,11 +121,78 @@ function MaintenanceQuoteScheduledDetail(props) {
     navigate("/maintenance");
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (quote) {
       loadQuote();
     }
   }, [quote]);
+  const rejectReschedule = async () => {
+    const body = {
+      maintenance_request_uid: quote.maintenance_request_uid,
+      request_status: "RESCHEDULE",
+      scheduled_date: reDate,
+      scheduled_time: reTime,
+    };
+
+    const images = JSON.parse(quote.images);
+    for (let i = -1; i < images.length - 1; i++) {
+      let key = `img_${i}`;
+      if (i === -1) {
+        key = "img_cover";
+      }
+      body[key] = images[i + 1];
+    }
+
+    const response = await put("/maintenanceRequests", body, null, images);
+  };
+
+  const acceptReschedule = async (quote) => {
+    const body = {
+      maintenance_request_uid: quote.maintenance_request_uid,
+      request_status: "SCHEDULED",
+      notes: "Maintenance Scheduled",
+      scheduled_date: quote.scheduled_date,
+      scheduled_time: quote.scheduled_time,
+    };
+    const images = JSON.parse(quote.images);
+    for (let i = -1; i < images.length - 1; i++) {
+      let key = `img_${i}`;
+      if (i === -1) {
+        key = "img_cover";
+      }
+      body[key] = images[i + 1];
+    }
+
+    const response = await put("/maintenanceRequests", body, null, images);
+
+    const updatedQuote = {
+      maintenance_quote_uid: quote.maintenance_quote_uid,
+      quote_status: "AGREED",
+    };
+    const responseMQ = await put("/maintenanceQuotes", updatedQuote);
+  };
+
+  const rescheduleRepair = async () => {
+    const body = {
+      maintenance_request_uid: quote.maintenance_request_uid,
+      request_status: "RESCHEDULE",
+      notes: "Request to reschedule",
+      scheduled_date: reDate,
+      scheduled_time: reTime,
+    };
+    const images = JSON.parse(quote.images);
+    for (let i = -1; i < images.length - 1; i++) {
+      let key = `img_${i}`;
+      if (i === -1) {
+        key = "img_cover";
+      }
+      body[key] = images[i + 1];
+    }
+
+    const response = await put("/maintenanceRequests", body, null, images);
+
+    navigate("../maintenance");
+  };
 
   return (
     <div className="h-100 d-flex flex-column">
@@ -215,47 +286,132 @@ function MaintenanceQuoteScheduledDetail(props) {
           />
         </div>
 
-        <div className="mt-2 mx-2 mb-4">
-          <Row>
-            <div style={headings}>Earliest Availabilty</div>
-          </Row>
-          <div>
-            <Form.Group className="mt-2 mb-2">
+        {!scheduleMaintenance ? (
+          quote.request_status === "NEW" ? (
+            <Row></Row>
+          ) : quote.request_status === "SCHEDULE" ? (
+            <Row className="mt-4">
+              <div style={headings}>Scheduled for</div>
+              <div style={subHeading}>
+                {moment(quote.scheduled_date).format("ddd, MMM DD, YYYY ")} at{" "}
+                {quote.scheduled_time} <hr />
+              </div>
+              <Row>
+                <Col>
+                  <Button
+                    variant="outline-primary"
+                    style={pillButton}
+                    onClick={() => {
+                      setScheduleMaintenance(true);
+                    }}
+                  >
+                    Reschedule
+                  </Button>
+                </Col>
+              </Row>
+            </Row>
+          ) : quote.request_status === "SCHEDULED" ? (
+            <Row className="mt-4">
+              <div style={headings}>Scheduled for</div>
+              <div style={subHeading}>
+                {moment(quote.scheduled_date).format("ddd, MMM DD, YYYY ")} at{" "}
+                {quote.scheduled_time} <hr />
+              </div>
+            </Row>
+          ) : quote.request_status === "RESCHEDULE" ? (
+            <Row className="mt-4">
+              <div style={headings}>Reschedule request for</div>
+              <div style={subHeading}>
+                {moment(quote.scheduled_date).format("ddd, MMM DD, YYYY ")} at{" "}
+                {quote.scheduled_time} <hr />
+              </div>
+              <Row>
+                <Col>
+                  <Button
+                    variant="outline-primary"
+                    style={pillButton}
+                    onClick={() => acceptReschedule(quote)}
+                  >
+                    Accept
+                  </Button>
+                </Col>
+
+                <Col>
+                  <Button
+                    variant="outline-primary"
+                    style={pillButton}
+                    onClick={() => {
+                      setScheduleMaintenance(true);
+                    }}
+                  >
+                    Reject
+                  </Button>
+                </Col>
+              </Row>
+            </Row>
+          ) : (
+            <Row className="mt-4">
+              <div style={headings}>Completed on</div>
+              <div style={subHeading}>
+                {moment(quote.scheduled_date).format("ddd, MMM DD, YYYY ")} at{" "}
+                {moment(quote.scheduled_date).format("hh:mm a")} <hr />
+              </div>
+            </Row>
+          )
+        ) : (
+          ""
+        )}
+        {scheduleMaintenance &&
+        (quote.request_status === "SCHEDULE" ||
+          quote.request_status === "RESCHEDULE") &&
+        quote.quote_status === "ACCEPTED" ? (
+          <Row className="mx-2 my-2 p-3">
+            <Row>
+              <div style={headings}>Reschedule Maintenace</div>
+            </Row>
+            <Form.Group className="mt-3 mb-2">
               <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
                 Date
               </Form.Label>
               <Form.Control
+                style={{ borderRadius: 0 }}
                 type="date"
-                style={squareForm}
-                value={earliestAvailability}
-                onChange={(e) => setEarliestAvailability(e.target.value)}
+                value={reDate}
+                onChange={(e) => setReDate(e.target.value)}
               />
             </Form.Group>
-          </div>
-        </div>
-
-        {/*<div className="mt-2 mx-2 mb-4">*/}
-        {/*    <Row>*/}
-        {/*        <div style={headings}>Event Type</div>*/}
-        {/*    </Row>*/}
-        {/*    <div>*/}
-        {/*        <Form.Group className="mt-2 mb-2">*/}
-        {/*            <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">*/}
-        {/*                Type*/}
-        {/*            </Form.Label>*/}
-        {/*            <Form.Select style={squareForm} value={eventType}*/}
-        {/*                         onChange={(e) => setEventType(e.target.value)}>*/}
-        {/*                <option>1 Hour Job</option>*/}
-        {/*                <option>2 Hour Job</option>*/}
-        {/*                <option>3 Hour Job</option>*/}
-        {/*                <option>4 Hour Job</option>*/}
-        {/*                <option>6 Hour Job</option>*/}
-        {/*                <option>8 Hour Job</option>*/}
-        {/*                <option>1 Day Job</option>*/}
-        {/*            </Form.Select>*/}
-        {/*        </Form.Group>*/}
-        {/*    </div>*/}
-        {/*</div>*/}
+            <Form.Group className="mt-3 mb-2">
+              <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                Time
+              </Form.Label>
+              <Form.Control
+                style={{ borderRadius: 0 }}
+                type="time"
+                value={reTime}
+                onChange={(e) => setReTime(e.target.value)}
+              />
+            </Form.Group>
+            <Row className="mt-4">
+              <Col className="d-flex justify-content-evenly">
+                <Button style={bluePillButton} onClick={rescheduleRepair}>
+                  Reschedule Maintenance
+                </Button>
+              </Col>
+            </Row>
+            <Row className="mt-3">
+              <Col className="d-flex justify-content-evenly">
+                <Button
+                  style={redPillButton}
+                  onClick={() => setScheduleMaintenance(false)}
+                >
+                  Cancel
+                </Button>
+              </Col>
+            </Row>
+          </Row>
+        ) : (
+          <Row></Row>
+        )}
 
         {propertyManager && propertyManager.length > 0 ? (
           <div className="mt-5">
@@ -308,38 +464,6 @@ function MaintenanceQuoteScheduledDetail(props) {
               <hr style={{ opacity: 1 }} className="mt-1" />
             </div>
           ))}
-
-        <Row className="mt-5 mx-2 mb-4">
-          <Col className="d-flex flex-row justify-content-evenly mb-1">
-            <Button
-              variant="outline-primary"
-              style={bluePillButton}
-              onClick={() => {
-                setOnConfirm(() => updateQuote);
-                setDialogText("Your quote will be updated");
-                setShowDialog(true);
-              }}
-            >
-              Update Quote
-            </Button>
-          </Col>
-
-          <Col className="d-flex flex-row justify-content-evenly mb-1">
-            <Button
-              variant="outline-primary"
-              style={redPillButton}
-              onClick={() => {
-                setOnConfirm(() => withdrawQuote);
-                setDialogText(
-                  "Your quote will be withdrawn and the request rejected"
-                );
-                setShowDialog(true);
-              }}
-            >
-              Withdraw Quote
-            </Button>
-          </Col>
-        </Row>
       </Container>
     </div>
   );
