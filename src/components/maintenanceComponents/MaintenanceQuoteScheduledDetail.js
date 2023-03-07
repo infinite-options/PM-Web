@@ -24,11 +24,13 @@ import {
   gray,
   mediumImg,
   redPillButton,
-  squareForm,
+  hidden,
+  small,
   pillButton,
   red,
 } from "../../utils/styles";
 import { put } from "../../utils/api";
+import RepairImages from "../RepairImages";
 
 function MaintenanceQuoteScheduledDetail(props) {
   const navigate = useNavigate();
@@ -45,6 +47,9 @@ function MaintenanceQuoteScheduledDetail(props) {
   const [earliestAvailability, setEarliestAvailability] = useState("");
   const [eventType, setEventType] = useState("1 Hour Job");
   const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
+  const [finishMaintenance, setFinishMaintenance] = useState(false);
+  const imageState = useState([]);
+  const [message, setMessage] = useState("");
   const [edit, setEdit] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [dialogText, setDialogText] = useState("");
@@ -111,7 +116,35 @@ function MaintenanceQuoteScheduledDetail(props) {
     const response = await put("/maintenanceQuotes", updatedQuote);
     navigate(-2);
   };
+  const finishMain = async () => {
+    if (message === "") {
+      setErrorMessage("Please fill out the notes");
+      return;
+    }
+    if (imageState[0].length === 0) {
+      setErrorMessage("Please upload images");
+      return;
+    }
+    const updateRequest = {
+      maintenance_quote_uid: quote.maintenance_quote_uid,
+      request_status: "FINISHED",
+      notes: message,
+    };
 
+    const files = imageState[0];
+    let i = 0;
+    for (const file of imageState[0]) {
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      if (file.file !== null) {
+        updateRequest[key] = file.file;
+      } else {
+        updateRequest[key] = file.image;
+      }
+    }
+    const res = await put("/FinishMaintenance", updateRequest, null, files);
+    setFinishMaintenance(false);
+    navigate("../maintenance");
+  };
   const withdrawQuote = async () => {
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
@@ -193,6 +226,7 @@ function MaintenanceQuoteScheduledDetail(props) {
 
     navigate("../maintenance");
   };
+  console.log(imageState[0].length);
 
   return (
     <div className="h-100 d-flex flex-column">
@@ -286,7 +320,7 @@ function MaintenanceQuoteScheduledDetail(props) {
           />
         </div>
 
-        {!scheduleMaintenance ? (
+        {!scheduleMaintenance && !finishMaintenance ? (
           quote.request_status === "NEW" ? (
             <Row></Row>
           ) : quote.request_status === "SCHEDULE" ? (
@@ -317,6 +351,17 @@ function MaintenanceQuoteScheduledDetail(props) {
                 {moment(quote.scheduled_date).format("ddd, MMM DD, YYYY ")} at{" "}
                 {quote.scheduled_time} <hr />
               </div>
+              <Row>
+                <Col>
+                  {" "}
+                  <Button
+                    style={bluePillButton}
+                    onClick={() => setFinishMaintenance(true)}
+                  >
+                    Finished
+                  </Button>
+                </Col>
+              </Row>
             </Row>
           ) : quote.request_status === "RESCHEDULE" ? (
             <Row className="mt-4">
@@ -358,6 +403,45 @@ function MaintenanceQuoteScheduledDetail(props) {
               </div>
             </Row>
           )
+        ) : (
+          ""
+        )}
+        {!scheduleMaintenance && finishMaintenance ? (
+          <Row className="m-3">
+            <RepairImages state={imageState} />
+            <Form.Group
+              className="mt-3 mb-4 p-2"
+              style={{
+                background: "#F3F3F3 0% 0% no-repeat padding-box",
+                borderRadius: "5px",
+              }}
+            >
+              <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                Notes {required}
+              </Form.Label>
+              <Form.Control
+                style={{ borderRadius: 0 }}
+                as="textarea"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Enter Notes"
+              />
+            </Form.Group>
+            <div
+              className="text-center"
+              style={errorMessage === "" ? hidden : {}}
+            >
+              <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
+            </div>
+            <Row>
+              <Col>
+                {" "}
+                <Button style={bluePillButton} onClick={() => finishMain()}>
+                  Finished Maintenance
+                </Button>
+              </Col>
+            </Row>
+          </Row>
         ) : (
           ""
         )}

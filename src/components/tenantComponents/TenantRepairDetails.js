@@ -41,6 +41,15 @@ const useStyles = makeStyles((theme) => ({
   priorityActive: {
     opacity: "1",
   },
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "2px 2px",
+      border: "0.5px solid grey ",
+      wordBreak: "break-word",
+    },
+    width: "100%",
+    tableLayout: "fixed",
+  },
 }));
 function TenantRepairDetails(props) {
   const classes = useStyles();
@@ -287,7 +296,7 @@ function TenantRepairDetails(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        <div className="w-100 mb-5">
           <Header
             title="Repairs"
             leftText={isEditing ? null : "< Back"}
@@ -505,52 +514,75 @@ function TenantRepairDetails(props) {
                 </div>
               ) : (
                 <div>
-                  {JSON.parse(repairsDetail.images).length === 0 ? (
-                    <Row className=" m-3">
+                  <Row className=" d-flex align-items-center justify-content-center m-3">
+                    {JSON.parse(repairsDetail.images).length === 0 ? (
                       <img
                         src={RepairImg}
+                        alt="Property"
                         style={{
-                          objectFit: "contain",
                           width: "200px",
-                          height: " 200px",
+                          height: "200px",
+                          objectFit: "cover",
                         }}
-                        alt="repair"
                       />
-                    </Row>
-                  ) : JSON.parse(repairsDetail.images).length > 1 ? (
-                    <Row className=" m-3">
-                      <Carousel responsive={responsive}>
-                        {JSON.parse(repairsDetail.images).map((images) => {
+                    ) : JSON.parse(repairsDetail.images).length > 4 ? (
+                      <Carousel
+                        responsive={responsive}
+                        infinite={true}
+                        arrows={true}
+                        partialVisible={false}
+                        // className=" d-flex align-items-center justify-content-center"
+                      >
+                        {JSON.parse(repairsDetail.images).map((image) => {
                           return (
+                            // <div className="d-flex align-items-center justify-content-center">
                             <img
-                              src={`${images}?${Date.now()}`}
+                              // key={Date.now()}
+                              src={`${image}?${Date.now()}`}
+                              // onClick={() =>
+                              //   showImage(`${image}?${Date.now()}`)
+                              // }
                               style={{
                                 width: "200px",
                                 height: "200px",
-                                objectFit: "contain",
+                                objectFit: "cover",
                               }}
-                              alt="repair"
                             />
+                            // </div>
                           );
                         })}
                       </Carousel>
-                    </Row>
-                  ) : (
-                    <Row className=" m-3">
-                      <img
-                        src={JSON.parse(repairsDetail.images)}
-                        //className="w-100 h-100"
-                        style={{
-                          objectFit: "contain",
-                          width: "200px",
-                          height: " 200px",
-                          border: "1px solid #C4C4C4",
-                          borderRadius: "5px",
-                        }}
-                        alt="repair"
-                      />
-                    </Row>
-                  )}
+                    ) : JSON.parse(repairsDetail.images).length < 4 ? (
+                      <Carousel
+                        responsive={responsive}
+                        infinite={true}
+                        arrows={true}
+                        partialVisible={false}
+                        className=" d-flex align-items-center justify-content-center"
+                      >
+                        {JSON.parse(repairsDetail.images).map((image) => {
+                          return (
+                            <div className="d-flex align-items-center justify-content-center">
+                              <img
+                                // key={Date.now()}
+                                src={`${image}?${Date.now()}`}
+                                // onClick={() =>
+                                //   showImage(`${image}?${Date.now()}`)
+                                // }
+                                style={{
+                                  width: "200px",
+                                  height: "200px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            </div>
+                          );
+                        })}
+                      </Carousel>
+                    ) : (
+                      ""
+                    )}
+                  </Row>
                   <Form.Group
                     className="p-2"
                     style={{

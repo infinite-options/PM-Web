@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import {
   Table,
   TableRow,
@@ -463,9 +463,14 @@ function ManagerRepairsOverview(props) {
                             {repair.days_open} days
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
-                            {repair.quotes_to_review > 0
-                              ? `${repair.quotes_to_review} new quote(s) to review`
-                              : "No new quotes"}
+                            {repair.request_status === "FINISHED" ||
+                            repair.request_status === "COMPLETED" ? (
+                              <Button>Pay</Button>
+                            ) : repair.quotes_to_review > 0 ? (
+                              `${repair.quotes_to_review} new quote(s) to review`
+                            ) : (
+                              "No new quotes"
+                            )}
                           </TableCell>
                         </TableRow>
                       )
