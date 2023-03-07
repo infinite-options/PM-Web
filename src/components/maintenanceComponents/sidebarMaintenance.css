@@ -1,0 +1,62 @@
+.sidebar {
+  display: flex;
+  flex-direction: row;
+  background-color: #229ebc;
+  position: fixed;
+  width: 11.75rem !important;
+  height: 100%;
+}
+
+.sidebarButtons {
+  padding: 15px;
+  color: #000000;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: Avenir-Light;
+  cursor: pointer;
+  width: 11rem;
+  background-color: #229ebc;
+  height: 100vh;
+
+  text-align: right;
+  padding-right: 15px;
+}
+
+.sidebarLinks {
+  display: flex;
+  flex-direction: column;
+  /* position: absolute; */
+  text-align: right;
+  padding-right: 15px;
+  background-color: #ffffff;
+  width: 11rem;
+  height: 60vh;
+  background-color: #229ebc;
+}
+
+.sidebarButtonsActive {
+  text-align: right;
+  padding-right: 15px;
+  color: #c93667;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: Avenir-Light;
+  cursor: pointer;
+  font-weight: 700;
+  width: 11rem;
+  /* background-color: #229ebc; */
+
+}
+
+.sidebarButtons:hover {
+  text-align: right;
+  padding-right: 15px;
+  color: #c93667;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: Avenir-Light;
+  cursor: pointer;
+  font-weight: 700;
+  width: 11rem;
+  /* background-color: #229ebc; */
+}

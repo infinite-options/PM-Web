@@ -32,10 +32,6 @@ import {
   redPillButton,
   formLabel,
   bluePillButton,
-  blue,
-  tileImg,
-  red,
-  small,
   hidden,
   squareForm,
   orangePill,
@@ -301,7 +297,7 @@ function ManagerRepairDetail(props) {
 
     fetchBusinesses();
   };
-  console.log(repair, repair.request_status, finishMaintenance);
+
   const updateRepair = async () => {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
@@ -1334,6 +1330,9 @@ function ManagerRepairDetail(props) {
                             ? "Maintenance Finished"
                             : quote.request_status === "COMPLETED"
                             ? "Maintenance Completed"
+                            : quote.quote_status === "PAID" &&
+                              quote.request_status === "COMPLETED"
+                            ? "Maintenance Paid"
                             : "Another quote accepted"}
                         </Button>
                       </Col>

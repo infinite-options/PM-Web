@@ -93,13 +93,15 @@ function OwnerRepairDetails(props) {
   };
   const imageState = useState([]);
   const { userData, refresh } = useContext(AppContext);
-  const { access_token } = userData;
+  const { user, access_token } = userData;
   const location = useLocation();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [issueType, setIssueType] = useState("Plumbing");
   const [requestQuote, setRequestQuote] = useState(false);
   const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
+
+  const [finishMaintenance, setFinishMaintenance] = useState(false);
   const [businesses, setBusinesses] = useState([]);
   const [quotes, setQuotes] = useState([]);
   const [repairsDetail, setRepairsDetail] = useState([]);
@@ -160,7 +162,9 @@ function OwnerRepairDetails(props) {
       });
     }
     imageState[1](files);
-
+    if (repair.request_status === "FINISHED") {
+      setFinishMaintenance(true);
+    }
     const response = await get(
       `/maintenanceQuotes?linked_request_uid=${repair.maintenance_request_uid}`
     );
@@ -240,6 +244,27 @@ function OwnerRepairDetails(props) {
     fetchBusinesses();
     setScheduleMaintenance(false);
     setIsEditing(false);
+  };
+  const CompleteMaintenance = async () => {
+    const newRepair = {
+      maintenance_request_uid: repair.maintenance_request_uid,
+      request_status: "COMPLETED",
+    };
+    const files = imageState[0];
+    let i = 0;
+    for (const file of imageState[0]) {
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      if (file.file !== null) {
+        newRepair[key] = file.file;
+      } else {
+        newRepair[key] = file.image;
+      }
+    }
+
+    // console.log("Repair Object to be updated", newRepair);
+
+    const response = await put("/maintenanceRequests", newRepair, null, files);
+    fetchBusinesses();
   };
 
   const acceptSchedule = async (quote) => {
@@ -994,6 +1019,14 @@ function OwnerRepairDetails(props) {
                             : quote.quote_status === "AGREED" &&
                               quote.request_status === "SCHEDULED"
                             ? "Maintenace Scheduled"
+                            : quote.quote_status === "AGREED" &&
+                              quote.request_status === "FINISHED"
+                            ? "Maintenance Finished"
+                            : quote.request_status === "COMPLETED"
+                            ? "Maintenance Completed"
+                            : quote.quote_status === "PAID" &&
+                              quote.request_status === "COMPLETED"
+                            ? "Maintenance Paid"
                             : "Another quote accepted"}
                         </Button>
                       </Col>
@@ -1076,6 +1109,117 @@ function OwnerRepairDetails(props) {
                               onClick={() => setScheduleMaintenance(false)}
                             >
                               Cancel
+                            </Button>
+                          </Col>
+                        </Row>
+                      </Row>
+                    ) : (
+                      <Row></Row>
+                    )}
+                    {finishMaintenance &&
+                    repair.request_created_by === user.user_uid &&
+                    JSON.parse(quote.maintenance_images) !== null &&
+                    quote.request_status === "FINISHED" ? (
+                      <Row className="mx-2 my-2 p-3">
+                        <Row>
+                          <div style={headings}>
+                            Images Uploaded by Maintenance
+                          </div>
+                        </Row>
+                        <Row className=" d-flex align-items-center justify-content-center m-3">
+                          {JSON.parse(quote.maintenance_images).length === 0 ? (
+                            <img
+                              src={RepairImg}
+                              alt="Property"
+                              style={{
+                                width: "200px",
+                                height: "200px",
+                                objectFit: "cover",
+                              }}
+                            />
+                          ) : JSON.parse(quote.maintenance_images).length >
+                            4 ? (
+                            <Carousel
+                              responsive={responsive}
+                              infinite={true}
+                              arrows={true}
+                              partialVisible={false}
+                              // className=" d-flex align-items-center justify-content-center"
+                            >
+                              {JSON.parse(quote.maintenance_images).map(
+                                (image) => {
+                                  return (
+                                    // <div className="d-flex align-items-center justify-content-center">
+                                    <img
+                                      // key={Date.now()}
+                                      src={`${image}?${Date.now()}`}
+                                      // onClick={() =>
+                                      //   showImage(`${image}?${Date.now()}`)
+                                      // }
+                                      style={{
+                                        width: "200px",
+                                        height: "200px",
+                                        objectFit: "cover",
+                                      }}
+                                    />
+                                    // </div>
+                                  );
+                                }
+                              )}
+                            </Carousel>
+                          ) : JSON.parse(quote.maintenance_images).length <
+                            4 ? (
+                            <Carousel
+                              responsive={responsive}
+                              infinite={true}
+                              arrows={true}
+                              partialVisible={false}
+                              className=" d-flex align-items-center justify-content-center"
+                            >
+                              {JSON.parse(quote.maintenance_images).map(
+                                (image) => {
+                                  return (
+                                    <div className="d-flex align-items-center justify-content-center">
+                                      <img
+                                        // key={Date.now()}
+                                        src={`${image}?${Date.now()}`}
+                                        // onClick={() =>
+                                        //   showImage(`${image}?${Date.now()}`)
+                                        // }
+                                        style={{
+                                          width: "200px",
+                                          height: "200px",
+                                          objectFit: "cover",
+                                        }}
+                                      />
+                                    </div>
+                                  );
+                                }
+                              )}
+                            </Carousel>
+                          ) : (
+                            ""
+                          )}
+                        </Row>
+                        <Row
+                          className="pt-1 mb-4"
+                          style={{
+                            background: "#F3F3F3 0% 0% no-repeat padding-box",
+                            borderRadius: "10px",
+                            opacity: 1,
+                          }}
+                        >
+                          <div style={subHeading}>Notes</div>
+                          <div style={subText}>{quote.notes}</div>
+                        </Row>
+                        <Row>
+                          <Col className="d-flex flex-row justify-content-evenly">
+                            {" "}
+                            <Button
+                              style={bluePillButton}
+                              onClick={() => CompleteMaintenance()}
+                            >
+                              Completed
                             </Button>
                           </Col>
                         </Row>

@@ -169,14 +169,6 @@ function ManagerRepairsOverview(props) {
       (item) => item.request_status === "COMPLETE"
     );
 
-    // setRepairIter([
-    //   { title: "New", repairs_list: new_repairs },
-    //   { title: "Info Requested", repairs_list: info_repairs },
-    //   { title: "Processing", repairs_list: processing_repairs },
-    //   { title: "Upcoming, Scheduled", repairs_list: scheduled_repairs },
-    //   { title: "Completed", repairs_list: completed_repairs },
-    // ]);
-    // console.log(response.result);
     setRepairIter(repairs_sorted);
     setIsLoading(false);
   };
@@ -386,25 +378,22 @@ function ManagerRepairsOverview(props) {
                   <TableBody>
                     {stableSort(repairIter, getComparator(order, orderBy)).map(
                       (repair, j) => (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={j}
-                          onClick={() => {
-                            navigate(`./${repair.maintenance_request_uid}`, {
-                              state: {
-                                repair: repair,
-                              },
-                            });
-                          }}
-                        >
-                          <TableCell padding="none" size="small" align="center">
+                        <TableRow hover role="checkbox" tabIndex={-1} key={j}>
+                          <TableCell
+                            onClick={() => {
+                              navigate(`./${repair.maintenance_request_uid}`, {
+                                state: {
+                                  repair: repair,
+                                },
+                              });
+                            }}
+                            padding="none"
+                            size="small"
+                            align="center"
+                          >
                             {JSON.parse(repair.images).length > 0 ? (
                               <img
                                 src={JSON.parse(repair.images)[0]}
-                                // onClick={() => selectRepair(repair)}
-
                                 alt="repair"
                                 style={{
                                   borderRadius: "4px",
@@ -427,6 +416,13 @@ function ManagerRepairsOverview(props) {
                             )}
                           </TableCell>
                           <TableCell
+                            onClick={() => {
+                              navigate(`./${repair.maintenance_request_uid}`, {
+                                state: {
+                                  repair: repair,
+                                },
+                              });
+                            }}
                             padding="none"
                             size="small"
                             align="center"
@@ -439,33 +435,121 @@ function ManagerRepairsOverview(props) {
                           >
                             {repair.request_status}
                           </TableCell>
-                          <TableCell padding="none" size="small" align="center">
+                          <TableCell
+                            onClick={() => {
+                              navigate(`./${repair.maintenance_request_uid}`, {
+                                state: {
+                                  repair: repair,
+                                },
+                              });
+                            }}
+                            padding="none"
+                            size="small"
+                            align="center"
+                          >
                             {repair.title}
                           </TableCell>
-                          <TableCell padding="none" size="small" align="center">
+                          <TableCell
+                            onClick={() => {
+                              navigate(`./${repair.maintenance_request_uid}`, {
+                                state: {
+                                  repair: repair,
+                                },
+                              });
+                            }}
+                            padding="none"
+                            size="small"
+                            align="center"
+                          >
                             {repair.description}
                           </TableCell>
 
-                          <TableCell padding="none" size="small" align="center">
+                          <TableCell
+                            onClick={() => {
+                              navigate(`./${repair.maintenance_request_uid}`, {
+                                state: {
+                                  repair: repair,
+                                },
+                              });
+                            }}
+                            padding="none"
+                            size="small"
+                            align="center"
+                          >
                             {repair.address}
                             {repair.unit !== "" ? " " + repair.unit : ""},{" "}
                             {repair.city}, {repair.state} <br />
                             {repair.zip}
                           </TableCell>
-                          <TableCell padding="none" size="small" align="center">
+                          <TableCell
+                            onClick={() => {
+                              navigate(`./${repair.maintenance_request_uid}`, {
+                                state: {
+                                  repair: repair,
+                                },
+                              });
+                            }}
+                            padding="none"
+                            size="small"
+                            align="center"
+                          >
                             {repair.priority}
                           </TableCell>
 
-                          <TableCell padding="none" size="small" align="center">
+                          <TableCell
+                            onClick={() => {
+                              navigate(`./${repair.maintenance_request_uid}`, {
+                                state: {
+                                  repair: repair,
+                                },
+                              });
+                            }}
+                            padding="none"
+                            size="small"
+                            align="center"
+                          >
                             {repair.request_created_date.split(" ")[0]}
                           </TableCell>
-                          <TableCell padding="none" size="small" align="center">
+                          <TableCell
+                            onClick={() => {
+                              navigate(`./${repair.maintenance_request_uid}`, {
+                                state: {
+                                  repair: repair,
+                                },
+                              });
+                            }}
+                            padding="none"
+                            size="small"
+                            align="center"
+                          >
                             {repair.days_open} days
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
-                            {repair.request_status === "FINISHED" ||
-                            repair.request_status === "COMPLETED" ? (
-                              <Button>Pay</Button>
+                            {(repair.request_status === "FINISHED" ||
+                              repair.request_status === "COMPLETED") &&
+                            repair.quotes.some(
+                              (quote) => quote.quote_status === "AGREED"
+                            ) ? (
+                              <Button
+                                onClick={() =>
+                                  navigate(
+                                    `/managerPaymentPage/${repair.purchase[0].purchase_uid}`,
+                                    {
+                                      state: {
+                                        amount: repair.purchase[0].amount_due,
+                                        selectedProperty:
+                                          repair.selectedProperty,
+                                        purchaseUIDs: [
+                                          repair.purchase[0].purchase_uid,
+                                        ],
+                                        purchases: repair.purchase,
+                                      },
+                                    }
+                                  )
+                                }
+                              >
+                                Pay
+                              </Button>
                             ) : repair.quotes_to_review > 0 ? (
                               `${repair.quotes_to_review} new quote(s) to review`
                             ) : (

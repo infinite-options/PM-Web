@@ -9,7 +9,7 @@ import {
 import * as ReactBootStrap from "react-bootstrap";
 import AppContext from "../AppContext";
 import { bluePillButton, pillButton } from "../utils/styles";
-import { post } from "../utils/api";
+import { post, put } from "../utils/api";
 
 function StripePayment(props) {
   const { purchases, message, amount } = props;
@@ -66,6 +66,11 @@ function StripePayment(props) {
         payment_type: "STRIPE",
       };
       await post("/payments", newPayment);
+      const body = {
+        maintenance_request_uid: purchases[0].linked_bill_id,
+        quote_status: "PAID",
+      };
+      const response = await put("/QuotePaid", body);
     } else {
       for (let purchase of purchases) {
         // console.log(purchase);
@@ -78,6 +83,11 @@ function StripePayment(props) {
           payment_type: "STRIPE",
         };
         await post("/payments", newPayment);
+        const body = {
+          maintenance_request_uid: purchase.linked_bill_id,
+          quote_status: "PAID",
+        };
+        const response = await put("/QuotePaid", body);
       }
     }
     setShowSpinner(false);

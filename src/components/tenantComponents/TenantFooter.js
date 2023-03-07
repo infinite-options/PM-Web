@@ -37,28 +37,6 @@ function ManagerFooter(props) {
             Dashboard
           </p>
         </Col>
-        {/* <Col
-          className="text-center"
-          onClick={() => {
-            navigate("/tenant-list");
-          }}
-        >
-          <img src={Roles_Gray} alt="Contacts" />
-          <p style={smallGray} className="mb-0">
-            Tenants
-          </p>
-        </Col> */}
-        {/* <Col
-          className="text-center"
-          onClick={() => {
-            navigate("/owner-list");
-          }}
-        >
-          <img src={Contacts_Gray} alt="Contacts" />
-          <p style={smallGray} className="mb-0">
-            Owners
-          </p>
-        </Col> */}
 
         <Col
           className="text-center"

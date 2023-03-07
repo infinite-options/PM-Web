@@ -23,7 +23,7 @@ import PaymentHistory from "./components/PaymentHistory";
 import ScheduleRepairs from "./components/ScheduleRepairs";
 import { get } from "./utils/api";
 import DetailRepairStatus from "./components/DetailRepairStatus";
-import MaintenanceHome from "./pages/MaintenanceHome";
+import MaintenanceDashboard from "./pages/MaintenanceDashboard";
 import MaintenanceQuotesRequested from "./components/maintenanceComponents/MaintenanceQuotesRequested";
 import DetailQuote from "./components/DetailQuote";
 import ManagerDetailAnnouncement from "./components/managerComponents/ManagerDetailAnnouncement";
@@ -138,7 +138,7 @@ function App() {
             <Route path="modifyexisiting" element={<ModifyExisiting />} />
             <Route path="profileInfo" element={<ProfileInfo />} />
             <Route path="owner" element={<OwnerDashboard />} />
-            <Route path="maintenance" element={<MaintenanceHome />} />
+            <Route path="maintenance" element={<MaintenanceDashboard />} />
             <Route
               path="quotes-requested"
               element={<MaintenanceQuotesRequested />}
