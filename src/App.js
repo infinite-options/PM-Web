@@ -24,6 +24,7 @@ import ScheduleRepairs from "./components/ScheduleRepairs";
 import { get } from "./utils/api";
 import DetailRepairStatus from "./components/DetailRepairStatus";
 import MaintenanceDashboard from "./pages/MaintenanceDashboard";
+import MaintenanceRequestView from "./components/maintenanceComponents/MaintenanceRequestView";
 import MaintenanceQuotesRequested from "./components/maintenanceComponents/MaintenanceQuotesRequested";
 import DetailQuote from "./components/DetailQuote";
 import ManagerDetailAnnouncement from "./components/managerComponents/ManagerDetailAnnouncement";
@@ -140,6 +141,11 @@ function App() {
             <Route path="owner" element={<OwnerDashboard />} />
             <Route path="maintenance" element={<MaintenanceDashboard />} />
             <Route
+              path="maintenanceRequestView"
+              element={<MaintenanceRequestView />}
+            />
+            MaintenanceRequestView
+            <Route
               path="quotes-requested"
               element={<MaintenanceQuotesRequested />}
             />
@@ -170,7 +176,6 @@ function App() {
             />
             <Route path="maintenencePage" element={<MaintenencePage />} />
             <Route path="OwnersTab" element={<OwnersTab />} />
-
             <Route path="applyToProperty" element={<ApplyToProperty />} />
             <Route
               path="reviewTenantProfile/:property_uid"
@@ -180,7 +185,6 @@ function App() {
               path="reviewTenantProfileEdit/:property_uid"
               element={<ReviewTenantProfileEdit />}
             />
-
             <Route path="profile-info" element={<ProfileInfo />} />
             <Route
               path="propertyApplicationView/:property_uid"

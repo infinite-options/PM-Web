@@ -2,27 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import moment from "moment";
-import Header from "../Header";
-import Footer from "../Footer";
 import ConfirmDialog from "../ConfirmDialog";
-import ServicesProvidedQuotes from "../ServicesProvidedQuotes";
-import No_Image from "../../icons/No_Image_Available.jpeg";
-import HighPriority from "../../icons/highPriority.svg";
-import Phone from "../../icons/Phone.svg";
-import Message from "../../icons/Message.svg";
 import {
   headings,
-  subText,
-  tileImg,
-  greenPill,
-  orangePill,
-  redPill,
   subHeading,
   bluePillButton,
   formLabel,
-  mediumBold,
-  gray,
-  mediumImg,
   redPillButton,
   hidden,
   small,
@@ -35,22 +20,14 @@ import RepairImages from "../RepairImages";
 function MaintenanceQuoteScheduledDetail(props) {
   const navigate = useNavigate();
   const location = useLocation();
-  const quote = location.state.quote;
+  const { quote } = props;
 
   const [reDate, setReDate] = useState("");
   const [reTime, setReTime] = useState("");
-  const [currentImg, setCurrentImg] = useState(0);
-  const [serviceState, setServiceState] = useState([]);
-  const [totalEstimate, setTotalEstimate] = useState(0);
-  const [tenants, setTenants] = useState([]);
-  const [propertyManager, setPropertyManager] = useState([]);
-  const [earliestAvailability, setEarliestAvailability] = useState("");
-  const [eventType, setEventType] = useState("1 Hour Job");
   const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
   const [finishMaintenance, setFinishMaintenance] = useState(false);
   const imageState = useState([]);
   const [message, setMessage] = useState("");
-  const [edit, setEdit] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [dialogText, setDialogText] = useState("");
   const [onConfirm, setOnConfirm] = useState(null);
@@ -65,57 +42,11 @@ function MaintenanceQuoteScheduledDetail(props) {
     ) : (
       ""
     );
+  useEffect(() => {
+    setReDate(quote.scheduled_date);
+    setReTime(quote.scheduled_time);
+  }, []);
 
-  const nextImg = () => {
-    if (currentImg === JSON.parse(quote.images).length - 1) {
-      setCurrentImg(0);
-    } else {
-      setCurrentImg(currentImg + 1);
-    }
-  };
-  const previousImg = () => {
-    if (currentImg === 0) {
-      setCurrentImg(JSON.parse(quote.images).length - 1);
-    } else {
-      setCurrentImg(currentImg - 1);
-    }
-  };
-
-  const loadQuote = () => {
-    // console.log('loaded quote details', quote)
-    let earliest_availability = new Date(quote.earliest_availability)
-      .toISOString()
-      .slice(0, 10);
-    setEarliestAvailability(earliest_availability);
-    // setEventType(quote.event_type)
-    setPropertyManager(
-      quote.property_manager.filter(
-        (manager) => manager.management_status === "ACCEPTED"
-      )
-    );
-    setTenants(quote.rentalInfo.filter((r) => r.rental_status === "ACTIVE"));
-    setServiceState(JSON.parse(quote.services_expenses));
-    setEventType(quote.event_type);
-  };
-
-  const updateQuote = async () => {
-    if (earliestAvailability === "" || eventType === "") {
-      setErrorMessage("Please fill out all fields");
-      return;
-    }
-    setErrorMessage("");
-
-    const updatedQuote = {
-      maintenance_quote_uid: quote.maintenance_quote_uid,
-      services_expenses: serviceState,
-      total_estimate: totalEstimate,
-      earliest_availability: earliestAvailability,
-      event_type: eventType,
-      quote_status: "SENT",
-    };
-    const response = await put("/maintenanceQuotes", updatedQuote);
-    navigate(-2);
-  };
   const finishMain = async () => {
     if (message === "") {
       setErrorMessage("Please fill out the notes");
@@ -154,11 +85,6 @@ function MaintenanceQuoteScheduledDetail(props) {
     navigate("/maintenance");
   };
 
-  useEffect(() => {
-    if (quote) {
-      loadQuote();
-    }
-  }, [quote]);
   const rejectReschedule = async () => {
     const body = {
       maintenance_request_uid: quote.maintenance_request_uid,
@@ -208,8 +134,8 @@ function MaintenanceQuoteScheduledDetail(props) {
   const rescheduleRepair = async () => {
     const body = {
       maintenance_request_uid: quote.maintenance_request_uid,
-      request_status: "RESCHEDULE",
-      notes: "Request to reschedule",
+      request_status: "SCHEDULE",
+      notes: "Schedule",
       scheduled_date: reDate,
       scheduled_time: reTime,
     };
@@ -226,7 +152,7 @@ function MaintenanceQuoteScheduledDetail(props) {
 
     navigate("../maintenance");
   };
-  console.log(imageState[0].length);
+  console.log(quote.request_status);
 
   return (
     <div className="h-100 d-flex flex-column">
@@ -237,89 +163,7 @@ function MaintenanceQuoteScheduledDetail(props) {
         onCancel={onCancel}
       />
 
-      <Header
-        title="Quote Sent (Detail)"
-        leftText="< Back"
-        leftFn={() => navigate(-1)}
-        rightText=""
-      />
-
-      <Container className="pb-5 mb-5">
-        <div style={{ ...tileImg, height: "200px", position: "relative" }}>
-          {JSON.parse(quote.images).length > 0 ? (
-            <img
-              src={JSON.parse(quote.images)[currentImg]}
-              className="w-100 h-100"
-              style={{ borderRadius: "4px", objectFit: "contain" }}
-              alt="Property"
-            />
-          ) : (
-            ""
-          )}
-          <div
-            style={{ position: "absolute", left: "5px", top: "90px" }}
-            onClick={previousImg}
-          >
-            {"<"}
-          </div>
-          <div
-            style={{ position: "absolute", right: "5px", top: "90px" }}
-            onClick={nextImg}
-          >
-            {">"}
-          </div>
-        </div>
-
-        <div className="d-flex justify-content-between">
-          <div className="pt-1">
-            <h5 className="mt-2 mb-0" style={mediumBold}>
-              {quote.title}
-            </h5>
-            <p style={gray} className="mt-1 mb-2">
-              {quote.address}
-              {quote.unit !== "" ? ` ${quote.unit}, ` : ", "}
-              {quote.city}, {quote.state} {quote.zip}
-            </p>
-          </div>
-          <div className="pt-3">
-            {quote.priority === "Low" ? (
-              <p style={greenPill} className="mb-0">
-                Low Priority
-              </p>
-            ) : quote.priority === "Medium" ? (
-              <p style={orangePill} className="mb-0">
-                Medium Priority
-              </p>
-            ) : quote.priority === "High" ? (
-              <p style={redPill} className="mb-0">
-                High Priority
-              </p>
-            ) : (
-              <p style={greenPill} className="mb-0">
-                No Priority
-              </p>
-            )}
-          </div>
-        </div>
-
-        <Row className="mt-2">
-          <div style={subText}>{quote.description}</div>
-        </Row>
-
-        <div className="mt-4 mb-4">
-          <Row>
-            <div style={headings}>Service Charge(s)</div>
-          </Row>
-          <ServicesProvidedQuotes
-            serviceState={serviceState}
-            setServiceState={setServiceState}
-            eventType={eventType}
-            setEventType={setEventType}
-            totalEstimate={totalEstimate}
-            setTotalEstimate={setTotalEstimate}
-          />
-        </div>
-
+      <Container className="pb-5">
         {!scheduleMaintenance && !finishMaintenance ? (
           quote.request_status === "NEW" ? (
             <Row></Row>
@@ -328,9 +172,9 @@ function MaintenanceQuoteScheduledDetail(props) {
               <div style={headings}>Scheduled for</div>
               <div style={subHeading}>
                 {moment(quote.scheduled_date).format("ddd, MMM DD, YYYY ")} at{" "}
-                {quote.scheduled_time} <hr />
+                {quote.scheduled_time}
               </div>
-              <Row>
+              <Row className="m-3">
                 <Col>
                   <Button
                     variant="outline-primary"
@@ -496,58 +340,6 @@ function MaintenanceQuoteScheduledDetail(props) {
         ) : (
           <Row></Row>
         )}
-
-        {propertyManager && propertyManager.length > 0 ? (
-          <div className="mt-5">
-            <div className="d-flex justify-content-between">
-              <div>
-                <h6 style={headings} className="mb-1">
-                  {propertyManager[0].manager_business_name}
-                </h6>
-                <p style={subText} className="mb-1">
-                  Property Management
-                </p>
-              </div>
-              <div>
-                <a href={`tel:${propertyManager[0].manager_phone_number}`}>
-                  <img src={Phone} alt="Phone" style={mediumImg} />
-                </a>
-                <a href={`mailto:${propertyManager[0].manager_email}`}>
-                  <img src={Message} alt="Message" style={mediumImg} />
-                </a>
-              </div>
-            </div>
-            <hr style={{ opacity: 1 }} className="mt-1" />
-          </div>
-        ) : (
-          ""
-        )}
-
-        {tenants &&
-          tenants.length > 0 &&
-          tenants.map((tenant, i) => (
-            <div key={i}>
-              <div className="d-flex justify-content-between">
-                <div>
-                  <h6 style={headings} className="mb-1">
-                    {tenant.tenant_first_name} {tenant.tenant_last_name}
-                  </h6>
-                  <p style={subText} className="mb-1">
-                    Tenant
-                  </p>
-                </div>
-                <div>
-                  <a href={`tel:${tenant.tenant_email}`}>
-                    <img src={Phone} alt="Phone" style={mediumImg} />
-                  </a>
-                  <a href={`mailto:${tenant.tenant_phone_number}`}>
-                    <img src={Message} alt="Message" style={mediumImg} />
-                  </a>
-                </div>
-              </div>
-              <hr style={{ opacity: 1 }} className="mt-1" />
-            </div>
-          ))}
       </Container>
     </div>
   );
