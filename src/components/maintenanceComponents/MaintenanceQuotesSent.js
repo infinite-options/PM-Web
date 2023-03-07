@@ -42,6 +42,7 @@ function MaintenanceQuotesSent(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const quotes = location.state.quotes;
+  console.log(quotes);
   const classes = useStyles();
   const [isLoading, setIsLoading] = useState(true); // search variables
   const [search, setSearch] = useState("");

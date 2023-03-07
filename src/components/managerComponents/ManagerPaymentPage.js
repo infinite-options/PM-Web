@@ -25,7 +25,7 @@ import WF_Logo from "../../icons/WF-Logo.png";
 import BofA_Logo from "../../icons/BofA-Logo.png";
 import Chase_Logo from "../../icons/Chase-Logo.png";
 import Citi_Logo from "../../icons/Citi-Logo.png";
-import { get, post } from "../../utils/api";
+import { get, post, put } from "../../utils/api";
 import {
   headings,
   bluePillButton,
@@ -96,7 +96,7 @@ function ManagerPaymentPage(props) {
 
     let newPayment = {};
     if (allPurchases.length === 1) {
-      // console.log(allPurchases[0]);
+      console.log("allPurchases", allPurchases[0]);
       newPayment = {
         pay_purchase_id: allPurchases[0].purchase_uid,
         //Need to make change here
@@ -106,6 +106,13 @@ function ManagerPaymentPage(props) {
         payment_type: paymentType,
       };
       await post("/payments", newPayment);
+
+      const body = {
+        maintenance_request_uid: allPurchases[0].linked_bill_id,
+        quote_status: "PAID",
+      };
+      console.log("allPurchases", body);
+      const response = await put("/QuotePaid", body);
     } else {
       for (let purchase of allPurchases) {
         // console.log(purchase);
@@ -120,8 +127,14 @@ function ManagerPaymentPage(props) {
           payment_type: paymentType,
         };
         await post("/payments", newPayment);
+        const body = {
+          maintenance_request_uid: purchase.linked_bill_id,
+          quote_status: "PAID",
+        };
+        await put("/QuotePaid", body);
       }
     }
+
     setShowSpinner(false);
     submit();
   };

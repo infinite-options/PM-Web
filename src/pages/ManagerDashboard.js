@@ -21,8 +21,6 @@ import AppContext from "../AppContext";
 import ManagerCreateExpense from "../components/managerComponents/ManagerCreateExpense";
 import ManagerRepairRequest from "../components/managerComponents/ManagerRepairRequest";
 import ManagerFooter from "../components/managerComponents/ManagerFooter";
-import SortDown from "../icons/Sort-down.svg";
-import SortLeft from "../icons/Sort-left.svg";
 import AddIcon from "../icons/AddIcon.svg";
 import PropertyIcon from "../icons/PropertyIcon.svg";
 import RepairImg from "../icons/RepairImg.svg";

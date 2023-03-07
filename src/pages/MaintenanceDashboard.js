@@ -2,37 +2,65 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import moment from "moment";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+  TableSortLabel,
+  Box,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import * as ReactBootStrap from "react-bootstrap";
+import PropTypes from "prop-types";
+import { visuallyHidden } from "@mui/utils";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
-import RepairRequest from "../icons/repair_request.svg";
-import RepairStatus from "../icons/repair_status.svg";
-import Documents from "../icons/documents.svg";
-import QuotesRejected from "../icons/QuotesRejected.svg";
-import JobCompleted from "../icons/JobCompleted.svg";
-import SearchPM from "../icons/searchPM.svg";
+import SideBar from "../components/maintenanceComponents/SideBar";
+import MaintenanceFooter from "../components/maintenanceComponents/MaintenanceFooter";
+import RepairImg from "../icons/RepairImg.svg";
 import { get } from "../utils/api";
-import {
-  headings,
-  upcoming,
-  upcomingHeading,
-  upcomingText,
-  actionsNoColor,
-  actions,
-} from "../utils/styles";
+import { green, red, blue, xSmall } from "../utils/styles";
+
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px", // <-- arbitrary value
+    },
+  },
+});
 
 function MaintenanceDashboard(props) {
   const navigate = useNavigate();
+  const classes = useStyles();
   const { userData } = useContext(AppContext);
-  const { setShowFooter } = props;
-  const [profile, setProfile] = useState([]);
   const [upcomingJob, setUpcomingJob] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [quotes, setQuotes] = useState([]);
+  const [quotesRequested, setQuotesRequested] = useState([]);
+  const [quotesSent, setQuotesSent] = useState([]);
+  const [quotesAccepted, setQuotesAccepted] = useState([]);
+  const [quotesScheduled, setQuotesScheduled] = useState([]);
+  const [quotesCompleted, setQuotesCompleted] = useState([]);
+  const [quotesRejected, setQuotesRejected] = useState([]);
+  const [quotesRefused, setQuotesRefused] = useState([]);
+  const [orderMaintenance, setOrderMaintenance] = useState("asc");
+  const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
 
-  let access_token = userData.access_token;
-
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsive = {
+    showSidebar: width > 1023,
+  };
   const sort_quotes = (quotes) => {
     quotes.sort(
       (a, b) => b.priority_n - a.priority_n || b.days_since - a.days_since
@@ -40,27 +68,23 @@ function MaintenanceDashboard(props) {
     return quotes;
   };
 
-  const fetchProfile = async () => {
+  const fetchMaintenanceDashboard = async () => {
     let business_uid = "";
     for (const business of userData.user.businesses) {
       if (business.business_type === "MAINTENANCE") {
         business_uid = business.business_uid;
-        // console.log(business_uid);
+
         break;
       }
     }
     if (business_uid === "") {
-      // console.log("no maintenance business found");
     }
     const response = await get(`/businesses?business_uid=${business_uid}`);
-    // console.log(response);
-    setProfile(response.result[0]);
 
     const quotes_response = await get(
       `/maintenanceQuotes?quote_business_uid=${business_uid}`
     );
-    // console.log("Quotes associated with business")
-    // console.log(quotes_response.result)
+
     const quotes_unsorted = quotes_response.result;
     quotes_unsorted.forEach((quote, i) => {
       const quote_created_date = new Date(Date.parse(quote.quote_created_date));
@@ -79,20 +103,47 @@ function MaintenanceDashboard(props) {
         quote.priority_n = 1;
       }
     });
+    let sorted_quotes = sort_quotes(quotes_unsorted);
     setQuotes(sort_quotes(quotes_unsorted));
+
+    let quotes_requested = sorted_quotes.filter(
+      (quote) => quote.request_status === "PROCESSING"
+    );
+    setQuotesRequested(quotes_requested);
+    let quotes_sent = sorted_quotes.filter(
+      (quote) => quote.request_status === "PROCESSING"
+    );
+    setQuotesSent(quotes_sent);
+    let quotes_accepted = sorted_quotes.filter(
+      (quote) =>
+        quote.request_status === "SCHEDULE" ||
+        quote.request_status === "RESCHEDULE"
+    );
+    setQuotesAccepted(quotes_accepted);
+    let quotes_scheduled = sorted_quotes.filter(
+      (quote) => quote.request_status === "SCHEDULED"
+    );
+    setQuotesScheduled(quotes_scheduled);
+    let quotes_completed = sorted_quotes.filter(
+      (quote) =>
+        quote.request_status === "FINISHED" ||
+        quote.request_status === "COMPLETED"
+    );
+    setQuotesCompleted(quotes_completed);
+    let quotes_rejected = sorted_quotes.filter(
+      (quote) =>
+        quote.quote_status === "REJECTED" || quote.quote_status === "WITHDRAWN"
+    );
+    setQuotesRejected(quotes_rejected);
+    let quotes_refused = sorted_quotes.filter(
+      (quote) => quote.quote_status === "REFUSED"
+    );
+    setQuotesRefused(quotes_refused);
+
+    setIsLoading(false);
   };
-  //console.log(profile);
-  useEffect(() => {
-    if (profile !== undefined) {
-      setIsLoading(false);
-    }
-  }, [profile]);
 
-  useEffect(() => {
-    setShowFooter(true);
-  });
-
-  useEffect(fetchProfile, []);
+  useEffect(fetchMaintenanceDashboard, []);
 
   const goToQuotesRequested = () => {
     navigate("/quotes-requested");
@@ -140,136 +191,1463 @@ function MaintenanceDashboard(props) {
   const goToSearchPM = () => {
     navigate("/maintenancePropertyManagers");
   };
-  // console.log(profile);
+  const handleRequestSortMaintenance = (event, property) => {
+    const isAsc = orderMaintenanceBy === property && orderMaintenance === "asc";
+    setOrderMaintenance(isAsc ? "desc" : "asc");
+    setOrderMaintenanceBy(property);
+  };
+
+  function descendingComparatorMaintenance(a, b, orderMaintenanceBy) {
+    if (b[orderMaintenanceBy] < a[orderMaintenanceBy]) {
+      return -1;
+    }
+    if (b[orderMaintenanceBy] > a[orderMaintenanceBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparatorMaintenance(orderMaintenance, orderMaintenanceBy) {
+    return orderMaintenance === "desc"
+      ? (a, b) => descendingComparatorMaintenance(a, b, orderMaintenanceBy)
+      : (a, b) => -descendingComparatorMaintenance(a, b, orderMaintenanceBy);
+  }
+
+  function stableSortMaintenance(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const orderMaintenance = comparator(a[0], b[0]);
+      if (orderMaintenance !== 0) {
+        return orderMaintenance;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  const maintenancesHeadCell = [
+    {
+      id: "images",
+      numeric: false,
+      label: "Property Images",
+    },
+    {
+      id: "address",
+      numeric: false,
+      label: "Address",
+    },
+    ,
+    {
+      id: "request_status",
+      numeric: false,
+      label: "Status",
+    },
+    {
+      id: "title",
+      numeric: false,
+      label: "Issue",
+    },
+    {
+      id: "request_created_date",
+      numeric: true,
+      label: "Date Reported",
+    },
+    {
+      id: "days_open",
+      numeric: false,
+      label: "Days Open",
+    },
+    {
+      id: "request_type",
+      numeric: true,
+      label: "Type",
+    },
+    {
+      id: "priority",
+      numeric: false,
+      label: "Priority",
+    },
+
+    {
+      id: "scheduled_date",
+      numeric: true,
+      label: "Scheduled Date",
+    },
+
+    {
+      id: "scheduled_time",
+      numeric: true,
+      label: "Scheduled Time",
+    },
+  ];
+  function EnhancedTableHeadMaintenance(props) {
+    const { orderMaintenance, orderMaintenanceBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {maintenancesHeadCell.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={
+                orderMaintenanceBy === headCell.id ? orderMaintenance : false
+              }
+            >
+              <TableSortLabel
+                align="center"
+                active={orderMaintenanceBy === headCell.id}
+                direction={
+                  orderMaintenanceBy === headCell.id ? orderMaintenance : "asc"
+                }
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderMaintenanceBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {orderMaintenance === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadMaintenance.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    orderMaintenance: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderMaintenanceBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
+  };
+
   return (
-    <div className="h-100">
-      <Header title="Home" />
-
-      <Container className="pt-1 mb-5 pb-5">
-        <Row style={headings}>
-          <div>{profile.business_name}</div>
-        </Row>
-
-        {upcomingJob ? (
-          <Row style={upcoming} className="mt-2 mb-2">
-            <div style={upcomingHeading} className="mt-1 mb-1">
-              Upcoming job:
-              <br />
-              Toilet Plumbing scheduled for
-              <br /> Today at 12:00 pm
-              <br />
-            </div>
-
-            <Col className="mt-1 mb-1">
-              <div style={upcomingText}>
-                For questions / concerns, feel free to contact the property
-                manager
-              </div>
-            </Col>
-            <Col xs={2} style={upcomingText} className="mt-1 mb-1">
-              <img src={Phone} alt="Phone" />
-            </Col>
-            <Col xs={2} style={upcomingText} className="mt-1 mb-1">
-              <img src={Message} alt="Message" />
-            </Col>
-          </Row>
-        ) : (
-          ""
-        )}
-
-        <Row
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-          }}
-          className="mb-4"
-        >
-          <div style={headings} className="mt-4 mb-1">
-            Actions
+    <div className="w-100 overflow-hidden">
+      {!isLoading && quotes.length > 0 ? (
+        <div className="flex-1">
+          <div
+            hidden={!responsive.showSidebar}
+            style={{
+              backgroundColor: "#229ebc",
+              width: "11rem",
+              minHeight: "100%",
+            }}
+          >
+            <SideBar />
           </div>
-          <Col xs={3} style={actions}>
-            <img
-              style={{ width: "50px", height: "50px", cursor: "pointer" }}
-              src={RepairRequest}
-              onClick={goToQuotesRequested}
-            />
-            <div>Quotes Requested</div>
-          </Col>
-          <Col xs={3} style={actions}>
-            <img
-              style={{ width: "50px", height: "50px", cursor: "pointer" }}
-              src={Documents}
-              onClick={goToQuotesSent}
-            />
-            <div>Quotes Sent</div>
-          </Col>
-          <Col xs={3} style={actions}>
-            <img
-              style={{ width: "50px", height: "50px", cursor: "pointer" }}
-              src={RepairStatus}
-              onClick={goToMaintenanceQuotesRequested}
-            />
-            <div>Scheduled Jobs</div>
-          </Col>
-        </Row>
-        <Row
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-          }}
-          className="mt-1 mb-4"
-        >
-          <Col xs={3} style={actions}>
-            <img
-              style={{ width: "50px", height: "50px", cursor: "pointer" }}
-              src={JobCompleted}
-              onClick={goToJobsCompleted}
-            />
-            <div>Jobs Completed</div>
-          </Col>
-          <Col xs={3} style={actions}>
-            <img
-              style={{ width: "50px", height: "50px", cursor: "pointer" }}
-              src={QuotesRejected}
-              onClick={goToQuotesRejectedM}
-            />
-            <div>Quotes Rejected by Manager</div>
-          </Col>
-          <Col xs={3} style={actions}>
-            <div>
-              <img
-                style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                src={QuotesRejected}
-                onClick={goToQuotesRejectedY}
-              />
-              <div>Quotes Rejected by You</div>
+          <div className="w-100 mb-5 overflow-scroll">
+            <Header title="Maintenance Dashboard" />
+            {quotesScheduled.length > 0 ? (
+              <div
+                className="mx-3 my-3 p-2"
+                style={{
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <Row className="m-3">
+                  <Col>
+                    <h3>Maintenance Requests Scheduled</h3>
+                  </Col>
+                  <Col></Col>
+                </Row>
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table
+                    responsive="xl"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <EnhancedTableHeadMaintenance
+                      orderMaintenance={orderMaintenance}
+                      orderMaintenanceBy={orderMaintenanceBy}
+                      onRequestSort={handleRequestSortMaintenance}
+                      rowCount={quotes.length}
+                    />{" "}
+                    <TableBody>
+                      {stableSortMaintenance(
+                        quotesScheduled,
+                        getComparatorMaintenance(
+                          orderMaintenance,
+                          orderMaintenanceBy
+                        )
+                      ).map((request, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={request.maintenance_request_uid}
+                            onClick={() => goToMaintenanceQuotesRequested()}
+                          >
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {JSON.parse(request.images).length > 0 ? (
+                                <img
+                                  src={`${
+                                    JSON.parse(request.images)[0]
+                                  }?${Date.now()}`}
+                                  alt="RepairImg"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src={RepairImg}
+                                  alt="Repair"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.address}{" "}
+                              {request.unit !== "" ? " " + request.unit : ""}{" "}
+                              {request.city}, {request.state} {request.zip}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              style={{
+                                color:
+                                  request.request_status === "NEW"
+                                    ? "green"
+                                    : "black",
+                              }}
+                            >
+                              {request.request_status}
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {request.request_status === "INFO"
+                                      ? request.notes
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.title}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.request_created_date.split(" ")[0]}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.days_open} days
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.request_type !== null
+                                ? request.request_type
+                                : "None"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.priority}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_date !== null &&
+                              request.scheduled_date !== "null"
+                                ? request.scheduled_date.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_time !== null &&
+                              request.scheduled_time !== "null"
+                                ? request.scheduled_time.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
+              </div>
+            ) : (
+              ""
+            )}
+            {quotesRequested.length > 0 ? (
+              <div
+                className="mx-3 my-3 p-2"
+                style={{
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <Row className="m-3">
+                  <Col>
+                    <h3>Maintenance Requests Requested</h3>
+                  </Col>
+                  <Col></Col>
+                </Row>
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table
+                    responsive="xl"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <EnhancedTableHeadMaintenance
+                      orderMaintenance={orderMaintenance}
+                      orderMaintenanceBy={orderMaintenanceBy}
+                      onRequestSort={handleRequestSortMaintenance}
+                      rowCount={quotes.length}
+                    />{" "}
+                    <TableBody>
+                      {stableSortMaintenance(
+                        quotesRequested,
+                        getComparatorMaintenance(
+                          orderMaintenance,
+                          orderMaintenanceBy
+                        )
+                      ).map((request, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={request.maintenance_request_uid}
+                            onClick={() => goToQuotesRequested()}
+                          >
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {JSON.parse(request.images).length > 0 ? (
+                                <img
+                                  src={`${
+                                    JSON.parse(request.images)[0]
+                                  }?${Date.now()}`}
+                                  alt="RepairImg"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src={RepairImg}
+                                  alt="Repair"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.address}{" "}
+                              {request.unit !== "" ? " " + request.unit : ""}{" "}
+                              {request.city}, {request.state} {request.zip}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              style={{
+                                color:
+                                  request.request_status === "NEW"
+                                    ? "green"
+                                    : "black",
+                              }}
+                            >
+                              {request.request_status}
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {request.request_status === "INFO"
+                                      ? request.notes
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.title}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.request_created_date.split(" ")[0]}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.days_open} days
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.request_type !== null
+                                ? request.request_type
+                                : "None"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.priority}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_date !== null &&
+                              request.scheduled_date !== "null"
+                                ? request.scheduled_date.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_time !== null &&
+                              request.scheduled_time !== "null"
+                                ? request.scheduled_time.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
+              </div>
+            ) : (
+              ""
+            )}{" "}
+            {quotesSent.length > 0 ? (
+              <div
+                className="mx-3 my-3 p-2"
+                style={{
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <Row className="m-3">
+                  <Col>
+                    <h3>Maintenance Requests Sent</h3>
+                  </Col>
+                  <Col></Col>
+                </Row>
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table
+                    responsive="xl"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <EnhancedTableHeadMaintenance
+                      orderMaintenance={orderMaintenance}
+                      orderMaintenanceBy={orderMaintenanceBy}
+                      onRequestSort={handleRequestSortMaintenance}
+                      rowCount={quotes.length}
+                    />{" "}
+                    <TableBody>
+                      {stableSortMaintenance(
+                        quotesSent,
+                        getComparatorMaintenance(
+                          orderMaintenance,
+                          orderMaintenanceBy
+                        )
+                      ).map((request, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={request.maintenance_request_uid}
+                            onClick={() => goToQuotesSent()}
+                          >
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {JSON.parse(request.images).length > 0 ? (
+                                <img
+                                  src={`${
+                                    JSON.parse(request.images)[0]
+                                  }?${Date.now()}`}
+                                  alt="RepairImg"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src={RepairImg}
+                                  alt="Repair"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.address}{" "}
+                              {request.unit !== "" ? " " + request.unit : ""}{" "}
+                              {request.city}, {request.state} {request.zip}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              style={{
+                                color:
+                                  request.request_status === "NEW"
+                                    ? "green"
+                                    : "black",
+                              }}
+                            >
+                              {request.request_status}
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {request.request_status === "INFO"
+                                      ? request.notes
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.title}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.request_created_date.split(" ")[0]}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.days_open} days
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.request_type !== null
+                                ? request.request_type
+                                : "None"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.priority}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_date !== null &&
+                              request.scheduled_date !== "null"
+                                ? request.scheduled_date.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_time !== null &&
+                              request.scheduled_time !== "null"
+                                ? request.scheduled_time.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
+              </div>
+            ) : (
+              ""
+            )}{" "}
+            {quotesAccepted.length > 0 ? (
+              <div
+                className="mx-3 my-3 p-2"
+                style={{
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <Row className="m-3">
+                  <Col>
+                    <h3>Maintenance Requests Accepted</h3>
+                  </Col>
+                  <Col></Col>
+                </Row>
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table
+                    responsive="xl"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <EnhancedTableHeadMaintenance
+                      orderMaintenance={orderMaintenance}
+                      orderMaintenanceBy={orderMaintenanceBy}
+                      onRequestSort={handleRequestSortMaintenance}
+                      rowCount={quotes.length}
+                    />{" "}
+                    <TableBody>
+                      {stableSortMaintenance(
+                        quotesAccepted,
+                        getComparatorMaintenance(
+                          orderMaintenance,
+                          orderMaintenanceBy
+                        )
+                      ).map((request, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={request.maintenance_request_uid}
+                            onClick={() => goToMaintenanceQuotesRequested()}
+                          >
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {JSON.parse(request.images).length > 0 ? (
+                                <img
+                                  src={`${
+                                    JSON.parse(request.images)[0]
+                                  }?${Date.now()}`}
+                                  alt="RepairImg"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src={RepairImg}
+                                  alt="Repair"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.address}{" "}
+                              {request.unit !== "" ? " " + request.unit : ""}{" "}
+                              {request.city}, {request.state} {request.zip}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              style={{
+                                color:
+                                  request.request_status === "NEW"
+                                    ? "green"
+                                    : "black",
+                              }}
+                            >
+                              {request.request_status}
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {request.request_status === "INFO"
+                                      ? request.notes
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.title}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.request_created_date.split(" ")[0]}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.days_open} days
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.request_type !== null
+                                ? request.request_type
+                                : "None"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.priority}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_date !== null &&
+                              request.scheduled_date !== "null"
+                                ? request.scheduled_date.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_time !== null &&
+                              request.scheduled_time !== "null"
+                                ? request.scheduled_time.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
+              </div>
+            ) : (
+              ""
+            )}
+            {quotesCompleted.length > 0 ? (
+              <div
+                className="mx-3 my-3 p-2"
+                style={{
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <Row className="m-3">
+                  <Col>
+                    <h3>Maintenance Requests Completed</h3>
+                  </Col>
+                  <Col></Col>
+                </Row>
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table
+                    responsive="xl"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <EnhancedTableHeadMaintenance
+                      orderMaintenance={orderMaintenance}
+                      orderMaintenanceBy={orderMaintenanceBy}
+                      onRequestSort={handleRequestSortMaintenance}
+                      rowCount={quotes.length}
+                    />{" "}
+                    <TableBody>
+                      {stableSortMaintenance(
+                        quotesCompleted,
+                        getComparatorMaintenance(
+                          orderMaintenance,
+                          orderMaintenanceBy
+                        )
+                      ).map((request, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={request.maintenance_request_uid}
+                            onClick={() => goToJobsCompleted()}
+                          >
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {JSON.parse(request.images).length > 0 ? (
+                                <img
+                                  src={`${
+                                    JSON.parse(request.images)[0]
+                                  }?${Date.now()}`}
+                                  alt="RepairImg"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src={RepairImg}
+                                  alt="Repair"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.address}{" "}
+                              {request.unit !== "" ? " " + request.unit : ""}{" "}
+                              {request.city}, {request.state} {request.zip}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              style={{
+                                color:
+                                  request.request_status === "NEW"
+                                    ? "green"
+                                    : "black",
+                              }}
+                            >
+                              {request.request_status}
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {request.request_status === "INFO"
+                                      ? request.notes
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.title}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.request_created_date.split(" ")[0]}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.days_open} days
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.request_type !== null
+                                ? request.request_type
+                                : "None"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.priority}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_date !== null &&
+                              request.scheduled_date !== "null"
+                                ? request.scheduled_date.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_time !== null &&
+                              request.scheduled_time !== "null"
+                                ? request.scheduled_time.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
+              </div>
+            ) : (
+              ""
+            )}
+            {quotesRejected.length > 0 ? (
+              <div
+                className="mx-3 my-3 p-2"
+                style={{
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <Row className="m-3">
+                  <Col>
+                    <h3>Maintenance Requests Rejected</h3>
+                  </Col>
+                  <Col></Col>
+                </Row>
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table
+                    responsive="xl"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <EnhancedTableHeadMaintenance
+                      orderMaintenance={orderMaintenance}
+                      orderMaintenanceBy={orderMaintenanceBy}
+                      onRequestSort={handleRequestSortMaintenance}
+                      rowCount={quotes.length}
+                    />{" "}
+                    <TableBody>
+                      {stableSortMaintenance(
+                        quotesRejected,
+                        getComparatorMaintenance(
+                          orderMaintenance,
+                          orderMaintenanceBy
+                        )
+                      ).map((request, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={request.maintenance_request_uid}
+                            onClick={() => goToQuotesRejectedM()}
+                          >
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {JSON.parse(request.images).length > 0 ? (
+                                <img
+                                  src={`${
+                                    JSON.parse(request.images)[0]
+                                  }?${Date.now()}`}
+                                  alt="RepairImg"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src={RepairImg}
+                                  alt="Repair"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.address}{" "}
+                              {request.unit !== "" ? " " + request.unit : ""}{" "}
+                              {request.city}, {request.state} {request.zip}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              style={{
+                                color:
+                                  request.request_status === "NEW"
+                                    ? "green"
+                                    : "black",
+                              }}
+                            >
+                              {request.request_status}
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {request.request_status === "INFO"
+                                      ? request.notes
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.title}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.request_created_date.split(" ")[0]}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.days_open} days
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.request_type !== null
+                                ? request.request_type
+                                : "None"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.priority}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_date !== null &&
+                              request.scheduled_date !== "null"
+                                ? request.scheduled_date.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_time !== null &&
+                              request.scheduled_time !== "null"
+                                ? request.scheduled_time.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
+              </div>
+            ) : (
+              ""
+            )}
+            {quotesRefused.length > 0 ? (
+              <div
+                className="mx-3 my-3 p-2"
+                style={{
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <Row className="m-3">
+                  <Col>
+                    <h3>Maintenance Requests Refused</h3>
+                  </Col>
+                  <Col></Col>
+                </Row>
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table
+                    responsive="xl"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <EnhancedTableHeadMaintenance
+                      orderMaintenance={orderMaintenance}
+                      orderMaintenanceBy={orderMaintenanceBy}
+                      onRequestSort={handleRequestSortMaintenance}
+                      rowCount={quotes.length}
+                    />{" "}
+                    <TableBody>
+                      {stableSortMaintenance(
+                        quotesRefused,
+                        getComparatorMaintenance(
+                          orderMaintenance,
+                          orderMaintenanceBy
+                        )
+                      ).map((request, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={request.maintenance_request_uid}
+                            onClick={() => goToQuotesRejectedY()}
+                          >
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {JSON.parse(request.images).length > 0 ? (
+                                <img
+                                  src={`${
+                                    JSON.parse(request.images)[0]
+                                  }?${Date.now()}`}
+                                  alt="RepairImg"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src={RepairImg}
+                                  alt="Repair"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.address}{" "}
+                              {request.unit !== "" ? " " + request.unit : ""}{" "}
+                              {request.city}, {request.state} {request.zip}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              style={{
+                                color:
+                                  request.request_status === "NEW"
+                                    ? "green"
+                                    : "black",
+                              }}
+                            >
+                              {request.request_status}
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {request.request_status === "INFO"
+                                      ? request.notes
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.title}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.request_created_date.split(" ")[0]}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.days_open} days
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.request_type !== null
+                                ? request.request_type
+                                : "None"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.priority}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_date !== null &&
+                              request.scheduled_date !== "null"
+                                ? request.scheduled_date.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_time !== null &&
+                              request.scheduled_time !== "null"
+                                ? request.scheduled_time.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
+              </div>
+            ) : (
+              ""
+            )}
+            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+              <MaintenanceFooter />
             </div>
-          </Col>
-        </Row>
-        <Row
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-          }}
-          className="mt-1 mb-1"
-        >
-          <Col xs={3} style={actions}>
-            <div>
-              <img
-                style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                src={SearchPM}
-                onClick={goToSearchPM}
-              />
-              <div>Search Property Managers</div>
+          </div>
+        </div>
+      ) : !isLoading && quotes.length === 0 ? (
+        <div className="flex-1">
+          <div
+            hidden={!responsive.showSidebar}
+            style={{
+              backgroundColor: "#229ebc",
+              width: "11rem",
+              minHeight: "100%",
+            }}
+          >
+            <SideBar />
+          </div>
+          <div className="w-100 mb-5 overflow-scroll">
+            <Header title="Maintenance Dashboard" />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <h3>Welcome to Manifest My Space</h3>
+              <br />
             </div>
-          </Col>
-          <Col xs={3} style={actionsNoColor}></Col>
-          <Col xs={3} style={actionsNoColor}></Col>
-        </Row>
-      </Container>
+
+            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+              <MaintenanceFooter />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="flex-1">
+          <div
+            hidden={!responsive.showSidebar}
+            style={{
+              backgroundColor: "#229ebc",
+              width: "11rem",
+              minHeight: "100%",
+            }}
+          >
+            <SideBar />
+          </div>
+          <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+            <ReactBootStrap.Spinner animation="border" role="status" />
+          </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <MaintenanceFooter />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

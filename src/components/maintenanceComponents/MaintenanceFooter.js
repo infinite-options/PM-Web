@@ -7,11 +7,9 @@ import Contacts_Gray from "../../icons/Contacts_Gray.svg";
 import Repairs_Gray from "../../icons/Repairs_Gray.svg";
 import Profile_Gray from "../../icons/Profile_Gray.svg";
 import Expenses_Gray from "../../icons/Expenses_Gray.svg";
-import Documents from "../../icons/Tenants.svg";
-import Announcements from "../../icons/announcements.svg";
-import Roles_Gray from "../../icons/Roles_Gray.svg";
 
-function ManagerFooter(props) {
+import Documents from "../../icons/Tenants.svg";
+function MaintenanceFooter(props) {
   const navigate = useNavigate();
   const footerContainer = {
     backgroundColor: "#F5F5F5",
@@ -27,9 +25,9 @@ function ManagerFooter(props) {
     >
       <Row>
         <Col
-          className="text-center p-0"
+          className="text-center"
           onClick={() => {
-            navigate("/manager");
+            navigate("/maintenance");
           }}
         >
           <img src={Dashboard_Gray} alt="Dashboard" />
@@ -38,31 +36,20 @@ function ManagerFooter(props) {
           </p>
         </Col>
         <Col
-          className="text-center p-0"
+          className="text-center"
           onClick={() => {
-            navigate("/tenant-list");
-          }}
-        >
-          <img src={Roles_Gray} alt="Contacts" />
-          <p style={smallGray} className="mb-0">
-            Tenants
-          </p>
-        </Col>
-        <Col
-          className="text-center p-0"
-          onClick={() => {
-            navigate("/owner-list");
+            navigate("/search-pm");
           }}
         >
           <img src={Contacts_Gray} alt="Contacts" />
           <p style={smallGray} className="mb-0">
-            Owners
+            Contacts
           </p>
         </Col>
         <Col
-          className="text-center p-0"
+          className="text-center"
           onClick={() => {
-            navigate("/manager-repairs");
+            navigate("/owner-repairs");
           }}
         >
           <img src={Repairs_Gray} alt="Repairs" />
@@ -74,18 +61,7 @@ function ManagerFooter(props) {
         <Col
           className="text-center p-0"
           onClick={() => {
-            navigate("/manager-utilities");
-          }}
-        >
-          <img src={Expenses_Gray} alt="EXPENSES" />
-          <p style={smallGray} className="mb-0">
-            Utilities
-          </p>
-        </Col>
-        <Col
-          className="text-center p-0"
-          onClick={() => {
-            navigate("/manager-payments");
+            navigate("/owner-payments");
           }}
         >
           <img src={Expenses_Gray} alt="EXPENSES" />
@@ -94,29 +70,14 @@ function ManagerFooter(props) {
           </p>
         </Col>
         <Col
-          className="text-center p-0"
+          className="text-center"
           onClick={() => {
-            navigate("/manager-announcements");
-          }}
-        >
-          <img
-            src={Announcements}
-            alt="Announcements"
-            style={{ width: "30px", height: "30px" }}
-          />
-          <p style={smallGray} className="mb-0">
-            Announcements
-          </p>
-        </Col>
-        <Col
-          className="text-center p-0"
-          onClick={() => {
-            navigate("/manager-documents");
+            navigate("/owner-documents");
           }}
         >
           <img
             src={Documents}
-            alt="documents"
+            alt="Documents"
             style={{ width: "30px", height: "30px" }}
           />
           <p style={smallGray} className="mb-0">
@@ -124,9 +85,9 @@ function ManagerFooter(props) {
           </p>
         </Col>
         <Col
-          className="text-center p-0"
+          className="text-center"
           onClick={() => {
-            navigate("/manager-profile");
+            navigate("/owner-profile");
           }}
         >
           <img src={Profile_Gray} alt="Profile" />
@@ -139,4 +100,4 @@ function ManagerFooter(props) {
   );
 }
 
-export default ManagerFooter;
+export default MaintenanceFooter;

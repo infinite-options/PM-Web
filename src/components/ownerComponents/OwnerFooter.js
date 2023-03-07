@@ -57,7 +57,7 @@ function OwnerFooter(props) {
             Maintenance
           </p>
         </Col>
-        .
+
         <Col
           className="text-center"
           onClick={() => {
