@@ -347,7 +347,7 @@ function MaintenanceDashboard(props) {
           </div>
           <div className="w-100 mb-5 overflow-scroll">
             <Header title="Maintenance Dashboard" />
-            {quotesScheduled.length > 0 ? (
+            {quotes.length > 0 ? (
               <div
                 className="mx-3 my-3 p-2"
                 style={{
@@ -376,7 +376,7 @@ function MaintenanceDashboard(props) {
                     />{" "}
                     <TableBody>
                       {stableSortMaintenance(
-                        quotesScheduled,
+                        quotes,
                         getComparatorMaintenance(
                           orderMaintenance,
                           orderMaintenanceBy
@@ -525,7 +525,7 @@ function MaintenanceDashboard(props) {
             ) : (
               ""
             )}
-            {quotesRequested.length > 0 ? (
+            {quotes.length > 0 ? (
               <div
                 className="mx-3 my-3 p-2"
                 style={{
@@ -554,7 +554,7 @@ function MaintenanceDashboard(props) {
                     />{" "}
                     <TableBody>
                       {stableSortMaintenance(
-                        quotesRequested,
+                        quotes,
                         getComparatorMaintenance(
                           orderMaintenance,
                           orderMaintenanceBy
@@ -703,7 +703,7 @@ function MaintenanceDashboard(props) {
             ) : (
               ""
             )}{" "}
-            {quotesSent.length > 0 ? (
+            {quotes.length > 0 ? (
               <div
                 className="mx-3 my-3 p-2"
                 style={{
@@ -732,7 +732,7 @@ function MaintenanceDashboard(props) {
                     />{" "}
                     <TableBody>
                       {stableSortMaintenance(
-                        quotesSent,
+                        quotes,
                         getComparatorMaintenance(
                           orderMaintenance,
                           orderMaintenanceBy
@@ -881,7 +881,7 @@ function MaintenanceDashboard(props) {
             ) : (
               ""
             )}{" "}
-            {quotesAccepted.length > 0 ? (
+            {quotes.length > 0 ? (
               <div
                 className="mx-3 my-3 p-2"
                 style={{
@@ -910,7 +910,7 @@ function MaintenanceDashboard(props) {
                     />{" "}
                     <TableBody>
                       {stableSortMaintenance(
-                        quotesAccepted,
+                        quotes,
                         getComparatorMaintenance(
                           orderMaintenance,
                           orderMaintenanceBy
@@ -1059,7 +1059,7 @@ function MaintenanceDashboard(props) {
             ) : (
               ""
             )}
-            {quotesCompleted.length > 0 ? (
+            {quotes.length > 0 ? (
               <div
                 className="mx-3 my-3 p-2"
                 style={{
@@ -1088,7 +1088,7 @@ function MaintenanceDashboard(props) {
                     />{" "}
                     <TableBody>
                       {stableSortMaintenance(
-                        quotesCompleted,
+                        quotes,
                         getComparatorMaintenance(
                           orderMaintenance,
                           orderMaintenanceBy
@@ -1237,7 +1237,7 @@ function MaintenanceDashboard(props) {
             ) : (
               ""
             )}
-            {quotesRejected.length > 0 ? (
+            {quotes.length > 0 ? (
               <div
                 className="mx-3 my-3 p-2"
                 style={{
@@ -1266,7 +1266,7 @@ function MaintenanceDashboard(props) {
                     />{" "}
                     <TableBody>
                       {stableSortMaintenance(
-                        quotesRejected,
+                        quotes,
                         getComparatorMaintenance(
                           orderMaintenance,
                           orderMaintenanceBy
@@ -1415,7 +1415,7 @@ function MaintenanceDashboard(props) {
             ) : (
               ""
             )}
-            {quotesRefused.length > 0 ? (
+            {quotes.length > 0 ? (
               <div
                 className="mx-3 my-3 p-2"
                 style={{
@@ -1444,7 +1444,7 @@ function MaintenanceDashboard(props) {
                     />{" "}
                     <TableBody>
                       {stableSortMaintenance(
-                        quotesRefused,
+                        quotes,
                         getComparatorMaintenance(
                           orderMaintenance,
                           orderMaintenanceBy
