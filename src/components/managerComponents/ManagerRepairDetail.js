@@ -69,6 +69,7 @@ function ManagerRepairDetail(props) {
   const [canReschedule, setCanReschedule] = useState(false);
   const [requestQuote, setRequestQuote] = useState(false);
   const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
+  const [finishMaintenance, setFinishMaintenance] = useState(false);
   const [businesses, setBusinesses] = useState([]);
   const [quotes, setQuotes] = useState([]);
   const imageState = useState([]);
@@ -165,6 +166,7 @@ function ManagerRepairDetail(props) {
       setReDate(request_response.result[0].scheduled_date);
       setReTime(request_response.result[0].scheduled_time);
     }
+
     let tenant = [];
     let ti = {};
     if (repair.rentalInfo !== "Not Rented") {
@@ -206,6 +208,9 @@ function ManagerRepairDetail(props) {
       });
     }
     imageState[1](files);
+    if (repair.request_status === "FINISHED") {
+      setFinishMaintenance(true);
+    }
   };
 
   useEffect(fetchBusinesses, [access_token]);
@@ -296,7 +301,7 @@ function ManagerRepairDetail(props) {
 
     fetchBusinesses();
   };
-
+  console.log(repair, repair.request_status, finishMaintenance);
   const updateRepair = async () => {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
@@ -337,6 +342,27 @@ function ManagerRepairDetail(props) {
       quote_status: "ACCEPTED",
     };
     const response = await put("/maintenanceQuotes", body);
+    fetchBusinesses();
+  };
+  const CompleteMaintenance = async () => {
+    const newRepair = {
+      maintenance_request_uid: repair.maintenance_request_uid,
+      request_status: "COMPLETED",
+    };
+    const files = imageState[0];
+    let i = 0;
+    for (const file of imageState[0]) {
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      if (file.file !== null) {
+        newRepair[key] = file.file;
+      } else {
+        newRepair[key] = file.image;
+      }
+    }
+
+    // console.log("Repair Object to be updated", newRepair);
+
+    const response = await put("/maintenanceRequests", newRepair, null, files);
     fetchBusinesses();
   };
 
@@ -1256,7 +1282,6 @@ function ManagerRepairDetail(props) {
                     ) : (
                       ""
                     )}
-
                     <Row
                       hidden={quote.quote_status !== "SENT"}
                       className="pt-1 mb-4"
@@ -1278,7 +1303,6 @@ function ManagerRepairDetail(props) {
                         </Button>
                       </Col>
                     </Row>
-
                     <Row
                       hidden={quote.quote_status === "SENT"}
                       className="pt-1 mb-4"
@@ -1298,13 +1322,18 @@ function ManagerRepairDetail(props) {
                             ? "Business refused to send a quote"
                             : quote.quote_status === "ACCEPTED" &&
                               quote.request_status === "SCHEDULE"
-                            ? "Maintenace Sent Schedule"
+                            ? "Maintenance Sent Schedule"
                             : quote.quote_status === "ACCEPTED" &&
                               quote.request_status === "RESCHEDULE"
                             ? "Reschedule Requested"
                             : quote.quote_status === "AGREED" &&
                               quote.request_status === "SCHEDULED"
-                            ? "Maintenace Scheduled"
+                            ? "Maintenance Scheduled"
+                            : quote.quote_status === "AGREED" &&
+                              quote.request_status === "FINISHED"
+                            ? "Maintenance Finished"
+                            : quote.request_status === "COMPLETED"
+                            ? "Maintenance Completed"
                             : "Another quote accepted"}
                         </Button>
                       </Col>
@@ -1389,6 +1418,116 @@ function ManagerRepairDetail(props) {
                               onClick={() => setScheduleMaintenance(false)}
                             >
                               Cancel
+                            </Button>
+                          </Col>
+                        </Row>
+                      </Row>
+                    ) : (
+                      <Row></Row>
+                    )}
+                    {finishMaintenance &&
+                    JSON.parse(quote.maintenance_images) !== null &&
+                    quote.request_status === "FINISHED" ? (
+                      <Row className="mx-2 my-2 p-3">
+                        <Row>
+                          <div style={headings}>
+                            Images Uploaded by Maintenance
+                          </div>
+                        </Row>
+                        <Row className=" d-flex align-items-center justify-content-center m-3">
+                          {JSON.parse(quote.maintenance_images).length === 0 ? (
+                            <img
+                              src={RepairImg}
+                              alt="Property"
+                              style={{
+                                width: "200px",
+                                height: "200px",
+                                objectFit: "cover",
+                              }}
+                            />
+                          ) : JSON.parse(quote.maintenance_images).length >
+                            4 ? (
+                            <Carousel
+                              responsive={responsive}
+                              infinite={true}
+                              arrows={true}
+                              partialVisible={false}
+                              // className=" d-flex align-items-center justify-content-center"
+                            >
+                              {JSON.parse(quote.maintenance_images).map(
+                                (image) => {
+                                  return (
+                                    // <div className="d-flex align-items-center justify-content-center">
+                                    <img
+                                      // key={Date.now()}
+                                      src={`${image}?${Date.now()}`}
+                                      // onClick={() =>
+                                      //   showImage(`${image}?${Date.now()}`)
+                                      // }
+                                      style={{
+                                        width: "200px",
+                                        height: "200px",
+                                        objectFit: "cover",
+                                      }}
+                                    />
+                                    // </div>
+                                  );
+                                }
+                              )}
+                            </Carousel>
+                          ) : JSON.parse(quote.maintenance_images).length <
+                            4 ? (
+                            <Carousel
+                              responsive={responsive}
+                              infinite={true}
+                              arrows={true}
+                              partialVisible={false}
+                              className=" d-flex align-items-center justify-content-center"
+                            >
+                              {JSON.parse(quote.maintenance_images).map(
+                                (image) => {
+                                  return (
+                                    <div className="d-flex align-items-center justify-content-center">
+                                      <img
+                                        // key={Date.now()}
+                                        src={`${image}?${Date.now()}`}
+                                        // onClick={() =>
+                                        //   showImage(`${image}?${Date.now()}`)
+                                        // }
+                                        style={{
+                                          width: "200px",
+                                          height: "200px",
+                                          objectFit: "cover",
+                                        }}
+                                      />
+                                    </div>
+                                  );
+                                }
+                              )}
+                            </Carousel>
+                          ) : (
+                            ""
+                          )}
+                        </Row>
+                        <Row
+                          className="pt-1 mb-4"
+                          style={{
+                            background: "#F3F3F3 0% 0% no-repeat padding-box",
+                            borderRadius: "10px",
+                            opacity: 1,
+                          }}
+                        >
+                          <div style={subHeading}>Notes</div>
+                          <div style={subText}>{quote.notes}</div>
+                        </Row>
+                        <Row>
+                          <Col className="d-flex flex-row justify-content-evenly">
+                            {" "}
+                            <Button
+                              style={bluePillButton}
+                              onClick={() => CompleteMaintenance()}
+                            >
+                              Completed
                             </Button>
                           </Col>
                         </Row>

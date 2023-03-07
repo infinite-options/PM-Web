@@ -99,7 +99,9 @@ function MaintenanceDashboard(props) {
   };
   const goToJobsCompleted = () => {
     const quotes_rejected = quotes.filter(
-      (quote) => quote.request_status === "COMPLETE"
+      (quote) =>
+        quote.request_status === "COMPLETE" ||
+        quote.request_status === "FINISHED"
     );
     navigate(`/jobsCompleted`, { state: { quotes: quotes_rejected } });
   };
