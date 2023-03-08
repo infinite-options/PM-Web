@@ -1307,9 +1307,14 @@ function ManagerRepairDetail(props) {
                       <Col className="d-flex flex-row justify-content-evenly">
                         <Button
                           style={
-                            quote.quote_status === "ACCEPTED" ||
-                            quote.quote_status === "AGREED" ||
-                            quote.quote_status === "PAID"
+                            (quote.quote_status === "ACCEPTED" ||
+                              quote.quote_status === "AGREED" ||
+                              quote.quote_status === "PAID") &&
+                            (quote.request_status === "SCHEDULED" ||
+                              quote.request_status === "SCHEDULE" ||
+                              quote.request_status === "RESCHEDULE" ||
+                              quote.request_status === "FINISHED" ||
+                              quote.request_status === "COMPLETED")
                               ? greenPill
                               : quote.quote_status === "REJECTED" ||
                                 quote.quote_status === "REFUSED"
@@ -1340,7 +1345,8 @@ function ManagerRepairDetail(props) {
                             : quote.quote_status === "AGREED" &&
                               quote.request_status === "FINISHED"
                             ? "Maintenance Finished"
-                            : quote.request_status === "COMPLETED"
+                            : quote.request_status === "COMPLETED" &&
+                              quote.quote_status === "AGREED"
                             ? "Maintenance Completed"
                             : quote.quote_status === "PAID" &&
                               quote.request_status === "COMPLETED"
