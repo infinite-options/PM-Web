@@ -43,6 +43,7 @@ function MaintenanceDashboard(props) {
   const [quotesAccepted, setQuotesAccepted] = useState([]);
   const [quotesScheduled, setQuotesScheduled] = useState([]);
   const [quotesCompleted, setQuotesCompleted] = useState([]);
+  const [quotesPaid, setQuotesPaid] = useState([]);
   const [quotesRejected, setQuotesRejected] = useState([]);
   const [quotesRefused, setQuotesRefused] = useState([]);
   const [orderMaintenance, setOrderMaintenance] = useState("asc");
@@ -107,29 +108,40 @@ function MaintenanceDashboard(props) {
     setQuotes(sort_quotes(quotes_unsorted));
 
     let quotes_requested = sorted_quotes.filter(
-      (quote) => quote.request_status === "PROCESSING"
+      (quote) => quote.quote_status === "REQUESTED"
     );
     setQuotesRequested(quotes_requested);
     let quotes_sent = sorted_quotes.filter(
-      (quote) => quote.request_status === "PROCESSING"
+      (quote) => quote.quote_status === "SENT"
     );
     setQuotesSent(quotes_sent);
     let quotes_accepted = sorted_quotes.filter(
       (quote) =>
-        quote.request_status === "SCHEDULE" ||
-        quote.request_status === "RESCHEDULE"
+        (quote.request_status === "SCHEDULE" ||
+          quote.request_status === "RESCHEDULE" ||
+          quote.request_status === "PROCESSING") &&
+        quote.quote_status === "ACCEPTED"
     );
     setQuotesAccepted(quotes_accepted);
     let quotes_scheduled = sorted_quotes.filter(
-      (quote) => quote.request_status === "SCHEDULED"
+      (quote) =>
+        quote.request_status === "SCHEDULED" && quote.quote_status === "AGREED"
     );
     setQuotesScheduled(quotes_scheduled);
     let quotes_completed = sorted_quotes.filter(
       (quote) =>
-        quote.request_status === "FINISHED" ||
-        quote.request_status === "COMPLETED"
+        (quote.request_status === "FINISHED" ||
+          quote.request_status === "COMPLETED") &&
+        quote.quote_status === "AGREED"
     );
     setQuotesCompleted(quotes_completed);
+    let quotes_paid = sorted_quotes.filter(
+      (quote) =>
+        (quote.request_status === "FINISHED" ||
+          quote.request_status === "COMPLETED") &&
+        quote.quote_status === "PAID"
+    );
+    setQuotesPaid(quotes_paid);
     let quotes_rejected = sorted_quotes.filter(
       (quote) =>
         quote.quote_status === "REJECTED" || quote.quote_status === "WITHDRAWN"
@@ -145,9 +157,6 @@ function MaintenanceDashboard(props) {
 
   useEffect(fetchMaintenanceDashboard, []);
 
-  const goToQuotesRequested = () => {
-    navigate("/quotes-requested");
-  };
   const goToJobsCompleted = () => {
     const quotes_rejected = quotes.filter(
       (quote) =>
@@ -182,6 +191,7 @@ function MaintenanceDashboard(props) {
         (quote.quote_status === "ACCEPTED" || quote.quote_status === "AGREED")
     );
     const quotes_total = [...quotes_accepted, ...quotes_scheduled];
+    console.log(quotes_total);
     navigate(`/quotes-scheduled`, { state: { quotes: quotes_total } });
   };
   const goToQuotesSent = () => {
@@ -240,7 +250,7 @@ function MaintenanceDashboard(props) {
     {
       id: "request_status",
       numeric: false,
-      label: "Status",
+      label: "Request Status",
     },
     {
       id: "title",
@@ -278,6 +288,11 @@ function MaintenanceDashboard(props) {
       id: "scheduled_time",
       numeric: true,
       label: "Scheduled Time",
+    },
+    {
+      id: "quote_status",
+      numeric: true,
+      label: "Quote Status",
     },
   ];
   function EnhancedTableHeadMaintenance(props) {
@@ -347,7 +362,7 @@ function MaintenanceDashboard(props) {
           </div>
           <div className="w-100 mb-5 overflow-scroll">
             <Header title="Maintenance Dashboard" />
-            {quotes.length > 0 ? (
+            {quotesScheduled.length > 0 ? (
               <div
                 className="mx-3 my-3 p-2"
                 style={{
@@ -372,11 +387,11 @@ function MaintenanceDashboard(props) {
                       orderMaintenance={orderMaintenance}
                       orderMaintenanceBy={orderMaintenanceBy}
                       onRequestSort={handleRequestSortMaintenance}
-                      rowCount={quotes.length}
+                      rowCount={quotesScheduled.length}
                     />{" "}
                     <TableBody>
                       {stableSortMaintenance(
-                        quotes,
+                        quotesScheduled,
                         getComparatorMaintenance(
                           orderMaintenance,
                           orderMaintenanceBy
@@ -388,7 +403,13 @@ function MaintenanceDashboard(props) {
                             role="checkbox"
                             tabIndex={-1}
                             key={request.maintenance_request_uid}
-                            onClick={() => goToMaintenanceQuotesRequested()}
+                            onClick={() =>
+                              navigate("../maintenanceRequestView", {
+                                state: {
+                                  quote_id: request.maintenance_quote_uid,
+                                },
+                              })
+                            }
                           >
                             <TableCell
                               padding="none"
@@ -515,6 +536,13 @@ function MaintenanceDashboard(props) {
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
                             </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -525,7 +553,7 @@ function MaintenanceDashboard(props) {
             ) : (
               ""
             )}
-            {quotes.length > 0 ? (
+            {quotesRequested.length > 0 ? (
               <div
                 className="mx-3 my-3 p-2"
                 style={{
@@ -550,11 +578,11 @@ function MaintenanceDashboard(props) {
                       orderMaintenance={orderMaintenance}
                       orderMaintenanceBy={orderMaintenanceBy}
                       onRequestSort={handleRequestSortMaintenance}
-                      rowCount={quotes.length}
+                      rowCount={quotesRequested.length}
                     />{" "}
                     <TableBody>
                       {stableSortMaintenance(
-                        quotes,
+                        quotesRequested,
                         getComparatorMaintenance(
                           orderMaintenance,
                           orderMaintenanceBy
@@ -566,7 +594,13 @@ function MaintenanceDashboard(props) {
                             role="checkbox"
                             tabIndex={-1}
                             key={request.maintenance_request_uid}
-                            onClick={() => goToQuotesRequested()}
+                            onClick={() =>
+                              navigate("../maintenanceRequestView", {
+                                state: {
+                                  quote_id: request.maintenance_quote_uid,
+                                },
+                              })
+                            }
                           >
                             <TableCell
                               padding="none"
@@ -693,6 +727,13 @@ function MaintenanceDashboard(props) {
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
                             </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -703,7 +744,7 @@ function MaintenanceDashboard(props) {
             ) : (
               ""
             )}{" "}
-            {quotes.length > 0 ? (
+            {quotesSent.length > 0 ? (
               <div
                 className="mx-3 my-3 p-2"
                 style={{
@@ -728,11 +769,11 @@ function MaintenanceDashboard(props) {
                       orderMaintenance={orderMaintenance}
                       orderMaintenanceBy={orderMaintenanceBy}
                       onRequestSort={handleRequestSortMaintenance}
-                      rowCount={quotes.length}
+                      rowCount={quotesSent.length}
                     />{" "}
                     <TableBody>
                       {stableSortMaintenance(
-                        quotes,
+                        quotesSent,
                         getComparatorMaintenance(
                           orderMaintenance,
                           orderMaintenanceBy
@@ -744,7 +785,13 @@ function MaintenanceDashboard(props) {
                             role="checkbox"
                             tabIndex={-1}
                             key={request.maintenance_request_uid}
-                            onClick={() => goToQuotesSent()}
+                            onClick={() =>
+                              navigate("../maintenanceRequestView", {
+                                state: {
+                                  quote_id: request.maintenance_quote_uid,
+                                },
+                              })
+                            }
                           >
                             <TableCell
                               padding="none"
@@ -871,6 +918,13 @@ function MaintenanceDashboard(props) {
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
                             </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -881,7 +935,7 @@ function MaintenanceDashboard(props) {
             ) : (
               ""
             )}{" "}
-            {quotes.length > 0 ? (
+            {quotesAccepted.length > 0 ? (
               <div
                 className="mx-3 my-3 p-2"
                 style={{
@@ -906,11 +960,11 @@ function MaintenanceDashboard(props) {
                       orderMaintenance={orderMaintenance}
                       orderMaintenanceBy={orderMaintenanceBy}
                       onRequestSort={handleRequestSortMaintenance}
-                      rowCount={quotes.length}
+                      rowCount={quotesAccepted.length}
                     />{" "}
                     <TableBody>
                       {stableSortMaintenance(
-                        quotes,
+                        quotesAccepted,
                         getComparatorMaintenance(
                           orderMaintenance,
                           orderMaintenanceBy
@@ -922,7 +976,13 @@ function MaintenanceDashboard(props) {
                             role="checkbox"
                             tabIndex={-1}
                             key={request.maintenance_request_uid}
-                            onClick={() => goToMaintenanceQuotesRequested()}
+                            onClick={() =>
+                              navigate("../maintenanceRequestView", {
+                                state: {
+                                  quote_id: request.maintenance_quote_uid,
+                                },
+                              })
+                            }
                           >
                             <TableCell
                               padding="none"
@@ -1049,6 +1109,13 @@ function MaintenanceDashboard(props) {
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
                             </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -1059,7 +1126,7 @@ function MaintenanceDashboard(props) {
             ) : (
               ""
             )}
-            {quotes.length > 0 ? (
+            {quotesCompleted.length > 0 ? (
               <div
                 className="mx-3 my-3 p-2"
                 style={{
@@ -1084,11 +1151,11 @@ function MaintenanceDashboard(props) {
                       orderMaintenance={orderMaintenance}
                       orderMaintenanceBy={orderMaintenanceBy}
                       onRequestSort={handleRequestSortMaintenance}
-                      rowCount={quotes.length}
+                      rowCount={quotesCompleted.length}
                     />{" "}
                     <TableBody>
                       {stableSortMaintenance(
-                        quotes,
+                        quotesCompleted,
                         getComparatorMaintenance(
                           orderMaintenance,
                           orderMaintenanceBy
@@ -1100,7 +1167,13 @@ function MaintenanceDashboard(props) {
                             role="checkbox"
                             tabIndex={-1}
                             key={request.maintenance_request_uid}
-                            onClick={() => goToJobsCompleted()}
+                            onClick={() =>
+                              navigate("../maintenanceRequestView", {
+                                state: {
+                                  quote_id: request.maintenance_quote_uid,
+                                },
+                              })
+                            }
                           >
                             <TableCell
                               padding="none"
@@ -1227,6 +1300,13 @@ function MaintenanceDashboard(props) {
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
                             </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -1237,7 +1317,198 @@ function MaintenanceDashboard(props) {
             ) : (
               ""
             )}
-            {quotes.length > 0 ? (
+            {quotesPaid.length > 0 ? (
+              <div
+                className="mx-3 my-3 p-2"
+                style={{
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <Row className="m-3">
+                  <Col>
+                    <h3>Maintenance Requests Paid</h3>
+                  </Col>
+                  <Col></Col>
+                </Row>
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table
+                    responsive="xl"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <EnhancedTableHeadMaintenance
+                      orderMaintenance={orderMaintenance}
+                      orderMaintenanceBy={orderMaintenanceBy}
+                      onRequestSort={handleRequestSortMaintenance}
+                      rowCount={quotesPaid.length}
+                    />{" "}
+                    <TableBody>
+                      {stableSortMaintenance(
+                        quotesPaid,
+                        getComparatorMaintenance(
+                          orderMaintenance,
+                          orderMaintenanceBy
+                        )
+                      ).map((request, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={request.maintenance_request_uid}
+                            onClick={() =>
+                              navigate("../maintenanceRequestView", {
+                                state: {
+                                  quote_id: request.maintenance_quote_uid,
+                                },
+                              })
+                            }
+                          >
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {JSON.parse(request.images).length > 0 ? (
+                                <img
+                                  src={`${
+                                    JSON.parse(request.images)[0]
+                                  }?${Date.now()}`}
+                                  alt="RepairImg"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src={RepairImg}
+                                  alt="Repair"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.address}{" "}
+                              {request.unit !== "" ? " " + request.unit : ""}{" "}
+                              {request.city}, {request.state} {request.zip}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              style={{
+                                color:
+                                  request.request_status === "NEW"
+                                    ? "green"
+                                    : "black",
+                              }}
+                            >
+                              {request.request_status}
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {request.request_status === "INFO"
+                                      ? request.notes
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.title}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.request_created_date.split(" ")[0]}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.days_open} days
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.request_type !== null
+                                ? request.request_type
+                                : "None"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.priority}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_date !== null &&
+                              request.scheduled_date !== "null"
+                                ? request.scheduled_date.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_time !== null &&
+                              request.scheduled_time !== "null"
+                                ? request.scheduled_time.split(" ")[0]
+                                : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
+              </div>
+            ) : (
+              ""
+            )}
+            {quotesRejected.length > 0 ? (
               <div
                 className="mx-3 my-3 p-2"
                 style={{
@@ -1262,11 +1533,11 @@ function MaintenanceDashboard(props) {
                       orderMaintenance={orderMaintenance}
                       orderMaintenanceBy={orderMaintenanceBy}
                       onRequestSort={handleRequestSortMaintenance}
-                      rowCount={quotes.length}
+                      rowCount={quotesRejected.length}
                     />{" "}
                     <TableBody>
                       {stableSortMaintenance(
-                        quotes,
+                        quotesRejected,
                         getComparatorMaintenance(
                           orderMaintenance,
                           orderMaintenanceBy
@@ -1278,7 +1549,13 @@ function MaintenanceDashboard(props) {
                             role="checkbox"
                             tabIndex={-1}
                             key={request.maintenance_request_uid}
-                            onClick={() => goToQuotesRejectedM()}
+                            onClick={() =>
+                              navigate("../maintenanceRequestView", {
+                                state: {
+                                  quote_id: request.maintenance_quote_uid,
+                                },
+                              })
+                            }
                           >
                             <TableCell
                               padding="none"
@@ -1405,6 +1682,13 @@ function MaintenanceDashboard(props) {
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
                             </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -1415,7 +1699,7 @@ function MaintenanceDashboard(props) {
             ) : (
               ""
             )}
-            {quotes.length > 0 ? (
+            {quotesRefused.length > 0 ? (
               <div
                 className="mx-3 my-3 p-2"
                 style={{
@@ -1440,11 +1724,11 @@ function MaintenanceDashboard(props) {
                       orderMaintenance={orderMaintenance}
                       orderMaintenanceBy={orderMaintenanceBy}
                       onRequestSort={handleRequestSortMaintenance}
-                      rowCount={quotes.length}
+                      rowCount={quotesRefused.length}
                     />{" "}
                     <TableBody>
                       {stableSortMaintenance(
-                        quotes,
+                        quotesRefused,
                         getComparatorMaintenance(
                           orderMaintenance,
                           orderMaintenanceBy
@@ -1456,7 +1740,13 @@ function MaintenanceDashboard(props) {
                             role="checkbox"
                             tabIndex={-1}
                             key={request.maintenance_request_uid}
-                            onClick={() => goToQuotesRejectedY()}
+                            onClick={() =>
+                              navigate("../maintenanceRequestView", {
+                                state: {
+                                  quote_id: request.maintenance_quote_uid,
+                                },
+                              })
+                            }
                           >
                             <TableCell
                               padding="none"
@@ -1582,6 +1872,13 @@ function MaintenanceDashboard(props) {
                               request.scheduled_time !== "null"
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
                             </TableCell>
                           </TableRow>
                         );

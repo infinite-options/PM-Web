@@ -96,7 +96,7 @@ function MaintenanceScheduleRepair(props) {
     );
   };
   useEffect(() => {
-    if (quotes.rentalInfo.lenght > 0) {
+    if (quotes.rentalInfo.length > 0) {
       axios
         .get(BASE_URL + `/UserDetails/${quotes.rentalInfo[0].tenant_id}`)
         .then((response) => {

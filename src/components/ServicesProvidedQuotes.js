@@ -17,11 +17,11 @@ import {
   squareForm,
   gray,
   small,
-  red,
   hidden,
   headings,
-  subText,
+  red,
   formLabel,
+  subHeading,
 } from "../utils/styles";
 
 const useStyles = makeStyles({
@@ -44,6 +44,8 @@ function ServicesProvidedQuotes(props) {
     setEventType,
     totalEstimate,
     setTotalEstimate,
+    editQuote,
+    addQuote,
   } = props;
   const [newService, setNewService] = React.useState(null);
   const [editingService, setEditingService] = React.useState(null);
@@ -60,18 +62,20 @@ function ServicesProvidedQuotes(props) {
     let total = 0;
     // console.log(serviceState)
     // console.log(eventType)
-    let hours = parseInt(eventType);
-    if (eventType.toLowerCase().includes("day")) {
-      hours = hours * 24;
-    }
-    serviceState.forEach((service) => {
-      if (service.per.toLocaleLowerCase() === "hour") {
-        total = total + parseInt(service.charge) * hours;
-      } else if (service.per.toLocaleLowerCase() === "one-time") {
-        total = total + parseInt(service.charge);
+    if (eventType !== null) {
+      let hours = parseInt(eventType);
+      if (eventType.toLowerCase().includes("day")) {
+        hours = hours * 24;
       }
-    });
-    setTotalEstimate(total);
+      serviceState.forEach((service) => {
+        if (service.per.toLocaleLowerCase() === "hour") {
+          total = total + parseInt(service.charge) * hours;
+        } else if (service.per.toLocaleLowerCase() === "one-time") {
+          total = total + parseInt(service.charge);
+        }
+      });
+      setTotalEstimate(total);
+    }
   };
 
   React.useEffect(() => {
@@ -135,7 +139,7 @@ function ServicesProvidedQuotes(props) {
     );
   return (
     <Container className="px-2">
-      {serviceState.length > 0 ? (
+      {serviceState !== null && serviceState.length > 0 ? (
         <Table classes={{ root: classes.customTable }} size="small">
           <TableHead>
             <TableRow>
@@ -172,7 +176,7 @@ function ServicesProvidedQuotes(props) {
           </TableBody>
         </Table>
       ) : (
-        ""
+        <div>No Services</div>
       )}
       {newService !== null ? (
         <div>
@@ -236,6 +240,7 @@ function ServicesProvidedQuotes(props) {
       {newService === null ? (
         <Button
           className="mt-2"
+          hidden={!addQuote && !editQuote}
           variant="outline-primary"
           style={smallPillButton}
           onClick={() => setNewService({ ...emptyService })}
@@ -262,37 +267,71 @@ function ServicesProvidedQuotes(props) {
           </Button>
         </div>
       )}
-
-      <div className="mt-4 mb-4">
-        <Row>
-          <div style={headings}>Event Type</div>
-        </Row>
-        <div>
-          <Form.Group className="mt-2 mb-2">
-            <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-              Type
-            </Form.Label>
-            <Form.Select
-              style={squareForm}
-              value={eventType}
-              onChange={(e) => setEventType(e.target.value)}
-            >
-              <option>1 Hour Job</option>
-              <option>2 Hour Job</option>
-              <option>3 Hour Job</option>
-              <option>4 Hour Job</option>
-              <option>6 Hour Job</option>
-              <option>8 Hour Job</option>
-              <option>1 Day Job</option>
-            </Form.Select>
-          </Form.Group>
+      {editQuote || addQuote ? (
+        <div className="mt-4 mb-4">
+          <Row>
+            <div style={headings}>Event Type</div>
+          </Row>
+          <Row>
+            <Col>
+              {" "}
+              <Form.Group className="mt-2 mb-2">
+                <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                  Type
+                </Form.Label>
+                <Form.Select
+                  style={squareForm}
+                  value={eventType}
+                  onChange={(e) => setEventType(e.target.value)}
+                >
+                  <option>1 Hour Job</option>
+                  <option>2 Hour Job</option>
+                  <option>3 Hour Job</option>
+                  <option>4 Hour Job</option>
+                  <option>6 Hour Job</option>
+                  <option>8 Hour Job</option>
+                  <option>1 Day Job</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col>
+              {" "}
+              <div className="mt-2 mb-2">
+                <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                  Total Estimate
+                </Form.Label>
+                <div className="mt-2">$ {totalEstimate}</div>
+              </div>
+            </Col>
+          </Row>
         </div>
-      </div>
-
-      <div className="mt-4 mb-4">
-        <div style={headings}>Total Estimate</div>
-        <div style={subText}>$ {totalEstimate}</div>
-      </div>
+      ) : (
+        <div className="mt-4 mb-4">
+          <Row>
+            <div style={headings}>Event Type</div>
+          </Row>
+          <Row>
+            <Col>
+              {" "}
+              <Form.Group className="mt-2 mb-2">
+                <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                  Type
+                </Form.Label>
+                <div className="mt-2">{eventType}</div>
+              </Form.Group>
+            </Col>
+            <Col>
+              {" "}
+              <div className="mt-2 mb-2">
+                <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                  Total Estimate
+                </Form.Label>
+                <div className="mt-2">$ {totalEstimate}</div>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      )}
     </Container>
   );
 }

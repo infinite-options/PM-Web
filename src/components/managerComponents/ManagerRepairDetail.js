@@ -32,7 +32,8 @@ import {
   redPillButton,
   formLabel,
   bluePillButton,
-  hidden,
+  greenPill,
+  redPill,
   squareForm,
   orangePill,
   mediumBold,
@@ -1304,7 +1305,18 @@ function ManagerRepairDetail(props) {
                       className="pt-1 mb-4"
                     >
                       <Col className="d-flex flex-row justify-content-evenly">
-                        <Button style={orangePill}>
+                        <Button
+                          style={
+                            quote.quote_status === "ACCEPTED" ||
+                            quote.quote_status === "AGREED" ||
+                            quote.quote_status === "PAID"
+                              ? greenPill
+                              : quote.quote_status === "REJECTED" ||
+                                quote.quote_status === "REFUSED"
+                              ? redPill
+                              : orangePill
+                          }
+                        >
                           {quote.quote_status === "REQUESTED"
                             ? "Waiting for quote from business"
                             : quote.quote_status === "REJECTED"
