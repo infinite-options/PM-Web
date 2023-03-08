@@ -52,7 +52,7 @@ function SideBar() {
         <nav className="sidebar">
           <div className="sidebarLinks">
             <NavLink
-              to="/owner"
+              to="/maintenance"
               className="sidebarButtons"
               activeClassName="sidebarButtonsActive"
               style={({ isActive }) =>
