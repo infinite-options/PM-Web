@@ -250,7 +250,7 @@ function MaintenanceDashboard(props) {
     {
       id: "request_status",
       numeric: false,
-      label: "Status",
+      label: "Request Status",
     },
     {
       id: "title",
@@ -288,6 +288,11 @@ function MaintenanceDashboard(props) {
       id: "scheduled_time",
       numeric: true,
       label: "Scheduled Time",
+    },
+    {
+      id: "quote_status",
+      numeric: true,
+      label: "Quote Status",
     },
   ];
   function EnhancedTableHeadMaintenance(props) {
@@ -531,6 +536,13 @@ function MaintenanceDashboard(props) {
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
                             </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -714,6 +726,13 @@ function MaintenanceDashboard(props) {
                               request.scheduled_time !== "null"
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
                             </TableCell>
                           </TableRow>
                         );
@@ -899,6 +918,13 @@ function MaintenanceDashboard(props) {
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
                             </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -1082,6 +1108,13 @@ function MaintenanceDashboard(props) {
                               request.scheduled_time !== "null"
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
                             </TableCell>
                           </TableRow>
                         );
@@ -1267,6 +1300,13 @@ function MaintenanceDashboard(props) {
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
                             </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -1450,6 +1490,13 @@ function MaintenanceDashboard(props) {
                               request.scheduled_time !== "null"
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
                             </TableCell>
                           </TableRow>
                         );
@@ -1635,6 +1682,13 @@ function MaintenanceDashboard(props) {
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
                             </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -1818,6 +1872,13 @@ function MaintenanceDashboard(props) {
                               request.scheduled_time !== "null"
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.quote_status}
                             </TableCell>
                           </TableRow>
                         );
