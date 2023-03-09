@@ -199,19 +199,23 @@ export default function ManagerDashboard() {
           );
           mr.sent_quotes = mr.quotes.filter((a) => a.quote_status === "SENT");
           mr.accepted_quotes = mr.quotes.filter(
-            (a) => a.quote_status === "ACCEPTED"
+            (a) =>
+              a.quote_status === "ACCEPTED" &&
+              mr.request_status === "PROCESSING"
           );
-          mr.agreed_quotes = mr.quotes.filter(
-            (a) => a.quote_status === "AGREED"
-          );
+
           mr.schedule_quotes = mr.quotes.filter(
-            (a) => a.quote_status === "SCHEDULE"
+            (a) =>
+              a.quote_status === "ACCEPTED" && mr.request_status === "SCHEDULE"
           );
           mr.reschedule_quotes = mr.quotes.filter(
-            (a) => a.quote_status === "RESCHEDULE"
+            (a) =>
+              a.quote_status === "ACCEPTED" &&
+              mr.request_status === "RESCHEDULE"
           );
           mr.scheduled_quotes = mr.quotes.filter(
-            (a) => a.quote_status === "SCHEDULED"
+            (a) =>
+              a.quote_status === "AGREED" && mr.request_status === "SCHEDULED"
           );
           mr.paid_quotes = mr.quotes.filter((a) => a.quote_status === "PAID");
         });
@@ -1018,21 +1022,26 @@ export default function ManagerDashboard() {
                                       </p>
                                     </div>
                                   </div>
-                                  <div className="d-flex">
-                                    <div className="d-flex align-items-end">
-                                      <p
-                                        style={{ ...red, ...xSmall }}
-                                        className="mb-0"
-                                      >
-                                        {property.tenant_refused_applications
-                                          .length > 0
-                                          ? `${property.forwarded_applications.length} Tenat(s) refused to pay`
-                                          : ""}
-                                      </p>
+                                  {property.rental_status === "ACTIVE" ||
+                                  property.rental_status === "PENDING" ? (
+                                    ""
+                                  ) : (
+                                    <div className="d-flex">
+                                      <div className="d-flex align-items-end">
+                                        <p
+                                          style={{ ...red, ...xSmall }}
+                                          className="mb-0"
+                                        >
+                                          {property.tenant_refused_applications
+                                            .length > 0
+                                            ? `${property.forwarded_applications.length} Tenat(s) refused the lease`
+                                            : ""}
+                                        </p>
+                                      </div>
                                     </div>
-                                  </div>
+                                  )}
                                 </TableCell>
-
+                                {console.log(property)}
                                 <TableCell
                                   padding="none"
                                   size="small"
@@ -2022,8 +2031,6 @@ export default function ManagerDashboard() {
                                 ? `${request.sent_quotes.length} quotes received`
                                 : request.accepted_quotes.length > 0
                                 ? `${request.accepted_quotes.length} quotes accepted`
-                                : request.agreed_quotes.length > 0
-                                ? `${request.agreed_quotes.length} quotes in contract`
                                 : request.schedule_quotes.length > 0
                                 ? `${request.schedule_quotes.length} quote requested to schedule`
                                 : request.reschedule_quotes.length > 0

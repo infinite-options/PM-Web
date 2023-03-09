@@ -35,6 +35,8 @@ import {
   subHeading,
   redPillButton,
   orangePill,
+  greenPill,
+  redPill,
 } from "../../utils/styles";
 import { get, put, post } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
@@ -998,7 +1000,24 @@ function OwnerRepairDetails(props) {
                       className="pt-1 mb-4"
                     >
                       <Col className="d-flex flex-row justify-content-evenly">
-                        <Button style={orangePill}>
+                        <Button
+                          style={
+                            (quote.quote_status === "ACCEPTED" ||
+                              quote.quote_status === "AGREED" ||
+                              quote.quote_status === "PAID") &&
+                            (quote.request_status === "PROCESSING" ||
+                              quote.request_status === "SCHEDULED" ||
+                              quote.request_status === "SCHEDULE" ||
+                              quote.request_status === "RESCHEDULE" ||
+                              quote.request_status === "FINISHED" ||
+                              quote.request_status === "COMPLETED")
+                              ? greenPill
+                              : quote.quote_status === "REJECTED" ||
+                                quote.quote_status === "REFUSED"
+                              ? redPill
+                              : orangePill
+                          }
+                        >
                           {quote.quote_status === "REQUESTED"
                             ? "Waiting for quote from business"
                             : quote.quote_status === "REJECTED"
@@ -1012,17 +1031,18 @@ function OwnerRepairDetails(props) {
                             ? "Business refused to send a quote"
                             : quote.quote_status === "ACCEPTED" &&
                               quote.request_status === "SCHEDULE"
-                            ? "Maintenace Sent Schedule"
+                            ? "Maintenance Sent Schedule"
                             : quote.quote_status === "ACCEPTED" &&
                               quote.request_status === "RESCHEDULE"
                             ? "Reschedule Requested"
                             : quote.quote_status === "AGREED" &&
                               quote.request_status === "SCHEDULED"
-                            ? "Maintenace Scheduled"
+                            ? "Maintenance Scheduled"
                             : quote.quote_status === "AGREED" &&
                               quote.request_status === "FINISHED"
                             ? "Maintenance Finished"
-                            : quote.request_status === "COMPLETED"
+                            : quote.request_status === "COMPLETED" &&
+                              quote.quote_status === "AGREED"
                             ? "Maintenance Completed"
                             : quote.quote_status === "PAID" &&
                               quote.request_status === "COMPLETED"

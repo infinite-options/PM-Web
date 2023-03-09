@@ -1352,7 +1352,8 @@ function ManagerRepairDetail(props) {
                             (quote.quote_status === "ACCEPTED" ||
                               quote.quote_status === "AGREED" ||
                               quote.quote_status === "PAID") &&
-                            (quote.request_status === "SCHEDULED" ||
+                            (quote.request_status === "PROCESSING" ||
+                              quote.request_status === "SCHEDULED" ||
                               quote.request_status === "SCHEDULE" ||
                               quote.request_status === "RESCHEDULE" ||
                               quote.request_status === "FINISHED" ||
@@ -1413,7 +1414,12 @@ function ManagerRepairDetail(props) {
                         <Col className="d-flex flex-row justify-content-evenly">
                           <Button
                             style={bluePillButton}
-                            onClick={() => setScheduleMaintenance(true)}
+                            // onClick={() => setScheduleMaintenance(true)}
+                            onClick={() =>
+                              navigate(`/rescheduleRepair`, {
+                                state: { quote: quote },
+                              })
+                            }
                           >
                             Reschedule
                           </Button>

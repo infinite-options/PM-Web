@@ -42,8 +42,11 @@ function MaintenanceScheduleRepair(props) {
       ? quotes.property_manager[0].manager_id
       : quotes.owner_id;
   const [date, setDate] = useState(new Date());
+  var currentDate = new Date(+new Date() + 86400000);
   const [minDate, setMinDate] = useState(
-    new Date(moment(quotes.earliest_availability))
+    currentDate > new Date(moment(quotes.earliest_availability))
+      ? currentDate
+      : new Date(moment(quotes.earliest_availability))
   );
   const [dateString, setDateString] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
@@ -515,11 +518,16 @@ function MaintenanceScheduleRepair(props) {
     if (timeSelected) {
       setTimeAASlotsTenant([]);
       setTimeAASlotsMaintenance([]);
+      let date =
+        dateString >
+        moment(new Date(+new Date() + 86400000)).format("YYYY-MM-DD")
+          ? dateString
+          : moment(new Date(+new Date() + 86400000)).format("YYYY-MM-DD");
       axios
         .get(
           BASE_URL +
             "/AvailableAppointmentsTenant/" +
-            dateString +
+            date +
             "/" +
             quotes.event_duration +
             "/" +
@@ -633,29 +641,73 @@ function MaintenanceScheduleRepair(props) {
     );
     // console.log("TimeSlots joined", result);
     return (
-      <div style={{ height: "10rem" }}>
+      <div className="m-5" style={{ height: "5rem" }}>
         <Grid
           container
-          // direction="column"
+          direction="column"
           spacing={1}
-          style={{ height: "20rem" }}
+          style={{ height: "25rem" }}
           justifyContent="center"
-          alignItems="center"
+          alignItems="start"
         >
-          {result.map(function (element) {
-            return (
-              <button
-                style={
-                  element === selectedTime
-                    ? activeTimeSlotButton
-                    : timeslotButton
-                }
-                onClick={() => selectApptTime(element)}
-              >
-                {formatTime(dateString, element)}
-              </button>
-            );
-          })}
+          <Row className="d-flex flex-start m-3">
+            {" "}
+            Morning Time:{" "}
+            {result.map(function (element) {
+              return "08:00:00" <= element && element < "12:00:00" ? (
+                <button
+                  style={
+                    element === selectedTime
+                      ? activeTimeSlotButton
+                      : timeslotButton
+                  }
+                  onClick={() => selectApptTime(element)}
+                >
+                  {formatTime(dateString, element)}
+                </button>
+              ) : (
+                ""
+              );
+            })}
+          </Row>{" "}
+          <Row className="d-flex flex-start m-3">
+            Afternoon Time:{" "}
+            {result.map(function (element) {
+              return "12:00:00" <= element && element < "17:00:00" ? (
+                <button
+                  style={
+                    element === selectedTime
+                      ? activeTimeSlotButton
+                      : timeslotButton
+                  }
+                  onClick={() => selectApptTime(element)}
+                >
+                  {formatTime(dateString, element)}
+                </button>
+              ) : (
+                ""
+              );
+            })}
+          </Row>
+          <Row className="d-flex flex-start m-3">
+            Evening Time:{" "}
+            {result.map(function (element) {
+              return "17:00:00" <= element ? (
+                <button
+                  style={
+                    element === selectedTime
+                      ? activeTimeSlotButton
+                      : timeslotButton
+                  }
+                  onClick={() => selectApptTime(element)}
+                >
+                  {formatTime(dateString, element)}
+                </button>
+              ) : (
+                ""
+              );
+            })}
+          </Row>
         </Grid>
       </div>
     );
@@ -758,7 +810,13 @@ function MaintenanceScheduleRepair(props) {
         </div>
         <div className="w-100 mb-5 overflow-scroll">
           <Header
-            title="Schedule Repair"
+            title={`Schedule Repair with a${
+              quotes.rentalInfo.length > 0
+                ? ` Tenant`
+                : quotes.property_manager.length > 0
+                ? ` Property Manager`
+                : ` Owner`
+            }`}
             leftText="< Back"
             leftFn={() => navigate("../maintenance")}
           />
@@ -838,7 +896,7 @@ function MaintenanceScheduleRepair(props) {
                 style={{
                   display: "flex",
                   justifyContent: "center",
-                  height: "50vh",
+                  height: "60vh",
                   overflow: "scroll",
                 }}
               >

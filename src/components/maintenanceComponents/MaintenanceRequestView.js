@@ -135,7 +135,7 @@ export default function MaintenanceRequestView() {
     );
     let quote_r = quotes_response.result[0];
     setQuote(quotes_response.result[0]);
-
+    console.log(quote_r.quote_status);
     if (quote_r.quote_status === "SENT") {
       setQuoteSent(true);
     }
@@ -177,11 +177,11 @@ export default function MaintenanceRequestView() {
   };
   useEffect(() => {
     fetchQuoteDetails();
-  }, [addQuote, editQuote]);
+  }, [addQuote, editQuote, quoteSent, quoteRejected]);
   const headerBack = () => {
     navigate(-1);
   };
-  console.log(quoteSent);
+  console.log(quoteSent, quoteRejected, quote.quote_status);
   return (
     <div className="w-100 overflow-hidden">
       {!isLoading && quote !== null ? (
@@ -402,6 +402,7 @@ export default function MaintenanceRequestView() {
                 setEditQuote={setEditQuote}
                 setQuoteSent={setQuoteSent}
                 setQuoteRefused={setQuoteRefused}
+                setQuoteRejected={setQuoteRejected}
               />
             </div>
             {quote.quote_status !== "REQUESTED" ? (
