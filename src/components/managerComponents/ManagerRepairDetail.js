@@ -64,6 +64,7 @@ function ManagerRepairDetail(props) {
     "Can you please share more pictures regarding the request?"
   );
   const [canReschedule, setCanReschedule] = useState(false);
+  const [rejectQuote, setRejectQuote] = useState(false);
   const [requestQuote, setRequestQuote] = useState(false);
   const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
   const [finishMaintenance, setFinishMaintenance] = useState(false);
@@ -75,6 +76,7 @@ function ManagerRepairDetail(props) {
   const [description, setDescription] = useState("");
   const [issueType, setIssueType] = useState("");
   const [notes, setNotes] = useState("");
+  const [messagetoM, setMessagetoM] = useState("");
   const [priority, setPriority] = useState("");
   const [tenantInfo, setTenantInfo] = useState([]);
   const [showSpinner, setShowSpinner] = useState(false);
@@ -363,9 +365,10 @@ function ManagerRepairDetail(props) {
     fetchBusinesses();
   };
 
-  const rejectQuote = async (quote) => {
+  const rejectQuoteFunc = async (quote) => {
     const body = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
+      notes: messagetoM,
       quote_status: "REJECTED",
     };
     const response = await put("/maintenanceQuotes", body);
@@ -1318,7 +1321,7 @@ function ManagerRepairDetail(props) {
                       <Col className="d-flex flex-row justify-content-evenly">
                         <Button
                           style={redPillButton}
-                          onClick={() => rejectQuote(quote)}
+                          onClick={() => setRejectQuote(true)}
                         >
                           Reject Quote
                         </Button>
@@ -1400,6 +1403,44 @@ function ManagerRepairDetail(props) {
                             Reschedule
                           </Button>
                         </Col>
+                      </Row>
+                    ) : (
+                      <Row></Row>
+                    )}
+                    {rejectQuote &&
+                    !requestQuote &&
+                    !scheduleMaintenance &&
+                    quote.request_status === "PROCESSING" &&
+                    quote.quote_status === "SENT" ? (
+                      <Row
+                        style={{
+                          background: "#F3F3F3 0% 0% no-repeat padding-box",
+                          borderRadius: "10px",
+                          opacity: 1,
+                        }}
+                        className="my-4 p-2"
+                      >
+                        <Form.Group className="mx-2 my-3">
+                          <Form.Label style={subHeading} className="mb-0 ms-2">
+                            Reason for Reject
+                          </Form.Label>
+                          <Form.Control
+                            style={squareForm}
+                            placeholder={title}
+                            value={messagetoM}
+                            onChange={(e) => setMessagetoM(e.target.value)}
+                          />
+                        </Form.Group>
+                        <Row>
+                          <Col className="d-flex flex-row justify-content-evenly">
+                            <Button
+                              style={redPillButton}
+                              onClick={() => rejectQuoteFunc(quote)}
+                            >
+                              Reject Quote
+                            </Button>
+                          </Col>
+                        </Row>
                       </Row>
                     ) : (
                       <Row></Row>
