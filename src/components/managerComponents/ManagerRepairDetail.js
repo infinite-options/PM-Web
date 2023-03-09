@@ -38,6 +38,9 @@ import {
   orangePill,
   mediumBold,
   smallImg,
+  red,
+  hidden,
+  small,
 } from "../../utils/styles";
 import { get, post, put } from "../../utils/api";
 
@@ -64,6 +67,7 @@ function ManagerRepairDetail(props) {
     "Can you please share more pictures regarding the request?"
   );
   const [canReschedule, setCanReschedule] = useState(false);
+  const [rejectQuote, setRejectQuote] = useState(false);
   const [requestQuote, setRequestQuote] = useState(false);
   const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
   const [finishMaintenance, setFinishMaintenance] = useState(false);
@@ -75,12 +79,14 @@ function ManagerRepairDetail(props) {
   const [description, setDescription] = useState("");
   const [issueType, setIssueType] = useState("");
   const [notes, setNotes] = useState("");
+  const [messagetoM, setMessagetoM] = useState("");
   const [priority, setPriority] = useState("");
   const [tenantInfo, setTenantInfo] = useState([]);
   const [showSpinner, setShowSpinner] = useState(false);
   const repair = location.state.repair;
   const [reDate, setReDate] = useState("");
   const [reTime, setReTime] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -362,10 +368,22 @@ function ManagerRepairDetail(props) {
     const response = await put("/maintenanceRequests", newRepair, null, files);
     fetchBusinesses();
   };
-
-  const rejectQuote = async (quote) => {
+  const required =
+    errorMessage === "Please fill out all fields" ? (
+      <span style={red} className="ms-1">
+        *
+      </span>
+    ) : (
+      ""
+    );
+  const rejectQuoteFunc = async (quote) => {
+    if (messagetoM === "") {
+      setErrorMessage("Please fill out the reason");
+      return;
+    }
     const body = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
+      notes: messagetoM,
       quote_status: "REJECTED",
     };
     const response = await put("/maintenanceQuotes", body);
@@ -901,6 +919,11 @@ function ManagerRepairDetail(props) {
                     <Table>
                       <TableHead>
                         <TableRow>
+                          <TableCell align="center">Tenant Name </TableCell>
+                          <TableCell align="center">Tenant Email</TableCell>
+                          <TableCell align="center">
+                            Tenant Phone Number
+                          </TableCell>
                           <TableCell align="center">Lease Start Date</TableCell>
                           <TableCell align="center">Lease End Date</TableCell>
                           <TableCell align="center">Tenant Payments</TableCell>
@@ -913,6 +936,27 @@ function ManagerRepairDetail(props) {
                         {repair.rentalInfo.map((rf) => {
                           return (
                             <TableRow>
+                              {console.log(tenantInfo)}
+                              <TableCell align="center">
+                                {tenantInfo.map((tf) => {
+                                  return (
+                                    <p>
+                                      {" "}
+                                      {tf.tenantFirstName} {tf.tenantLastName}
+                                    </p>
+                                  );
+                                })}
+                              </TableCell>{" "}
+                              <TableCell align="center">
+                                {tenantInfo.map((tf) => {
+                                  return <p> {tf.tenantEmail}</p>;
+                                })}
+                              </TableCell>{" "}
+                              <TableCell align="center">
+                                {tenantInfo.map((tf) => {
+                                  return <p> {tf.tenantPhoneNumber}</p>;
+                                })}
+                              </TableCell>
                               <TableCell align="center">
                                 {rf.lease_start}
                               </TableCell>
@@ -929,43 +973,38 @@ function ManagerRepairDetail(props) {
                                 })}
                               </TableCell>
                               <TableCell align="center">
-                                {JSON.parse(rf.documents).map((rp) => {
-                                  return (
-                                    <Row className="d-flex justify-content-center align-items-center p-2">
-                                      <Col
-                                        className=" d-flex align-items-left"
-                                        style={{
-                                          font: "normal normal 600 18px Bahnschrift-Regular",
-                                          color: "#007AFF",
-                                          textDecoration: "underline",
-                                        }}
-                                      >
-                                        {rp.description == ""
-                                          ? rp.name
-                                          : rp.description}
-                                      </Col>
-                                      <Col className=" d-flex justify-content-end">
-                                        <a
-                                          href={rp.link}
-                                          target="_blank"
-                                          rel="noreferrer"
-                                        >
-                                          <img src={File} alt="open document" />
-                                        </a>
-                                      </Col>
-                                    </Row>
-                                  );
-                                })}
-                              </TableCell>
-                              <TableCell align="center">
-                                {tenantInfo.map((tf) => {
-                                  return (
-                                    <p>
-                                      {" "}
-                                      {tf.tenantFirstName} {tf.tenantLastName}
-                                    </p>
-                                  );
-                                })}
+                                {JSON.parse(rf.documents).length > 0
+                                  ? JSON.parse(rf.documents).map((rp) => {
+                                      return (
+                                        <Row className="d-flex justify-content-center align-items-center p-2">
+                                          <Col
+                                            className=" d-flex align-items-left"
+                                            style={{
+                                              font: "normal normal 600 18px Bahnschrift-Regular",
+                                              color: "#007AFF",
+                                              textDecoration: "underline",
+                                            }}
+                                          >
+                                            {rp.description == ""
+                                              ? rp.name
+                                              : rp.description}
+                                          </Col>
+                                          <Col className=" d-flex justify-content-end">
+                                            <a
+                                              href={rp.link}
+                                              target="_blank"
+                                              rel="noreferrer"
+                                            >
+                                              <img
+                                                src={File}
+                                                alt="open document"
+                                              />
+                                            </a>
+                                          </Col>
+                                        </Row>
+                                      );
+                                    })
+                                  : "No documents"}
                               </TableCell>
                               <TableCell align="center">
                                 {tenantInfo.map((tf) => {
@@ -1089,6 +1128,9 @@ function ManagerRepairDetail(props) {
                       </Row>
                     </Col>
                     <Col>
+                      {console.log(
+                        JSON.parse(business.business_services_fees).length
+                      )}
                       <Row style={mediumBold}>{business.business_name}</Row>
                       <Row className="m-3" style={subText}>
                         {JSON.parse(business.business_services_fees).length >
@@ -1294,7 +1336,7 @@ function ManagerRepairDetail(props) {
                       <Col className="d-flex flex-row justify-content-evenly">
                         <Button
                           style={redPillButton}
-                          onClick={() => rejectQuote(quote)}
+                          onClick={() => setRejectQuote(true)}
                         >
                           Reject Quote
                         </Button>
@@ -1376,6 +1418,53 @@ function ManagerRepairDetail(props) {
                             Reschedule
                           </Button>
                         </Col>
+                      </Row>
+                    ) : (
+                      <Row></Row>
+                    )}
+                    {rejectQuote &&
+                    !requestQuote &&
+                    !scheduleMaintenance &&
+                    quote.request_status === "PROCESSING" &&
+                    quote.quote_status === "SENT" ? (
+                      <Row
+                        style={{
+                          background: "#F3F3F3 0% 0% no-repeat padding-box",
+                          borderRadius: "10px",
+                          opacity: 1,
+                        }}
+                        className="my-4 p-2"
+                      >
+                        <Form.Group className="mx-2 my-3">
+                          <Form.Label style={subHeading} className="mb-0 ms-2">
+                            Reason for Reject{" "}
+                            {messagetoM === "" ? required : ""}
+                          </Form.Label>
+                          <Form.Control
+                            style={squareForm}
+                            placeholder=" Reason for Reject"
+                            value={messagetoM}
+                            onChange={(e) => setMessagetoM(e.target.value)}
+                          />
+                        </Form.Group>
+                        <div
+                          className="text-center"
+                          style={errorMessage === "" ? hidden : {}}
+                        >
+                          <p style={{ ...red, ...small }}>
+                            {errorMessage || "error"}
+                          </p>
+                        </div>
+                        <Row>
+                          <Col className="d-flex flex-row justify-content-evenly">
+                            <Button
+                              style={redPillButton}
+                              onClick={() => rejectQuoteFunc(quote)}
+                            >
+                              Reject Quote
+                            </Button>
+                          </Col>
+                        </Row>
                       </Row>
                     ) : (
                       <Row></Row>

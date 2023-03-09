@@ -25,16 +25,13 @@ import { get } from "./utils/api";
 import DetailRepairStatus from "./components/DetailRepairStatus";
 import MaintenanceDashboard from "./pages/MaintenanceDashboard";
 import MaintenanceRequestView from "./components/maintenanceComponents/MaintenanceRequestView";
-import MaintenanceQuotesRequested from "./components/maintenanceComponents/MaintenanceQuotesRequested";
+import MaintenanceHistory from "./components/maintenanceComponents/MaintenanceHistory";
 import DetailQuote from "./components/DetailQuote";
 import ManagerDetailAnnouncement from "./components/managerComponents/ManagerDetailAnnouncement";
 import RescheduleRepair from "./components/RescheduleRepair";
-import JobsCompleted from "./components/JobsCompleted";
-import QuotesRejectedM from "./components/maintenanceComponents/QuotesRejectedM";
-import QuotesRejectedPM from "./components/maintenanceComponents/QuotesRejectedPM";
 import DetailQuoteRequest from "./components/maintenanceComponents/DetailQuoteRequest";
-import QuotesAccepted from "./components/maintenanceComponents/QuotesAccepted";
 import MaintenanceScheduleRepair from "./components/maintenanceComponents/MaintenanceScheduleRepair";
+import MaintenanceProfile from "./components/maintenanceComponents/MaintenanceProfile";
 import ReviewTenantProfile from "./components/tenantComponents/ReviewTenantprofile";
 import PropertyApplicationView from "./components/tenantComponents/PropertyApplicationView";
 import ReviewPropertyLease from "./components/tenantComponents/reviewPropertyLease";
@@ -44,10 +41,7 @@ import ManagerPropertyView from "./components/managerComponents/ManagerPropertyV
 import ManagerRepairDetail from "./components/managerComponents/ManagerRepairDetail";
 import SignupExisting from "./pages/SignUpExisiting";
 import ManagerRepairsOverview from "./components/managerComponents/ManagerRepairsOverview";
-import MaintenanceQuotesSent from "./components/maintenanceComponents/MaintenanceQuotesSent";
-import MaintenanceQuoteSentDetail from "./components/maintenanceComponents/MaintenanceQuoteSentDetail";
 import MaintenanceQuoteScheduledDetail from "./components/maintenanceComponents/MaintenanceQuoteScheduledDetail";
-import MaintenanceQuotesScheduled from "./components/maintenanceComponents/MaintenanceQuotesScheduled";
 import ManagerUtilities from "./components/managerComponents/ManagerUtilities";
 import OwnerUtilities from "./components/ownerComponents/OwnerUtilities";
 import TenantDuePayments from "./components/tenantComponents/TenantDuePayments";
@@ -145,10 +139,6 @@ function App() {
               element={<MaintenanceRequestView />}
             />
             MaintenanceRequestView
-            <Route
-              path="quotes-requested"
-              element={<MaintenanceQuotesRequested />}
-            />
             <Route path="detailQuote" element={<DetailQuote />} />
             <Route path="search-pm" element={<OwnerContacts />} />
             <Route
@@ -156,20 +146,18 @@ function App() {
               element={<DetailQuoteRequest />}
             />
             <Route
+              path="maintenance-profile"
+              element={<MaintenanceProfile />}
+            />
+            <Route
               path="maintenanceScheduleRepair/:quote_id"
               element={<MaintenanceScheduleRepair />}
             />
-            <Route path="quotesAccepted" element={<QuotesAccepted />} />
             <Route
-              path="quotesAccepted/:quote_id"
-              element={<QuotesAccepted />}
+              path="maintenance-history"
+              element={<MaintenanceHistory />}
             />
-            <Route path="jobsCompleted" element={<JobsCompleted />} />
-            <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
-            <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
             <Route path="tenant" element={<TenantDashboard />} />
-            {/* <Route path="tenantPaymnt" element={<TenantPayment />} /> */}
-            {/* <Route path="tenant_doc_upload" element={<TenantDocumentUpload />} /> */}
             <Route
               path="tenantAvailableProperties"
               element={<TenantAvailableProperties />}
@@ -286,15 +274,6 @@ function App() {
               element={<TenantRepairDetails />}
             />
             <Route path="/properties" element={<NotManagedProperties />} />
-            <Route path="quotes-sent" element={<MaintenanceQuotesSent />} />
-            <Route
-              path="quotes-sent/:q_id"
-              element={<MaintenanceQuoteSentDetail />}
-            />
-            <Route
-              path="quotes-scheduled"
-              element={<MaintenanceQuotesScheduled />}
-            />
             <Route
               path="quotes-scheduled/:q_id"
               element={<MaintenanceQuoteScheduledDetail />}
