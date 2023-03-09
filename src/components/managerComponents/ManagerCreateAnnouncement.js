@@ -853,7 +853,7 @@ function ManagerCreateAnnouncement(props) {
                     onClick={addAnnouncement}
                     className="mx-2"
                   >
-                    Save
+                    Send
                   </Button>
                 </div>
                 {showSpinner ? (

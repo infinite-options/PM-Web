@@ -249,10 +249,10 @@ function MaintenanceHistory(props) {
           <SideBar />
         </div>
         <div className="w-100 mb-5 overflow-scroll">
-          <Header title="Maintenance and Repairs" />
+          <Header title="Maintenance History" />
           <Row className="m-3">
             <Col>
-              <h3>Maintenance and Repairs</h3>
+              <h3>Maintenance History</h3>
             </Col>
           </Row>
 
