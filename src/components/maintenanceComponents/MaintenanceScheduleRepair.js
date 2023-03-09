@@ -4,9 +4,11 @@ import moment from "moment";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Row, Col, Button } from "react-bootstrap";
 import Grid from "@mui/material/Grid";
-import AppContext from "../../AppContext";
-import Header from "../Header";
 import Calendar from "react-calendar";
+import AppContext from "../../AppContext";
+import MaintenanceFooter from "./MaintenanceFooter";
+import Header from "../Header";
+import SideBar from "./SideBar";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import {
@@ -63,7 +65,20 @@ function MaintenanceScheduleRepair(props) {
   const [accessTokenTenant, setAccessTokenTenant] = useState("");
   const [accessTokenMaintenance, setAccessTokenMaintenance] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
 
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsive = {
+    showSidebar: width > 1023,
+  };
   function convert(value) {
     var a = value.split(":"); // split it at the colons
 
@@ -602,9 +617,7 @@ function MaintenanceScheduleRepair(props) {
             timeAASlotsTenant.some((o2) => o1 === o2)
           ));
     }
-    // console.log("TimeSlots Tenant", timeAASlotsTenant);
-    // console.log("TimeSlots Tenant", timeSlotsTenant);
-    // console.log("TimeSlots Tenant", resultTenant);
+
     {
       timeSlotsMaintenance.length === 0
         ? (resultMaintenance = timeAASlotsMaintenance)
@@ -614,9 +627,6 @@ function MaintenanceScheduleRepair(props) {
             timeAASlotsMaintenance.some((o2) => o1 === o2)
           ));
     }
-    // console.log("TimeSlots Maintenance", timeAASlotsMaintenance);
-    // console.log("TimeSlots Maintenance", timeSlotsMaintenance);
-    // console.log("TimeSlots Maintenance", resultMaintenance);
 
     result = resultTenant.filter((o1) =>
       resultMaintenance.some((o2) => o1 === o2)
@@ -626,11 +636,11 @@ function MaintenanceScheduleRepair(props) {
       <div style={{ height: "10rem" }}>
         <Grid
           container
-          direction="column"
+          // direction="column"
           spacing={1}
           style={{ height: "20rem" }}
           justifyContent="center"
-          alignItems="left"
+          alignItems="center"
         >
           {result.map(function (element) {
             return (
@@ -730,182 +740,209 @@ function MaintenanceScheduleRepair(props) {
       });
 
     setAttendees([{ email: "" }]);
-    navigate("../maintenance");
+    navigate(-2);
   }
   console.log(quotes);
   return (
-    <div className="d-flex flex-column" style={{ overflow: "auto" }}>
-      <Header
-        title="Schedule Repair"
-        leftText="< Back"
-        leftFn={() => navigate("../maintenance")}
-
-        //rightText="Sort by"
-        // rightFn={() => {
-        //   submitInfo();
-        // }}
-      />
-      <div
-        style={{ display: "flex", flexDirection: "column" }}
-        className="pt-1 mb-2"
-      >
-        {/* <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Col style={subHeading}>Dates Available</Col>
-        </div> */}
-        <div>
-          <Calendar
-            calendarType="US"
-            onClickDay={(e) => {
-              setTimeAASlotsMaintenance([]);
-              setTimeAASlotsTenant([]);
-              setTimeSlotsMaintenance([]);
-              setTimeSlotsTenant([]);
-              dateChange(e);
-            }}
-            value={date}
-            minDate={minDate}
-            next2Label={null}
-            prev2Label={null}
-          />
-        </div>
-      </div>
-      <div style={{ display: "flex", flexDirection: "column" }}>
+    <div className="w-100 overflow-hidden">
+      <div className="flex-1">
         <div
+          hidden={!responsive.showSidebar}
           style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
-          <Col style={subHeading}>Times Available</Col>
-          <Col
-            hidden={showTimes}
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5 overflow-scroll">
+          <Header
+            title="Schedule Repair"
+            leftText="< Back"
+            leftFn={() => navigate("../maintenance")}
+          />
+          <div
+            className="mx-3 my-3 p-2"
             style={{
-              font: "normal normal normal 20px/28px Bahnschrift",
-              color: "#A2A2A2",
-              marginTop: "3rem",
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+            // style={{ display: "flex", flexDirection: "column" }}
+            // className="pt-1 mb-2"
+          >
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Calendar
+                calendarType="US"
+                onClickDay={(e) => {
+                  setTimeAASlotsMaintenance([]);
+                  setTimeAASlotsTenant([]);
+                  setTimeSlotsMaintenance([]);
+                  setTimeSlotsTenant([]);
+                  dateChange(e);
+                }}
+                value={date}
+                minDate={minDate}
+                next2Label={null}
+                prev2Label={null}
+              />
+            </div>
+          </div>
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
             }}
           >
-            Please Select a Date Above
-          </Col>
-        </div>
-      </div>
-      {showTimes === true ? (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Col style={subHeading}>Times Available</Col>
+              <Col
+                hidden={showTimes}
+                style={{
+                  font: "normal normal normal 20px/28px Bahnschrift",
+                  color: "#A2A2A2",
+                  marginTop: "3rem",
+                }}
+              >
+                Please Select a Date Above
+              </Col>
+            </div>
+          </div>
+          {showTimes === true ? (
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  height: "50vh",
+                  overflow: "scroll",
+                }}
+              >
+                {renderAvailableApptsVertical()}
+              </div>
+            </div>
+          ) : (
+            <div></div>
+          )}
+
           <div
+            hidden={!buttonSelect}
             style={{
               display: "flex",
-              justifyContent: "start",
-              height: "50vh",
-              overflow: "scroll",
+              flexDirection: "column",
+              alignItems: "center",
+              marginBottom: "5rem",
             }}
           >
-            {renderAvailableApptsVertical()}
+            <Col>
+              <Button
+                size="medium"
+                style={bluePillButton}
+                variant="outline-primary"
+                onClick={() => {
+                  scheduleRequest();
+                  createMeet();
+                }}
+              >
+                Share Schedule
+              </Button>
+            </Col>
+          </div>
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
+            {quotes.property_manager.length > 0 ? (
+              <Row className="m-3">
+                <Col>
+                  <div style={headings}>
+                    {quotes.property_manager[0].manager_business_name}
+                  </div>
+                  <div style={subText}>Property Manager</div>
+                </Col>
+                <Col xs={2} className="mt-1 mb-1">
+                  <img
+                    onClick={() =>
+                      (window.location.href = `tel:${quotes.property_manager[0].manager_phone_number}`)
+                    }
+                    src={Phone}
+                    alt="Phone"
+                  />
+                </Col>
+                <Col xs={2} className="mt-1 mb-1">
+                  <img
+                    onClick={() =>
+                      (window.location.href = `mailto:${quotes.property_manager[0].manager_email}`)
+                    }
+                    src={Message}
+                    alt="Message"
+                  />
+                </Col>
+              </Row>
+            ) : (
+              <Row className="m-3">
+                <Col>
+                  <div style={headings}>
+                    {quotes.owner[0].owner_first_name}{" "}
+                    {quotes.owner[0].owner_last_name}
+                  </div>
+                  <div style={subText}>Property Owner</div>
+                </Col>
+                <Col xs={2} className="mt-1 mb-1">
+                  <img
+                    onClick={() =>
+                      (window.location.href = `tel:${quotes.owner[0].owner_phone_number}`)
+                    }
+                    src={Phone}
+                    alt="Phone"
+                  />
+                </Col>
+                <Col xs={2} className="mt-1 mb-1">
+                  <img
+                    onClick={() =>
+                      (window.location.href = `mailto:${quotes.owner[0].manager_email}`)
+                    }
+                    src={Message}
+                    alt="Message"
+                  />
+                </Col>
+              </Row>
+            )}
+          </div>
+
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <MaintenanceFooter />
           </div>
         </div>
-      ) : (
-        <div></div>
-      )}
-
-      <div
-        hidden={!buttonSelect}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          marginBottom: "10rem",
-        }}
-      >
-        <Col>
-          <Button
-            size="medium"
-            style={bluePillButton}
-            variant="outline-primary"
-            onClick={() => {
-              scheduleRequest();
-              createMeet();
-            }}
-          >
-            Share Schedule
-          </Button>
-        </Col>
       </div>
-
-      {quotes.property_manager.length > 0 ? (
-        <div className="d-flex align-items-center fixed-bottom flex-grow-1">
-          <Row style={{ background: "white" }}>
-            <hr />
-            <Col>
-              <div style={headings}>
-                {quotes.property_manager[0].manager_business_name}
-              </div>
-              <div style={subText}>Property Manager</div>
-            </Col>
-            <Col xs={2} className="mt-1 mb-1">
-              <img
-                onClick={() =>
-                  (window.location.href = `tel:${quotes.property_manager[0].manager_phone_number}`)
-                }
-                src={Phone}
-                alt="Phone"
-              />
-            </Col>
-            <Col xs={2} className="mt-1 mb-1">
-              <img
-                onClick={() =>
-                  (window.location.href = `mailto:${quotes.property_manager[0].manager_email}`)
-                }
-                src={Message}
-                alt="Message"
-              />
-            </Col>
-          </Row>
-        </div>
-      ) : (
-        <div className="d-flex align-items-center fixed-bottom flex-grow-1">
-          <Row style={{ background: "white" }}>
-            <hr />
-            <Col>
-              <div style={headings}>
-                {quotes.owner[0].owner_first_name}{" "}
-                {quotes.owner[0].owner_last_name}
-              </div>
-              <div style={subText}>Property Owner</div>
-            </Col>
-            <Col xs={2} className="mt-1 mb-1">
-              <img
-                onClick={() =>
-                  (window.location.href = `tel:${quotes.owner[0].owner_phone_number}`)
-                }
-                src={Phone}
-                alt="Phone"
-              />
-            </Col>
-            <Col xs={2} className="mt-1 mb-1">
-              <img
-                onClick={() =>
-                  (window.location.href = `mailto:${quotes.owner[0].manager_email}`)
-                }
-                src={Message}
-                alt="Message"
-              />
-            </Col>
-          </Row>
-        </div>
-      )}
     </div>
   );
 }

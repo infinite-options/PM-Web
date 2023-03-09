@@ -112,6 +112,7 @@ function DetailQuoteRequest(props) {
     };
     const response = await put("/maintenanceQuotes", updatedQuote);
     setEditQuote(false);
+    setShowDialog(false);
   };
 
   const rejectQuote = async () => {
@@ -145,7 +146,8 @@ function DetailQuoteRequest(props) {
       quote.quote_status === "SENT" ||
       quote.quote_status === "ACCEPTED" ||
       quote.quote_status === "AGREED" ||
-      quote.quote_status === "PAID" ? (
+      quote.quote_status === "PAID" ||
+      quote.quote_status === "REJECTED" ? (
         <Container className="pt-1 mb-4">
           <div>
             <Row>
@@ -277,9 +279,12 @@ function DetailQuoteRequest(props) {
           <Col className="d-flex flex-row justify-content-evenly mb-1">
             <Button
               hidden={
+                addQuote ||
                 quote.quote_status === "ACCEPTED" ||
                 quote.quote_status === "AGREED" ||
-                quote.quote_status === "PAID"
+                quote.quote_status === "PAID" ||
+                quote.quote_status === "REJECTED" ||
+                quote.quote_status === "WITHDRAWN"
               }
               variant="outline-primary"
               style={redPillButton}

@@ -12,11 +12,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 import AppContext from "../../AppContext";
 import Header from "../Header";
-import ManagerPaymentSelection from "./ManagerPaymentSelection";
 import ManagerLocations from "../ManagerLocations";
-import ManagerFooter from "./ManagerFooter";
+import MaintenancePaymentSelection from "./MaintenancePaymentSelection";
+import MaintenanceFooter from "./MaintenanceFooter";
 import SideBar from "./SideBar";
-import ManagerFees from "../ManagerFees";
 import { get, put, post } from "../../utils/api";
 import {
   squareForm,
@@ -33,6 +32,8 @@ import {
   formatSSN,
   MaskCharacter,
 } from "../../utils/helper";
+import ServicesProvided from "../ServicesProvided";
+
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -44,7 +45,7 @@ const useStyles = makeStyles({
     tableLayout: "fixed",
   },
 });
-function ManagerProfile(props) {
+function MaintenanceProfile(props) {
   const classes = useStyles();
   const context = useContext(AppContext);
   const { userData, refresh, logout } = context;
@@ -74,9 +75,7 @@ function ManagerProfile(props) {
     accountNumber: "",
     routingNumber: "",
   });
-  // const feeState = useState([]);
-  // const locationState = useState([]);
-  const [feeState, setFeeState] = useState([]);
+  const [serviceState, setServiceState] = useState([]);
   const [locationState, setLocationState] = useState([]);
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
@@ -114,7 +113,7 @@ function ManagerProfile(props) {
         ? profile.business_routing_number
         : "",
     });
-    setFeeState(JSON.parse(profile.business_services_fees));
+    setServiceState(JSON.parse(profile.business_services_fees));
 
     const location = JSON.parse(profile.business_locations);
     setLocationState(location);
@@ -126,21 +125,29 @@ function ManagerProfile(props) {
       return;
     }
     const busi_res = await get(`/businesses?business_email=${user.email}`);
-    console.log("busi_res", user.role, busi_res.result);
-    if (user.role.indexOf("MANAGER") === -1 || busi_res.result.length > 0) {
-      // console.log("no manager profile");
+    console.log("busi_res", user.role.indexOf("MAINTENANCE"), busi_res.result);
+    if (user.role.indexOf("MAINTENANCE") === -1 || busi_res.result.length > 0) {
+      // console.log("no Maintenance profile");
       // props.onConfirm();
     }
-
+    const bus_uid = busi_res.result.filter(
+      (bus) => bus.business_type === "MAINTENANCE"
+    )[0].business_uid;
+    console.log(bus_uid);
     const employee_response = await get(`/employees?user_uid=${user.user_uid}`);
+    console.log(employee_response);
     if (employee_response.result.length !== 0) {
-      const employee = employee_response.result[0];
+      const employee = employee_response.result.filter(
+        (emp) => emp.business_uid === bus_uid
+      )[0];
+      console.log(employee);
       const business_response = await get(
         `/businesses?business_uid=${employee.business_uid}`
       );
+
       const business = business_response.result[0];
       setBusinessInfo(business);
-      // console.log(business);
+      console.log(business);
       const profile = { ...employee, ...business };
       // console.log(profile)
       loadProfile(profile);
@@ -168,12 +175,12 @@ function ManagerProfile(props) {
       // };
       const business_info = {
         // business_uid: profileInfo.business_uid,
-        type: "MANAGEMENT",
+        type: "MAINTENANCE",
         name: companyName,
         phone_number: phoneNumber,
         email: email,
         ein_number: einNumber,
-        services_fees: feeState,
+        services_fees: serviceState,
         locations: locationState,
         paypal: paypal || null,
         apple_pay: applePay || null,
@@ -213,7 +220,7 @@ function ManagerProfile(props) {
         phone_number: phoneNumber,
         email: profileInfo.business_email,
         ein_number: einNumber,
-        services_fees: feeState,
+        services_fees: serviceState,
         locations: locationState,
         paypal: paypal || null,
         apple_pay: applePay || null,
@@ -530,11 +537,6 @@ function ManagerProfile(props) {
             </div>
           )}
 
-          <ManagerPaymentSelection
-            paymentState={paymentState}
-            setPaymentState={setPaymentState}
-            editProfile={editProfile}
-          />
           <div
             className="mx-3 my-3 p-2"
             style={{
@@ -547,27 +549,35 @@ function ManagerProfile(props) {
               <div>Fee Details</div>
             </Row>
             <Row className="mx-1">
-              <ManagerFees
-                feeState={feeState}
-                setFeeState={setFeeState}
-                editProfile={editProfile}
+              <ServicesProvided
+                serviceState={serviceState}
+                setServiceState={setServiceState}
+                businessType="MAINTENANCE"
               />
             </Row>
           </div>
+
+          <MaintenancePaymentSelection
+            paymentState={paymentState}
+            setPaymentState={setPaymentState}
+            editProfile={editProfile}
+          />
           <div
-            className="mx-3 my-3"
+            className="mx-3 my-3 p-2"
             style={{
               background: "#E9E9E9 0% 0% no-repeat padding-box",
               borderRadius: "10px",
               opacity: 1,
             }}
           >
+            {" "}
             <ManagerLocations
               locationState={locationState}
               setLocationState={setLocationState}
-              editProfile={editProfile}
+              editProfile={true}
             />
           </div>
+
           {editProfile ? (
             <div className="mt-2 mx-2">
               <Row>
@@ -700,7 +710,7 @@ function ManagerProfile(props) {
           )}
 
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
-            <ManagerFooter />
+            <MaintenanceFooter />
           </div>
         </div>{" "}
       </div>{" "}
@@ -708,4 +718,4 @@ function ManagerProfile(props) {
   );
 }
 
-export default ManagerProfile;
+export default MaintenanceProfile;

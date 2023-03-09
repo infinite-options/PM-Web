@@ -135,7 +135,8 @@ export default function MaintenanceRequestView() {
     );
     let quote_r = quotes_response.result[0];
     setQuote(quotes_response.result[0]);
-    if (quote.quote_status === "SENT") {
+
+    if (quote_r.quote_status === "SENT") {
       setQuoteSent(true);
     }
     if (
@@ -180,6 +181,7 @@ export default function MaintenanceRequestView() {
   const headerBack = () => {
     navigate(-1);
   };
+  console.log(quoteSent);
   return (
     <div className="w-100 overflow-hidden">
       {!isLoading && quote !== null ? (
@@ -373,7 +375,8 @@ export default function MaintenanceRequestView() {
                         marginRight: "5rem",
                       }}
                     />
-                  ) : quote.quote_status === "SENT" ? (
+                  ) : quote.quote_status === "SENT" ||
+                    quote.quote_status === "REJECTED" ? (
                     <img
                       src={EditIconNew}
                       alt="Edit Icon"
@@ -518,56 +521,29 @@ export default function MaintenanceRequestView() {
                       was notified and will confirm the completion and pay
                     </Col>
                   </Row>
-                  <Row className=" d-flex align-items-center justify-content-center m-3">
-                    {JSON.parse(quote.maintenance_images).length === 0 ? (
-                      <img
-                        src={RepairImg}
-                        alt="Property"
-                        style={{
-                          width: "200px",
-                          height: "200px",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ) : JSON.parse(quote.maintenance_images).length > 4 ? (
-                      <Carousel
-                        responsive={responsive}
-                        infinite={true}
-                        arrows={true}
-                        partialVisible={false}
-                        // className=" d-flex align-items-center justify-content-center"
-                      >
-                        {JSON.parse(quote.maintenance_images).map((image) => {
-                          return (
-                            // <div className="d-flex align-items-center justify-content-center">
-                            <img
-                              // key={Date.now()}
-                              src={`${image}?${Date.now()}`}
-                              // src={image}
-                              style={{
-                                width: "200px",
-                                height: "200px",
-                                objectFit: "cover",
-                              }}
-                              onClick={() =>
-                                showImage(`${image}?${Date.now()}`)
-                              }
-                            />
-                            // </div>
-                          );
-                        })}
-                      </Carousel>
-                    ) : JSON.parse(quote.maintenance_images).length < 4 ? (
-                      <Carousel
-                        responsive={responsive}
-                        infinite={true}
-                        arrows={true}
-                        partialVisible={false}
-                        className=" d-flex align-items-center justify-content-center"
-                      >
-                        {JSON.parse(quote.maintenance_images).map((image) => {
-                          return (
-                            <div className="d-flex align-items-center justify-content-center">
+                  {JSON.parse(quote.maintenance_images) !== null ? (
+                    <Row className=" d-flex align-items-center justify-content-center m-3">
+                      {JSON.parse(quote.maintenance_images).length === 0 ? (
+                        <img
+                          src={RepairImg}
+                          alt="Property"
+                          style={{
+                            width: "200px",
+                            height: "200px",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : JSON.parse(quote.maintenance_images).length > 4 ? (
+                        <Carousel
+                          responsive={responsive}
+                          infinite={true}
+                          arrows={true}
+                          partialVisible={false}
+                          // className=" d-flex align-items-center justify-content-center"
+                        >
+                          {JSON.parse(quote.maintenance_images).map((image) => {
+                            return (
+                              // <div className="d-flex align-items-center justify-content-center">
                               <img
                                 // key={Date.now()}
                                 src={`${image}?${Date.now()}`}
@@ -581,14 +557,46 @@ export default function MaintenanceRequestView() {
                                   showImage(`${image}?${Date.now()}`)
                                 }
                               />
-                            </div>
-                          );
-                        })}
-                      </Carousel>
-                    ) : (
-                      ""
-                    )}
-                  </Row>
+                              // </div>
+                            );
+                          })}
+                        </Carousel>
+                      ) : JSON.parse(quote.maintenance_images).length < 4 ? (
+                        <Carousel
+                          responsive={responsive}
+                          infinite={true}
+                          arrows={true}
+                          partialVisible={false}
+                          className=" d-flex align-items-center justify-content-center"
+                        >
+                          {JSON.parse(quote.maintenance_images).map((image) => {
+                            return (
+                              <div className="d-flex align-items-center justify-content-center">
+                                <img
+                                  // key={Date.now()}
+                                  src={`${image}?${Date.now()}`}
+                                  // src={image}
+                                  style={{
+                                    width: "200px",
+                                    height: "200px",
+                                    objectFit: "cover",
+                                  }}
+                                  onClick={() =>
+                                    showImage(`${image}?${Date.now()}`)
+                                  }
+                                />
+                              </div>
+                            );
+                          })}
+                        </Carousel>
+                      ) : (
+                        ""
+                      )}
+                    </Row>
+                  ) : (
+                    ""
+                  )}
+
                   <Row
                     style={{
                       textAlign: "center",
@@ -621,56 +629,29 @@ export default function MaintenanceRequestView() {
                       has verified the maintenance and will pay soon.
                     </Col>
                   </Row>
-                  <Row className=" d-flex align-items-center justify-content-center m-3">
-                    {JSON.parse(quote.maintenance_images).length === 0 ? (
-                      <img
-                        src={RepairImg}
-                        alt="Property"
-                        style={{
-                          width: "200px",
-                          height: "200px",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ) : JSON.parse(quote.maintenance_images).length > 4 ? (
-                      <Carousel
-                        responsive={responsive}
-                        infinite={true}
-                        arrows={true}
-                        partialVisible={false}
-                        // className=" d-flex align-items-center justify-content-center"
-                      >
-                        {JSON.parse(quote.maintenance_images).map((image) => {
-                          return (
-                            // <div className="d-flex align-items-center justify-content-center">
-                            <img
-                              // key={Date.now()}
-                              src={`${image}?${Date.now()}`}
-                              // src={image}
-                              style={{
-                                width: "200px",
-                                height: "200px",
-                                objectFit: "cover",
-                              }}
-                              onClick={() =>
-                                showImage(`${image}?${Date.now()}`)
-                              }
-                            />
-                            // </div>
-                          );
-                        })}
-                      </Carousel>
-                    ) : JSON.parse(quote.maintenance_images).length < 4 ? (
-                      <Carousel
-                        responsive={responsive}
-                        infinite={true}
-                        arrows={true}
-                        partialVisible={false}
-                        className=" d-flex align-items-center justify-content-center"
-                      >
-                        {JSON.parse(quote.maintenance_images).map((image) => {
-                          return (
-                            <div className="d-flex align-items-center justify-content-center">
+                  {JSON.parse(quote.maintenance_images) !== null ? (
+                    <Row className=" d-flex align-items-center justify-content-center m-3">
+                      {JSON.parse(quote.maintenance_images).length === 0 ? (
+                        <img
+                          src={RepairImg}
+                          alt="Property"
+                          style={{
+                            width: "200px",
+                            height: "200px",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : JSON.parse(quote.maintenance_images).length > 4 ? (
+                        <Carousel
+                          responsive={responsive}
+                          infinite={true}
+                          arrows={true}
+                          partialVisible={false}
+                          // className=" d-flex align-items-center justify-content-center"
+                        >
+                          {JSON.parse(quote.maintenance_images).map((image) => {
+                            return (
+                              // <div className="d-flex align-items-center justify-content-center">
                               <img
                                 // key={Date.now()}
                                 src={`${image}?${Date.now()}`}
@@ -684,14 +665,45 @@ export default function MaintenanceRequestView() {
                                   showImage(`${image}?${Date.now()}`)
                                 }
                               />
-                            </div>
-                          );
-                        })}
-                      </Carousel>
-                    ) : (
-                      ""
-                    )}
-                  </Row>
+                              // </div>
+                            );
+                          })}
+                        </Carousel>
+                      ) : JSON.parse(quote.maintenance_images).length < 4 ? (
+                        <Carousel
+                          responsive={responsive}
+                          infinite={true}
+                          arrows={true}
+                          partialVisible={false}
+                          className=" d-flex align-items-center justify-content-center"
+                        >
+                          {JSON.parse(quote.maintenance_images).map((image) => {
+                            return (
+                              <div className="d-flex align-items-center justify-content-center">
+                                <img
+                                  // key={Date.now()}
+                                  src={`${image}?${Date.now()}`}
+                                  // src={image}
+                                  style={{
+                                    width: "200px",
+                                    height: "200px",
+                                    objectFit: "cover",
+                                  }}
+                                  onClick={() =>
+                                    showImage(`${image}?${Date.now()}`)
+                                  }
+                                />
+                              </div>
+                            );
+                          })}
+                        </Carousel>
+                      ) : (
+                        ""
+                      )}
+                    </Row>
+                  ) : (
+                    ""
+                  )}
                   <Row
                     style={{
                       textAlign: "center",

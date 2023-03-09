@@ -156,7 +156,7 @@ function BusinessProfileInfo(props) {
       phone_number: phoneNumber,
       email: email,
       ein_number: einNumber,
-      services_fees: businessType === "MANAGEMENT" ? feeState : serviceState[0],
+      services_fees: businessType === "MANAGEMENT" ? feeState : serviceState,
       locations: locationState,
       paypal: paypal,
       apple_pay: applePay,

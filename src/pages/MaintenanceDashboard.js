@@ -22,7 +22,7 @@ import MaintenanceFooter from "../components/maintenanceComponents/MaintenanceFo
 import RepairImg from "../icons/RepairImg.svg";
 import { get } from "../utils/api";
 import { green, red, blue, xSmall } from "../utils/styles";
-
+import { days } from "../utils/helper";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -157,50 +157,6 @@ function MaintenanceDashboard(props) {
 
   useEffect(fetchMaintenanceDashboard, []);
 
-  const goToJobsCompleted = () => {
-    const quotes_rejected = quotes.filter(
-      (quote) =>
-        quote.request_status === "COMPLETE" ||
-        quote.request_status === "FINISHED"
-    );
-    navigate(`/jobsCompleted`, { state: { quotes: quotes_rejected } });
-  };
-  const goToQuotesRejectedM = () => {
-    const quotes_rejected = quotes.filter(
-      (quote) => quote.quote_status === "REJECTED"
-    );
-    navigate(`/quotesRejectedPM`, { state: { quotes: quotes_rejected } });
-  };
-  const goToQuotesRejectedY = () => {
-    const quotes_rejected = quotes.filter(
-      (quote) => quote.quote_status === "REFUSED"
-    );
-    navigate(`/quotesRejectedM`, { state: { quotes: quotes_rejected } });
-  };
-  const goToMaintenanceQuotesRequested = () => {
-    const quotes_accepted = quotes.filter(
-      (quote) =>
-        quote.quote_status === "ACCEPTED" &&
-        quote.request_status === "PROCESSING"
-    );
-    const quotes_scheduled = quotes.filter(
-      (quote) =>
-        (quote.request_status === "SCHEDULED" ||
-          quote.request_status === "RESCHEDULE" ||
-          quote.request_status === "SCHEDULE") &&
-        (quote.quote_status === "ACCEPTED" || quote.quote_status === "AGREED")
-    );
-    const quotes_total = [...quotes_accepted, ...quotes_scheduled];
-    console.log(quotes_total);
-    navigate(`/quotes-scheduled`, { state: { quotes: quotes_total } });
-  };
-  const goToQuotesSent = () => {
-    const quotes_sent = quotes.filter((quote) => quote.quote_status === "SENT");
-    navigate(`/quotes-sent`, { state: { quotes: quotes_sent } });
-  };
-  const goToSearchPM = () => {
-    navigate("/maintenancePropertyManagers");
-  };
   const handleRequestSortMaintenance = (event, property) => {
     const isAsc = orderMaintenanceBy === property && orderMaintenance === "asc";
     setOrderMaintenance(isAsc ? "desc" : "asc");
@@ -497,7 +453,13 @@ function MaintenanceDashboard(props) {
                               size="small"
                               align="center"
                             >
-                              {request.days_open} days
+                              {days(
+                                new Date(
+                                  request.request_created_date.split(" ")[0]
+                                ),
+                                new Date()
+                              )}{" "}
+                              days
                             </TableCell>
                             <TableCell
                               padding="none"
@@ -688,7 +650,13 @@ function MaintenanceDashboard(props) {
                               size="small"
                               align="center"
                             >
-                              {request.days_open} days
+                              {days(
+                                new Date(
+                                  request.request_created_date.split(" ")[0]
+                                ),
+                                new Date()
+                              )}{" "}
+                              days
                             </TableCell>
                             <TableCell
                               padding="none"
@@ -879,7 +847,13 @@ function MaintenanceDashboard(props) {
                               size="small"
                               align="center"
                             >
-                              {request.days_open} days
+                              {days(
+                                new Date(
+                                  request.request_created_date.split(" ")[0]
+                                ),
+                                new Date()
+                              )}{" "}
+                              days
                             </TableCell>
                             <TableCell
                               padding="none"
@@ -1070,7 +1044,13 @@ function MaintenanceDashboard(props) {
                               size="small"
                               align="center"
                             >
-                              {request.days_open} days
+                              {days(
+                                new Date(
+                                  request.request_created_date.split(" ")[0]
+                                ),
+                                new Date()
+                              )}{" "}
+                              days
                             </TableCell>
                             <TableCell
                               padding="none"
@@ -1261,7 +1241,13 @@ function MaintenanceDashboard(props) {
                               size="small"
                               align="center"
                             >
-                              {request.days_open} days
+                              {days(
+                                new Date(
+                                  request.request_created_date.split(" ")[0]
+                                ),
+                                new Date()
+                              )}{" "}
+                              days
                             </TableCell>
                             <TableCell
                               padding="none"
@@ -1452,7 +1438,13 @@ function MaintenanceDashboard(props) {
                               size="small"
                               align="center"
                             >
-                              {request.days_open} days
+                              {days(
+                                new Date(
+                                  request.request_created_date.split(" ")[0]
+                                ),
+                                new Date()
+                              )}{" "}
+                              days
                             </TableCell>
                             <TableCell
                               padding="none"
@@ -1643,7 +1635,13 @@ function MaintenanceDashboard(props) {
                               size="small"
                               align="center"
                             >
-                              {request.days_open} days
+                              {days(
+                                new Date(
+                                  request.request_created_date.split(" ")[0]
+                                ),
+                                new Date()
+                              )}{" "}
+                              days
                             </TableCell>
                             <TableCell
                               padding="none"
@@ -1834,7 +1832,13 @@ function MaintenanceDashboard(props) {
                               size="small"
                               align="center"
                             >
-                              {request.days_open} days
+                              {days(
+                                new Date(
+                                  request.request_created_date.split(" ")[0]
+                                ),
+                                new Date()
+                              )}{" "}
+                              days
                             </TableCell>
                             <TableCell
                               padding="none"

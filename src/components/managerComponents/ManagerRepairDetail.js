@@ -901,6 +901,11 @@ function ManagerRepairDetail(props) {
                     <Table>
                       <TableHead>
                         <TableRow>
+                          <TableCell align="center">Tenant Name </TableCell>
+                          <TableCell align="center">Tenant Email</TableCell>
+                          <TableCell align="center">
+                            Tenant Phone Number
+                          </TableCell>
                           <TableCell align="center">Lease Start Date</TableCell>
                           <TableCell align="center">Lease End Date</TableCell>
                           <TableCell align="center">Tenant Payments</TableCell>
@@ -913,6 +918,27 @@ function ManagerRepairDetail(props) {
                         {repair.rentalInfo.map((rf) => {
                           return (
                             <TableRow>
+                              {console.log(tenantInfo)}
+                              <TableCell align="center">
+                                {tenantInfo.map((tf) => {
+                                  return (
+                                    <p>
+                                      {" "}
+                                      {tf.tenantFirstName} {tf.tenantLastName}
+                                    </p>
+                                  );
+                                })}
+                              </TableCell>{" "}
+                              <TableCell align="center">
+                                {tenantInfo.map((tf) => {
+                                  return <p> {tf.tenantEmail}</p>;
+                                })}
+                              </TableCell>{" "}
+                              <TableCell align="center">
+                                {tenantInfo.map((tf) => {
+                                  return <p> {tf.tenantPhoneNumber}</p>;
+                                })}
+                              </TableCell>
                               <TableCell align="center">
                                 {rf.lease_start}
                               </TableCell>
@@ -929,43 +955,38 @@ function ManagerRepairDetail(props) {
                                 })}
                               </TableCell>
                               <TableCell align="center">
-                                {JSON.parse(rf.documents).map((rp) => {
-                                  return (
-                                    <Row className="d-flex justify-content-center align-items-center p-2">
-                                      <Col
-                                        className=" d-flex align-items-left"
-                                        style={{
-                                          font: "normal normal 600 18px Bahnschrift-Regular",
-                                          color: "#007AFF",
-                                          textDecoration: "underline",
-                                        }}
-                                      >
-                                        {rp.description == ""
-                                          ? rp.name
-                                          : rp.description}
-                                      </Col>
-                                      <Col className=" d-flex justify-content-end">
-                                        <a
-                                          href={rp.link}
-                                          target="_blank"
-                                          rel="noreferrer"
-                                        >
-                                          <img src={File} alt="open document" />
-                                        </a>
-                                      </Col>
-                                    </Row>
-                                  );
-                                })}
-                              </TableCell>
-                              <TableCell align="center">
-                                {tenantInfo.map((tf) => {
-                                  return (
-                                    <p>
-                                      {" "}
-                                      {tf.tenantFirstName} {tf.tenantLastName}
-                                    </p>
-                                  );
-                                })}
+                                {JSON.parse(rf.documents).length > 0
+                                  ? JSON.parse(rf.documents).map((rp) => {
+                                      return (
+                                        <Row className="d-flex justify-content-center align-items-center p-2">
+                                          <Col
+                                            className=" d-flex align-items-left"
+                                            style={{
+                                              font: "normal normal 600 18px Bahnschrift-Regular",
+                                              color: "#007AFF",
+                                              textDecoration: "underline",
+                                            }}
+                                          >
+                                            {rp.description == ""
+                                              ? rp.name
+                                              : rp.description}
+                                          </Col>
+                                          <Col className=" d-flex justify-content-end">
+                                            <a
+                                              href={rp.link}
+                                              target="_blank"
+                                              rel="noreferrer"
+                                            >
+                                              <img
+                                                src={File}
+                                                alt="open document"
+                                              />
+                                            </a>
+                                          </Col>
+                                        </Row>
+                                      );
+                                    })
+                                  : "No documents"}
                               </TableCell>
                               <TableCell align="center">
                                 {tenantInfo.map((tf) => {
@@ -1089,6 +1110,9 @@ function ManagerRepairDetail(props) {
                       </Row>
                     </Col>
                     <Col>
+                      {console.log(
+                        JSON.parse(business.business_services_fees).length
+                      )}
                       <Row style={mediumBold}>{business.business_name}</Row>
                       <Row className="m-3" style={subText}>
                         {JSON.parse(business.business_services_fees).length >

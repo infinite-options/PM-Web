@@ -71,7 +71,7 @@ function SideBar() {
               Contacts
             </NavLink>
             <NavLink
-              to="/owner-repairs"
+              to="/maintenance-history"
               className="sidebarButtons"
               style={({ isActive }) =>
                 isActive ? sidebarButtonsActive : sidebarButtons
@@ -98,7 +98,7 @@ function SideBar() {
               Documents
             </NavLink>
             <NavLink
-              to="/owner-profile"
+              to="/maintenance-profile"
               className="sidebarButtons"
               style={({ isActive }) =>
                 isActive ? sidebarButtonsActive : sidebarButtons
