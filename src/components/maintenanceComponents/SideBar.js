@@ -62,7 +62,7 @@ function SideBar() {
               Dashboard
             </NavLink>
             <NavLink
-              to="/search-pm"
+              to="/maintenance-contacts"
               className="sidebarButtons"
               style={({ isActive }) =>
                 isActive ? sidebarButtonsActive : sidebarButtons
@@ -80,7 +80,7 @@ function SideBar() {
               Maintenance History
             </NavLink>
             <NavLink
-              to="/owner-payments"
+              to="/maintenance-payments"
               className="sidebarButtons"
               style={({ isActive }) =>
                 isActive ? sidebarButtonsActive : sidebarButtons
@@ -89,7 +89,7 @@ function SideBar() {
               Payments
             </NavLink>
             <NavLink
-              to="/owner-documents"
+              to="/maintenance-documents"
               className="sidebarButtons"
               style={({ isActive }) =>
                 isActive ? sidebarButtonsActive : sidebarButtons

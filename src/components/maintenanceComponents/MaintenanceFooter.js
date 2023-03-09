@@ -38,7 +38,7 @@ function MaintenanceFooter(props) {
         <Col
           className="text-center"
           onClick={() => {
-            navigate("/search-pm");
+            navigate("/maintenance-contacts");
           }}
         >
           <img src={Contacts_Gray} alt="Contacts" />
@@ -49,7 +49,7 @@ function MaintenanceFooter(props) {
         <Col
           className="text-center"
           onClick={() => {
-            navigate("/owner-repairs");
+            navigate("/maintenance-history");
           }}
         >
           <img src={Repairs_Gray} alt="Repairs" />
@@ -61,7 +61,7 @@ function MaintenanceFooter(props) {
         <Col
           className="text-center p-0"
           onClick={() => {
-            navigate("/owner-payments");
+            navigate("/maintenance-payments");
           }}
         >
           <img src={Expenses_Gray} alt="EXPENSES" />
@@ -72,7 +72,7 @@ function MaintenanceFooter(props) {
         <Col
           className="text-center"
           onClick={() => {
-            navigate("/owner-documents");
+            navigate("/maintenance-documents");
           }}
         >
           <img
@@ -87,7 +87,7 @@ function MaintenanceFooter(props) {
         <Col
           className="text-center"
           onClick={() => {
-            navigate("/owner-profile");
+            navigate("/maintenance-profile");
           }}
         >
           <img src={Profile_Gray} alt="Profile" />

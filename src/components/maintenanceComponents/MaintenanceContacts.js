@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import SideBar from "./SideBar";
 import MaintenanceFooter from "./MaintenanceFooter";
 import Header from "../Header";
-export default function MaintenancePayments() {
+export default function MaintenanceContacts() {
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -33,10 +33,10 @@ export default function MaintenancePayments() {
           <SideBar />
         </div>
         <div className="w-100 mb-5 overflow-scroll">
-          <Header title="Maintenance Payments" />
+          <Header title="Maintenance Contacts" />
           <Row className="m-3">
             <Col>
-              <h3>Maintenance Payments</h3>
+              <h3>Maintenance Contacts</h3>
             </Col>
             <Col></Col>
           </Row>

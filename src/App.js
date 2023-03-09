@@ -25,6 +25,8 @@ import { get } from "./utils/api";
 import DetailRepairStatus from "./components/DetailRepairStatus";
 import MaintenanceDashboard from "./pages/MaintenanceDashboard";
 import MaintenanceRequestView from "./components/maintenanceComponents/MaintenanceRequestView";
+import MaintenancePayments from "./components/maintenanceComponents/MaintenancePayments";
+import MaintenanceContacts from "./components/maintenanceComponents/MaintenanceContacts";
 import MaintenanceHistory from "./components/maintenanceComponents/MaintenanceHistory";
 import DetailQuote from "./components/DetailQuote";
 import ManagerDetailAnnouncement from "./components/managerComponents/ManagerDetailAnnouncement";
@@ -32,6 +34,7 @@ import RescheduleRepair from "./components/RescheduleRepair";
 import DetailQuoteRequest from "./components/maintenanceComponents/DetailQuoteRequest";
 import MaintenanceScheduleRepair from "./components/maintenanceComponents/MaintenanceScheduleRepair";
 import MaintenanceProfile from "./components/maintenanceComponents/MaintenanceProfile";
+import MaintenanceDocuments from "./components/maintenanceComponents/MaintenanceDocuments";
 import ReviewTenantProfile from "./components/tenantComponents/ReviewTenantprofile";
 import PropertyApplicationView from "./components/tenantComponents/PropertyApplicationView";
 import ReviewPropertyLease from "./components/tenantComponents/reviewPropertyLease";
@@ -150,12 +153,24 @@ function App() {
               element={<MaintenanceProfile />}
             />
             <Route
+              path="maintenance-documents"
+              element={<MaintenanceDocuments />}
+            />
+            <Route
+              path="maintenance-payments"
+              element={<MaintenancePayments />}
+            />
+            <Route
               path="maintenanceScheduleRepair/:quote_id"
               element={<MaintenanceScheduleRepair />}
             />
             <Route
               path="maintenance-history"
               element={<MaintenanceHistory />}
+            />
+            <Route
+              path="maintenance-contacts"
+              element={<MaintenanceContacts />}
             />
             <Route path="tenant" element={<TenantDashboard />} />
             <Route
