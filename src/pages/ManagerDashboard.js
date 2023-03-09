@@ -194,6 +194,30 @@ export default function ManagerDashboard() {
       if (res.maintenanceRequests.length > 0) {
         res.maintenanceRequests.forEach((mr) => {
           requests.push(mr);
+          mr.new_quotes = mr.quotes.filter(
+            (a) => a.quote_status === "REQUESTED"
+          );
+          mr.sent_quotes = mr.quotes.filter((a) => a.quote_status === "SENT");
+          mr.accepted_quotes = mr.quotes.filter(
+            (a) =>
+              a.quote_status === "ACCEPTED" &&
+              mr.request_status === "PROCESSING"
+          );
+
+          mr.schedule_quotes = mr.quotes.filter(
+            (a) =>
+              a.quote_status === "ACCEPTED" && mr.request_status === "SCHEDULE"
+          );
+          mr.reschedule_quotes = mr.quotes.filter(
+            (a) =>
+              a.quote_status === "ACCEPTED" &&
+              mr.request_status === "RESCHEDULE"
+          );
+          mr.scheduled_quotes = mr.quotes.filter(
+            (a) =>
+              a.quote_status === "AGREED" && mr.request_status === "SCHEDULED"
+          );
+          mr.paid_quotes = mr.quotes.filter((a) => a.quote_status === "PAID");
         });
       }
     });
@@ -205,6 +229,7 @@ export default function ManagerDashboard() {
     fetchManagerDashboard();
   }, [access_token]);
 
+  console.log(managerData);
   const fetchTenantDetails = async (tenant_id) => {
     if (access_token === null) {
       navigate("/");
@@ -997,21 +1022,26 @@ export default function ManagerDashboard() {
                                       </p>
                                     </div>
                                   </div>
-                                  <div className="d-flex">
-                                    <div className="d-flex align-items-end">
-                                      <p
-                                        style={{ ...red, ...xSmall }}
-                                        className="mb-0"
-                                      >
-                                        {property.tenant_refused_applications
-                                          .length > 0
-                                          ? `${property.forwarded_applications.length} Tenat(s) refused to pay`
-                                          : ""}
-                                      </p>
+                                  {property.rental_status === "ACTIVE" ||
+                                  property.rental_status === "PENDING" ? (
+                                    ""
+                                  ) : (
+                                    <div className="d-flex">
+                                      <div className="d-flex align-items-end">
+                                        <p
+                                          style={{ ...red, ...xSmall }}
+                                          className="mb-0"
+                                        >
+                                          {property.tenant_refused_applications
+                                            .length > 0
+                                            ? `${property.forwarded_applications.length} Tenat(s) refused the lease`
+                                            : ""}
+                                        </p>
+                                      </div>
                                     </div>
-                                  </div>
+                                  )}
                                 </TableCell>
-
+                                {console.log(property)}
                                 <TableCell
                                   padding="none"
                                   size="small"
@@ -1860,6 +1890,7 @@ export default function ManagerDashboard() {
                               )
                             }
                           >
+                            {console.log(request)}
                             <TableCell
                               padding="none"
                               size="small"
@@ -1907,6 +1938,14 @@ export default function ManagerDashboard() {
                               style={{
                                 color:
                                   request.request_status === "NEW"
+                                    ? "red"
+                                    : request.request_status === "PROCESSING"
+                                    ? "orange"
+                                    : request.request_status === "SCHEDULE"
+                                    ? "blue"
+                                    : request.request_status === "RESCHEDULE"
+                                    ? "yellow"
+                                    : request.request_status === "SCHEDULED"
                                     ? "green"
                                     : "black",
                               }}
@@ -1984,22 +2023,23 @@ export default function ManagerDashboard() {
                               size="small"
                               align="center"
                             >
-                              {request.quotes.length > 0
-                                ? request.quotes.map((quote) =>
-                                    quote.quote_status === "ACCEPTED"
-                                      ? quote.quote_status
-                                      : quote.quote_status === "SENT"
-                                      ? "QUOTE RECIEVED"
-                                      : quote.quote_status === "WITHDRAWN" ||
-                                        quote.quote_status === "REJECTED" ||
-                                        quote.quote_status === "REFUSED"
-                                      ? ""
-                                      : request.total_quotes === 1 &&
-                                        quote.quote_status === "REQUESTED"
-                                      ? "QUOTE REQUESTED"
-                                      : ""
-                                  )
-                                : "NO QUOTES REQUESTED"}
+                              {request.new_quotes.length > 0
+                                ? `${request.quotes.length} requested quotes`
+                                : ""}
+                              <br></br>
+                              {request.sent_quotes.length > 0
+                                ? `${request.sent_quotes.length} quotes received`
+                                : request.accepted_quotes.length > 0
+                                ? `${request.accepted_quotes.length} quotes accepted`
+                                : request.schedule_quotes.length > 0
+                                ? `${request.schedule_quotes.length} quote requested to schedule`
+                                : request.reschedule_quotes.length > 0
+                                ? `${request.reschedule_quotes.length} requested to reschedule quotes`
+                                : request.scheduled_quotes.length > 0
+                                ? `${request.scheduled_quotes.length} quotes scheduled`
+                                : request.paid_quotes.length > 0
+                                ? `${request.paid_quotes.length} quote paid`
+                                : ""}
                             </TableCell>
 
                             <TableCell
@@ -2022,7 +2062,7 @@ export default function ManagerDashboard() {
                                 ? request.scheduled_time.split(" ")[0]
                                 : "Not Scheduled"}
                             </TableCell>
-                            <TableCell>${request.total_estimate}</TableCell>
+                            <TableCell>$ {request.total_estimate}</TableCell>
                           </TableRow>
                         );
                       })}

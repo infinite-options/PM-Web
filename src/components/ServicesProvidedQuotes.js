@@ -247,6 +247,25 @@ function ServicesProvidedQuotes(props) {
         >
           Add Service
         </Button>
+      ) : editingService !== null ? (
+        <div className="d-flex justify-content-center mb-4">
+          <Button
+            variant="outline-primary"
+            style={pillButton}
+            onClick={cancelEdit}
+            className="mx-2"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="outline-primary"
+            style={pillButton}
+            onClick={addService}
+            className="mx-2"
+          >
+            Update Service
+          </Button>
+        </div>
       ) : (
         <div className="d-flex justify-content-center mb-4">
           <Button

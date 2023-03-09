@@ -22,7 +22,7 @@ import {
 import { put } from "../../utils/api";
 import "../calendar.css";
 
-function MaintenanceScheduleRepair(props) {
+function RescheduleRepair(props) {
   const { userData } = useContext(AppContext);
   const { user } = userData;
   const imageState = useState([]);
@@ -34,21 +34,24 @@ function MaintenanceScheduleRepair(props) {
   const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 
   const location = useLocation();
-  const quotes = location.state.quote;
+  const { quotes, setScheduleMaintenance } = props;
+  console.log(quotes);
+  console.log(new Date(+new Date() + 86400000));
+  console.log(new Date(+new Date(quotes.scheduled_date) + 86400000));
   const user_book =
     quotes.rentalInfo.length > 0
       ? quotes.rentalInfo[0].tenant_id
       : quotes.property_manager.length > 0
       ? quotes.property_manager[0].manager_id
       : quotes.owner_id;
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(
+    new Date(+new Date(quotes.scheduled_date) + 86400000)
+  );
   var currentDate = new Date(+new Date() + 86400000);
   const [minDate, setMinDate] = useState(
-    currentDate > new Date(moment(quotes.earliest_availability))
-      ? currentDate
-      : new Date(moment(quotes.earliest_availability))
+    new Date(+new Date(quotes.scheduled_date) + 86400000)
   );
-  const [dateString, setDateString] = useState(null);
+  const [dateString, setDateString] = useState(quotes.scheduled_time);
   const [selectedTime, setSelectedTime] = useState(null);
 
   const [timeSelected, setTimeSelected] = useState(false);
@@ -639,7 +642,7 @@ function MaintenanceScheduleRepair(props) {
     result = resultTenant.filter((o1) =>
       resultMaintenance.some((o2) => o1 === o2)
     );
-    // console.log("TimeSlots joined", result);
+    console.log("TimeSlots joined", result);
     return (
       <div className="m-5" style={{ height: "5rem" }}>
         <Grid
@@ -718,7 +721,7 @@ function MaintenanceScheduleRepair(props) {
 
     let meeting = {
       maintenance_request_uid: quotes.maintenance_request_uid,
-      request_status: "SCHEDULE",
+      request_status: "RESCHEDULE",
       scheduled_date: meetDate,
       scheduled_time: meetTime,
       request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
@@ -793,34 +796,14 @@ function MaintenanceScheduleRepair(props) {
       });
 
     setAttendees([{ email: "" }]);
-    navigate(-2);
+    navigate(-1);
+    // setScheduleMaintenance(false);
   }
   console.log(quotes);
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
-          <SideBar />
-        </div>
         <div className="w-100 mb-5 overflow-scroll">
-          <Header
-            title={`Schedule Repair with a${
-              quotes.rentalInfo.length > 0
-                ? ` Tenant`
-                : quotes.property_manager.length > 0
-                ? ` Property Manager`
-                : ` Owner`
-            }`}
-            leftText="< Back"
-            leftFn={() => navigate("../maintenance")}
-          />
           <div
             className="mx-3 my-3 p-2"
             style={{
@@ -996,14 +979,10 @@ function MaintenanceScheduleRepair(props) {
               </Row>
             )}
           </div>
-
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
-            <MaintenanceFooter />
-          </div>
         </div>
       </div>
     </div>
   );
 }
 
-export default MaintenanceScheduleRepair;
+export default RescheduleRepair;

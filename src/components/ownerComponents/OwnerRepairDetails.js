@@ -9,6 +9,7 @@ import {
   TableHead,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import moment from "moment";
 import * as ReactBootStrap from "react-bootstrap";
 import Carousel from "react-multi-carousel";
 import AppContext from "../../AppContext";
@@ -35,9 +36,12 @@ import {
   subHeading,
   redPillButton,
   orangePill,
+  greenPill,
+  redPill,
 } from "../../utils/styles";
 import { get, put, post } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
+import RescheduleRepair from "../maintenanceComponents/RescheduleRepair";
 const useStyles = makeStyles((theme) => ({
   priorityInactive: {
     opacity: "0.5",
@@ -188,6 +192,7 @@ function OwnerRepairDetails(props) {
       description: description,
       scheduled_date: repair.scheduled_date,
       assigned_worker: repair.assigned_worker,
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
 
     const files = imageState[0];
@@ -228,6 +233,7 @@ function OwnerRepairDetails(props) {
       notes: "Request to reschedule",
       scheduled_date: reDate,
       scheduled_time: reTime,
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -249,6 +255,7 @@ function OwnerRepairDetails(props) {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
       request_status: "COMPLETED",
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -274,6 +281,7 @@ function OwnerRepairDetails(props) {
       notes: "Maintenance Scheduled",
       scheduled_date: reDate,
       scheduled_time: reTime,
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -998,7 +1006,24 @@ function OwnerRepairDetails(props) {
                       className="pt-1 mb-4"
                     >
                       <Col className="d-flex flex-row justify-content-evenly">
-                        <Button style={orangePill}>
+                        <Button
+                          style={
+                            (quote.quote_status === "ACCEPTED" ||
+                              quote.quote_status === "AGREED" ||
+                              quote.quote_status === "PAID") &&
+                            (quote.request_status === "PROCESSING" ||
+                              quote.request_status === "SCHEDULED" ||
+                              quote.request_status === "SCHEDULE" ||
+                              quote.request_status === "RESCHEDULE" ||
+                              quote.request_status === "FINISHED" ||
+                              quote.request_status === "COMPLETED")
+                              ? greenPill
+                              : quote.quote_status === "REJECTED" ||
+                                quote.quote_status === "REFUSED"
+                              ? redPill
+                              : orangePill
+                          }
+                        >
                           {quote.quote_status === "REQUESTED"
                             ? "Waiting for quote from business"
                             : quote.quote_status === "REJECTED"
@@ -1012,17 +1037,18 @@ function OwnerRepairDetails(props) {
                             ? "Business refused to send a quote"
                             : quote.quote_status === "ACCEPTED" &&
                               quote.request_status === "SCHEDULE"
-                            ? "Maintenace Sent Schedule"
+                            ? "Maintenance Sent Schedule"
                             : quote.quote_status === "ACCEPTED" &&
                               quote.request_status === "RESCHEDULE"
                             ? "Reschedule Requested"
                             : quote.quote_status === "AGREED" &&
                               quote.request_status === "SCHEDULED"
-                            ? "Maintenace Scheduled"
+                            ? "Maintenance Scheduled"
                             : quote.quote_status === "AGREED" &&
                               quote.request_status === "FINISHED"
                             ? "Maintenance Finished"
-                            : quote.request_status === "COMPLETED"
+                            : quote.request_status === "COMPLETED" &&
+                              quote.quote_status === "AGREED"
                             ? "Maintenance Completed"
                             : quote.quote_status === "PAID" &&
                               quote.request_status === "COMPLETED"
@@ -1059,7 +1085,8 @@ function OwnerRepairDetails(props) {
                     )}
                     {scheduleMaintenance ? (
                       <Row className="mx-2 my-2 p-3">
-                        <Row>
+                        <RescheduleRepair quotes={quote} />
+                        {/* <Row>
                           <div style={headings}>Schedule Maintenace</div>
                         </Row>
                         <Form.Group className="mt-3 mb-2">
@@ -1111,7 +1138,7 @@ function OwnerRepairDetails(props) {
                               Cancel
                             </Button>
                           </Col>
-                        </Row>
+                        </Row> */}
                       </Row>
                     ) : (
                       <Row></Row>

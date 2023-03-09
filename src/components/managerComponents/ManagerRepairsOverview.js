@@ -428,7 +428,15 @@ function ManagerRepairsOverview(props) {
                             align="center"
                             style={{
                               color:
-                                repair.request_status === "New"
+                                repair.request_status === "NEW"
+                                  ? "red"
+                                  : repair.request_status === "PROCESSING"
+                                  ? "orange"
+                                  : repair.request_status === "SCHEDULE"
+                                  ? "blue"
+                                  : repair.request_status === "RESCHEDULE"
+                                  ? "yellow"
+                                  : repair.request_status === "SCHEDULED"
                                   ? "green"
                                   : "black",
                             }}

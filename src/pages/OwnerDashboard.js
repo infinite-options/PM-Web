@@ -927,6 +927,14 @@ export default function OwnerDashboard2() {
                               style={{
                                 color:
                                   request.request_status === "NEW"
+                                    ? "red"
+                                    : request.request_status === "PROCESSING"
+                                    ? "orange"
+                                    : request.request_status === "SCHEDULE"
+                                    ? "blue"
+                                    : request.request_status === "RESCHEDULE"
+                                    ? "yellow"
+                                    : request.request_status === "SCHEDULED"
                                     ? "green"
                                     : "black",
                               }}

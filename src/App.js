@@ -30,7 +30,7 @@ import MaintenanceContacts from "./components/maintenanceComponents/MaintenanceC
 import MaintenanceHistory from "./components/maintenanceComponents/MaintenanceHistory";
 import DetailQuote from "./components/DetailQuote";
 import ManagerDetailAnnouncement from "./components/managerComponents/ManagerDetailAnnouncement";
-import RescheduleRepair from "./components/RescheduleRepair";
+import RescheduleRepair from "./components/maintenanceComponents/RescheduleRepair";
 import DetailQuoteRequest from "./components/maintenanceComponents/DetailQuoteRequest";
 import MaintenanceScheduleRepair from "./components/maintenanceComponents/MaintenanceScheduleRepair";
 import MaintenanceProfile from "./components/maintenanceComponents/MaintenanceProfile";

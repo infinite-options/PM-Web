@@ -50,6 +50,7 @@ function DetailQuoteRequest(props) {
     setAddQuote,
     setQuoteSent,
     setQuoteRefused,
+    setQuoteRejected,
   } = props;
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -94,6 +95,7 @@ function DetailQuoteRequest(props) {
     const response = await put("/maintenanceQuotes", updatedQuote);
     setAddQuote(false);
     setQuoteSent(true);
+    setQuoteRejected(false);
   };
   const updateQuote = async () => {
     if (earliestAvailability === "" || eventType === "") {
@@ -113,6 +115,7 @@ function DetailQuoteRequest(props) {
     const response = await put("/maintenanceQuotes", updatedQuote);
     setEditQuote(false);
     setShowDialog(false);
+    setQuoteRejected(false);
   };
 
   const rejectQuote = async () => {

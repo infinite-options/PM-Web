@@ -8,6 +8,7 @@ import {
   TableBody,
   TableHead,
 } from "@material-ui/core";
+import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import Carousel from "react-multi-carousel";
@@ -43,6 +44,7 @@ import {
   small,
 } from "../../utils/styles";
 import { get, post, put } from "../../utils/api";
+import RescheduleRepair from "../maintenanceComponents/RescheduleRepair";
 
 const useStyles = makeStyles({
   customTable: {
@@ -231,6 +233,7 @@ function ManagerRepairDetail(props) {
       notes: "Request to reschedule",
       scheduled_date: reDate,
       scheduled_time: reTime,
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -255,6 +258,7 @@ function ManagerRepairDetail(props) {
       notes: "Maintenance Scheduled",
       scheduled_date: reDate,
       scheduled_time: reTime,
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -314,6 +318,7 @@ function ManagerRepairDetail(props) {
       priority: priority,
       can_reschedule: canReschedule ? 1 : 0,
       request_status: repair.request_status,
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -351,6 +356,7 @@ function ManagerRepairDetail(props) {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
       request_status: "COMPLETED",
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -1352,7 +1358,8 @@ function ManagerRepairDetail(props) {
                             (quote.quote_status === "ACCEPTED" ||
                               quote.quote_status === "AGREED" ||
                               quote.quote_status === "PAID") &&
-                            (quote.request_status === "SCHEDULED" ||
+                            (quote.request_status === "PROCESSING" ||
+                              quote.request_status === "SCHEDULED" ||
                               quote.request_status === "SCHEDULE" ||
                               quote.request_status === "RESCHEDULE" ||
                               quote.request_status === "FINISHED" ||
@@ -1414,6 +1421,11 @@ function ManagerRepairDetail(props) {
                           <Button
                             style={bluePillButton}
                             onClick={() => setScheduleMaintenance(true)}
+                            // onClick={() =>
+                            //   navigate(`/rescheduleRepair`, {
+                            //     state: { quote: quote },
+                            //   })
+                            // }
                           >
                             Reschedule
                           </Button>
@@ -1474,7 +1486,11 @@ function ManagerRepairDetail(props) {
                       quote.request_status === "RESCHEDULE") &&
                     quote.quote_status === "ACCEPTED" ? (
                       <Row className="mx-2 my-2 p-3">
-                        <Row>
+                        <RescheduleRepair
+                          quotes={quote}
+                          setScheduleMaintenance={setScheduleMaintenance}
+                        />
+                        {/* <Row>
                           <div style={headings}>Reschedule Maintenace</div>
                         </Row>
                         <Form.Group className="mt-3 mb-2">
@@ -1526,7 +1542,7 @@ function ManagerRepairDetail(props) {
                               Cancel
                             </Button>
                           </Col>
-                        </Row>
+                        </Row> */}
                       </Row>
                     ) : (
                       <Row></Row>
