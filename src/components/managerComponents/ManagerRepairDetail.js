@@ -8,6 +8,7 @@ import {
   TableBody,
   TableHead,
 } from "@material-ui/core";
+import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import Carousel from "react-multi-carousel";
@@ -43,6 +44,7 @@ import {
   small,
 } from "../../utils/styles";
 import { get, post, put } from "../../utils/api";
+import RescheduleRepair from "../maintenanceComponents/RescheduleRepair";
 
 const useStyles = makeStyles({
   customTable: {
@@ -231,6 +233,7 @@ function ManagerRepairDetail(props) {
       notes: "Request to reschedule",
       scheduled_date: reDate,
       scheduled_time: reTime,
+      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -255,6 +258,7 @@ function ManagerRepairDetail(props) {
       notes: "Maintenance Scheduled",
       scheduled_date: reDate,
       scheduled_time: reTime,
+      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -314,6 +318,7 @@ function ManagerRepairDetail(props) {
       priority: priority,
       can_reschedule: canReschedule ? 1 : 0,
       request_status: repair.request_status,
+      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -351,6 +356,7 @@ function ManagerRepairDetail(props) {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
       request_status: "COMPLETED",
+      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -1414,12 +1420,12 @@ function ManagerRepairDetail(props) {
                         <Col className="d-flex flex-row justify-content-evenly">
                           <Button
                             style={bluePillButton}
-                            // onClick={() => setScheduleMaintenance(true)}
-                            onClick={() =>
-                              navigate(`/rescheduleRepair`, {
-                                state: { quote: quote },
-                              })
-                            }
+                            onClick={() => setScheduleMaintenance(true)}
+                            // onClick={() =>
+                            //   navigate(`/rescheduleRepair`, {
+                            //     state: { quote: quote },
+                            //   })
+                            // }
                           >
                             Reschedule
                           </Button>
@@ -1480,7 +1486,11 @@ function ManagerRepairDetail(props) {
                       quote.request_status === "RESCHEDULE") &&
                     quote.quote_status === "ACCEPTED" ? (
                       <Row className="mx-2 my-2 p-3">
-                        <Row>
+                        <RescheduleRepair
+                          quotes={quote}
+                          setScheduleMaintenance={setScheduleMaintenance}
+                        />
+                        {/* <Row>
                           <div style={headings}>Reschedule Maintenace</div>
                         </Row>
                         <Form.Group className="mt-3 mb-2">
@@ -1532,7 +1542,7 @@ function ManagerRepairDetail(props) {
                               Cancel
                             </Button>
                           </Col>
-                        </Row>
+                        </Row> */}
                       </Row>
                     ) : (
                       <Row></Row>

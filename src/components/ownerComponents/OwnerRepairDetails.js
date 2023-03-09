@@ -9,6 +9,7 @@ import {
   TableHead,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import moment from "moment";
 import * as ReactBootStrap from "react-bootstrap";
 import Carousel from "react-multi-carousel";
 import AppContext from "../../AppContext";
@@ -40,6 +41,7 @@ import {
 } from "../../utils/styles";
 import { get, put, post } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
+import RescheduleRepair from "../maintenanceComponents/RescheduleRepair";
 const useStyles = makeStyles((theme) => ({
   priorityInactive: {
     opacity: "0.5",
@@ -190,6 +192,7 @@ function OwnerRepairDetails(props) {
       description: description,
       scheduled_date: repair.scheduled_date,
       assigned_worker: repair.assigned_worker,
+      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
 
     const files = imageState[0];
@@ -230,6 +233,7 @@ function OwnerRepairDetails(props) {
       notes: "Request to reschedule",
       scheduled_date: reDate,
       scheduled_time: reTime,
+      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -251,6 +255,7 @@ function OwnerRepairDetails(props) {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
       request_status: "COMPLETED",
+      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -276,6 +281,7 @@ function OwnerRepairDetails(props) {
       notes: "Maintenance Scheduled",
       scheduled_date: reDate,
       scheduled_time: reTime,
+      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -1079,7 +1085,8 @@ function OwnerRepairDetails(props) {
                     )}
                     {scheduleMaintenance ? (
                       <Row className="mx-2 my-2 p-3">
-                        <Row>
+                        <RescheduleRepair quotes={quote} />
+                        {/* <Row>
                           <div style={headings}>Schedule Maintenace</div>
                         </Row>
                         <Form.Group className="mt-3 mb-2">
@@ -1131,7 +1138,7 @@ function OwnerRepairDetails(props) {
                               Cancel
                             </Button>
                           </Col>
-                        </Row>
+                        </Row> */}
                       </Row>
                     ) : (
                       <Row></Row>

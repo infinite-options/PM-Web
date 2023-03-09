@@ -34,6 +34,7 @@ import {
 } from "../../utils/styles";
 import { get, put } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
+import RescheduleRepair from "../maintenanceComponents/RescheduleRepair";
 const useStyles = makeStyles((theme) => ({
   priorityInactive: {
     opacity: "0.5",
@@ -889,7 +890,8 @@ function TenantRepairDetails(props) {
                     )}
                     {scheduleMaintenance ? (
                       <Row className="mx-2 my-2 p-3">
-                        <Row>
+                        <RescheduleRepair quotes={quote} />
+                        {/* <Row>
                           <div style={headings}>Schedule Maintenace</div>
                         </Row>
                         <Form.Group className="mt-3 mb-2">
@@ -941,7 +943,7 @@ function TenantRepairDetails(props) {
                               Cancel
                             </Button>
                           </Col>
-                        </Row>
+                        </Row> */}
                       </Row>
                     ) : (
                       <Row></Row>

@@ -319,6 +319,7 @@ function DetailRepairStatus(props) {
       description: description,
       scheduled_date: repairsDetail[0].scheduled_date,
       assigned_worker: repairsDetail[0].assigned_worker,
+      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
 
     const files = imageState[0];
