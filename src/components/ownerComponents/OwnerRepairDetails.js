@@ -192,7 +192,7 @@ function OwnerRepairDetails(props) {
       description: description,
       scheduled_date: repair.scheduled_date,
       assigned_worker: repair.assigned_worker,
-      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
 
     const files = imageState[0];
@@ -233,7 +233,7 @@ function OwnerRepairDetails(props) {
       notes: "Request to reschedule",
       scheduled_date: reDate,
       scheduled_time: reTime,
-      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -255,7 +255,7 @@ function OwnerRepairDetails(props) {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
       request_status: "COMPLETED",
-      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;
@@ -281,7 +281,7 @@ function OwnerRepairDetails(props) {
       notes: "Maintenance Scheduled",
       scheduled_date: reDate,
       scheduled_time: reTime,
-      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
     let i = 0;

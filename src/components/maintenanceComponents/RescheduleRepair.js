@@ -724,7 +724,7 @@ function RescheduleRepair(props) {
       request_status: "RESCHEDULE",
       scheduled_date: meetDate,
       scheduled_time: meetTime,
-      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const images = JSON.parse(quotes.images);
     for (let i = -1; i < images.length - 1; i++) {

@@ -91,7 +91,7 @@ function MaintenanceQuoteScheduledDetail(props) {
       request_status: "RESCHEDULE",
       scheduled_date: reDate,
       scheduled_time: reTime,
-      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
 
     const images = JSON.parse(quote.images);
@@ -113,7 +113,7 @@ function MaintenanceQuoteScheduledDetail(props) {
       notes: "Maintenance Scheduled",
       scheduled_date: quote.scheduled_date,
       scheduled_time: quote.scheduled_time,
-      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const images = JSON.parse(quote.images);
     for (let i = -1; i < images.length - 1; i++) {
@@ -140,7 +140,7 @@ function MaintenanceQuoteScheduledDetail(props) {
       notes: "Schedule",
       scheduled_date: reDate,
       scheduled_time: reTime,
-      maintenance_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const images = JSON.parse(quote.images);
     for (let i = -1; i < images.length - 1; i++) {
