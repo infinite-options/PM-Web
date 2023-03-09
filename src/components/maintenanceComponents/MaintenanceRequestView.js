@@ -786,6 +786,11 @@ export default function MaintenanceRequestView() {
                       rejected your quote.
                     </Col>
                   </Row>
+                  <Row>
+                    <Col style={subHeading}>
+                      Notes from manager: {quote.notes}
+                    </Col>
+                  </Row>
                 </Container>
                 <Container hidden={!quoteWithdrawn}>
                   <Row

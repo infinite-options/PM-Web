@@ -38,6 +38,9 @@ import {
   orangePill,
   mediumBold,
   smallImg,
+  red,
+  hidden,
+  small,
 } from "../../utils/styles";
 import { get, post, put } from "../../utils/api";
 
@@ -83,6 +86,7 @@ function ManagerRepairDetail(props) {
   const repair = location.state.repair;
   const [reDate, setReDate] = useState("");
   const [reTime, setReTime] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -364,8 +368,19 @@ function ManagerRepairDetail(props) {
     const response = await put("/maintenanceRequests", newRepair, null, files);
     fetchBusinesses();
   };
-
+  const required =
+    errorMessage === "Please fill out all fields" ? (
+      <span style={red} className="ms-1">
+        *
+      </span>
+    ) : (
+      ""
+    );
   const rejectQuoteFunc = async (quote) => {
+    if (messagetoM === "") {
+      setErrorMessage("Please fill out the reason");
+      return;
+    }
     const body = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       notes: messagetoM,
@@ -1422,15 +1437,24 @@ function ManagerRepairDetail(props) {
                       >
                         <Form.Group className="mx-2 my-3">
                           <Form.Label style={subHeading} className="mb-0 ms-2">
-                            Reason for Reject
+                            Reason for Reject{" "}
+                            {messagetoM === "" ? required : ""}
                           </Form.Label>
                           <Form.Control
                             style={squareForm}
-                            placeholder={title}
+                            placeholder=" Reason for Reject"
                             value={messagetoM}
                             onChange={(e) => setMessagetoM(e.target.value)}
                           />
                         </Form.Group>
+                        <div
+                          className="text-center"
+                          style={errorMessage === "" ? hidden : {}}
+                        >
+                          <p style={{ ...red, ...small }}>
+                            {errorMessage || "error"}
+                          </p>
+                        </div>
                         <Row>
                           <Col className="d-flex flex-row justify-content-evenly">
                             <Button
