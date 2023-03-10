@@ -55,33 +55,65 @@ function ServicesProvided(props) {
     service_name: "",
     charge: "",
     per: "Hour",
+    event_type: "1 Hour Job",
+    total_estimate: "",
   };
   const [errorMessage, setErrorMessage] = React.useState("");
 
+  // const calculateEstimate = () => {
+  //   console.log("in calculate estimate");
+
+  //   console.log("in calculate estimate serevicestate", serviceState);
+  //   // console.log(eventType)
+
+  //   if (serviceState !== []) {
+  //     serviceState.forEach((service) => {
+  //       console.log("in calculate estimate service", service);
+  //       let total = 0;
+  //       let hours = parseInt(service.event_type);
+  //       if (
+  //         service.event_type !== undefined &&
+  //         service.event_type.toLowerCase().includes("day")
+  //       ) {
+  //         hours = hours * 24;
+  //       }
+  //       if (service.per.toLocaleLowerCase() === "hour") {
+  //         total = total + parseInt(service.charge) * hours;
+  //       } else if (service.per.toLocaleLowerCase() === "one-time") {
+  //         total = total + parseInt(service.charge);
+  //       }
+  //       service.total_estimate = total;
+  //     });
+  //     // setTotalEstimate(total);
+  //   }
+  // };
   const calculateEstimate = () => {
-    // console.log('***')
-    let total = 0;
-    // console.log(serviceState)
+    console.log("in calculate estimate");
+
+    console.log("in calculate estimate serevicestate", serviceState);
     // console.log(eventType)
-    let hours = parseInt(eventType);
-    if (eventType !== undefined && eventType.toLowerCase().includes("day")) {
-      hours = hours * 24;
-    }
-    if (serviceState === []) {
-      serviceState.forEach((service) => {
-        if (service.per.toLocaleLowerCase() === "hour") {
-          total = total + parseInt(service.charge) * hours;
-        } else if (service.per.toLocaleLowerCase() === "one-time") {
-          total = total + parseInt(service.charge);
-        }
-      });
-      setTotalEstimate(total);
+    if (newService !== null) {
+      console.log("in calculate estimate newservice", newService);
+      let total = 0;
+      let hours = parseInt(newService.event_type);
+      if (
+        newService.event_type !== undefined &&
+        newService.event_type.toLowerCase().includes("day")
+      ) {
+        hours = hours * 24;
+      }
+      if (newService.per.toLocaleLowerCase() === "hour") {
+        total = total + parseInt(newService.charge) * hours;
+      } else if (newService.per.toLocaleLowerCase() === "one-time") {
+        total = total + parseInt(newService.charge);
+      }
+      newService.total_estimate = total;
     }
   };
 
   React.useEffect(() => {
     calculateEstimate();
-  }, [serviceState, eventType]);
+  }, [newService]);
 
   const addService = () => {
     if (
@@ -98,9 +130,9 @@ function ServicesProvided(props) {
     newServiceState.push({ ...newService });
     // console.log(newServiceState);
     setServiceState(newServiceState);
+    calculateEstimate();
     setNewService(null);
     setErrorMessage("");
-    calculateEstimate();
   };
   const cancelEdit = () => {
     setNewService(null);
@@ -141,47 +173,56 @@ function ServicesProvided(props) {
     ) : (
       ""
     );
+  console.log("serviceState", serviceState);
+  console.log("newService", newService);
   return (
-    <Container className="px-2">
-      {serviceState.length > 0 ? (
-        <Table classes={{ root: classes.customTable }} size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>Fee Name</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Per</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {serviceState.map((service, i) => (
-              <TableRow key={i}>
-                <TableCell>{service.service_name}</TableCell>
-                <TableCell>${service.charge}</TableCell>
-
-                <TableCell>{service.per}</TableCell>
-
-                <TableCell>
-                  <img
-                    src={EditIcon}
-                    alt="Edit"
-                    className="px-1 mx-2"
-                    onClick={() => editService(i)}
-                  />
-                  <img
-                    src={DeleteIcon}
-                    alt="Delete Icon"
-                    className="px-1 mx-2"
-                    onClick={() => deleteService(i)}
-                  />
-                </TableCell>
+    <div>
+      <Row className="mx-2">
+        {" "}
+        {serviceState.length > 0 ? (
+          <Table classes={{ root: classes.customTable }} size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>Fee Name</TableCell>
+                <TableCell>Amount</TableCell>
+                <TableCell>Per</TableCell>
+                <TableCell>Hours</TableCell>
+                <TableCell>Total Estimate</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      ) : (
-        ""
-      )}
+            </TableHead>
+            <TableBody>
+              {serviceState.map((service, i) => (
+                <TableRow key={i}>
+                  <TableCell>{service.service_name}</TableCell>
+                  <TableCell>${service.charge}</TableCell>
+
+                  <TableCell>{service.per}</TableCell>
+                  <TableCell>{service.event_type}</TableCell>
+                  <TableCell>${service.total_estimate}</TableCell>
+
+                  <TableCell>
+                    <img
+                      src={EditIcon}
+                      alt="Edit"
+                      className="px-1 mx-2"
+                      onClick={() => editService(i)}
+                    />
+                    <img
+                      src={DeleteIcon}
+                      alt="Delete Icon"
+                      className="px-1 mx-2"
+                      onClick={() => deleteService(i)}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          ""
+        )}
+      </Row>
 
       {newService !== null ? (
         <div>
@@ -204,6 +245,7 @@ function ServicesProvided(props) {
                 </Form.Label>
                 <Form.Control
                   style={squareForm}
+                  min="0"
                   type="number"
                   placeholder="Amount($)"
                   value={newService.charge}
@@ -227,11 +269,30 @@ function ServicesProvided(props) {
                   <option>Hour</option>
                   <option>One-time</option>
                 </Form.Select>
-                {/*<Form.Control style={squareForm} placeholder='Hour' value={newService.per}*/}
-                {/*  onChange={(e) => changeNewService(e, 'per')}/>*/}
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group className="mx-2">
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Type
+                </Form.Label>
+                <Form.Select
+                  style={squareForm}
+                  value={newService.event_type}
+                  onChange={(e) => changeNewService(e, "event_type")}
+                >
+                  <option>1 Hour Job</option>
+                  <option>2 Hour Job</option>
+                  <option>3 Hour Job</option>
+                  <option>4 Hour Job</option>
+                  <option>6 Hour Job</option>
+                  <option>8 Hour Job</option>
+                  <option>1 Day Job</option>
+                </Form.Select>
               </Form.Group>
             </Col>
           </Row>
+
           <div
             className="text-center"
             style={errorMessage === "" ? hidden : {}}
@@ -271,40 +332,7 @@ function ServicesProvided(props) {
           </Button>
         </div>
       )}
-      {serviceState.length !== 0 && businessType !== "MAINTENANCE" ? (
-        <div className="mt-4 mb-4">
-          <Row>
-            <div style={headings}>Event Type</div>
-          </Row>
-          <div>
-            <Form.Group className="mt-2 mb-2">
-              <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                Type
-              </Form.Label>
-              <Form.Select
-                style={squareForm}
-                value={eventType}
-                onChange={(e) => setEventType(e.target.value)}
-              >
-                <option>1 Hour Job</option>
-                <option>2 Hour Job</option>
-                <option>3 Hour Job</option>
-                <option>4 Hour Job</option>
-                <option>6 Hour Job</option>
-                <option>8 Hour Job</option>
-                <option>1 Day Job</option>
-              </Form.Select>
-            </Form.Group>
-          </div>
-        </div>
-      ) : null}
-      {serviceState.length !== 0 && businessType !== "MAINTENANCE" ? (
-        <div className="mt-4 mb-4">
-          <div style={headings}>Total Estimate</div>
-          <div style={subText}>$ {totalEstimate}</div>
-        </div>
-      ) : null}
-    </Container>
+    </div>
   );
 }
 

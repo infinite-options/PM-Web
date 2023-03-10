@@ -44,7 +44,7 @@ function ManagerRepairRequest(props) {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [selectedProperty, setSelectedProperty] = useState(properties[0]);
   const [showSpinner, setShowSpinner] = useState(false);
   const submitForm = async (sp) => {
     if (title === "" || description === "" || priority === "") {
@@ -70,11 +70,10 @@ function ManagerRepairRequest(props) {
       management_buid = management_businesses[0].business_uid;
     }
 
-    // console.log(sp);
-    let selectedProperty = sp === undefined ? properties : JSON.parse(sp);
-    // console.log(typeof JSON.parse(sp));
+    let selProp = sp === undefined ? properties : sp;
+    console.log(selProp);
     const newRequest = {
-      property_uid: selectedProperty.property_uid,
+      property_uid: selProp.property_uid,
       title: title,
       request_type: issueType,
       description: description,
@@ -141,7 +140,7 @@ function ManagerRepairRequest(props) {
           <Form.Select
             style={squareForm}
             value={selectedProperty}
-            onChange={(e) => setSelectedProperty(e.target.value)}
+            onChange={(e) => setSelectedProperty(JSON.parse(e.target.value))}
           >
             <option key="blankChoice" hidden value>
               Search Your Properties

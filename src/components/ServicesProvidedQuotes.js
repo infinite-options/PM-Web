@@ -54,34 +54,62 @@ function ServicesProvidedQuotes(props) {
     service_name: "",
     charge: "",
     per: "Hour",
+    event_type: "1 Hour Job",
+    total_estimate: "",
   };
   const [errorMessage, setErrorMessage] = React.useState("");
 
   const calculateEstimate = () => {
-    // console.log('***')
-    let total = 0;
-    // console.log(serviceState)
+    console.log("in calculate estimate");
+
+    console.log("in calculate estimate serevicestate", serviceState);
     // console.log(eventType)
-    if (eventType !== null) {
-      let hours = parseInt(eventType);
-      if (eventType.toLowerCase().includes("day")) {
+    if (newService !== null) {
+      console.log("in calculate estimate newservice", newService);
+      let total = 0;
+      let hours = parseInt(newService.event_type);
+      if (
+        newService.event_type !== undefined &&
+        newService.event_type.toLowerCase().includes("day")
+      ) {
         hours = hours * 24;
       }
-      serviceState.forEach((service) => {
-        if (service.per.toLocaleLowerCase() === "hour") {
-          total = total + parseInt(service.charge) * hours;
-        } else if (service.per.toLocaleLowerCase() === "one-time") {
-          total = total + parseInt(service.charge);
-        }
-      });
-      setTotalEstimate(total);
+      if (newService.per.toLocaleLowerCase() === "hour") {
+        total = total + parseInt(newService.charge) * hours;
+      } else if (newService.per.toLocaleLowerCase() === "one-time") {
+        total = total + parseInt(newService.charge);
+      }
+      newService.total_estimate = total;
     }
   };
+  const calculateTotalEstimate = () => {
+    // console.log('***')
+    let totalEst = 0;
+    let totalHrs = 0;
+    // console.log(serviceState)
+    // console.log(eventType)
+    let hours = parseInt(eventType);
 
+    if (serviceState !== []) {
+      serviceState.forEach((service) => {
+        totalHrs = totalHrs + parseInt(service.event_type);
+        totalEst = totalEst + parseInt(service.total_estimate);
+      });
+    }
+    setTotalEstimate(totalEst);
+    setEventType(totalHrs);
+  };
+
+  // React.useEffect(() => {
+  //   calculateEstimate();
+  // }, [serviceState, eventType]);
   React.useEffect(() => {
     calculateEstimate();
-  }, [serviceState, eventType]);
-
+    calculateTotalEstimate();
+  }, [newService, serviceState]);
+  console.log(serviceState);
+  console.log(eventType);
+  console.log(totalEstimate);
   const addService = () => {
     if (
       newService.service_name === "" ||
@@ -96,7 +124,7 @@ function ServicesProvidedQuotes(props) {
     setServiceState(newServiceState);
     setNewService(null);
     setErrorMessage("");
-    calculateEstimate();
+    calculateTotalEstimate();
   };
   const cancelEdit = () => {
     setNewService(null);
@@ -146,6 +174,8 @@ function ServicesProvidedQuotes(props) {
               <TableCell>Fee Name</TableCell>
               <TableCell>Amount</TableCell>
               <TableCell>Per</TableCell>
+              <TableCell>Hours</TableCell>
+              <TableCell>Total Estimate</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -156,7 +186,8 @@ function ServicesProvidedQuotes(props) {
                 <TableCell>${service.charge}</TableCell>
 
                 <TableCell>{service.per}</TableCell>
-
+                <TableCell>{service.event_type}</TableCell>
+                <TableCell>${service.total_estimate}</TableCell>
                 <TableCell>
                   <img
                     src={EditIcon}
@@ -199,6 +230,7 @@ function ServicesProvidedQuotes(props) {
                 </Form.Label>
                 <Form.Control
                   style={squareForm}
+                  min="0"
                   type="number"
                   placeholder="Amount($)"
                   value={newService.charge}
@@ -222,8 +254,26 @@ function ServicesProvidedQuotes(props) {
                   <option>Hour</option>
                   <option>One-time</option>
                 </Form.Select>
-                {/*<Form.Control style={squareForm} placeholder='Hour' value={newService.per}*/}
-                {/*  onChange={(e) => changeNewService(e, 'per')}/>*/}
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group className="mx-2">
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Type
+                </Form.Label>
+                <Form.Select
+                  style={squareForm}
+                  value={newService.event_type}
+                  onChange={(e) => changeNewService(e, "event_type")}
+                >
+                  <option>1 Hour Job</option>
+                  <option>2 Hour Job</option>
+                  <option>3 Hour Job</option>
+                  <option>4 Hour Job</option>
+                  <option>6 Hour Job</option>
+                  <option>8 Hour Job</option>
+                  <option>1 Day Job</option>
+                </Form.Select>
               </Form.Group>
             </Col>
           </Row>
@@ -298,19 +348,7 @@ function ServicesProvidedQuotes(props) {
                 <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
                   Type
                 </Form.Label>
-                <Form.Select
-                  style={squareForm}
-                  value={eventType}
-                  onChange={(e) => setEventType(e.target.value)}
-                >
-                  <option>1 Hour Job</option>
-                  <option>2 Hour Job</option>
-                  <option>3 Hour Job</option>
-                  <option>4 Hour Job</option>
-                  <option>6 Hour Job</option>
-                  <option>8 Hour Job</option>
-                  <option>1 Day Job</option>
-                </Form.Select>
+                <div className="mt-2"> {eventType} Hour Job</div>
               </Form.Group>
             </Col>
             <Col>
