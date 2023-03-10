@@ -706,312 +706,191 @@ function TenantRepairDetails(props) {
               )}
             </div>
           )}
+
           {!isEditing && !requestQuote && quotes && quotes.length > 0 && (
             <div className="pb-4 mb-4">
               {quotes &&
                 quotes.length > 0 &&
-                quotes.map((quote, i) => (
-                  <div key={i}>
-                    <hr
-                      style={{
-                        border: "1px dashed #000000",
-                        borderStyle: "none none dashed",
-                        backgroundColor: "white",
-                      }}
-                    />
-                    <Row className="mx-2 my-2" style={headings}>
-                      <div>{quote.business_name}</div>
-                    </Row>
-                    {quote.quote_status === "ACCEPTED" ||
-                    quote.quote_status === "SENT" ||
-                    quote.quote_status === "REJECTED" ? (
-                      <div className="mx-2 my-2 p-3">
-                        <Row>
-                          <Table
-                            responsive="md"
-                            classes={{ root: classes.customTable }}
-                            size="small"
-                          >
-                            <TableHead>
-                              <TableRow>
-                                <TableCell align="center">
-                                  Service Charges
-                                </TableCell>
-                                <TableCell align="center">Event Type</TableCell>
-                                {/* <TableCell align="center">
+                quotes.map((quote, i) =>
+                  quote.quote_status === "AGREED" ||
+                  quote.quote_status === "PAID" ? (
+                    <div key={i}>
+                      <hr
+                        style={{
+                          border: "1px dashed #000000",
+                          borderStyle: "none none dashed",
+                          backgroundColor: "white",
+                        }}
+                      />
+                      <Row className="mx-2 my-2" style={headings}>
+                        <div>{quote.business_name}</div>
+                      </Row>
+                      {quote.quote_status === "ACCEPTED" ||
+                      quote.quote_status === "AGREED" ||
+                      quote.quote_status === "SENT" ||
+                      quote.quote_status === "REJECTED" ? (
+                        <div className="mx-2 my-2 p-3">
+                          <Row>
+                            <Table
+                              responsive="md"
+                              classes={{ root: classes.customTable }}
+                              size="small"
+                            >
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell align="center">
+                                    Service Charges
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    Event Type
+                                  </TableCell>
+                                  {/* <TableCell align="center">
                                   Total Estimate
                                 </TableCell> */}
-                                <TableCell align="center">
-                                  Earliest Availability
-                                </TableCell>
-                                <TableCell align="center">
-                                  Scheduled Date
-                                </TableCell>
-                                <TableCell align="center">
-                                  Scheduled Time
-                                </TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              <TableRow>
-                                <TableCell align="center">
-                                  {" "}
-                                  {quote.services_expenses &&
-                                    quote.services_expenses.length > 0 &&
-                                    JSON.parse(quote.services_expenses).map(
-                                      (service, j) => (
-                                        <div className="pt-1 mb-2 align-items-center">
-                                          <div
-                                            style={
-                                              (subHeading,
-                                              { textAlign: "center" })
-                                            }
-                                          >
-                                            {service.service_name}
+                                  <TableCell align="center">
+                                    Earliest Availability
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    Scheduled Date
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    Scheduled Time
+                                  </TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                <TableRow>
+                                  <TableCell align="center">
+                                    {" "}
+                                    {quote.services_expenses &&
+                                      quote.services_expenses.length > 0 &&
+                                      JSON.parse(quote.services_expenses).map(
+                                        (service, j) => (
+                                          <div className="pt-1 mb-2 align-items-center">
+                                            <div
+                                              style={
+                                                (subHeading,
+                                                { textAlign: "center" })
+                                              }
+                                            >
+                                              {service.service_name}
+                                            </div>
                                           </div>
-                                        </div>
-                                      )
-                                    )}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  {quote.event_type}
-                                </TableCell>
-                                {/* <TableCell align="center">
+                                        )
+                                      )}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {" "}
+                                    {quote.event_type}
+                                  </TableCell>
+                                  {/* <TableCell align="center">
                                   {" "}
                                   $ {quote.total_estimate}
                                 </TableCell> */}
-                                <TableCell align="center">
-                                  {" "}
-                                  {
-                                    String(quote.earliest_availability).split(
-                                      " "
-                                    )[0]
-                                  }
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  {repair.scheduled_date !== null &&
-                                  repair.scheduled_date !== "null"
-                                    ? repair.scheduled_date.split(" ")[0]
-                                    : "Not Scheduled"}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  {repair.scheduled_time !== null &&
-                                  repair.scheduled_time !== "null"
-                                    ? repair.scheduled_time
-                                    : "Not Scheduled"}
-                                </TableCell>
-                              </TableRow>
-                            </TableBody>
-                          </Table>
-                        </Row>
-                      </div>
-                    ) : quote.quote_status === "REQUESTED" ||
-                      quote.quote_status === "REFUSED" ||
-                      quote.quote_status === "WITHDRAW" ? (
-                      ""
-                    ) : (
-                      ""
-                    )}
+                                  <TableCell align="center">
+                                    {" "}
+                                    {
+                                      String(quote.earliest_availability).split(
+                                        " "
+                                      )[0]
+                                    }
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {" "}
+                                    {repair.scheduled_date !== null &&
+                                    repair.scheduled_date !== "null"
+                                      ? repair.scheduled_date.split(" ")[0]
+                                      : "Not Scheduled"}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {" "}
+                                    {repair.scheduled_time !== null &&
+                                    repair.scheduled_time !== "null"
+                                      ? repair.scheduled_time
+                                      : "Not Scheduled"}
+                                  </TableCell>
+                                </TableRow>
+                              </TableBody>
+                            </Table>
+                          </Row>
+                        </div>
+                      ) : quote.quote_status === "REQUESTED" ||
+                        quote.quote_status === "REFUSED" ||
+                        quote.quote_status === "WITHDRAW" ? (
+                        ""
+                      ) : (
+                        ""
+                      )}
 
-                    {/* <Row
-                      hidden={quote.quote_status !== "SENT"}
-                      className="pt-1 mb-4"
-                    >
-                      <Col className="d-flex flex-row justify-content-evenly">
-                        <Button
-                          style={bluePillButton}
-                          onClick={() => acceptQuote(quote)}
-                        >
-                          Accept Quote
-                        </Button>
-                      </Col>
-                      <Col className="d-flex flex-row justify-content-evenly">
-                        <Button
-                          style={redPillButton}
-                          onClick={() => rejectQuote(quote)}
-                        >
-                          Reject Quote
-                        </Button>
-                      </Col>
-                    </Row> */}
-
-                    {/* <Row
-                      hidden={quote.quote_status === "SENT"}
-                      className="pt-1 mb-4"
-                    >
-                      <Col className="d-flex flex-row justify-content-evenly">
-                        <Button style={orangePill}>
-                           {quote.quote_status === "REQUESTED"
-                            ? "Waiting for quote from business"
-                            : quote.quote_status === "REJECTED"
-                            ? "You've Rejected the Quote"
-                            : quote.quote_status === "ACCEPTED" &&
-                              quote.request_status !== "SCHEDULED"
-                            ? "You've Accepted the Quote"
-                            : quote.quote_status === "SENT"
-                            ? "Waiting for quote from business"
-                            : quote.quote_status === "REFUSED"
-                            ? "Business refused to send a quote"
-                            : quote.quote_status === "ACCEPTED" &&
-                              quote.request_status === "SCHEDULED"
-                            ? "Maintenace Scheduled"
-                            : "Another quote accepted"}
-                        </Button>
-                      </Col>
-                    </Row> */}
-                    {!scheduleMaintenance &&
-                    repair.can_reschedule &&
-                    (quote.request_status === "SCHEDULE" ||
-                      quote.request_status === "RESCHEDULE") &&
-                    quote.quote_status === "ACCEPTED" ? (
-                      <Row className="pt-1">
-                        <Col className="d-flex flex-row justify-content-evenly">
-                          <Button
-                            style={bluePillButton}
-                            onClick={() => acceptSchedule(quote)}
-                          >
-                            Accept
-                          </Button>
-                        </Col>
-                        <Col className="d-flex flex-row justify-content-evenly">
-                          <Button
-                            style={bluePillButton}
-                            onClick={() => setScheduleMaintenance(true)}
-                          >
-                            Reschedule
-                          </Button>
-                        </Col>
-                      </Row>
-                    ) : (
-                      <Row></Row>
-                    )}
-                    {scheduleMaintenance ? (
-                      <Row className="mx-2 my-2 p-3">
-                        <RescheduleRepair quotes={quote} />
-                        {/* <Row>
-                          <div style={headings}>Schedule Maintenace</div>
-                        </Row>
-                        <Form.Group className="mt-3 mb-2">
-                          <Form.Label
-                            style={formLabel}
-                            as="h5"
-                            className="ms-1 mb-0"
-                          >
-                            Date
-                          </Form.Label>
-                          <Form.Control
-                            style={{ borderRadius: 0 }}
-                            type="date"
-                            value={reDate}
-                            onChange={(e) => setReDate(e.target.value)}
-                          />
-                        </Form.Group>
-                        <Form.Group className="mt-3 mb-2">
-                          <Form.Label
-                            style={formLabel}
-                            as="h5"
-                            className="ms-1 mb-0"
-                          >
-                            Time
-                          </Form.Label>
-                          <Form.Control
-                            style={{ borderRadius: 0 }}
-                            type="time"
-                            value={reTime}
-                            onChange={(e) => setReTime(e.target.value)}
-                          />
-                        </Form.Group>
-                        <Row className="mt-4">
-                          <Col className="d-flex justify-content-evenly">
+                      {!scheduleMaintenance &&
+                      repair.can_reschedule &&
+                      (quote.request_status === "SCHEDULE" ||
+                        quote.request_status === "RESCHEDULE") &&
+                      quote.quote_status === "ACCEPTED" ? (
+                        <Row className="pt-1">
+                          <Col className="d-flex flex-row justify-content-evenly">
                             <Button
                               style={bluePillButton}
-                              onClick={rescheduleRepair}
+                              onClick={() => acceptSchedule(quote)}
                             >
-                              Schedule Maintenance
+                              Accept
                             </Button>
                           </Col>
-                        </Row>
-                        <Row className="mt-3">
-                          <Col className="d-flex justify-content-evenly">
+                          <Col className="d-flex flex-row justify-content-evenly">
                             <Button
-                              style={redPillButton}
-                              onClick={() => setScheduleMaintenance(false)}
+                              style={bluePillButton}
+                              onClick={() => setScheduleMaintenance(true)}
                             >
-                              Cancel
+                              Reschedule
                             </Button>
                           </Col>
-                        </Row> */}
-                      </Row>
-                    ) : (
-                      <Row></Row>
-                    )}
-                    {finishMaintenance &&
-                    repair.request_created_by === user.tenant_id[0].tenant_id &&
-                    JSON.parse(quote.maintenance_images) !== null &&
-                    quote.request_status === "FINISHED" ? (
-                      <Row className="mx-2 my-2 p-3">
-                        <Row>
-                          <div style={headings}>
-                            Images Uploaded by Maintenance
-                          </div>
                         </Row>
-                        <Row className=" d-flex align-items-center justify-content-center m-3">
-                          {JSON.parse(quote.maintenance_images).length === 0 ? (
-                            <img
-                              src={RepairImg}
-                              alt="Property"
-                              style={{
-                                width: "200px",
-                                height: "200px",
-                                objectFit: "cover",
-                              }}
-                            />
-                          ) : JSON.parse(quote.maintenance_images).length >
-                            4 ? (
-                            <Carousel
-                              responsive={responsive}
-                              infinite={true}
-                              arrows={true}
-                              partialVisible={false}
-                              // className=" d-flex align-items-center justify-content-center"
-                            >
-                              {JSON.parse(quote.maintenance_images).map(
-                                (image) => {
-                                  return (
-                                    // <div className="d-flex align-items-center justify-content-center">
-                                    <img
-                                      // key={Date.now()}
-                                      src={`${image}?${Date.now()}`}
-                                      // onClick={() =>
-                                      //   showImage(`${image}?${Date.now()}`)
-                                      // }
-                                      style={{
-                                        width: "200px",
-                                        height: "200px",
-                                        objectFit: "cover",
-                                      }}
-                                    />
-                                    // </div>
-                                  );
-                                }
-                              )}
-                            </Carousel>
-                          ) : JSON.parse(quote.maintenance_images).length <
-                            4 ? (
-                            <Carousel
-                              responsive={responsive}
-                              infinite={true}
-                              arrows={true}
-                              partialVisible={false}
-                              className=" d-flex align-items-center justify-content-center"
-                            >
-                              {JSON.parse(quote.maintenance_images).map(
-                                (image) => {
-                                  return (
-                                    <div className="d-flex align-items-center justify-content-center">
+                      ) : (
+                        <Row></Row>
+                      )}
+                      {scheduleMaintenance ? (
+                        <Row className="mx-2 my-2 p-3">
+                          <RescheduleRepair quotes={quote} />
+                        </Row>
+                      ) : (
+                        <Row></Row>
+                      )}
+                      {finishMaintenance &&
+                      repair.request_created_by ===
+                        user.tenant_id[0].tenant_id &&
+                      JSON.parse(quote.maintenance_images) !== null &&
+                      quote.request_status === "FINISHED" ? (
+                        <Row className="mx-2 my-2 p-3">
+                          <Row>
+                            <div style={headings}>
+                              Images Uploaded by Maintenance
+                            </div>
+                          </Row>
+                          <Row className=" d-flex align-items-center justify-content-center m-3">
+                            {JSON.parse(quote.maintenance_images).length ===
+                            0 ? (
+                              <img
+                                src={RepairImg}
+                                alt="Property"
+                                style={{
+                                  width: "200px",
+                                  height: "200px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            ) : JSON.parse(quote.maintenance_images).length >
+                              4 ? (
+                              <Carousel
+                                responsive={responsive}
+                                infinite={true}
+                                arrows={true}
+                                partialVisible={false}
+                                // className=" d-flex align-items-center justify-content-center"
+                              >
+                                {JSON.parse(quote.maintenance_images).map(
+                                  (image) => {
+                                    return (
+                                      // <div className="d-flex align-items-center justify-content-center">
                                       <img
                                         // key={Date.now()}
                                         src={`${image}?${Date.now()}`}
@@ -1024,44 +903,77 @@ function TenantRepairDetails(props) {
                                           objectFit: "cover",
                                         }}
                                       />
-                                    </div>
-                                  );
-                                }
-                              )}
-                            </Carousel>
-                          ) : (
-                            ""
-                          )}
+                                      // </div>
+                                    );
+                                  }
+                                )}
+                              </Carousel>
+                            ) : JSON.parse(quote.maintenance_images).length <
+                              4 ? (
+                              <Carousel
+                                responsive={responsive}
+                                infinite={true}
+                                arrows={true}
+                                partialVisible={false}
+                                className=" d-flex align-items-center justify-content-center"
+                              >
+                                {JSON.parse(quote.maintenance_images).map(
+                                  (image) => {
+                                    return (
+                                      <div className="d-flex align-items-center justify-content-center">
+                                        <img
+                                          // key={Date.now()}
+                                          src={`${image}?${Date.now()}`}
+                                          // onClick={() =>
+                                          //   showImage(`${image}?${Date.now()}`)
+                                          // }
+                                          style={{
+                                            width: "200px",
+                                            height: "200px",
+                                            objectFit: "cover",
+                                          }}
+                                        />
+                                      </div>
+                                    );
+                                  }
+                                )}
+                              </Carousel>
+                            ) : (
+                              ""
+                            )}
+                          </Row>
+                          <Row
+                            className="pt-1 mb-4"
+                            style={{
+                              background: "#F3F3F3 0% 0% no-repeat padding-box",
+                              borderRadius: "10px",
+                              opacity: 1,
+                            }}
+                          >
+                            <div style={subHeading}>Notes</div>
+                            <div style={subText}>{quote.notes}</div>
+                          </Row>
+                          <Row>
+                            <Col className="d-flex flex-row justify-content-evenly">
+                              {" "}
+                              <Button
+                                style={bluePillButton}
+                                onClick={() => CompleteMaintenance()}
+                              >
+                                Completed
+                              </Button>
+                            </Col>
+                          </Row>
                         </Row>
-                        <Row
-                          className="pt-1 mb-4"
-                          style={{
-                            background: "#F3F3F3 0% 0% no-repeat padding-box",
-                            borderRadius: "10px",
-                            opacity: 1,
-                          }}
-                        >
-                          <div style={subHeading}>Notes</div>
-                          <div style={subText}>{quote.notes}</div>
-                        </Row>
-                        <Row>
-                          <Col className="d-flex flex-row justify-content-evenly">
-                            {" "}
-                            <Button
-                              style={bluePillButton}
-                              onClick={() => CompleteMaintenance()}
-                            >
-                              Completed
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Row>
-                    ) : (
-                      <Row></Row>
-                    )}
-                    <hr />
-                  </div>
-                ))}
+                      ) : (
+                        <Row></Row>
+                      )}
+                      <hr />
+                    </div>
+                  ) : (
+                    ""
+                  )
+                )}
             </div>
           )}
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">

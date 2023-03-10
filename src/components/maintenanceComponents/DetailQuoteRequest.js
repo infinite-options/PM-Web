@@ -283,6 +283,31 @@ function DetailQuoteRequest(props) {
             <Button
               hidden={
                 addQuote ||
+                quote.quote_status === "SENT" ||
+                quote.quote_status === "ACCEPTED" ||
+                quote.quote_status === "AGREED" ||
+                quote.quote_status === "PAID" ||
+                quote.quote_status === "REJECTED" ||
+                quote.quote_status === "WITHDRAWN"
+              }
+              variant="outline-primary"
+              style={redPillButton}
+              onClick={() => {
+                setOnConfirm(() => rejectQuote);
+                setDialogText(
+                  "Your quote will be withdrawn and the request rejected"
+                );
+                setShowDialog(true);
+              }}
+            >
+              Decline to Quote
+            </Button>
+          </Col>
+          <Col className="d-flex flex-row justify-content-evenly mb-1">
+            <Button
+              hidden={
+                addQuote ||
+                quote.quote_status === "REQUESTED" ||
                 quote.quote_status === "ACCEPTED" ||
                 quote.quote_status === "AGREED" ||
                 quote.quote_status === "PAID" ||

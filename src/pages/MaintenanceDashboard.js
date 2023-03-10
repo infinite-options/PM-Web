@@ -534,7 +534,7 @@ function MaintenanceDashboard(props) {
               >
                 <Row className="m-3">
                   <Col>
-                    <h3>Maintenance Requests Requested</h3>
+                    <h3>Maintenance Quotes Requested</h3>
                   </Col>
                   <Col></Col>
                 </Row>
@@ -739,7 +739,7 @@ function MaintenanceDashboard(props) {
               >
                 <Row className="m-3">
                   <Col>
-                    <h3>Maintenance Requests Sent</h3>
+                    <h3>Maintenance Quotes Sent</h3>
                   </Col>
                   <Col></Col>
                 </Row>
@@ -944,7 +944,7 @@ function MaintenanceDashboard(props) {
               >
                 <Row className="m-3">
                   <Col>
-                    <h3>Maintenance Requests Accepted</h3>
+                    <h3>Maintenance Quotes Accepted</h3>
                   </Col>
                   <Col></Col>
                 </Row>
@@ -1559,7 +1559,7 @@ function MaintenanceDashboard(props) {
               >
                 <Row className="m-3">
                   <Col>
-                    <h3>Maintenance Requests Rejected</h3>
+                    <h3>Maintenance Quotes Rejected</h3>
                   </Col>
                   <Col></Col>
                 </Row>
@@ -1764,7 +1764,7 @@ function MaintenanceDashboard(props) {
               >
                 <Row className="m-3">
                   <Col>
-                    <h3>Maintenance Requests Refused</h3>
+                    <h3>Maintenance Quotes Refused</h3>
                   </Col>
                   <Col></Col>
                 </Row>
