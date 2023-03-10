@@ -374,6 +374,38 @@ function ManagerRepairDetail(props) {
     const response = await put("/maintenanceRequests", newRepair, null, files);
     fetchBusinesses();
   };
+  const CancelMaintenance = async () => {
+    const newRepair = {
+      maintenance_request_uid: repair.maintenance_request_uid,
+      request_status: "COMPLETED",
+      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+    };
+    const files = imageState[0];
+    let i = 0;
+    for (const file of imageState[0]) {
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      if (file.file !== null) {
+        newRepair[key] = file.file;
+      } else {
+        newRepair[key] = file.image;
+      }
+    }
+
+    // console.log("Repair Object to be updated", newRepair);
+    setShowSpinner(true);
+    const response = await put("/maintenanceRequests", newRepair, null, files);
+    repair.quotes.forEach(async (quote) => {
+      if (quote.quote_status === "REQUESTED" || quote.quote_status === "SENT") {
+        const body = {
+          maintenance_quote_uid: quote.maintenance_quote_uid,
+          quote_status: "WITHDRAWN",
+        };
+        const response = await put("/maintenanceQuotes", body);
+      }
+    });
+    setShowSpinner(false);
+    navigate(-1);
+  };
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -391,6 +423,14 @@ function ManagerRepairDetail(props) {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       notes: messagetoM,
       quote_status: "REJECTED",
+    };
+    const response = await put("/maintenanceQuotes", body);
+    fetchBusinesses();
+  };
+  const withdrawQuoteFunc = async (quote) => {
+    const body = {
+      maintenance_quote_uid: quote.maintenance_quote_uid,
+      quote_status: "WITHDRAWN",
     };
     const response = await put("/maintenanceQuotes", body);
     fetchBusinesses();
@@ -1400,8 +1440,26 @@ function ManagerRepairDetail(props) {
                             : quote.quote_status === "PAID" &&
                               quote.request_status === "COMPLETED"
                             ? "Maintenance Paid"
+                            : quote.quote_status === "WITHDRAWN" &&
+                              quote.request_status === "PROCESSING"
+                            ? "Quote Request Withdrawn"
                             : "Another quote accepted"}
                         </Button>
+                      </Col>
+                    </Row>
+                    <Row className="pt-1 mb-4">
+                      <Col className="d-flex flex-row justify-content-evenly">
+                        {" "}
+                        {quote.quote_status === "REQUESTED" ? (
+                          <Button
+                            style={bluePillButton}
+                            onClick={() => withdrawQuoteFunc(quote)}
+                          >
+                            Withdraw Quote
+                          </Button>
+                        ) : (
+                          ""
+                        )}
                       </Col>
                     </Row>
                     {!scheduleMaintenance &&
@@ -1661,6 +1719,28 @@ function ManagerRepairDetail(props) {
                   </div>
                 ))}
             </div>
+          )}
+          {!edit ? (
+            <Row className="pt-1 mt-3 mb-2">
+              {showSpinner ? (
+                <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                  <ReactBootStrap.Spinner animation="border" role="status" />
+                </div>
+              ) : (
+                ""
+              )}
+              <Col className="d-flex flex-row justify-content-evenly">
+                <Button
+                  style={pillButton}
+                  variant="outline-primary"
+                  onClick={() => CancelMaintenance()}
+                >
+                  Cancel Maintenance
+                </Button>
+              </Col>
+            </Row>
+          ) : (
+            ""
           )}
         </div>
       </div>
