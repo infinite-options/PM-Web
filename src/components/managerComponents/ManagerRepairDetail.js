@@ -377,7 +377,7 @@ function ManagerRepairDetail(props) {
   const CancelMaintenance = async () => {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
-      request_status: "COMPLETED",
+      request_status: "CANCELLED",
       request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
     };
     const files = imageState[0];
@@ -1443,6 +1443,8 @@ function ManagerRepairDetail(props) {
                             : quote.quote_status === "WITHDRAWN" &&
                               quote.request_status === "PROCESSING"
                             ? "Quote Request Withdrawn"
+                            : quote.request_status === "CANCELLED"
+                            ? "Maintenance Request Cancelled"
                             : "Another quote accepted"}
                         </Button>
                       </Col>
