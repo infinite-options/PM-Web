@@ -6,6 +6,7 @@ import { Row, Col, Button } from "react-bootstrap";
 import Grid from "@mui/material/Grid";
 import Calendar from "react-calendar";
 import AppContext from "../../AppContext";
+import * as ReactBootStrap from "react-bootstrap";
 import MaintenanceFooter from "./MaintenanceFooter";
 import Header from "../Header";
 import SideBar from "./SideBar";
@@ -20,7 +21,7 @@ import {
   subText,
 } from "../../utils/styles";
 import { put } from "../../utils/api";
-import "../calendar.css";
+import "./calendar.css";
 
 function RescheduleRepair(props) {
   const { userData } = useContext(AppContext);
@@ -67,7 +68,7 @@ function RescheduleRepair(props) {
   const [meetDate, setMeetDate] = useState("");
   const [meetTime, setMeetTime] = useState("");
   const [attendees, setAttendees] = useState([{ email: "" }]);
-
+  const [showSpinner, setShowSpinner] = useState(false);
   const [accessTokenTenant, setAccessTokenTenant] = useState("");
   const [accessTokenMaintenance, setAccessTokenMaintenance] = useState("");
   const [userEmail, setUserEmail] = useState("");
@@ -718,13 +719,13 @@ function RescheduleRepair(props) {
 
   const scheduleRequest = async () => {
     // console.log("selected", meetTime, dateString);
-
+    setShowSpinner(true);
     let meeting = {
       maintenance_request_uid: quotes.maintenance_request_uid,
       request_status: "RESCHEDULE",
       scheduled_date: meetDate,
       scheduled_time: meetTime,
-      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: new Date(),
     };
     const images = JSON.parse(quotes.images);
     for (let i = -1; i < images.length - 1; i++) {
@@ -796,6 +797,7 @@ function RescheduleRepair(props) {
       });
 
     setAttendees([{ email: "" }]);
+    setShowSpinner(false);
     navigate(-1);
     // setScheduleMaintenance(false);
   }
@@ -890,7 +892,13 @@ function RescheduleRepair(props) {
           ) : (
             <div></div>
           )}
-
+          {showSpinner ? (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
+            </div>
+          ) : (
+            ""
+          )}
           <div
             hidden={!buttonSelect}
             style={{

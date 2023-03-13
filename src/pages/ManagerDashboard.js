@@ -487,7 +487,7 @@ export default function ManagerDashboard() {
     {
       id: "request_status",
       numeric: false,
-      label: "Status",
+      label: "Request Status",
     },
     {
       id: "title",
@@ -517,7 +517,7 @@ export default function ManagerDashboard() {
     {
       id: "assigned_business",
       numeric: false,
-      label: "Assigned",
+      label: "Assigned (REC/REQ)",
     },
 
     {
@@ -1034,7 +1034,7 @@ export default function ManagerDashboard() {
                                         >
                                           {property.tenant_refused_applications
                                             .length > 0
-                                            ? `${property.forwarded_applications.length} Tenat(s) refused the lease`
+                                            ? `${property.tenant_refused_applications.length} Tenant(s) refused the lease`
                                             : ""}
                                         </p>
                                       </div>
@@ -1618,7 +1618,7 @@ export default function ManagerDashboard() {
                                       >
                                         {property.tenant_refused_applications
                                           .length > 0
-                                          ? "Tenant refused the lease"
+                                          ? `${property.tenant_refused_applications.length} Tenant(s) refused the lease`
                                           : ""}
                                       </p>
                                     </div>
@@ -2024,22 +2024,22 @@ export default function ManagerDashboard() {
                               align="center"
                             >
                               {request.new_quotes.length > 0
-                                ? `${request.quotes.length} requested quotes`
+                                ? `Quotes REQUESTED : ${request.quotes.length}`
                                 : ""}
                               <br></br>
                               {request.sent_quotes.length > 0
-                                ? `${request.sent_quotes.length} quotes received`
+                                ? `Quotes SENT: ${request.sent_quotes.length} `
                                 : request.accepted_quotes.length > 0
-                                ? `${request.accepted_quotes.length} quotes accepted`
+                                ? `QUOTE ACCEPTED`
                                 : request.schedule_quotes.length > 0
-                                ? `${request.schedule_quotes.length} quote requested to schedule`
+                                ? `QUOTE ACCEPTED`
                                 : request.reschedule_quotes.length > 0
-                                ? `${request.reschedule_quotes.length} requested to reschedule quotes`
+                                ? `QUOTE ACCEPTED`
                                 : request.scheduled_quotes.length > 0
-                                ? `${request.scheduled_quotes.length} quotes scheduled`
+                                ? `QUOTE AGREED`
                                 : request.paid_quotes.length > 0
-                                ? `${request.paid_quotes.length} quote paid`
-                                : ""}
+                                ? `QUOTE PAID`
+                                : "NO QUOTES REQUESTED"}
                             </TableCell>
 
                             <TableCell

@@ -55,13 +55,15 @@ function DetailQuoteRequest(props) {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [sendManager, setSendManager] = useState(false);
-  const [serviceState, setServiceState] = React.useState([]);
-  const [totalEstimate, setTotalEstimate] = React.useState(0);
+  const [serviceState, setServiceState] = useState([]);
+  const [totalEstimate, setTotalEstimate] = useState(0);
   const [earliestAvailability, setEarliestAvailability] =
     useState("No date selected");
-  const [eventType, setEventType] = React.useState("1 Hour Job");
+  const [eventType, setEventType] = useState("1 Hour Job");
   const [showDialog, setShowDialog] = useState(false);
+  const [withdrawQuote, setWithdrawQuote] = useState(false);
   const [dialogText, setDialogText] = useState("");
+  const [message, setMessage] = useState("");
   const [onConfirm, setOnConfirm] = useState(null);
   const onCancel = () => setShowDialog(false);
   const loadQuote = () => {
@@ -69,7 +71,7 @@ function DetailQuoteRequest(props) {
       .toISOString()
       .slice(0, 10);
     setEarliestAvailability(earliest_availability);
-
+    setMessage(quote.notes);
     setServiceState(JSON.parse(quote.services_expenses));
     setEventType(quote.event_type);
   };
@@ -90,7 +92,9 @@ function DetailQuoteRequest(props) {
       total_estimate: totalEstimate,
       earliest_availability: earliestAvailability,
       quote_status: "SENT",
-      event_type: eventType,
+      event_type: eventType + " Hour Job",
+      notes: message,
+      quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", updatedQuote);
     setAddQuote(false);
@@ -109,8 +113,10 @@ function DetailQuoteRequest(props) {
       services_expenses: serviceState,
       total_estimate: totalEstimate,
       earliest_availability: earliestAvailability,
-      event_type: eventType,
+      event_type: eventType + " Hour Job",
       quote_status: "SENT",
+      notes: message,
+      quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", updatedQuote);
     setEditQuote(false);
@@ -119,14 +125,22 @@ function DetailQuoteRequest(props) {
   };
 
   const rejectQuote = async () => {
+    if (message === "") {
+      setErrorMessage("Please fill out the reason");
+      return;
+    }
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "REFUSED",
+      notes: message,
+      quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", updatedQuote);
     // navigate("/maintenance");
-    setShowDialog(false);
+
+    setWithdrawQuote(false);
     setQuoteRefused(true);
+    setShowDialog(false);
   };
 
   const required =
@@ -150,7 +164,8 @@ function DetailQuoteRequest(props) {
       quote.quote_status === "ACCEPTED" ||
       quote.quote_status === "AGREED" ||
       quote.quote_status === "PAID" ||
-      quote.quote_status === "REJECTED" ? (
+      quote.quote_status === "REJECTED" ||
+      quote.services_expenses !== null ? (
         <Container className="pt-1 mb-4">
           <div>
             <Row>
@@ -200,15 +215,45 @@ function DetailQuoteRequest(props) {
                 </div>
               </div>
             )}
+            {addQuote || editQuote ? (
+              <Form.Group
+                className="mt-3 mb-4 p-2"
+                style={{
+                  background: "#F3F3F3 0% 0% no-repeat padding-box",
+                  borderRadius: "5px",
+                }}
+              >
+                <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                  Message
+                </Form.Label>
+                <Form.Control
+                  style={{ borderRadius: 0 }}
+                  defaultValue={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Enter Message"
+                />
+              </Form.Group>
+            ) : (
+              <div className="mt-2 mx-2 mb-4">
+                <div>
+                  <Form.Group className="mt-2 mb-2">
+                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                      Message
+                    </Form.Label>
+                    <div> {message}</div>
+                  </Form.Group>
+                </div>
+              </div>
+            )}
 
-            <div
-              className="text-center"
-              style={errorMessage === "" ? hidden : {}}
-            >
-              <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
-            </div>
             {addQuote ? (
               <div className="mt-2 mx-2 mb-4" hidden={sendManager}>
+                <div
+                  className="text-center"
+                  style={errorMessage === "" ? hidden : {}}
+                >
+                  <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
+                </div>
                 <Row>
                   <Col
                     style={{
@@ -288,16 +333,18 @@ function DetailQuoteRequest(props) {
                 quote.quote_status === "AGREED" ||
                 quote.quote_status === "PAID" ||
                 quote.quote_status === "REJECTED" ||
-                quote.quote_status === "WITHDRAWN"
+                quote.quote_status === "WITHDRAWN" ||
+                withdrawQuote
               }
               variant="outline-primary"
               style={redPillButton}
               onClick={() => {
-                setOnConfirm(() => rejectQuote);
-                setDialogText(
-                  "Your quote will be withdrawn and the request rejected"
-                );
-                setShowDialog(true);
+                setWithdrawQuote(true);
+                // setOnConfirm(() => rejectQuote);
+                // setDialogText(
+                //   "Your quote will be withdrawn and the request rejected"
+                // );
+                // setShowDialog(true);
               }}
             >
               Decline to Quote
@@ -312,24 +359,99 @@ function DetailQuoteRequest(props) {
                 quote.quote_status === "AGREED" ||
                 quote.quote_status === "PAID" ||
                 quote.quote_status === "REJECTED" ||
-                quote.quote_status === "WITHDRAWN"
+                quote.quote_status === "WITHDRAWN" ||
+                withdrawQuote
               }
               variant="outline-primary"
               style={redPillButton}
               onClick={() => {
-                setOnConfirm(() => rejectQuote);
-                setDialogText(
-                  "Your quote will be withdrawn and the request rejected"
-                );
-                setShowDialog(true);
+                setWithdrawQuote(true);
+                // setOnConfirm(() => rejectQuote);
+                // setDialogText(
+                //   "Your quote will be withdrawn and the request rejected"
+                // );
+                // setShowDialog(true);
               }}
             >
               Withdraw Quote
             </Button>
           </Col>
+          {withdrawQuote ? (
+            <Col>
+              <Form.Group
+                className="mt-3 mb-4 p-2"
+                style={{
+                  background: "#F3F3F3 0% 0% no-repeat padding-box",
+                  borderRadius: "5px",
+                }}
+              >
+                <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                  Message {message === "" ? required : ""}
+                </Form.Label>
+                <Form.Control
+                  style={{ borderRadius: 0 }}
+                  defaultValue={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Enter Message"
+                />
+              </Form.Group>
+              <div
+                className="text-center"
+                style={errorMessage === "" ? hidden : {}}
+              >
+                <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
+              </div>
+              <Button
+                hidden={
+                  addQuote ||
+                  quote.quote_status === "REQUESTED" ||
+                  quote.quote_status === "ACCEPTED" ||
+                  quote.quote_status === "AGREED" ||
+                  quote.quote_status === "PAID" ||
+                  quote.quote_status === "REJECTED" ||
+                  quote.quote_status === "WITHDRAWN"
+                }
+                variant="outline-primary"
+                style={redPillButton}
+                onClick={() => {
+                  setOnConfirm(() => rejectQuote);
+                  setDialogText(
+                    "Your quote will be withdrawn and the request rejected"
+                  );
+                  setShowDialog(true);
+                }}
+              >
+                Withdraw Quote
+              </Button>
+              <Button
+                hidden={
+                  addQuote ||
+                  quote.quote_status === "SENT" ||
+                  quote.quote_status === "ACCEPTED" ||
+                  quote.quote_status === "AGREED" ||
+                  quote.quote_status === "PAID" ||
+                  quote.quote_status === "REJECTED" ||
+                  quote.quote_status === "WITHDRAWN"
+                }
+                variant="outline-primary"
+                style={redPillButton}
+                onClick={() => {
+                  setOnConfirm(() => rejectQuote);
+                  setDialogText(
+                    "Your quote will be withdrawn and the request rejected"
+                  );
+                  setShowDialog(true);
+                }}
+              >
+                Decline to Quote
+              </Button>
+            </Col>
+          ) : (
+            ""
+          )}
         </Container>
       ) : (
-        ""
+        <Container className="pt-1 mb-4"> No quote submitted</Container>
       )}
     </div>
   );

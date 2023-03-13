@@ -4,6 +4,7 @@ import moment from "moment";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Row, Col, Button } from "react-bootstrap";
 import Grid from "@mui/material/Grid";
+import * as ReactBootStrap from "react-bootstrap";
 import Calendar from "react-calendar";
 import AppContext from "../../AppContext";
 import MaintenanceFooter from "./MaintenanceFooter";
@@ -20,7 +21,7 @@ import {
   subText,
 } from "../../utils/styles";
 import { put } from "../../utils/api";
-import "../calendar.css";
+import "./calendar.css";
 
 function MaintenanceScheduleRepair(props) {
   const { userData } = useContext(AppContext);
@@ -65,6 +66,7 @@ function MaintenanceScheduleRepair(props) {
   const [meetTime, setMeetTime] = useState("");
   const [attendees, setAttendees] = useState([{ email: "" }]);
 
+  const [showSpinner, setShowSpinner] = useState(false);
   const [accessTokenTenant, setAccessTokenTenant] = useState("");
   const [accessTokenMaintenance, setAccessTokenMaintenance] = useState("");
   const [userEmail, setUserEmail] = useState("");
@@ -113,12 +115,14 @@ function MaintenanceScheduleRepair(props) {
       doubleDigitDay(date)
     );
   };
+  console.log(accessTokenTenant);
   useEffect(() => {
     if (quotes.rentalInfo.length > 0) {
+      console.log("tenant get access token", quotes.rentalInfo[0]);
       axios
         .get(BASE_URL + `/UserDetails/${quotes.rentalInfo[0].tenant_id}`)
         .then((response) => {
-          // console.log(response.data);
+          console.log(response.data);
           setAccessTokenTenant(response.data.result[0].google_auth_token);
           setUserEmail(response.data.result[0].email);
           setAttendees([{ email: response.data.result[0].email }]);
@@ -198,7 +202,9 @@ function MaintenanceScheduleRepair(props) {
           console.log(error);
         });
     } else if (quotes.property_manager.length > 0) {
+      console.log("pm get access token");
     } else {
+      console.log("owner get access token");
       axios
         .get(BASE_URL + `/UserDetails/${quotes.owner_id}`)
         .then((response) => {
@@ -518,6 +524,7 @@ function MaintenanceScheduleRepair(props) {
     if (timeSelected) {
       setTimeAASlotsTenant([]);
       setTimeAASlotsMaintenance([]);
+
       let date =
         dateString >
         moment(new Date(+new Date() + 86400000)).format("YYYY-MM-DD")
@@ -715,13 +722,13 @@ function MaintenanceScheduleRepair(props) {
 
   const scheduleRequest = async () => {
     // console.log("selected", meetTime, dateString);
-
+    setShowSpinner(true);
     let meeting = {
       maintenance_request_uid: quotes.maintenance_request_uid,
       request_status: "SCHEDULE",
       scheduled_date: meetDate,
       scheduled_time: meetTime,
-      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: new Date(),
     };
     const images = JSON.parse(quotes.images);
     for (let i = -1; i < images.length - 1; i++) {
@@ -793,6 +800,7 @@ function MaintenanceScheduleRepair(props) {
       });
 
     setAttendees([{ email: "" }]);
+    setShowSpinner(false);
     navigate(-2);
   }
   console.log(quotes);
@@ -819,7 +827,7 @@ function MaintenanceScheduleRepair(props) {
                 : ` Owner`
             }`}
             leftText="< Back"
-            leftFn={() => navigate("../maintenance")}
+            leftFn={() => navigate(-1)}
           />
           <div
             className="mx-3 my-3 p-2"
@@ -907,7 +915,13 @@ function MaintenanceScheduleRepair(props) {
           ) : (
             <div></div>
           )}
-
+          {showSpinner ? (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
+            </div>
+          ) : (
+            ""
+          )}
           <div
             hidden={!buttonSelect}
             style={{

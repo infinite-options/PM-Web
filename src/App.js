@@ -20,7 +20,7 @@ import TenantAnnouncements from "./components/tenantComponents/TenantAnnouncemen
 import TenantPropertyView from "./components/tenantComponents/TenantPropertyView";
 import OwnerPaymentPage from "./components/ownerComponents/OwnerPaymentPage";
 import PaymentHistory from "./components/PaymentHistory";
-import ScheduleRepairs from "./components/ScheduleRepairs";
+import ScheduleRepairs from "./components/maintenanceComponents/ScheduleRepairs";
 import { get } from "./utils/api";
 import DetailRepairStatus from "./components/DetailRepairStatus";
 import MaintenanceDashboard from "./pages/MaintenanceDashboard";

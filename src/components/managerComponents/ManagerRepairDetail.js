@@ -73,6 +73,8 @@ function ManagerRepairDetail(props) {
   const [requestQuote, setRequestQuote] = useState(false);
   const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
   const [finishMaintenance, setFinishMaintenance] = useState(false);
+  const [cancelMaintenance, setCancelMaintenance] = useState(false);
+  const [withdrawQuote, setWithdrawQuote] = useState(false);
   const [businesses, setBusinesses] = useState([]);
   const [quotes, setQuotes] = useState([]);
   const imageState = useState([]);
@@ -233,7 +235,7 @@ function ManagerRepairDetail(props) {
       notes: "Request to reschedule",
       scheduled_date: reDate,
       scheduled_time: reTime,
-      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: new Date(),
     };
     const files = imageState[0];
     let i = 0;
@@ -258,7 +260,7 @@ function ManagerRepairDetail(props) {
       notes: "Maintenance Scheduled",
       scheduled_date: reDate,
       scheduled_time: reTime,
-      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: new Date(),
     };
     const files = imageState[0];
     let i = 0;
@@ -275,6 +277,7 @@ function ManagerRepairDetail(props) {
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "AGREED",
+      quote_adjustment_date: new Date(),
     };
     const responseMQ = await put("/maintenanceQuotes", updatedQuote);
 
@@ -295,6 +298,8 @@ function ManagerRepairDetail(props) {
     const quote_details = {
       linked_request_uid: repair.maintenance_request_uid,
       quote_business_uid: business_ids,
+
+      quote_adjustment_date: new Date(),
     };
     const response = await post("/maintenanceQuotes", quote_details);
     const result = response.result;
@@ -318,7 +323,7 @@ function ManagerRepairDetail(props) {
       priority: priority,
       can_reschedule: canReschedule ? 1 : 0,
       request_status: repair.request_status,
-      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: new Date(),
     };
     const files = imageState[0];
     let i = 0;
@@ -348,6 +353,7 @@ function ManagerRepairDetail(props) {
     const body = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "ACCEPTED",
+      quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
     fetchBusinesses();
@@ -356,7 +362,7 @@ function ManagerRepairDetail(props) {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
       request_status: "COMPLETED",
-      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: new Date(),
     };
     const files = imageState[0];
     let i = 0;
@@ -374,11 +380,16 @@ function ManagerRepairDetail(props) {
     const response = await put("/maintenanceRequests", newRepair, null, files);
     fetchBusinesses();
   };
-  const CancelMaintenance = async () => {
+  const CancelMaintenanceFunc = async () => {
+    if (messagetoM === "") {
+      setErrorMessage("Please fill out the reason");
+      return;
+    }
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
       request_status: "CANCELLED",
-      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: new Date(),
+      notes: messagetoM,
     };
     const files = imageState[0];
     let i = 0;
@@ -399,6 +410,8 @@ function ManagerRepairDetail(props) {
         const body = {
           maintenance_quote_uid: quote.maintenance_quote_uid,
           quote_status: "WITHDRAWN",
+          quote_adjustment_date: new Date(),
+          notes: messagetoM,
         };
         const response = await put("/maintenanceQuotes", body);
       }
@@ -423,14 +436,21 @@ function ManagerRepairDetail(props) {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       notes: messagetoM,
       quote_status: "REJECTED",
+      quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
     fetchBusinesses();
   };
   const withdrawQuoteFunc = async (quote) => {
+    if (messagetoM === "") {
+      setErrorMessage("Please fill out the reason");
+      return;
+    }
     const body = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "WITHDRAWN",
+      notes: messagetoM,
+      quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
     fetchBusinesses();
@@ -974,7 +994,7 @@ function ManagerRepairDetail(props) {
                           <TableCell align="center">Lease End Date</TableCell>
                           <TableCell align="center">Tenant Payments</TableCell>
                           <TableCell align="center">Lease Docs</TableCell>
-                          <TableCell align="center">Tenant Name</TableCell>
+
                           <TableCell align="center">Actions</TableCell>
                         </TableRow>
                       </TableHead>
@@ -1043,6 +1063,7 @@ function ManagerRepairDetail(props) {
                                             >
                                               <img
                                                 src={File}
+                                                style={smallImg}
                                                 alt="open document"
                                               />
                                             </a>
@@ -1285,6 +1306,7 @@ function ManagerRepairDetail(props) {
                                 <TableCell align="center">
                                   Service Charges
                                 </TableCell>
+                                <TableCell align="center">Notes</TableCell>
                                 <TableCell align="center">Event Type</TableCell>
                                 <TableCell align="center">
                                   Total Estimate
@@ -1326,8 +1348,11 @@ function ManagerRepairDetail(props) {
                                     )}
                                 </TableCell>
                                 <TableCell align="center">
+                                  {quote.notes}
+                                </TableCell>
+                                <TableCell align="center">
                                   {" "}
-                                  {quote.event_type}
+                                  {quote.event_type} hour job
                                 </TableCell>
                                 <TableCell align="center">
                                   {" "}
@@ -1452,10 +1477,12 @@ function ManagerRepairDetail(props) {
                     <Row className="pt-1 mb-4">
                       <Col className="d-flex flex-row justify-content-evenly">
                         {" "}
-                        {quote.quote_status === "REQUESTED" ? (
+                        {!withdrawQuote &&
+                        quote.quote_status === "REQUESTED" ? (
                           <Button
                             style={bluePillButton}
-                            onClick={() => withdrawQuoteFunc(quote)}
+                            // onClick={() => withdrawQuoteFunc(quote)}
+                            onClick={() => setWithdrawQuote(true)}
                           >
                             Withdraw Quote
                           </Button>
@@ -1464,6 +1491,46 @@ function ManagerRepairDetail(props) {
                         )}
                       </Col>
                     </Row>
+                    {!scheduleMaintenance &&
+                    withdrawQuote &&
+                    quote.quote_status === "REQUESTED" ? (
+                      <Row className="pt-1">
+                        <Form.Group className="mx-2 my-3">
+                          <Form.Label style={subHeading} className="mb-0 ms-2">
+                            Reason for Withdraw{" "}
+                            {messagetoM === "" ? required : ""}
+                          </Form.Label>
+                          <Form.Control
+                            style={squareForm}
+                            placeholder=" Reason for Withdraw"
+                            value={messagetoM}
+                            onChange={(e) => setMessagetoM(e.target.value)}
+                          />
+                        </Form.Group>
+                        <div
+                          className="text-center"
+                          style={errorMessage === "" ? hidden : {}}
+                        >
+                          <p style={{ ...red, ...small }}>
+                            {errorMessage || "error"}
+                          </p>
+                        </div>
+                        <Row>
+                          {" "}
+                          <Col className="d-flex flex-row justify-content-evenly">
+                            <Button
+                              style={bluePillButton}
+                              onClick={() => withdrawQuoteFunc(quote)}
+                              // onClick={() => setWithdrawQuote(true)}
+                            >
+                              Withdraw Quote
+                            </Button>
+                          </Col>
+                        </Row>
+                      </Row>
+                    ) : (
+                      <Row></Row>
+                    )}
                     {!scheduleMaintenance &&
                     (quote.request_status === "SCHEDULE" ||
                       quote.request_status === "RESCHEDULE") &&
@@ -1722,24 +1789,53 @@ function ManagerRepairDetail(props) {
                 ))}
             </div>
           )}
-          {!edit ? (
+          {!edit && !cancelMaintenance ? (
             <Row className="pt-1 mt-3 mb-2">
-              {showSpinner ? (
-                <div className="w-100 d-flex flex-column justify-content-center align-items-center">
-                  <ReactBootStrap.Spinner animation="border" role="status" />
-                </div>
-              ) : (
-                ""
-              )}
               <Col className="d-flex flex-row justify-content-evenly">
                 <Button
                   style={pillButton}
                   variant="outline-primary"
-                  onClick={() => CancelMaintenance()}
+                  onClick={() => setCancelMaintenance(true)}
                 >
                   Cancel Maintenance
                 </Button>
               </Col>
+            </Row>
+          ) : (
+            ""
+          )}
+          {cancelMaintenance ? (
+            <Row>
+              <Form.Group className="mx-2 my-3">
+                <Form.Label style={subHeading} className="mb-0 ms-2">
+                  Reason for Cancelling Maintenance{" "}
+                  {messagetoM === "" ? required : ""}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder=" Reason for Cancelling Maintenance"
+                  value={messagetoM}
+                  onChange={(e) => setMessagetoM(e.target.value)}
+                />
+              </Form.Group>
+              <Row className="pt-1 mt-3 mb-2">
+                {showSpinner ? (
+                  <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                    <ReactBootStrap.Spinner animation="border" role="status" />
+                  </div>
+                ) : (
+                  ""
+                )}
+                <Col className="d-flex flex-row justify-content-evenly">
+                  <Button
+                    style={pillButton}
+                    variant="outline-primary"
+                    onClick={() => CancelMaintenanceFunc()}
+                  >
+                    Cancel Maintenance
+                  </Button>
+                </Col>
+              </Row>
             </Row>
           ) : (
             ""
