@@ -192,7 +192,7 @@ function OwnerRepairDetails(props) {
       description: description,
       scheduled_date: repair.scheduled_date,
       assigned_worker: repair.assigned_worker,
-      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: new Date(),
     };
 
     const files = imageState[0];
@@ -222,6 +222,7 @@ function OwnerRepairDetails(props) {
     const body = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "ACCEPTED",
+      quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
     fetchBusinesses();
@@ -233,7 +234,7 @@ function OwnerRepairDetails(props) {
       notes: "Request to reschedule",
       scheduled_date: reDate,
       scheduled_time: reTime,
-      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: new Date(),
     };
     const files = imageState[0];
     let i = 0;
@@ -255,7 +256,7 @@ function OwnerRepairDetails(props) {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
       request_status: "COMPLETED",
-      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: new Date(),
     };
     const files = imageState[0];
     let i = 0;
@@ -281,7 +282,7 @@ function OwnerRepairDetails(props) {
       notes: "Maintenance Scheduled",
       scheduled_date: reDate,
       scheduled_time: reTime,
-      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: new Date(),
     };
     const files = imageState[0];
     let i = 0;
@@ -298,6 +299,7 @@ function OwnerRepairDetails(props) {
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "AGREED",
+      quote_adjustment_date: new Date(),
     };
     const responseMQ = await put("/maintenanceQuotes", updatedQuote);
 
@@ -310,6 +312,7 @@ function OwnerRepairDetails(props) {
     const body = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "REJECTED",
+      quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
 
@@ -328,6 +331,7 @@ function OwnerRepairDetails(props) {
     const quote_details = {
       linked_request_uid: repair.maintenance_request_uid,
       quote_business_uid: business_ids,
+      quote_adjustment_date: new Date(),
     };
     const response = await post("/maintenanceQuotes", quote_details);
     const result = response.result;
@@ -895,7 +899,8 @@ function OwnerRepairDetails(props) {
                               <TableRow>
                                 <TableCell align="center">
                                   Service Charges
-                                </TableCell>
+                                </TableCell>{" "}
+                                <TableCell align="center">Notes</TableCell>
                                 <TableCell align="center">Event Type</TableCell>
                                 <TableCell align="center">
                                   Total Estimate
@@ -937,8 +942,11 @@ function OwnerRepairDetails(props) {
                                     )}
                                 </TableCell>
                                 <TableCell align="center">
+                                  {quote.notes}
+                                </TableCell>
+                                <TableCell align="center">
                                   {" "}
-                                  {quote.event_type}
+                                  {quote.event_type} hour job
                                 </TableCell>
                                 <TableCell align="center">
                                   {" "}

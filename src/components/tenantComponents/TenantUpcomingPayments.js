@@ -15,6 +15,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import { makeStyles } from "@material-ui/core/styles";
+import { subHeading } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -59,6 +60,32 @@ export default function TenantUpcomingPayments(props) {
         }
       }
     }
+    setPurchaseUIDs(tempPurchaseUID);
+    setPurchases(tempPurchase);
+  }
+  function handleCheckAll(source) {
+    //pid is the purchase uid
+    let tempPurchaseUID = [];
+    let tempPurchase = [];
+
+    rents.forEach((row) => {
+      if (row.purchase_status === "UNPAID") {
+        tempPurchaseUID.push(row.purchase_uid);
+        tempPurchase.push(row);
+      }
+    });
+    setTotalSum(
+      tempPurchase.reduce(function (prev, current) {
+        return prev + +current.amount_due;
+      }, 0)
+    );
+    var checkboxes = document.querySelectorAll('input[name="check"]');
+    for (var i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i] != source.target) {
+        checkboxes[i].checked = source.target.checked;
+      }
+    }
+
     setPurchaseUIDs(tempPurchaseUID);
     setPurchases(tempPurchase);
   }
@@ -220,6 +247,19 @@ export default function TenantUpcomingPayments(props) {
           <h4>Upcoming Payments</h4>
         </Col>
       </Row>
+      <Row className="m-3" style={subHeading}>
+        <Col xs={1}>
+          <h5> Pay All</h5>
+        </Col>
+        <Col>
+          <input
+            className="check"
+            type="checkbox"
+            name="selectall"
+            onClick={(source) => handleCheckAll(source)}
+          />
+        </Col>
+      </Row>
       <div
         className="mx-3 my-3 p-2"
         style={{
@@ -301,6 +341,7 @@ export default function TenantUpcomingPayments(props) {
                                 <input
                                   className="check"
                                   type="checkbox"
+                                  name="check"
                                   onClick={(event) =>
                                     handleCheck(
                                       event,

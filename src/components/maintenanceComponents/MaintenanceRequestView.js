@@ -167,7 +167,10 @@ export default function MaintenanceRequestView() {
       setQuoteFinished(true);
     }
 
-    if (quote_r.request_status === "COMPLETED") {
+    if (
+      quote_r.request_status === "COMPLETED" &&
+      quote_r.quote_status === "AGREED"
+    ) {
       setQuoteCompleted(true);
     }
     if (quote_r.quote_status === "PAID") {
@@ -177,7 +180,7 @@ export default function MaintenanceRequestView() {
   };
   useEffect(() => {
     fetchQuoteDetails();
-  }, [addQuote, editQuote, quoteSent, quoteRejected]);
+  }, [addQuote, editQuote, quoteSent, quoteRejected, quoteRefused]);
   const headerBack = () => {
     navigate(-1);
   };
@@ -770,7 +773,7 @@ export default function MaintenanceRequestView() {
                       textAlign: "center",
                     }}
                   >
-                    <Col style={headings}>Request rejected!</Col>
+                    <Col style={headings}>Quote rejected!</Col>
                   </Row>
                   <Row
                     style={{
@@ -799,7 +802,7 @@ export default function MaintenanceRequestView() {
                       textAlign: "center",
                     }}
                   >
-                    <Col style={headings}>Request rejected!</Col>
+                    <Col style={headings}>Quote Withdrawn!</Col>
                   </Row>
                   <Row
                     style={{
@@ -813,85 +816,16 @@ export default function MaintenanceRequestView() {
                           " " +
                           quote.owner[0].owner_last_name
                         : quote.property_manager[0].manager_business_name}{" "}
-                      went with another quote.
+                      has withdrawn the quote request.
                     </Col>
                   </Row>
-                  <Row className="mt-3 mx-2">
-                    <Table classes={{ root: classes.customTable }} size="small">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Contact Name</TableCell>
-                          <TableCell>Email</TableCell>
-                          <TableCell>Phone Number</TableCell>
-
-                          <TableCell>Actions</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {quote.property_manager.length === 0
-                          ? quote.owner.map((contact, i) => (
-                              <TableRow key={i}>
-                                <TableCell>
-                                  {contact.owner_first_name}{" "}
-                                  {contact.owner_last_name}
-                                </TableCell>
-
-                                <TableCell>{contact.owner_email}</TableCell>
-                                <TableCell>
-                                  {contact.owner_phone_number}
-                                </TableCell>
-
-                                <TableCell>
-                                  <a href={`tel:${contact.owner_phone_number}`}>
-                                    <img
-                                      src={Phone}
-                                      alt="Phone"
-                                      style={smallImg}
-                                    />
-                                  </a>
-                                  <a href={`mailto:${contact.owner_email}`}>
-                                    <img
-                                      src={Message}
-                                      alt="Message"
-                                      style={smallImg}
-                                    />
-                                  </a>
-                                </TableCell>
-                              </TableRow>
-                            ))
-                          : quote.property_manager.map((contact, i) => (
-                              <TableRow key={i}>
-                                <TableCell>
-                                  {contact.manager_business_name}
-                                </TableCell>
-
-                                <TableCell>{contact.manager_email}</TableCell>
-                                <TableCell>
-                                  {contact.manager_phone_number}
-                                </TableCell>
-
-                                <TableCell>
-                                  <a
-                                    href={`tel:${contact.manager_phone_number}`}
-                                  >
-                                    <img
-                                      src={Phone}
-                                      alt="Phone"
-                                      style={smallImg}
-                                    />
-                                  </a>
-                                  <a href={`mailto:${contact.manager_email}`}>
-                                    <img
-                                      src={Message}
-                                      alt="Message"
-                                      style={smallImg}
-                                    />
-                                  </a>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                      </TableBody>
-                    </Table>
+                  <Row>
+                    <Col style={subHeading}>
+                      Notes from manager:{" "}
+                      {quote.notes === null
+                        ? "Went with another quote"
+                        : quote.notes}
+                    </Col>
                   </Row>
                 </Container>
               </div>

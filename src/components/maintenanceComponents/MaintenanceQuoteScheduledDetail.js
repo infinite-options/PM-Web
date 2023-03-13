@@ -80,6 +80,7 @@ function MaintenanceQuoteScheduledDetail(props) {
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "REJECTED",
+      quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", updatedQuote);
     navigate("/maintenance");
@@ -91,7 +92,7 @@ function MaintenanceQuoteScheduledDetail(props) {
       request_status: "RESCHEDULE",
       scheduled_date: reDate,
       scheduled_time: reTime,
-      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: new Date(),
     };
 
     const images = JSON.parse(quote.images);
@@ -113,7 +114,7 @@ function MaintenanceQuoteScheduledDetail(props) {
       notes: "Maintenance Scheduled",
       scheduled_date: quote.scheduled_date,
       scheduled_time: quote.scheduled_time,
-      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: new Date(),
     };
     const images = JSON.parse(quote.images);
     for (let i = -1; i < images.length - 1; i++) {
@@ -129,6 +130,7 @@ function MaintenanceQuoteScheduledDetail(props) {
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "AGREED",
+      quote_adjustment_date: new Date(),
     };
     const responseMQ = await put("/maintenanceQuotes", updatedQuote);
   };
@@ -140,7 +142,7 @@ function MaintenanceQuoteScheduledDetail(props) {
       notes: "Schedule",
       scheduled_date: reDate,
       scheduled_time: reTime,
-      request_adjustment_date: moment(new Date()).format("HH:mm:ss"),
+      request_adjustment_date: new Date(),
     };
     const images = JSON.parse(quote.images);
     for (let i = -1; i < images.length - 1; i++) {

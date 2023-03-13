@@ -283,6 +283,7 @@ function TenantRepairDetails(props) {
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "AGREED",
+      quote_adjustment_date: new Date(),
     };
     const responseMQ = await put("/maintenanceQuotes", updatedQuote);
 
@@ -294,6 +295,7 @@ function TenantRepairDetails(props) {
     const body = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "ACCEPTED",
+      quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
     fetchBusinesses();
@@ -303,6 +305,7 @@ function TenantRepairDetails(props) {
     const body = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "REJECTED",
+      quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
     fetchBusinesses();
@@ -744,9 +747,7 @@ function TenantRepairDetails(props) {
                                   <TableCell align="center">
                                     Event Type
                                   </TableCell>
-                                  {/* <TableCell align="center">
-                                  Total Estimate
-                                </TableCell> */}
+                                  <TableCell align="center">Notes</TableCell>
                                   <TableCell align="center">
                                     Earliest Availability
                                   </TableCell>
@@ -781,12 +782,11 @@ function TenantRepairDetails(props) {
                                   </TableCell>
                                   <TableCell align="center">
                                     {" "}
-                                    {quote.event_type}
+                                    {quote.event_type} hour job
                                   </TableCell>
-                                  {/* <TableCell align="center">
-                                  {" "}
-                                  $ {quote.total_estimate}
-                                </TableCell> */}
+                                  <TableCell align="center">
+                                    {quote.notes}
+                                  </TableCell>
                                   <TableCell align="center">
                                     {" "}
                                     {

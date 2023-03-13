@@ -272,7 +272,6 @@ function ServicesProvidedQuotes(props) {
                   <option>4 Hour Job</option>
                   <option>6 Hour Job</option>
                   <option>8 Hour Job</option>
-                  <option>1 Day Job</option>
                 </Form.Select>
               </Form.Group>
             </Col>
@@ -374,7 +373,7 @@ function ServicesProvidedQuotes(props) {
                 <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
                   Type
                 </Form.Label>
-                <div className="mt-2">{eventType}</div>
+                <div className="mt-2">{eventType} Hour Job</div>
               </Form.Group>
             </Col>
             <Col>

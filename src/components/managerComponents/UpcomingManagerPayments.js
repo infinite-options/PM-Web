@@ -69,6 +69,39 @@ export default function UpcomingManagerPayments(props) {
     setPurchaseUIDs(tempPurchaseUID);
     setPurchases(tempPurchase);
   }
+  function handleCheckAll(source) {
+    //pid is the purchase uid
+    let tempPurchaseUID = [];
+    let tempPurchase = [];
+
+    rents.forEach((row) => {
+      if (
+        row.purchase_status === "UNPAID" &&
+        row.receiver !== managerID &&
+        row.amount_due > 0
+      ) {
+        tempPurchaseUID.push(row.purchase_uid);
+        tempPurchase.push(row);
+      }
+    });
+
+    setTotalSum(
+      tempPurchase.reduce(function (prev, current) {
+        return prev + +current.amount_due;
+      }, 0)
+    );
+    var checkboxes = document.querySelectorAll('input[name="check"]');
+
+    for (var i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i] != source.target) {
+        checkboxes[i].checked = source.target.checked;
+      }
+    }
+
+    setPurchaseUIDs(tempPurchaseUID);
+    setPurchases(tempPurchase);
+  }
+
   function navigateToPaymentPage() {
     if (props.paymentSelection[1].isActive === true) {
       // console.log("zelle selected");
@@ -183,7 +216,6 @@ export default function UpcomingManagerPayments(props) {
       label: "Amount",
     },
   ];
-
   function EnhancedTableHeadOutgoingPayments(props) {
     const { order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
@@ -381,8 +413,23 @@ export default function UpcomingManagerPayments(props) {
       >
         {" "}
         <Row className="m-3" style={subHeading}>
-          {" "}
-          <h5> Outgoing Payments</h5>
+          <Col xs={4}>
+            {" "}
+            <h5> Outgoing Payments</h5>
+          </Col>
+        </Row>
+        <Row className="m-3" style={subHeading}>
+          <Col xs={1}>
+            <h5> Pay All</h5>
+          </Col>
+          <Col>
+            <input
+              className="check"
+              type="checkbox"
+              name="selectall"
+              onClick={(source) => handleCheckAll(source)}
+            />
+          </Col>
         </Row>
         <Row className="m-3" style={{ overflow: "scroll" }}>
           <Table
@@ -440,7 +487,7 @@ export default function UpcomingManagerPayments(props) {
                           >
                             {row.next_payment.substring(0, 10)}
                           </TableCell>
-                          <TableCell align="right" style={{ width: "83px" }}>
+                          <TableCell align="center" style={{ width: "83px" }}>
                             {props.type ? (
                               <button
                                 style={{
@@ -460,6 +507,7 @@ export default function UpcomingManagerPayments(props) {
                                 <input
                                   className="check"
                                   type="checkbox"
+                                  name="check"
                                   onClick={(event) =>
                                     handleCheck(
                                       event,

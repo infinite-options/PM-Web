@@ -5,8 +5,8 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
 import Grid from "@mui/material/Grid";
 import Item from "@mui/material/Grid";
-import AppContext from "../AppContext";
-import Header from "../components/Header";
+import AppContext from "../../AppContext";
+import Header from "../Header";
 import Calendar from "react-calendar";
 import "./calendar.css";
 import {
@@ -15,7 +15,7 @@ import {
   timeslotButton,
   activeTimeSlotButton,
   bluePillButton,
-} from "../utils/styles";
+} from "../../utils/styles";
 
 function ScheduleRepairs(props) {
   const { userData } = useContext(AppContext);
