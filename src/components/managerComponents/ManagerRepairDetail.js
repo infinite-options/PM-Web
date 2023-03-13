@@ -1002,7 +1002,6 @@ function ManagerRepairDetail(props) {
                         {repair.rentalInfo.map((rf) => {
                           return (
                             <TableRow>
-                              {console.log(tenantInfo)}
                               <TableCell align="center">
                                 {tenantInfo.map((tf) => {
                                   return (
@@ -1169,7 +1168,6 @@ function ManagerRepairDetail(props) {
             <Row style={subHeading}>
               <div>Select businesses to request a quote:</div>
             </Row>
-            {console.log(businesses)}
             <div>
               {businesses.length > 0 &&
                 businesses.map((business, i) => (
@@ -1195,9 +1193,6 @@ function ManagerRepairDetail(props) {
                       </Row>
                     </Col>
                     <Col>
-                      {console.log(
-                        JSON.parse(business.business_services_fees).length
-                      )}
                       <Row style={mediumBold}>{business.business_name}</Row>
                       <Row className="m-3" style={subText}>
                         {JSON.parse(business.business_services_fees).length >

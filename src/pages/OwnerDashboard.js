@@ -999,7 +999,8 @@ export default function OwnerDashboard2() {
                             >
                               {request.assigned_business !== null &&
                               request.assigned_business !== "null"
-                                ? request.assigned_business
+                                ? request.assigned_business_info[0]
+                                    .business_name
                                 : "None"}
                             </TableCell>
 

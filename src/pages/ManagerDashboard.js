@@ -593,7 +593,6 @@ export default function ManagerDashboard() {
     orderMaintenanceBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
-  console.log(user);
 
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
@@ -2010,7 +2009,7 @@ export default function ManagerDashboard() {
                             >
                               {request.assigned_business !== null &&
                               request.assigned_business !== "null" ? (
-                                request.assigned_business
+                                request.assigned_business_info[0].business_name
                               ) : (
                                 <div>
                                   {request.quotes_received}/
