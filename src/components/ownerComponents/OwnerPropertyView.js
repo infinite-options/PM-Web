@@ -3038,7 +3038,9 @@ function OwnerPropertyView(props) {
                           </Table>
                         </div>
                       ) : (
-                        <div>Not rented</div>
+                        <Row className="m-3">
+                          <div className="m-3">Not Rented</div>
+                        </Row>
                       )}
                     </Row>
                   </div>

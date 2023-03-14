@@ -38,6 +38,9 @@ import {
   orangePill,
   greenPill,
   redPill,
+  red,
+  hidden,
+  small,
 } from "../../utils/styles";
 import { get, put, post } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
@@ -102,9 +105,11 @@ function OwnerRepairDetails(props) {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [issueType, setIssueType] = useState("Plumbing");
+  const [rejectQuote, setRejectQuote] = useState(false);
   const [requestQuote, setRequestQuote] = useState(false);
   const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
-
+  const [cancelMaintenance, setCancelMaintenance] = useState(false);
+  const [withdrawQuote, setWithdrawQuote] = useState(false);
   const [finishMaintenance, setFinishMaintenance] = useState(false);
   const [businesses, setBusinesses] = useState([]);
   const [quotes, setQuotes] = useState([]);
@@ -114,8 +119,11 @@ function OwnerRepairDetails(props) {
   const [priority, setPriority] = useState("");
   const [reDate, setReDate] = useState("");
   const [reTime, setReTime] = useState("");
+  const [notes, setNotes] = useState("");
+  const [messagetoM, setMessagetoM] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [showSpinner, setShowSpinner] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const repair = location.state.repair;
 
   const fetchBusinesses = async () => {
@@ -275,6 +283,81 @@ function OwnerRepairDetails(props) {
     fetchBusinesses();
   };
 
+  const CancelMaintenanceFunc = async () => {
+    if (messagetoM === "") {
+      setErrorMessage("Please fill out the reason");
+      return;
+    }
+    const newRepair = {
+      maintenance_request_uid: repair.maintenance_request_uid,
+      request_status: "CANCELLED",
+      request_adjustment_date: new Date(),
+      notes: messagetoM,
+    };
+    const files = imageState[0];
+    let i = 0;
+    for (const file of imageState[0]) {
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      if (file.file !== null) {
+        newRepair[key] = file.file;
+      } else {
+        newRepair[key] = file.image;
+      }
+    }
+
+    // console.log("Repair Object to be updated", newRepair);
+    setShowSpinner(true);
+    const response = await put("/maintenanceRequests", newRepair, null, files);
+    repair.quotes.forEach(async (quote) => {
+      if (quote.quote_status === "REQUESTED" || quote.quote_status === "SENT") {
+        const body = {
+          maintenance_quote_uid: quote.maintenance_quote_uid,
+          quote_status: "WITHDRAWN",
+          quote_adjustment_date: new Date(),
+          notes: messagetoM,
+        };
+        const response = await put("/maintenanceQuotes", body);
+      }
+    });
+    setShowSpinner(false);
+    navigate(-1);
+  };
+  const required =
+    errorMessage === "Please fill out all fields" ? (
+      <span style={red} className="ms-1">
+        *
+      </span>
+    ) : (
+      ""
+    );
+  const rejectQuoteFunc = async (quote) => {
+    if (messagetoM === "") {
+      setErrorMessage("Please fill out the reason");
+      return;
+    }
+    const body = {
+      maintenance_quote_uid: quote.maintenance_quote_uid,
+      notes: messagetoM,
+      quote_status: "REJECTED",
+      quote_adjustment_date: new Date(),
+    };
+    const response = await put("/maintenanceQuotes", body);
+    fetchBusinesses();
+  };
+  const withdrawQuoteFunc = async (quote) => {
+    if (messagetoM === "") {
+      setErrorMessage("Please fill out the reason");
+      return;
+    }
+    const body = {
+      maintenance_quote_uid: quote.maintenance_quote_uid,
+      quote_status: "WITHDRAWN",
+      notes: messagetoM,
+      quote_adjustment_date: new Date(),
+    };
+    const response = await put("/maintenanceQuotes", body);
+    fetchBusinesses();
+  };
   const acceptSchedule = async (quote) => {
     const body = {
       maintenance_request_uid: repair.maintenance_request_uid,
@@ -308,16 +391,6 @@ function OwnerRepairDetails(props) {
     setIsEditing(false);
   };
 
-  const rejectQuote = async (quote) => {
-    const body = {
-      maintenance_quote_uid: quote.maintenance_quote_uid,
-      quote_status: "REJECTED",
-      quote_adjustment_date: new Date(),
-    };
-    const response = await put("/maintenanceQuotes", body);
-
-    fetchBusinesses();
-  };
   const sendQuotesRequest = async () => {
     const business_ids = businesses
       .filter((b) => b.quote_requested)
@@ -988,7 +1061,10 @@ function OwnerRepairDetails(props) {
                     )}
 
                     <Row
-                      hidden={quote.quote_status !== "SENT"}
+                      hidden={
+                        quote.quote_status !== "SENT" &&
+                        repair.property_manager.length === 0
+                      }
                       className="pt-1 mb-4"
                     >
                       <Col className="d-flex flex-row justify-content-evenly">
@@ -1002,7 +1078,7 @@ function OwnerRepairDetails(props) {
                       <Col className="d-flex flex-row justify-content-evenly">
                         <Button
                           style={redPillButton}
-                          onClick={() => rejectQuote(quote)}
+                          onClick={() => setRejectQuote(true)}
                         >
                           Reject Quote
                         </Button>
@@ -1061,11 +1137,74 @@ function OwnerRepairDetails(props) {
                             : quote.quote_status === "PAID" &&
                               quote.request_status === "COMPLETED"
                             ? "Maintenance Paid"
+                            : quote.quote_status === "WITHDRAWN" &&
+                              quote.request_status === "PROCESSING"
+                            ? "Quote Request Withdrawn"
+                            : quote.request_status === "CANCELLED"
+                            ? "Maintenance Request Cancelled"
                             : "Another quote accepted"}
                         </Button>
                       </Col>
                     </Row>
-
+                    <Row className="pt-1 mb-4">
+                      <Col className="d-flex flex-row justify-content-evenly">
+                        {" "}
+                        {!withdrawQuote &&
+                        repair.property_manager.length === 0 &&
+                        quote.quote_status === "REQUESTED" ? (
+                          <Button
+                            style={bluePillButton}
+                            // onClick={() => withdrawQuoteFunc(quote)}
+                            onClick={() => setWithdrawQuote(true)}
+                          >
+                            Withdraw Quote
+                          </Button>
+                        ) : (
+                          ""
+                        )}
+                      </Col>
+                    </Row>
+                    {!scheduleMaintenance &&
+                    repair.property_manager.length === 0 &&
+                    withdrawQuote &&
+                    quote.quote_status === "REQUESTED" ? (
+                      <Row className="pt-1">
+                        <Form.Group className="mx-2 my-3">
+                          <Form.Label style={subHeading} className="mb-0 ms-2">
+                            Reason for Withdraw{" "}
+                            {messagetoM === "" ? required : ""}
+                          </Form.Label>
+                          <Form.Control
+                            style={squareForm}
+                            placeholder=" Reason for Withdraw"
+                            value={messagetoM}
+                            onChange={(e) => setMessagetoM(e.target.value)}
+                          />
+                        </Form.Group>
+                        <div
+                          className="text-center"
+                          style={errorMessage === "" ? hidden : {}}
+                        >
+                          <p style={{ ...red, ...small }}>
+                            {errorMessage || "error"}
+                          </p>
+                        </div>
+                        <Row>
+                          {" "}
+                          <Col className="d-flex flex-row justify-content-evenly">
+                            <Button
+                              style={bluePillButton}
+                              onClick={() => withdrawQuoteFunc(quote)}
+                              // onClick={() => setWithdrawQuote(true)}
+                            >
+                              Withdraw Quote
+                            </Button>
+                          </Col>
+                        </Row>
+                      </Row>
+                    ) : (
+                      <Row></Row>
+                    )}
                     {!scheduleMaintenance &&
                     repair.property_manager.length === 0 &&
                     quote.request_status === "SCHEDULE" &&
@@ -1094,59 +1233,54 @@ function OwnerRepairDetails(props) {
                     {scheduleMaintenance ? (
                       <Row className="mx-2 my-2 p-3">
                         <RescheduleRepair quotes={quote} />
-                        {/* <Row>
-                          <div style={headings}>Schedule Maintenace</div>
-                        </Row>
-                        <Form.Group className="mt-3 mb-2">
-                          <Form.Label
-                            style={formLabel}
-                            as="h5"
-                            className="ms-1 mb-0"
-                          >
-                            Date
+                      </Row>
+                    ) : (
+                      <Row></Row>
+                    )}
+                    {rejectQuote &&
+                    !requestQuote &&
+                    repair.property_manager.length === 0 &&
+                    !scheduleMaintenance &&
+                    quote.request_status === "PROCESSING" &&
+                    quote.quote_status === "SENT" ? (
+                      <Row
+                        style={{
+                          background: "#F3F3F3 0% 0% no-repeat padding-box",
+                          borderRadius: "10px",
+                          opacity: 1,
+                        }}
+                        className="my-4 p-2"
+                      >
+                        <Form.Group className="mx-2 my-3">
+                          <Form.Label style={subHeading} className="mb-0 ms-2">
+                            Reason for Reject{" "}
+                            {messagetoM === "" ? required : ""}
                           </Form.Label>
                           <Form.Control
-                            style={{ borderRadius: 0 }}
-                            type="date"
-                            value={reDate}
-                            onChange={(e) => setReDate(e.target.value)}
+                            style={squareForm}
+                            placeholder=" Reason for Reject"
+                            value={messagetoM}
+                            onChange={(e) => setMessagetoM(e.target.value)}
                           />
                         </Form.Group>
-                        <Form.Group className="mt-3 mb-2">
-                          <Form.Label
-                            style={formLabel}
-                            as="h5"
-                            className="ms-1 mb-0"
-                          >
-                            Time
-                          </Form.Label>
-                          <Form.Control
-                            style={{ borderRadius: 0 }}
-                            type="time"
-                            value={reTime}
-                            onChange={(e) => setReTime(e.target.value)}
-                          />
-                        </Form.Group>
-                        <Row className="mt-4">
-                          <Col className="d-flex justify-content-evenly">
-                            <Button
-                              style={bluePillButton}
-                              onClick={rescheduleRepair}
-                            >
-                              Schedule Maintenance
-                            </Button>
-                          </Col>
-                        </Row>
-                        <Row className="mt-3">
-                          <Col className="d-flex justify-content-evenly">
+                        <div
+                          className="text-center"
+                          style={errorMessage === "" ? hidden : {}}
+                        >
+                          <p style={{ ...red, ...small }}>
+                            {errorMessage || "error"}
+                          </p>
+                        </div>
+                        <Row>
+                          <Col className="d-flex flex-row justify-content-evenly">
                             <Button
                               style={redPillButton}
-                              onClick={() => setScheduleMaintenance(false)}
+                              onClick={() => rejectQuoteFunc(quote)}
                             >
-                              Cancel
+                              Reject Quote
                             </Button>
                           </Col>
-                        </Row> */}
+                        </Row>
                       </Row>
                     ) : (
                       <Row></Row>
@@ -1265,6 +1399,71 @@ function OwnerRepairDetails(props) {
                     <hr />
                   </div>
                 ))}
+              {!isEditing &&
+              repair.property_manager.length === 0 &&
+              !cancelMaintenance ? (
+                <Row className="pt-1 mt-3 mb-2">
+                  <Col className="d-flex flex-row justify-content-evenly">
+                    <Button
+                      style={pillButton}
+                      variant="outline-primary"
+                      onClick={() => setCancelMaintenance(true)}
+                    >
+                      Cancel Maintenance
+                    </Button>
+                  </Col>
+                </Row>
+              ) : (
+                ""
+              )}
+              {cancelMaintenance && repair.property_manager.length === 0 ? (
+                <Row>
+                  <Form.Group className="mx-2 my-3">
+                    <Form.Label style={subHeading} className="mb-0 ms-2">
+                      Reason for Cancelling Maintenance{" "}
+                      {messagetoM === "" ? required : ""}
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      placeholder=" Reason for Cancelling Maintenance"
+                      value={messagetoM}
+                      onChange={(e) => setMessagetoM(e.target.value)}
+                    />
+                  </Form.Group>
+                  <div
+                    className="text-center"
+                    style={errorMessage === "" ? hidden : {}}
+                  >
+                    <p style={{ ...red, ...small }}>
+                      {errorMessage || "error"}
+                    </p>
+                  </div>
+                  <Row className="pt-1 mt-3 mb-2">
+                    {showSpinner ? (
+                      <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                        <ReactBootStrap.Spinner
+                          animation="border"
+                          role="status"
+                        />
+                      </div>
+                    ) : (
+                      ""
+                    )}
+
+                    <Col className="d-flex flex-row justify-content-evenly">
+                      <Button
+                        style={pillButton}
+                        variant="outline-primary"
+                        onClick={() => CancelMaintenanceFunc()}
+                      >
+                        Cancel Maintenance
+                      </Button>
+                    </Col>
+                  </Row>
+                </Row>
+              ) : (
+                ""
+              )}
             </div>
           )}
 
