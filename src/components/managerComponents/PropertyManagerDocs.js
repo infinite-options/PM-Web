@@ -50,7 +50,6 @@ function PropertyManagerDocs(props) {
     addDocument,
     property,
     selectContract,
-    reload,
     fetchProperty,
     setShowDialog,
     endEarlyDate,
@@ -58,7 +57,6 @@ function PropertyManagerDocs(props) {
     cancel,
     setCancel,
     managerID,
-    selectedBusiness,
     setSelectedBusiness,
   } = props;
   const [contracts, setContracts] = useState([]);
@@ -81,11 +79,13 @@ function PropertyManagerDocs(props) {
     }
     const newProperty = {
       property_uid: property.property_uid,
-      management_status: "REJECTED",
+      manager_id: management_buid,
+      management_status: "REFUSED",
     };
     const files = JSON.parse(property.images);
 
     await put("/properties", newProperty, null, files);
+    navigate("../manager");
   };
 
   const acceptCancelAgreement = async () => {

@@ -75,18 +75,10 @@ function ManagerTenantApplications(props) {
         resArr.push(item);
       }
     });
-    // console.log(resArr);
+
     setApplications(resArr);
-    // setNewApplications(
-    //   applications.filter((a) => a.application_status === "NEW")
-    // );
+
     setIsLoading(false);
-    // setForwardedApplications(
-    //   applications.filter((a) => a.application_status === "FORWARDED")
-    // );
-    // setRejectedApplications(
-    //   applications.filter((a) => a.application_status === "REJECTED")
-    // );
   };
 
   useEffect(fetchApplications, [property]);

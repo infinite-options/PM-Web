@@ -1,8 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
-import Header from "../Header";
-import SideBar from "./SideBar";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import OwnerFooter from "./OwnerFooter";
 import AppContext from "../../AppContext";
 import Phone from "../../icons/Phone.svg";
@@ -14,27 +20,29 @@ import Verified from "../../icons/Verified.jpg";
 import { get, put } from "../../utils/api";
 import {
   mediumBold,
-  xSmall,
-  blue,
   smallImg,
   hidden,
   gray,
   pillButton,
 } from "../../utils/styles";
-
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "2px 2px",
+      border: "0.5px solid grey ",
+      wordBreak: "break-word",
+    },
+    width: "100%",
+    tableLayout: "fixed",
+  },
+});
 function PropertyManagersList(props) {
   const navigate = useNavigate();
-
-  const location = useLocation();
+  const classes = useStyles();
   const { property_uid, property, reload } = props;
-
-  // const property_uid = location.state.property_uid;
-
-  // const property = location.state.property;
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [propertyManagers, setPropertyManagers] = useState([]);
-
   const [showDialog, setShowDialog] = useState(false);
   const [selectedPropertyManagers, setSelectedPropertyManagers] =
     useState(null);
@@ -211,7 +219,7 @@ function PropertyManagersList(props) {
                     ""
                   )}
                 </Col>
-                <Col className="ps-0">
+                <Col className="ps-4">
                   <div className="d-flex justify-content-between align-items-center">
                     <h5 className="mb-0" style={{ fontWeight: "600" }}>
                       {pm.business_name}
@@ -273,27 +281,34 @@ function PropertyManagersList(props) {
             }}
           >
             Fees Charged:
-            {/* {console.log(selectedPropertyManagers.business_services_fees)} */}
-            {JSON.parse(selectedPropertyManagers.business_services_fees).map(
-              (bsf) => {
-                return (
-                  <div
-                    className="m-2 p-2"
-                    style={{
-                      background: " #FFFFFF 0% 0% no-repeat padding-box",
-                      boxShadow: " 0px 1px 6px #00000029",
-                      borderRadius: "5px",
-                    }}
-                  >
-                    <p> {bsf.fee_name}&nbsp;</p>
-                    {bsf.fee_type === "%"
-                      ? `${bsf.charge}% of ${bsf.of}`
-                      : `$${bsf.charge}`}{" "}
-                    {bsf.frequency}
-                  </div>
-                );
-              }
-            )}
+            <Table classes={{ root: classes.customTable }} size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Fee Name</TableCell>
+                  <TableCell>Amount</TableCell>
+                  <TableCell>Of</TableCell>
+                  <TableCell>Frequency</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {JSON.parse(
+                  selectedPropertyManagers.business_services_fees
+                ).map((fee, i) => (
+                  <TableRow key={i}>
+                    <TableCell>{fee.fee_name}</TableCell>
+                    <TableCell>
+                      {fee.fee_type === "%"
+                        ? `${fee.charge}%`
+                        : `$${fee.charge}`}
+                    </TableCell>
+                    <TableCell>
+                      {fee.fee_type === "%" ? `${fee.of}` : ""}
+                    </TableCell>
+                    <TableCell>{fee.frequency}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
           <div
             className="m-2 p-2"
