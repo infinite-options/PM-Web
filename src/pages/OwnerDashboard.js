@@ -40,13 +40,14 @@ const useStyles = makeStyles({
 export default function OwnerDashboard2() {
   const navigate = useNavigate();
   const classes = useStyles();
+
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
   const [ownerData, setOwnerData] = useState([]);
   const [editAppliances, setEditAppliances] = useState(false);
   const [stage, setStage] = useState("LIST");
   const [isLoading, setIsLoading] = useState(true);
 
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { access_token, user } = userData;
   // search variables
   const [search, setSearch] = useState("");
@@ -56,6 +57,7 @@ export default function OwnerDashboard2() {
 
   const [orderMaintenance, setOrderMaintenance] = useState("asc");
   const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
+  const [managementStatus, setManagementStatus] = useState("");
 
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
@@ -83,6 +85,7 @@ export default function OwnerDashboard2() {
     }
     // navigate("../owner");
   };
+
   const fetchOwnerDashboard = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {
       navigate("/");
@@ -137,13 +140,23 @@ export default function OwnerDashboard2() {
     setMaintenanceRequests(requests);
     setIsLoading(false);
   };
+  const channel = ably.channels.get("management_status");
 
   useEffect(() => {
-    // console.log("in use effect");
     fetchOwnerDashboard();
-  }, [access_token]);
+    async function subscribe_host() {
+      await channel.subscribe((message) => {
+        console.log(message);
+        setManagementStatus(message.data.te);
+      });
+    }
+    // console.log("in use effect");
+    subscribe_host();
 
-  useEffect(() => {});
+    return function cleanup() {
+      channel.unsubscribe();
+    };
+  }, [access_token, managementStatus]);
 
   const addProperty = () => {
     fetchOwnerDashboard();

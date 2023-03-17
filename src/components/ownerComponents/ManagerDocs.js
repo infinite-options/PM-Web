@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Button, Form, Row, Col } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import Dialog from "@material-ui/core/Dialog";
@@ -15,10 +15,13 @@ import {
   mediumBold,
   squareForm,
 } from "../../utils/styles";
+import AppContext from "../../AppContext";
 
 function ManagerDocs(props) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { ably } = useContext(AppContext);
+  const channel = ably.channels.get("management_status");
   const {
     addDocument,
     property,
@@ -70,6 +73,7 @@ function ManagerDocs(props) {
             newProperty[key] = files[i + 1];
           }
           const response = await put("/properties", newProperty, null, files);
+          channel.publish({ data: { te: newProperty } });
           setAddPropertyManager(false);
           reload();
         }
@@ -89,6 +93,7 @@ function ManagerDocs(props) {
       }
       const response = await put("/properties", newProperty, null, files);
       setAddPropertyManager(false);
+      channel.publish({ data: { te: newProperty } });
       reload();
     } else {
       // console.log("in else");
@@ -114,6 +119,7 @@ function ManagerDocs(props) {
           newProperty[key] = files[i + 1];
         }
         const response = await put("/properties", newProperty, null, files);
+        channel.publish({ data: { te: newProperty } });
         setAddPropertyManager(false);
         reload();
       }

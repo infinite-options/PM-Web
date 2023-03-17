@@ -84,12 +84,16 @@ import OwnerPayments from "./components/ownerComponents/OwnerPayments";
 import TenantPayments from "./components/tenantComponents/TenantPayments";
 import OwnerCashflow from "./components/ownerComponents/OwnerCashflow";
 import ManagerCashflow from "./components/managerComponents/ManagerCashflow";
+
+import Ably from "ably/callbacks";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
     refresh_token: JSON.parse(localStorage.getItem("refresh_token")),
     user: JSON.parse(localStorage.getItem("user")),
   });
+  const ably_api_key = process.env.REACT_APP_ABLY_API_KEY;
+  const ably = new Ably.Realtime(ably_api_key);
   const updateUserData = (newUserData) => {
     setUserData(newUserData);
     localStorage.setItem(
@@ -115,7 +119,9 @@ function App() {
   };
   // console.log(userData);
   return (
-    <AppContext.Provider value={{ userData, updateUserData, logout, refresh }}>
+    <AppContext.Provider
+      value={{ userData, updateUserData, logout, refresh, ably }}
+    >
       <BrowserRouter>
         <LandingNavbar />
         <Routes>

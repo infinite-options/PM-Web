@@ -21,7 +21,7 @@ import {
 } from "../../utils/styles";
 
 function ManagementContract(props) {
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { access_token, user } = userData;
   const { back, property, contract, reload } = props;
   // console.log(property);
@@ -52,7 +52,7 @@ function ManagementContract(props) {
       loadContract();
     }
   }, [contract]);
-
+  const channel = ably.channels.get(`management_status`);
   const approvePropertyManager = async (pID) => {
     const files = JSON.parse(property.images);
     let pid = pID;
@@ -61,20 +61,13 @@ function ManagementContract(props) {
       management_status: "ACCEPTED",
       manager_id: pid,
     };
-    // for (let i = -1; i < files.length - 1; i++) {
-    //   let key = `img_${i}`;
-    //   if (i === -1) {
-    //     key = "img_cover";
-    //   }
-    //   updatedManagementContract[key] = files[i + 1];
-    // }
-    // console.log(files);
     const response2 = await put(
       "/properties",
       updatedManagementContract,
       null,
       files
     );
+    channel.publish({ data: { te: updatedManagementContract } });
     back();
     reload();
   };
@@ -101,6 +94,7 @@ function ManagementContract(props) {
       null,
       files
     );
+    channel.publish({ data: { te: updatedManagementContract } });
 
     reload();
   };

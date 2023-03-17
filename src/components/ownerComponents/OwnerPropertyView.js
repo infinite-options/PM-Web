@@ -65,7 +65,9 @@ function OwnerPropertyView(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const classes = useStyles();
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
+
+  const channel = ably.channels.get("management_status");
   const { access_token, user } = userData;
   const property_uid =
     location.state === null ? props.property_uid : location.state.property_uid;
@@ -366,6 +368,7 @@ function OwnerPropertyView(props) {
       null,
       files
     );
+    channel.publish({ data: { te: updatedManagementContract } });
     reloadProperty();
   };
 
@@ -392,6 +395,7 @@ function OwnerPropertyView(props) {
       files
     );
     setShowDialog(false);
+    channel.publish({ data: { te: updatedManagementContract } });
     reloadProperty();
   };
 
@@ -417,6 +421,7 @@ function OwnerPropertyView(props) {
       null,
       files
     );
+    channel.publish({ data: { te: updatedManagementContract } });
     setShowDialog2(false);
     reloadProperty();
   };
@@ -435,6 +440,7 @@ function OwnerPropertyView(props) {
       updatedManagementContract[key] = files[i + 1];
     }
     await put("/cancelAgreement", updatedManagementContract, null, files);
+    channel.publish({ data: { te: updatedManagementContract } });
     reloadProperty();
   };
 
@@ -447,6 +453,7 @@ function OwnerPropertyView(props) {
     };
 
     await put("/cancelAgreement", updatedManagementContract, null, files);
+    channel.publish({ data: { te: updatedManagementContract } });
     reloadProperty();
   };
 

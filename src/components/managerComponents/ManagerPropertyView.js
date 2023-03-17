@@ -60,8 +60,9 @@ function ManagerPropertyView(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const classes = useStyles();
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { access_token, user } = userData;
+  const channel = ably.channels.get("management_status");
   // const property = location.state.property
   // const { mp_id } = useParams();
   const property_uid =
@@ -250,6 +251,7 @@ function ManagerPropertyView(props) {
       updatedManagementContract[key] = files[i + 1];
     }
     await put("/cancelAgreement", updatedManagementContract, null, files);
+    channel.publish({ data: { te: updatedManagementContract } });
     setShowDialog(false);
     reloadProperty();
   };

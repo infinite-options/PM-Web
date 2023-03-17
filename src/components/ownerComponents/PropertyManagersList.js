@@ -40,7 +40,7 @@ function PropertyManagersList(props) {
   const navigate = useNavigate();
   const classes = useStyles();
   const { property_uid, property, reload } = props;
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { access_token, user } = userData;
   const [propertyManagers, setPropertyManagers] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
@@ -62,6 +62,7 @@ function PropertyManagersList(props) {
   const responsiveSidebar = {
     showSidebar: width > 1023,
   };
+  const channel = ably.channels.get(`management_status`);
 
   const fetchProperties = async () => {
     if (access_token === null) {
@@ -97,15 +98,7 @@ function PropertyManagersList(props) {
           business_uid === prop.manager_id &&
           prop.management_status === "REFUSED"
         ) {
-          // console.log("here in if");
-
-          // alert("youve already rejected this Management Company");
           setShowDialog(true);
-          // navigate(`/propertyDetails/${property_uid}`, {
-          //   state: {
-          //     property_uid: property_uid,
-          //   },
-          // });
         } else {
           // console.log("here in else");
           const newProperty = {
@@ -121,14 +114,7 @@ function PropertyManagersList(props) {
             newProperty[key] = files[i + 1];
           }
           const response = await put("/properties", newProperty, null, files);
-          //   setAddPropertyManager(false);
-          // navigate(`/propertyDetails/${property_uid}`, {
-          //   state: {
-          //     property_uid: property_uid,
-          //   },
-          // });
-          // reload();
-          // setStage("LIST");
+          channel.publish({ data: { te: newProperty } });
         }
       }
     } else if (property.property_manager.length === 0) {
@@ -137,6 +123,7 @@ function PropertyManagersList(props) {
         manager_id: business_uid,
         management_status: "FORWARDED",
       };
+
       for (let i = -1; i < files.length - 1; i++) {
         let key = `img_${i}`;
         if (i === -1) {
@@ -145,9 +132,7 @@ function PropertyManagersList(props) {
         newProperty[key] = files[i + 1];
       }
       const response = await put("/properties", newProperty, null, files);
-      //   setAddPropertyManager(false);
-      // reload();
-      // setStage("LIST");
+      channel.publish({ data: { te: newProperty } });
     } else {
       // console.log("in else");
       if (
@@ -157,32 +142,21 @@ function PropertyManagersList(props) {
         // console.log("here in if");
         setShowDialog(true);
         setStage("LIST");
-        // alert("youve already rejected this Management Company");
       } else {
-        // console.log("here in else");
         const newProperty = {
           property_uid: property.property_uid,
           manager_id: business_uid,
           management_status: "FORWARDED",
         };
-        // for (let i = -1; i < files.length - 1; i++) {
-        //   let key = `img_${i}`;
-        //   if (i === -1) {
-        //     key = "img_cover";
-        //   }
-        //   newProperty[key] = files[i + 1];
-        // }
+
         const response = await put("/properties", newProperty, null, files);
-        // setAddPropertyManager(false);
-        // navigate(`/propertyDetails/${property_uid}`);
+        channel.publish({ data: { te: newProperty } });
         setStage("LIST");
       }
     }
     reload();
     setStage("LIST");
   };
-  // console.log("Property Managers", propertyManagers);
-  // console.log("Property", property);
   return stage === "LIST" ? (
     <div className="flex-1">
       <div className="w-100  mb-5">
