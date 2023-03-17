@@ -49,7 +49,7 @@ const useStyles = makeStyles({
 export default function TenantDashboard() {
   const navigate = useNavigate();
   const classes = useStyles();
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { access_token, user } = userData;
   const [stage, setStage] = useState("LIST");
   const [isLoading, setIsLoading] = useState(true);
@@ -61,10 +61,13 @@ export default function TenantDashboard() {
   const [applications, setApplications] = useState([]);
   const [tenantProfile, setTenantProfile] = useState([]);
   const [managerInfo, setManagerInfo] = useState([]);
+  const [applicationStatus, setApplicationStatus] = useState("");
 
   // // search variables
   // const [search, setSearch] = useState("");
   // // sorting variables
+
+  const channel_application = ably.channels.get("application_status");
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
 
@@ -245,8 +248,18 @@ export default function TenantDashboard() {
   };
 
   useEffect(() => {
+    async function subscribe_host() {
+      await channel_application.subscribe((message) => {
+        console.log(message);
+        setApplicationStatus(message.data.te);
+      });
+    }
+    subscribe_host();
     fetchTenantDashboard();
-  }, [access_token]);
+    return function cleanup() {
+      channel_application.unsubscribe();
+    };
+  }, [access_token, applicationStatus]);
 
   const addProperty = () => {
     fetchTenantDashboard();

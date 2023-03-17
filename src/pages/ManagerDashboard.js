@@ -60,6 +60,8 @@ export default function ManagerDashboard() {
   const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
   const [managementStatus, setManagementStatus] = useState("");
 
+  const [applicationStatus, setApplicationStatus] = useState("");
+
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -227,6 +229,7 @@ export default function ManagerDashboard() {
   };
 
   const channel = ably.channels.get("management_status");
+  const channel_application = ably.channels.get("application_status");
 
   useEffect(() => {
     async function subscribe_host() {
@@ -235,12 +238,20 @@ export default function ManagerDashboard() {
         setManagementStatus(message.data.te);
       });
     }
+    async function subscribe_host2() {
+      await channel_application.subscribe((message) => {
+        console.log(message);
+        setApplicationStatus(message.data.te);
+      });
+    }
     subscribe_host();
+    subscribe_host2();
     fetchManagerDashboard();
     return function cleanup() {
       channel.unsubscribe();
+      channel_application.unsubscribe();
     };
-  }, [access_token, managementStatus]);
+  }, [access_token, managementStatus, applicationStatus]);
 
   console.log(managerData);
   const fetchTenantDetails = async (tenant_id) => {

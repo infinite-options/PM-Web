@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import {
   Table,
@@ -35,6 +35,7 @@ import {
   subHeading,
   gray,
 } from "../../utils/styles";
+import AppContext from "../../AppContext";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -62,7 +63,7 @@ function ManagerTenantAgreement(props) {
     e.stopPropagation();
   };
   console.log(property, agreement, acceptedTenantApplications);
-
+  const { ably } = useContext(AppContext);
   const [tenantID, setTenantID] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -90,6 +91,8 @@ function ManagerTenantAgreement(props) {
 
   const [showSpinner, setShowSpinner] = useState(false);
   const [width, setWindowWidth] = useState(0);
+
+  const channel_application = ably.channels.get("application_status");
   useEffect(() => {
     updateDimensions();
 
@@ -315,6 +318,7 @@ function ManagerTenantAgreement(props) {
       };
       // console.log(request_body)
       const update_application = await put("/applications", request_body);
+      channel_application.publish({ data: { te: request_body } });
       // console.log(response)
     }
 

@@ -41,11 +41,12 @@ function ReviewPropertyLease(props) {
   const location = useLocation();
   const classes = useStyles();
   const context = useContext(AppContext);
-  const { userData } = context;
+  const { userData, ably } = context;
   const { access_token, user } = userData;
   const [rentals, setRentals] = useState([]);
   const [rentPayments, setRentPayments] = useState([]);
   const [lease, setLease] = useState([]);
+  const channel_application = ably.channels.get("application_status");
   const property_uid = location.state.property_uid;
   const application_uid = location.state.application_uid;
   const application_status_1 = location.state.application_status_1;
@@ -176,6 +177,8 @@ function ReviewPropertyLease(props) {
           property_uid: property_uid,
         };
         const response2 = await put("/applications", updatedApplication);
+
+        channel_application.publish({ data: { te: updatedApplication } });
         navigate("/tenant");
       } else if (rentals.some((rental) => rental.rental_status === "PENDING")) {
         let i = rentals.findIndex(
@@ -192,6 +195,8 @@ function ReviewPropertyLease(props) {
         };
         // console.log("in extendlease", updateLease);
         const response2 = await put("/extendLease", updateLease);
+
+        channel_application.publish({ data: { te: updateLease } });
         navigate("/tenant");
       } else if (rentals.some((rental) => rental.rental_status === "ACTIVE")) {
         let i = rentals.findIndex(
@@ -204,6 +209,7 @@ function ReviewPropertyLease(props) {
         };
         // console.log("in update activr lease", updateLease);
         const response2 = await put("/UpdateActiveLease", updateLease);
+        channel_application.publish({ data: { te: updateLease } });
         navigate("/tenant");
       }
     }
