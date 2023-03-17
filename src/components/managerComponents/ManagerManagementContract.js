@@ -43,7 +43,7 @@ const useStyles = makeStyles({
 
 function ManagerManagementContract(props) {
   const classes = useStyles();
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { access_token, user } = userData;
   const { back, property, contract, selectedBusiness, reload } = props;
 
@@ -74,6 +74,7 @@ function ManagerManagementContract(props) {
     showSidebar: width > 1023,
   };
 
+  const channel = ably.channels.get(`management_status`);
   const loadContract = () => {
     if (contract.contract_name) {
       setContractName(contract.contract_name);
@@ -162,6 +163,7 @@ function ManagerManagementContract(props) {
     }
 
     await put("/properties", newProperty, null, images);
+    channel.publish({ data: { te: newProperty } });
     setShowSpinner(false);
     back();
     reload();

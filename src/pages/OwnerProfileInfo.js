@@ -8,7 +8,7 @@ import Checkbox from "../components/Checkbox";
 import PaymentSelection from "../components/PaymentSelection";
 import { get, post } from "../utils/api";
 import { squareForm, pillButton, hidden, red, small } from "../utils/styles";
-import { formatPhoneNumber, formatSSN } from "../utils/helper";
+import { formatEIN, formatPhoneNumber, formatSSN } from "../utils/helper";
 function OwnerProfileInfo(props) {
   const context = React.useContext(AppContext);
   const { access_token, user } = context.userData;
@@ -202,7 +202,7 @@ function OwnerProfileInfo(props) {
                 placeholder="xx-xxxxxxx"
                 value={einNumber}
                 pattern="[0-9]{2}-[0-9]{7}"
-                onChange={(e) => setEinNumber(e.target.value)}
+                onChange={(e) => setEinNumber(formatEIN(e.target.value))}
               />
             </Col>
           </Row>

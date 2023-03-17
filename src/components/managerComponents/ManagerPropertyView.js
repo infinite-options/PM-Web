@@ -60,13 +60,15 @@ function ManagerPropertyView(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const classes = useStyles();
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { access_token, user } = userData;
+  const channel = ably.channels.get("management_status");
   // const property = location.state.property
   // const { mp_id } = useParams();
   const property_uid =
     location.state === null ? props.property_uid : location.state.property_uid;
   const [isLoading, setIsLoading] = useState(true);
+  const [addDoc, setAddDoc] = useState(false);
   const [managerID, setManagerID] = useState("");
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [property, setProperty] = useState({ images: "[]" });
@@ -249,6 +251,7 @@ function ManagerPropertyView(props) {
       updatedManagementContract[key] = files[i + 1];
     }
     await put("/cancelAgreement", updatedManagementContract, null, files);
+    channel.publish({ data: { te: updatedManagementContract } });
     setShowDialog(false);
     reloadProperty();
   };
@@ -360,10 +363,6 @@ function ManagerPropertyView(props) {
     // console.log(recent_mr, past_mr);
     setIsLoading(false);
   };
-  console.log("selected", selectedAgreement);
-  console.log("refused", refusedAgreement);
-  console.log("extended", extendedAgreement);
-  console.log(acceptedTenantApplications);
   const headerBack = () => {
     if (editAppliances && editProperty) {
       setEditAppliances(false);
@@ -397,8 +396,9 @@ function ManagerPropertyView(props) {
     showTenantAgreementEdit,
   ]);
   useEffect(() => {
+    console.log("in useeffect");
     fetchProperty();
-  }, []);
+  }, [addDoc]);
   const addContract = () => {
     setSelectedContract(null);
     setShowManagementContract(true);
@@ -428,7 +428,7 @@ function ManagerPropertyView(props) {
     setAcceptedTenantApplications([]);
     setSelectedAgreement(null);
     window.scrollTo(0, 0);
-
+    console.log("in close agreement");
     fetchProperty();
   };
 
@@ -436,6 +436,7 @@ function ManagerPropertyView(props) {
     setEditProperty(false);
     setShowAddRequest(false);
     window.scrollTo(0, 0);
+    console.log("in reload property");
     fetchProperty();
   };
 
@@ -1100,8 +1101,9 @@ function ManagerPropertyView(props) {
                       <Col></Col>
                     )}
                   </Row>
-                  <Row>
-                    {property.maintenanceRequests.length > 0 ? (
+                  <Row className="m-3">
+                    {property.maintenanceRequests.length > 0 &&
+                    property.management_status === "ACCEPTED" ? (
                       <div style={{ overflow: "hidden" }}>
                         <Table
                           classes={{ root: classes.customTable }}
@@ -1671,6 +1673,8 @@ function ManagerPropertyView(props) {
                       extendedAgreement={extendedAgreement}
                       selectAgreement={selectAgreement}
                       renewLease={renewLease}
+                      addDoc={addDoc}
+                      setAddDoc={setAddDoc}
                       acceptedTenantApplications={acceptedTenantApplications}
                       setAcceptedTenantApplications={
                         setAcceptedTenantApplications

@@ -41,7 +41,7 @@ const useStyles = makeStyles({
 function ReviewTenantProfile(props) {
   const classes = useStyles();
   const { property_uid } = useParams();
-  const { userData } = useContext(AppContext);
+  const { userData, ably } = useContext(AppContext);
   const { user, access_token } = userData;
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
@@ -64,6 +64,7 @@ function ReviewTenantProfile(props) {
 
   const [width, setWindowWidth] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
+  const channel_application = ably.channels.get("application_status");
   useEffect(() => {
     updateDimensions();
 
@@ -121,7 +122,7 @@ function ReviewTenantProfile(props) {
     };
     // console.log(application_docs);
     const response = await post("/applications", newApplication, access_token);
-
+    channel_application.publish({ data: { te: newApplication } });
     const tenantProfile = {};
     let update_tenant_docs = [];
     for (let i = 0; i < filesCopy.length; i++) {

@@ -52,6 +52,8 @@ function ManagerTenantAgreementView(props) {
     selectAgreement,
     closeAgreement,
     extendedAgreement,
+    addDoc,
+    setAddDoc,
   } = props;
   // console.log(property);
   const { userData, refresh } = useContext(AppContext);
@@ -77,7 +79,7 @@ function ManagerTenantAgreementView(props) {
   const [selectedTenant, setSelectedTenant] = useState("");
   const [selectedContact, setSelectedContact] = useState("");
 
-  const [addDoc, setAddDoc] = useState(false);
+  // const [addDoc, setAddDoc] = useState(false);
   const [editingDoc, setEditingDoc] = useState(null);
   const [showMailForm, setShowMailForm] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
@@ -88,9 +90,9 @@ function ManagerTenantAgreementView(props) {
   const onCancelContact = () => {
     setShowMessageFormContact(false);
   };
-  useEffect(() => {
-    closeAgreement();
-  }, [addDoc]);
+  // useEffect(() => {
+  //   closeAgreement();
+  // }, [addDoc]);
   const loadAgreement = async (agg) => {
     // console.log("load agreement");
 

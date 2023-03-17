@@ -39,18 +39,18 @@ const useStyles = makeStyles({
 });
 function PropertyManagerDocs(props) {
   const classes = useStyles();
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { access_token, user } = userData;
   // console.log(user);
   let pageURL = window.location.href.split("/");
 
+  const channel = ably.channels.get("management_status");
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const {
     addDocument,
     property,
     selectContract,
-    reload,
     fetchProperty,
     setShowDialog,
     endEarlyDate,
@@ -58,7 +58,6 @@ function PropertyManagerDocs(props) {
     cancel,
     setCancel,
     managerID,
-    selectedBusiness,
     setSelectedBusiness,
   } = props;
   const [contracts, setContracts] = useState([]);
@@ -81,11 +80,15 @@ function PropertyManagerDocs(props) {
     }
     const newProperty = {
       property_uid: property.property_uid,
-      management_status: "REJECTED",
+      manager_id: management_buid,
+      management_status: "REFUSED",
     };
     const files = JSON.parse(property.images);
 
     await put("/properties", newProperty, null, files);
+
+    channel.publish({ data: { te: newProperty } });
+    navigate("../manager");
   };
 
   const acceptCancelAgreement = async () => {
@@ -112,6 +115,7 @@ function PropertyManagerDocs(props) {
 
     await put("/cancelAgreement", updatedManagementContract, null, files);
 
+    channel.publish({ data: { te: updatedManagementContract } });
     navigate("../manager");
   };
 
@@ -137,6 +141,8 @@ function PropertyManagerDocs(props) {
       updatedManagementContract[key] = files[i + 1];
     }
     await put("/cancelAgreement", updatedManagementContract, null, files);
+
+    channel.publish({ data: { te: updatedManagementContract } });
     fetchProperty();
   };
   const getContract = async () => {

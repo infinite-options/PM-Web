@@ -1813,6 +1813,12 @@ function ManagerRepairDetail(props) {
                   onChange={(e) => setMessagetoM(e.target.value)}
                 />
               </Form.Group>
+              <div
+                className="text-center"
+                style={errorMessage === "" ? hidden : {}}
+              >
+                <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
+              </div>
               <Row className="pt-1 mt-3 mb-2">
                 {showSpinner ? (
                   <div className="w-100 d-flex flex-column justify-content-center align-items-center">
@@ -1821,6 +1827,7 @@ function ManagerRepairDetail(props) {
                 ) : (
                   ""
                 )}
+
                 <Col className="d-flex flex-row justify-content-evenly">
                   <Button
                     style={pillButton}

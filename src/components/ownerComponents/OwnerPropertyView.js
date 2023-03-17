@@ -48,6 +48,7 @@ import {
   smallImg,
 } from "../../utils/styles";
 import "react-multi-carousel/lib/styles.css";
+
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -64,13 +65,13 @@ function OwnerPropertyView(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const classes = useStyles();
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
+
+  const channel = ably.channels.get("management_status");
   const { access_token, user } = userData;
-  // console.log(location.state);
   const property_uid =
     location.state === null ? props.property_uid : location.state.property_uid;
   const [isLoading, setIsLoading] = useState(true);
-  // const { property_uid, back, reload, setStage } = props;
   const [property, setProperty] = useState({
     images: "[]",
   });
@@ -367,6 +368,7 @@ function OwnerPropertyView(props) {
       null,
       files
     );
+    channel.publish({ data: { te: updatedManagementContract } });
     reloadProperty();
   };
 
@@ -393,6 +395,7 @@ function OwnerPropertyView(props) {
       files
     );
     setShowDialog(false);
+    channel.publish({ data: { te: updatedManagementContract } });
     reloadProperty();
   };
 
@@ -418,6 +421,7 @@ function OwnerPropertyView(props) {
       null,
       files
     );
+    channel.publish({ data: { te: updatedManagementContract } });
     setShowDialog2(false);
     reloadProperty();
   };
@@ -436,6 +440,7 @@ function OwnerPropertyView(props) {
       updatedManagementContract[key] = files[i + 1];
     }
     await put("/cancelAgreement", updatedManagementContract, null, files);
+    channel.publish({ data: { te: updatedManagementContract } });
     reloadProperty();
   };
 
@@ -448,6 +453,7 @@ function OwnerPropertyView(props) {
     };
 
     await put("/cancelAgreement", updatedManagementContract, null, files);
+    channel.publish({ data: { te: updatedManagementContract } });
     reloadProperty();
   };
 
@@ -974,8 +980,8 @@ function OwnerPropertyView(props) {
                                     style={{
                                       borderRadius: "4px",
                                       objectFit: "contain",
-                                      maxWidth: "80px",
-                                      maxHeight: "80px",
+                                      maxWidth: "50px",
+                                      maxHeight: "50px",
                                     }}
                                   />
                                 ) : (
@@ -985,8 +991,8 @@ function OwnerPropertyView(props) {
                                     style={{
                                       borderRadius: "4px",
                                       objectFit: "contain",
-                                      maxWidth: "80px",
-                                      maxHeight: "80px",
+                                      maxWidth: "50px",
+                                      maxHeight: "50px",
                                     }}
                                   />
                                 )}
@@ -2081,7 +2087,6 @@ function OwnerPropertyView(props) {
                       /> */}
                       </Col>
                     </Row>
-                    {console.log(property.property_manager)}
                     {property.property_manager.length === 0 ? (
                       ""
                     ) : property.property_manager.length > 1 ? (
@@ -2141,29 +2146,43 @@ function OwnerPropertyView(props) {
                                 >
                                   {" "}
                                   Fees Charged:
-                                  {JSON.parse(p.business_services_fees).map(
-                                    (bsf) => {
-                                      return (
-                                        <Row
-                                          className="m-2 p-1"
-                                          style={{
-                                            background:
-                                              " #FFFFFF 0% 0% no-repeat padding-box",
-                                            boxShadow: " 0px 1px 6px #00000029",
-                                            borderRadius: "5px",
-                                          }}
-                                        >
-                                          <Col> {bsf.fee_name}&nbsp;</Col>
-                                          <Col>
-                                            {bsf.fee_type === "%"
-                                              ? `${bsf.charge}% of ${bsf.of}`
-                                              : `$${bsf.charge}`}{" "}
-                                            {bsf.frequency}
-                                          </Col>
-                                        </Row>
-                                      );
-                                    }
-                                  )}
+                                  <Table
+                                    classes={{ root: classes.customTable }}
+                                    size="small"
+                                  >
+                                    <TableHead>
+                                      <TableRow>
+                                        <TableCell>Fee Name</TableCell>
+                                        <TableCell>Amount</TableCell>
+                                        <TableCell>Of</TableCell>
+                                        <TableCell>Frequency</TableCell>
+                                      </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                      {JSON.parse(p.business_services_fees).map(
+                                        (fee, i) => (
+                                          <TableRow key={i}>
+                                            <TableCell>
+                                              {fee.fee_name}
+                                            </TableCell>
+                                            <TableCell>
+                                              {fee.fee_type === "%"
+                                                ? `${fee.charge}%`
+                                                : `$${fee.charge}`}
+                                            </TableCell>
+                                            <TableCell>
+                                              {fee.fee_type === "%"
+                                                ? `${fee.of}`
+                                                : ""}
+                                            </TableCell>
+                                            <TableCell>
+                                              {fee.frequency}
+                                            </TableCell>
+                                          </TableRow>
+                                        )
+                                      )}
+                                    </TableBody>
+                                  </Table>
                                 </Row>
                                 <Row
                                   className="m-2 p-2"
@@ -2298,30 +2317,40 @@ function OwnerPropertyView(props) {
                             >
                               {" "}
                               Fees Charged:
-                              {JSON.parse(
-                                property.property_manager[0]
-                                  .business_services_fees
-                              ).map((bsf) => {
-                                return (
-                                  <Row
-                                    className="m-2 p-1"
-                                    style={{
-                                      background:
-                                        " #FFFFFF 0% 0% no-repeat padding-box",
-                                      boxShadow: " 0px 1px 6px #00000029",
-                                      borderRadius: "5px",
-                                    }}
-                                  >
-                                    <Col> {bsf.fee_name}&nbsp;</Col>
-                                    <Col>
-                                      {bsf.fee_type === "%"
-                                        ? `${bsf.charge}% of ${bsf.of}`
-                                        : `$${bsf.charge}`}{" "}
-                                      {bsf.frequency}
-                                    </Col>
-                                  </Row>
-                                );
-                              })}
+                              <Table
+                                classes={{ root: classes.customTable }}
+                                size="small"
+                              >
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>Fee Name</TableCell>
+                                    <TableCell>Amount</TableCell>
+                                    <TableCell>Of</TableCell>
+                                    <TableCell>Frequency</TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {JSON.parse(
+                                    property.property_manager[0]
+                                      .business_services_fees
+                                  ).map((fee, i) => (
+                                    <TableRow key={i}>
+                                      <TableCell>{fee.fee_name}</TableCell>
+                                      <TableCell>
+                                        {fee.fee_type === "%"
+                                          ? `${fee.charge}%`
+                                          : `$${fee.charge}`}
+                                      </TableCell>
+                                      <TableCell>
+                                        {fee.fee_type === "%"
+                                          ? `${fee.of}`
+                                          : ""}
+                                      </TableCell>
+                                      <TableCell>{fee.frequency}</TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
                             </Row>
                             <Row
                               className="m-2 p-2"
@@ -2408,110 +2437,103 @@ function OwnerPropertyView(props) {
                         ) : p.management_status === "SENT" ? (
                           <div>
                             <Row
-                              className="mt-1"
+                              className="mt-1 mx-3"
                               style={{ overflow: "scroll" }}
                             >
-                              <div>
-                                <Table
-                                  responsive="md"
-                                  classes={{ root: classes.customTable }}
-                                  size="small"
-                                >
-                                  <TableHead>
-                                    <TableRow>
-                                      <TableCell>Business Name</TableCell>
-                                      <TableCell>Contract Name</TableCell>
-                                      <TableCell>Start Date</TableCell>
-                                      <TableCell>End Date</TableCell>
-                                      <TableCell>Actions</TableCell>
-                                    </TableRow>
-                                  </TableHead>
-                                  <TableBody>
-                                    <TableRow>
-                                      <TableCell>
-                                        {p.manager_business_name}
+                              <Table
+                                responsive="md"
+                                classes={{ root: classes.customTable }}
+                                size="small"
+                              >
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>Business Name</TableCell>
+                                    <TableCell>Contract Name</TableCell>
+                                    <TableCell>Start Date</TableCell>
+                                    <TableCell>End Date</TableCell>
+                                    <TableCell>Actions</TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell>
+                                      {p.manager_business_name}
 
-                                        <p
-                                          style={{
-                                            color: "#007AFF",
-                                            fontSize: "12px",
-                                          }}
-                                          className="m-1"
-                                        >
-                                          Contract in Review
-                                        </p>
-                                      </TableCell>
-                                      {contracts.map((contract, i) =>
-                                        contract.business_uid ===
-                                          p.manager_id &&
-                                        contract.contract_status ===
-                                          "ACTIVE" ? (
-                                          contract.contract_name !== null ? (
-                                            <TableCell>
-                                              {contract.contract_name}{" "}
-                                            </TableCell>
-                                          ) : (
-                                            <TableCell>
-                                              Contract {i + 1}{" "}
-                                            </TableCell>
-                                          )
-                                        ) : (
-                                          ""
-                                        )
-                                      )}
-
-                                      {contracts.map((contract, i) =>
-                                        contract.business_uid ===
-                                        p.manager_id ? (
+                                      <p
+                                        style={{
+                                          color: "#007AFF",
+                                          fontSize: "12px",
+                                        }}
+                                        className="m-1"
+                                      >
+                                        Contract in Review
+                                      </p>
+                                    </TableCell>
+                                    {contracts.map((contract, i) =>
+                                      contract.business_uid === p.manager_id &&
+                                      contract.contract_status === "ACTIVE" ? (
+                                        contract.contract_name !== null ? (
                                           <TableCell>
-                                            {contract.start_date}
+                                            {contract.contract_name}{" "}
                                           </TableCell>
                                         ) : (
-                                          ""
-                                        )
-                                      )}
-                                      {contracts.map((contract, i) =>
-                                        contract.business_uid ===
-                                          p.manager_id &&
-                                        contract.contract_status ===
-                                          "ACTIVE" ? (
                                           <TableCell>
-                                            {contract.end_date}
+                                            Contract {i + 1}{" "}
                                           </TableCell>
-                                        ) : (
-                                          ""
                                         )
-                                      )}
+                                      ) : (
+                                        ""
+                                      )
+                                    )}
 
-                                      <TableCell>
-                                        <a
-                                          href={`tel:${property.managerInfo.manager_phone_number}`}
-                                        >
-                                          <img
-                                            src={Phone}
-                                            alt="Phone"
-                                            style={smallImg}
-                                          />
-                                        </a>
-                                        <a
-                                          href={`mailto:${property.managerInfo.manager_email}`}
-                                        >
-                                          <img
-                                            src={Message}
-                                            alt="Message"
-                                            style={smallImg}
-                                          />
-                                        </a>
-                                      </TableCell>
-                                    </TableRow>
-                                  </TableBody>
-                                </Table>
-                              </div>
+                                    {contracts.map((contract, i) =>
+                                      contract.business_uid === p.manager_id ? (
+                                        <TableCell>
+                                          {contract.start_date}
+                                        </TableCell>
+                                      ) : (
+                                        ""
+                                      )
+                                    )}
+                                    {contracts.map((contract, i) =>
+                                      contract.business_uid === p.manager_id &&
+                                      contract.contract_status === "ACTIVE" ? (
+                                        <TableCell>
+                                          {contract.end_date}
+                                        </TableCell>
+                                      ) : (
+                                        ""
+                                      )
+                                    )}
+
+                                    <TableCell>
+                                      <a
+                                        href={`tel:${property.managerInfo.manager_phone_number}`}
+                                      >
+                                        <img
+                                          src={Phone}
+                                          alt="Phone"
+                                          style={smallImg}
+                                        />
+                                      </a>
+                                      <a
+                                        href={`mailto:${property.managerInfo.manager_email}`}
+                                      >
+                                        <img
+                                          src={Message}
+                                          alt="Message"
+                                          style={smallImg}
+                                        />
+                                      </a>
+                                    </TableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
                             </Row>
-                            <Row className="mt-1">
+                            <Row className="mt-1 mx-3">
                               <h5>Property Manager Documents</h5>
                             </Row>
-                            <div>
+                            <Row className="mt-1 mx-3">
                               <Table
                                 responsive="md"
                                 classes={{ root: classes.customTable }}
@@ -2574,39 +2596,46 @@ function OwnerPropertyView(props) {
                                   )}
                                 </TableBody>
                               </Table>
-                            </div>
-
-                            <Row className="mt-1">
-                              <h5>Property Manager Fee Details</h5>
                             </Row>
-                            {contracts.map((contract, i) =>
-                              contract.business_uid === p.manager_id &&
-                              contract.contract_status === "ACTIVE" ? (
-                                <ManagerFees
-                                  feeState={JSON.parse(contract.contract_fees)}
-                                  setFeeState={setFeeState}
-                                />
-                              ) : (
-                                ""
-                              )
-                            )}
-                            <Row className="mt-1">
+                            <Row className="mt-1 mx-3">
+                              <h5>Property Manager Fee Details</h5>
+                            </Row>{" "}
+                            <Row className="mt-1 mx-1">
+                              {" "}
+                              {contracts.map((contract, i) =>
+                                contract.business_uid === p.manager_id &&
+                                contract.contract_status === "ACTIVE" ? (
+                                  <ManagerFees
+                                    feeState={JSON.parse(
+                                      contract.contract_fees
+                                    )}
+                                    setFeeState={setFeeState}
+                                  />
+                                ) : (
+                                  ""
+                                )
+                              )}
+                            </Row>
+                            <Row className="mt-1 mx-3">
                               <h5>Property Manager Contact Details</h5>
                             </Row>
-                            {contracts.map((contract, i) =>
-                              contract.business_uid === p.manager_id &&
-                              contract.contract_status === "ACTIVE" ? (
-                                JSON.parse(contract.assigned_contacts)
-                                  .length === 0 ? (
-                                  "No Contacts Provided"
+                            <Row className="mt-1 mx-1">
+                              {contracts.map((contract, i) =>
+                                contract.business_uid === p.manager_id &&
+                                contract.contract_status === "ACTIVE" ? (
+                                  JSON.parse(contract.assigned_contacts)
+                                    .length === 0 ? (
+                                    <Row className="mt-1 mx-3">
+                                      No Contacts Provided
+                                    </Row>
+                                  ) : (
+                                    <BusinessContact state={contactState} />
+                                  )
                                 ) : (
-                                  <BusinessContact state={contactState} />
+                                  ""
                                 )
-                              ) : (
-                                ""
-                              )
-                            )}
-
+                              )}
+                            </Row>
                             <Row className="mt-4">
                               <Col
                                 style={{
@@ -3038,7 +3067,9 @@ function OwnerPropertyView(props) {
                           </Table>
                         </div>
                       ) : (
-                        <div>Not rented</div>
+                        <Row className="m-3">
+                          <div className="m-3">Not Rented</div>
+                        </Row>
                       )}
                     </Row>
                   </div>

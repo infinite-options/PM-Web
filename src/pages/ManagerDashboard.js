@@ -27,6 +27,7 @@ import RepairImg from "../icons/RepairImg.svg";
 import { get } from "../utils/api";
 import { green, red, blue, xSmall } from "../utils/styles";
 import ManagerCashflow from "../components/managerComponents/ManagerCashflow";
+import { configureAbly, useChannel } from "@ably-labs/react-hooks";
 
 const useStyles = makeStyles({
   customTable: {
@@ -47,7 +48,7 @@ export default function ManagerDashboard() {
   const [stage, setStage] = useState("LIST");
   const [isLoading, setIsLoading] = useState(true);
 
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { access_token, user } = userData;
   // search variables
   const [search, setSearch] = useState("");
@@ -57,6 +58,9 @@ export default function ManagerDashboard() {
 
   const [orderMaintenance, setOrderMaintenance] = useState("asc");
   const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
+  const [managementStatus, setManagementStatus] = useState("");
+
+  const [applicationStatus, setApplicationStatus] = useState("");
 
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
@@ -224,10 +228,30 @@ export default function ManagerDashboard() {
     setMaintenanceRequests(requests);
   };
 
+  const channel = ably.channels.get("management_status");
+  const channel_application = ably.channels.get("application_status");
+
   useEffect(() => {
-    // console.log("in use effect");
+    async function subscribe_host() {
+      await channel.subscribe((message) => {
+        console.log(message);
+        setManagementStatus(message.data.te);
+      });
+    }
+    async function subscribe_host2() {
+      await channel_application.subscribe((message) => {
+        console.log(message);
+        setApplicationStatus(message.data.te);
+      });
+    }
+    subscribe_host();
+    subscribe_host2();
     fetchManagerDashboard();
-  }, [access_token]);
+    return function cleanup() {
+      channel.unsubscribe();
+      channel_application.unsubscribe();
+    };
+  }, [access_token, managementStatus, applicationStatus]);
 
   console.log(managerData);
   const fetchTenantDetails = async (tenant_id) => {
@@ -437,6 +461,8 @@ export default function ManagerDashboard() {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
+
+  // console.log(channel);
 
   const handleRequestSortMaintenance = (event, property) => {
     const isAsc = orderMaintenanceBy === property && orderMaintenance === "asc";
