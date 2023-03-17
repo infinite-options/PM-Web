@@ -91,7 +91,6 @@ function ManagerRepairDetail(props) {
   const [reDate, setReDate] = useState("");
   const [reTime, setReTime] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  co;
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
