@@ -58,6 +58,7 @@ export default function OwnerDashboard2() {
   const [orderMaintenance, setOrderMaintenance] = useState("asc");
   const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
   const [managementStatus, setManagementStatus] = useState("");
+  const [maintenanceStatus, setMaintenanceStatus] = useState("");
 
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
@@ -141,22 +142,29 @@ export default function OwnerDashboard2() {
     setIsLoading(false);
   };
   const channel = ably.channels.get("management_status");
+  const channel_maintenance = ably.channels.get("maintenance_status");
 
   useEffect(() => {
-    fetchOwnerDashboard();
-    async function subscribe_host() {
+    async function management_message() {
       await channel.subscribe((message) => {
         console.log(message);
         setManagementStatus(message.data.te);
       });
     }
-    // console.log("in use effect");
-    subscribe_host();
-
+    async function maintenance_message() {
+      await channel_maintenance.subscribe((message) => {
+        console.log(message);
+        setMaintenanceStatus(message.data.te);
+      });
+    }
+    management_message();
+    maintenance_message();
+    fetchOwnerDashboard();
     return function cleanup() {
       channel.unsubscribe();
+      channel_maintenance.unsubscribe();
     };
-  }, [access_token, managementStatus]);
+  }, [access_token, managementStatus, maintenanceStatus]);
 
   const addProperty = () => {
     fetchOwnerDashboard();

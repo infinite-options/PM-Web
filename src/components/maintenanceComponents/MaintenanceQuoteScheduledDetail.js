@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import moment from "moment";
@@ -16,11 +16,14 @@ import {
 } from "../../utils/styles";
 import { put } from "../../utils/api";
 import RepairImages from "../RepairImages";
+import AppContext from "../../AppContext";
 
 function MaintenanceQuoteScheduledDetail(props) {
+  const { ably } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
   const { quote } = props;
+  const channel_maintenance = ably.channels.get("maintenance_status");
 
   const [reDate, setReDate] = useState("");
   const [reTime, setReTime] = useState("");
@@ -73,6 +76,7 @@ function MaintenanceQuoteScheduledDetail(props) {
       }
     }
     const res = await put("/FinishMaintenance", updateRequest, null, files);
+    channel_maintenance.publish({ data: { te: updateRequest } });
     setFinishMaintenance(false);
     navigate("../maintenance");
   };
@@ -83,6 +87,7 @@ function MaintenanceQuoteScheduledDetail(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", updatedQuote);
+    channel_maintenance.publish({ data: { te: updatedQuote } });
     navigate("/maintenance");
   };
 
@@ -105,6 +110,7 @@ function MaintenanceQuoteScheduledDetail(props) {
     }
 
     const response = await put("/maintenanceRequests", body, null, images);
+    channel_maintenance.publish({ data: { te: body } });
   };
 
   const acceptReschedule = async (quote) => {
@@ -133,6 +139,7 @@ function MaintenanceQuoteScheduledDetail(props) {
       quote_adjustment_date: new Date(),
     };
     const responseMQ = await put("/maintenanceQuotes", updatedQuote);
+    channel_maintenance.publish({ data: { te: updatedQuote } });
   };
 
   const rescheduleRepair = async () => {
@@ -154,7 +161,7 @@ function MaintenanceQuoteScheduledDetail(props) {
     }
 
     const response = await put("/maintenanceRequests", body, null, images);
-
+    channel_maintenance.publish({ data: { te: body } });
     navigate("../maintenance");
   };
   console.log(quote.request_status);

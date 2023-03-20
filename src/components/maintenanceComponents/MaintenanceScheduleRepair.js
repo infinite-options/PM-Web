@@ -24,8 +24,9 @@ import { put } from "../../utils/api";
 import "./calendar.css";
 
 function MaintenanceScheduleRepair(props) {
-  const { userData } = useContext(AppContext);
+  const { userData, ably } = useContext(AppContext);
   const { user } = userData;
+  const channel_maintenance = ably.channels.get("maintenance_status");
   const imageState = useState([]);
 
   const navigate = useNavigate();
@@ -740,6 +741,8 @@ function MaintenanceScheduleRepair(props) {
     }
 
     const response = await put("/maintenanceRequests", meeting, null, images);
+
+    channel_maintenance.publish({ data: { te: meeting } });
   };
 
   function createMeet() {

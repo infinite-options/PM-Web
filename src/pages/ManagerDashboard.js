@@ -59,7 +59,7 @@ export default function ManagerDashboard() {
   const [orderMaintenance, setOrderMaintenance] = useState("asc");
   const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
   const [managementStatus, setManagementStatus] = useState("");
-
+  const [maintenanceStatus, setMaintenanceStatus] = useState("");
   const [applicationStatus, setApplicationStatus] = useState("");
 
   const [width, setWindowWidth] = useState(0);
@@ -230,6 +230,7 @@ export default function ManagerDashboard() {
 
   const channel = ably.channels.get("management_status");
   const channel_application = ably.channels.get("application_status");
+  const channel_maintenance = ably.channels.get("maintenance_status");
 
   useEffect(() => {
     async function subscribe_host() {
@@ -240,6 +241,12 @@ export default function ManagerDashboard() {
     }
     async function subscribe_host2() {
       await channel_application.subscribe((message) => {
+        console.log(message);
+        setApplicationStatus(message.data.te);
+      });
+    }
+    async function subscribe_host2() {
+      await channel_maintenance.subscribe((message) => {
         console.log(message);
         setApplicationStatus(message.data.te);
       });

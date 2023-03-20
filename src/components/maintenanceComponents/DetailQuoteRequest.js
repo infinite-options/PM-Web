@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import {
@@ -41,6 +41,7 @@ const useStyles = makeStyles({
 });
 function DetailQuoteRequest(props) {
   const navigate = useNavigate();
+  const { ably } = useContext(AppContext);
   const classes = useStyles();
   const {
     quote,
@@ -53,6 +54,7 @@ function DetailQuoteRequest(props) {
     setQuoteRejected,
   } = props;
 
+  const channel_maintenance = ably.channels.get("maintenance_status");
   const [errorMessage, setErrorMessage] = useState("");
   const [sendManager, setSendManager] = useState(false);
   const [serviceState, setServiceState] = useState([]);
@@ -97,6 +99,7 @@ function DetailQuoteRequest(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", updatedQuote);
+    channel_maintenance.publish({ data: { te: updateQuote } });
     setAddQuote(false);
     setQuoteSent(true);
     setQuoteRejected(false);
@@ -119,6 +122,7 @@ function DetailQuoteRequest(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", updatedQuote);
+    channel_maintenance.publish({ data: { te: updateQuote } });
     setEditQuote(false);
     setShowDialog(false);
     setQuoteRejected(false);
@@ -136,6 +140,7 @@ function DetailQuoteRequest(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", updatedQuote);
+    channel_maintenance.publish({ data: { te: updateQuote } });
     // navigate("/maintenance");
 
     setWithdrawQuote(false);

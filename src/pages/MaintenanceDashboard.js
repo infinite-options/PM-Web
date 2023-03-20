@@ -34,8 +34,9 @@ const useStyles = makeStyles({
 function MaintenanceDashboard(props) {
   const navigate = useNavigate();
   const classes = useStyles();
-  const { userData } = useContext(AppContext);
-  const [upcomingJob, setUpcomingJob] = useState(null);
+  const { userData, ably } = useContext(AppContext);
+
+  const channel_maintenance = ably.channels.get("maintenance_status");
   const [isLoading, setIsLoading] = useState(true);
   const [quotes, setQuotes] = useState([]);
   const [quotesRequested, setQuotesRequested] = useState([]);
@@ -48,6 +49,7 @@ function MaintenanceDashboard(props) {
   const [quotesRefused, setQuotesRefused] = useState([]);
   const [orderMaintenance, setOrderMaintenance] = useState("asc");
   const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
+  const [maintenanceStatus, setMaintenanceStatus] = useState("");
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -155,7 +157,21 @@ function MaintenanceDashboard(props) {
     setIsLoading(false);
   };
 
-  useEffect(fetchMaintenanceDashboard, []);
+  useEffect(() => {
+    async function maintenance_message() {
+      await channel_maintenance.subscribe((message) => {
+        console.log(message);
+        setMaintenanceStatus(message.data.te);
+      });
+    }
+    maintenance_message();
+    fetchMaintenanceDashboard();
+    return function cleanup() {
+      channel_maintenance.unsubscribe();
+    };
+  }, [maintenanceStatus]);
+
+  // useEffect(fetchMaintenanceDashboard, []);
 
   const handleRequestSortMaintenance = (event, property) => {
     const isAsc = orderMaintenanceBy === property && orderMaintenance === "asc";

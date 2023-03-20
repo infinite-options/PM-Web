@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -33,6 +33,7 @@ import {
   squareForm,
   pillButton,
 } from "../../utils/styles";
+import AppContext from "../../AppContext";
 // import ApplePay from "./ApplePay";
 const useStyles = makeStyles({
   customTable: {
@@ -45,9 +46,11 @@ const useStyles = makeStyles({
 });
 function ManagerPaymentPage(props) {
   const classes = useStyles();
+  const { ably } = useContext(AppContext);
   const navigate = useNavigate();
   const { purchase_uid } = useParams();
   const location = useLocation();
+  const channel_maintenance = ably.channels.get("maintenance_status");
   const [totalSum, setTotalSum] = useState(location.state.amount);
   const selectedProperty = location.state.selectedProperty;
   const purchaseUIDs = location.state.purchaseUIDs;
@@ -113,6 +116,7 @@ function ManagerPaymentPage(props) {
       };
       console.log("allPurchases", body);
       const response = await put("/QuotePaid", body);
+      channel_maintenance.publish({ data: { te: body } });
     } else {
       for (let purchase of allPurchases) {
         // console.log(purchase);
@@ -132,6 +136,7 @@ function ManagerPaymentPage(props) {
           quote_status: "PAID",
         };
         await put("/QuotePaid", body);
+        channel_maintenance.publish({ data: { te: body } });
       }
     }
 
