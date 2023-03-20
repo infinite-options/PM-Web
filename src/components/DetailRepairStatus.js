@@ -44,8 +44,9 @@ function DetailRepairStatus(props) {
   const navigate = useNavigate();
   const { maintenance_request_uid, property_uid } = useParams();
   const context = useContext(AppContext);
-  const { userData, refresh } = context;
+  const { userData, refresh, ably } = context;
   const { access_token, user } = userData;
+  const channel_maintenance = ably.channels.get("maintenance_status");
   const [profile, setProfile] = useState([]);
   const [repairsDetail, setRepairsDetail] = useState([]);
   const [busineesAssigned, setBusineesAssigned] = useState([]);
@@ -171,6 +172,7 @@ function DetailRepairStatus(props) {
       `/maintenanceRequests?maintenance_request_uid=${maintenance_request_uid}`,
       payload
     );
+    channel_maintenance.publish({ data: { te: payload } });
   };
 
   const acceptRepairAppt = async () => {
@@ -184,6 +186,7 @@ function DetailRepairStatus(props) {
       `/maintenanceRequests?maintenance_request_uid=${maintenance_request_uid}`,
       payload
     );
+    channel_maintenance.publish({ data: { te: payload } });
   };
 
   function displayMessage() {
@@ -336,7 +339,7 @@ function DetailRepairStatus(props) {
     // console.log(newRepair);
     setShowSpinner(true);
     const res = await put("/maintenanceRequests", newRepair, null, files);
-    // console.log(res);
+    channel_maintenance.publish({ data: { te: newRepair } });
     setShowSpinner(false);
     reload();
     // setIsEditing(false);

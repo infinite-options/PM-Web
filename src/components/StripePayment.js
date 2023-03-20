@@ -13,7 +13,8 @@ import { post, put } from "../utils/api";
 
 function StripePayment(props) {
   const { purchases, message, amount } = props;
-  const { userData } = React.useContext(AppContext);
+  const { userData, ably } = React.useContext(AppContext);
+  const channel_maintenance = ably.channels.get("maintenance_status");
   const [showSpinner, setShowSpinner] = useState(false);
   const { user } = userData;
   const elements = useElements();
@@ -71,6 +72,7 @@ function StripePayment(props) {
         quote_status: "PAID",
       };
       const response = await put("/QuotePaid", body);
+      channel_maintenance.publish({ data: { te: body } });
     } else {
       for (let purchase of purchases) {
         // console.log(purchase);
@@ -88,6 +90,7 @@ function StripePayment(props) {
           quote_status: "PAID",
         };
         const response = await put("/QuotePaid", body);
+        channel_maintenance.publish({ data: { te: body } });
       }
     }
     setShowSpinner(false);

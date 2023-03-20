@@ -40,8 +40,9 @@ const useStyles = makeStyles({
 });
 function ReviewTenantProfileEdit(props) {
   const classes = useStyles();
-  const { userData } = useContext(AppContext);
+  const { userData, ably } = useContext(AppContext);
   const { user, access_token } = userData;
+  const channel_application = ably.channels.get("application_status");
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -116,6 +117,7 @@ function ReviewTenantProfileEdit(props) {
 
     const response = await put("/applications", newApplication);
 
+    channel_application.publish({ data: { te: newApplication } });
     const tenantProfile = {};
     let update_tenant_docs = [];
     for (let i = 0; i < filesCopy.length; i++) {

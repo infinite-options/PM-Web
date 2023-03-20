@@ -88,8 +88,9 @@ function TenantRepairDetails(props) {
     showSidebar: width > 1023,
   };
   const imageState = useState([]);
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { user, access_token } = userData;
+  const channel_maintenance = ably.channels.get("maintenance_status");
   const location = useLocation();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
@@ -199,6 +200,7 @@ function TenantRepairDetails(props) {
     setShowSpinner(true);
     // console.log(newRepair);
     const res = await put("/maintenanceRequests", newRepair, null, files);
+    channel_maintenance.publish({ data: { te: newRepair } });
     setShowSpinner(false);
     fetchBusinesses();
     setIsEditing(false);
@@ -235,6 +237,7 @@ function TenantRepairDetails(props) {
     }
     const response = await put("/maintenanceRequests", body, null, files);
 
+    channel_maintenance.publish({ data: { te: body } });
     fetchBusinesses();
     setScheduleMaintenance(false);
     setIsEditing(false);
@@ -258,6 +261,7 @@ function TenantRepairDetails(props) {
     // console.log("Repair Object to be updated", newRepair);
 
     const response = await put("/maintenanceRequests", newRepair, null, files);
+    channel_maintenance.publish({ data: { te: newRepair } });
     fetchBusinesses();
   };
   const acceptSchedule = async (quote) => {
@@ -286,6 +290,7 @@ function TenantRepairDetails(props) {
       quote_adjustment_date: new Date(),
     };
     const responseMQ = await put("/maintenanceQuotes", updatedQuote);
+    channel_maintenance.publish({ data: { te: updatedQuote } });
 
     fetchBusinesses();
     setScheduleMaintenance(false);
@@ -298,6 +303,7 @@ function TenantRepairDetails(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
+    channel_maintenance.publish({ data: { te: body } });
     fetchBusinesses();
   };
 
@@ -308,6 +314,7 @@ function TenantRepairDetails(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
+    channel_maintenance.publish({ data: { te: body } });
     fetchBusinesses();
   };
 

@@ -29,7 +29,7 @@ const useStyles = makeStyles({
 });
 function ManagerTenantApplications(props) {
   const classes = useStyles();
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { access_token } = userData;
   const {
     property,
@@ -43,10 +43,8 @@ function ManagerTenantApplications(props) {
   console.log(selectedTenantApplication);
   const [applications, setApplications] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
-  // const [newApplications, setNewApplications] = useState([]);
-  // const [selectedApplications, setSelectedApplications] = useState([])
-  // const [forwardedApplications, setForwardedApplications] = useState([]);
-  // const [rejectedApplications, setRejectedApplications] = useState([]);
+
+  const channel_application = ably.channels.get("application_status");
   const [isLoading, setIsLoading] = useState(true);
   const fetchApplications = async () => {
     if (access_token === null) {
@@ -101,6 +99,7 @@ function ManagerTenantApplications(props) {
     };
     // console.log(request_body)
     const response = await put("/applications", request_body);
+    channel_application.publish({ data: { te: request_body } });
     reload();
     setShowDialog(false);
   };

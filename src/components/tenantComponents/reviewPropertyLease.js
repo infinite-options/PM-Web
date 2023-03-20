@@ -227,6 +227,7 @@ function ReviewPropertyLease(props) {
       message: "requesting EXTENSION",
     };
     const response6 = await put("/extendLease", extendObject, access_token);
+    channel_application.publish({ data: { te: extendObject } });
     // console.log(response6.result);
     navigate("/tenant");
   };
@@ -246,6 +247,7 @@ function ReviewPropertyLease(props) {
     };
     // console.log(updatedRental);
     const response3 = await put("/endEarly", updatedRental, access_token);
+    channel_application.publish({ data: { te: updatedRental } });
     // console.log(response3.result);
     navigate("/tenant");
   };
@@ -257,6 +259,7 @@ function ReviewPropertyLease(props) {
       property_uid: rentals[0].rental_property_id,
     };
     const response4 = await put("/endEarly", updatedApprove, access_token);
+    channel_application.publish({ data: { te: updatedApprove } });
     // console.log(response4.result);
     navigate("/tenant");
   };
@@ -267,6 +270,7 @@ function ReviewPropertyLease(props) {
       property_uid: rentals[0].rental_property_id,
     };
     const response5 = await put("/endEarly", updatedApprove, access_token);
+    channel_application.publish({ data: { te: updatedApprove } });
     // console.log(response5.result);
     navigate("/tenant");
   };
@@ -283,6 +287,7 @@ function ReviewPropertyLease(props) {
           property_uid: property_uid,
         };
         const response2 = await put("/applications", updatedApplication, null);
+        channel_application.publish({ data: { te: updatedApplication } });
         navigate("/tenant");
       } else if (rentals.some((rental) => rental.rental_status === "PENDING")) {
         if (rentals.length > 1) {
@@ -295,6 +300,7 @@ function ReviewPropertyLease(props) {
           };
 
           const response = await put("/extendLease", request_body);
+          channel_application.publish({ data: { te: request_body } });
         } else {
           let request_body = {
             application_status: "REFUSED",
@@ -302,6 +308,7 @@ function ReviewPropertyLease(props) {
           };
 
           const response = await put("/extendLease", request_body);
+          channel_application.publish({ data: { te: request_body } });
           const updatedApplication = {
             application_uid: application_uid,
             application_status: "REFUSED",
@@ -312,6 +319,7 @@ function ReviewPropertyLease(props) {
             updatedApplication,
             null
           );
+          channel_application.publish({ data: { te: request_body } });
         }
 
         // const newMessage = {
@@ -336,6 +344,7 @@ function ReviewPropertyLease(props) {
         property_uid: property_uid,
       };
       const response2 = await put("/applications", updatedApplication, null);
+      channel_application.publish({ data: { te: updatedApplication } });
       navigate("/tenant");
     }
   };

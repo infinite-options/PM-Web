@@ -59,9 +59,9 @@ function TenantPropertyView(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const classes = useStyles();
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { access_token, user } = userData;
-  // const property = location.state.property
+  const channel_application = ably.channels.get("application_status");
   // const { mp_id } = useParams();
   const property_uid = location.state.property_uid;
   const [isLoading, setIsLoading] = useState(true);
@@ -242,6 +242,7 @@ function TenantPropertyView(props) {
     extendObject.application_uid =
       apps.length > 0 ? apps[0].application_uid : null;
     const response6 = await put("/extendLease", extendObject, access_token);
+    channel_application.publish({ data: { te: extendObject } });
     const newMessage = {
       sender_name:
         property.rentalInfo[0].tenant_first_name +
@@ -270,6 +271,7 @@ function TenantPropertyView(props) {
     };
 
     const response = await put("/extendLease", request_body);
+    channel_application.publish({ data: { te: request_body } });
     const newMessage = {
       sender_name: property.managerInfo.manager_business_name,
       sender_email: property.managerInfo.manager_email,
@@ -327,6 +329,7 @@ function TenantPropertyView(props) {
       message: message,
     };
     const response = await put("/endEarly", request_body);
+    channel_application.publish({ data: { te: request_body } });
     const newMessage = {
       sender_name:
         property.rentalInfo[0].tenant_first_name +
@@ -368,6 +371,7 @@ function TenantPropertyView(props) {
       request_body.application_status = "REFUSED";
     }
     const response = await put("/endEarly", request_body);
+    channel_application.publish({ data: { te: request_body } });
     if (request_body.application_status === "TENANT ENDED") {
       const newMessage = {
         sender_name:
@@ -421,6 +425,7 @@ function TenantPropertyView(props) {
     };
 
     const response = await put("/endEarly", request_body);
+    channel_application.publish({ data: { te: request_body } });
     const newMessage = {
       sender_name:
         property.rentalInfo[0].tenant_first_name +

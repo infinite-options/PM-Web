@@ -59,8 +59,9 @@ const useStyles = makeStyles({
 });
 
 function ManagerRepairDetail(props) {
-  const { userData, refresh } = React.useContext(AppContext);
+  const { userData, refresh, ably } = React.useContext(AppContext);
   const { access_token } = userData;
+  const channel_maintenance = ably.channels.get("maintenance_status");
   const location = useLocation();
   const navigate = useNavigate();
   const classes = useStyles();
@@ -249,6 +250,7 @@ function ManagerRepairDetail(props) {
     }
     const response = await put("/maintenanceRequests", body, null, files);
 
+    channel_maintenance.publish({ data: { te: body } });
     fetchBusinesses();
     setScheduleMaintenance(false);
     setEdit(false);
@@ -280,6 +282,7 @@ function ManagerRepairDetail(props) {
       quote_adjustment_date: new Date(),
     };
     const responseMQ = await put("/maintenanceQuotes", updatedQuote);
+    channel_maintenance.publish({ data: { te: updatedQuote } });
 
     fetchBusinesses();
     setScheduleMaintenance(false);
@@ -302,6 +305,7 @@ function ManagerRepairDetail(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await post("/maintenanceQuotes", quote_details);
+    channel_maintenance.publish({ data: { te: quote_details } });
     const result = response.result;
     setRequestQuote(false);
     if (
@@ -339,6 +343,7 @@ function ManagerRepairDetail(props) {
     // console.log("Repair Object to be updated", newRepair);
 
     const response = await put("/maintenanceRequests", newRepair, null, files);
+    channel_maintenance.publish({ data: { te: newRepair } });
     // console.log(response.result);
     setTitle(title);
     setDescription(description);
@@ -356,6 +361,7 @@ function ManagerRepairDetail(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
+    channel_maintenance.publish({ data: { te: body } });
     fetchBusinesses();
   };
   const CompleteMaintenance = async () => {
@@ -378,6 +384,7 @@ function ManagerRepairDetail(props) {
     // console.log("Repair Object to be updated", newRepair);
 
     const response = await put("/maintenanceRequests", newRepair, null, files);
+    channel_maintenance.publish({ data: { te: newRepair } });
     fetchBusinesses();
   };
   const CancelMaintenanceFunc = async () => {
@@ -416,6 +423,7 @@ function ManagerRepairDetail(props) {
         const response = await put("/maintenanceQuotes", body);
       }
     });
+    channel_maintenance.publish({ data: { te: newRepair } });
     setShowSpinner(false);
     navigate(-1);
   };
@@ -439,6 +447,7 @@ function ManagerRepairDetail(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
+    channel_maintenance.publish({ data: { te: body } });
     fetchBusinesses();
   };
   const withdrawQuoteFunc = async (quote) => {
@@ -453,6 +462,7 @@ function ManagerRepairDetail(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
+    channel_maintenance.publish({ data: { te: body } });
     fetchBusinesses();
   };
 
@@ -467,6 +477,7 @@ function ManagerRepairDetail(props) {
     // console.log(newRepair);
     setShowSpinner(true);
     const response = await put("/RequestMorePictures", newRepair);
+    channel_maintenance.publish({ data: { te: newRepair } });
     setShowSpinner(false);
     setMorePictures(false);
     fetchBusinesses();

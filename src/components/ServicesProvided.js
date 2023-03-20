@@ -88,12 +88,12 @@ function ServicesProvided(props) {
   //   }
   // };
   const calculateEstimate = () => {
-    console.log("in calculate estimate");
+    // console.log("in calculate estimate");
 
-    console.log("in calculate estimate serevicestate", serviceState);
+    // console.log("in calculate estimate serevicestate", serviceState);
     // console.log(eventType)
     if (newService !== null) {
-      console.log("in calculate estimate newservice", newService);
+      // console.log("in calculate estimate newservice", newService);
       let total = 0;
       let hours = parseInt(newService.event_type);
       if (
@@ -173,8 +173,8 @@ function ServicesProvided(props) {
     ) : (
       ""
     );
-  console.log("serviceState", serviceState);
-  console.log("newService", newService);
+  // console.log("serviceState", serviceState);
+  // console.log("newService", newService);
   return (
     <div>
       <Row className="mx-2">

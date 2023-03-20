@@ -62,12 +62,14 @@ export default function TenantDashboard() {
   const [tenantProfile, setTenantProfile] = useState([]);
   const [managerInfo, setManagerInfo] = useState([]);
   const [applicationStatus, setApplicationStatus] = useState("");
+  const [maintenanceStatus, setMaintenanceStatus] = useState("");
 
   // // search variables
   // const [search, setSearch] = useState("");
   // // sorting variables
 
   const channel_application = ably.channels.get("application_status");
+  const channel_maintenance = ably.channels.get("maintenance_status");
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
 
@@ -248,18 +250,26 @@ export default function TenantDashboard() {
   };
 
   useEffect(() => {
-    async function subscribe_host() {
+    async function application_message() {
       await channel_application.subscribe((message) => {
         console.log(message);
         setApplicationStatus(message.data.te);
       });
     }
-    subscribe_host();
+    async function maintenance_message() {
+      await channel_maintenance.subscribe((message) => {
+        console.log(message);
+        setMaintenanceStatus(message.data.te);
+      });
+    }
+    application_message();
+    maintenance_message();
     fetchTenantDashboard();
     return function cleanup() {
       channel_application.unsubscribe();
+      channel_maintenance.unsubscribe();
     };
-  }, [access_token, applicationStatus]);
+  }, [access_token, applicationStatus, maintenanceStatus]);
 
   const addProperty = () => {
     fetchTenantDashboard();

@@ -99,8 +99,9 @@ function OwnerRepairDetails(props) {
     showSidebar: width > 1023,
   };
   const imageState = useState([]);
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { user, access_token } = userData;
+  const channel_maintenance = ably.channels.get("maintenance_status");
   const location = useLocation();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
@@ -216,6 +217,7 @@ function OwnerRepairDetails(props) {
     setShowSpinner(true);
     // console.log(newRepair);
     const res = await put("/maintenanceRequests", newRepair, null, files);
+    channel_maintenance.publish({ data: { te: newRepair } });
     setShowSpinner(false);
     fetchBusinesses();
     setIsEditing(false);
@@ -233,6 +235,7 @@ function OwnerRepairDetails(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
+    channel_maintenance.publish({ data: { te: body } });
     fetchBusinesses();
   };
   const rescheduleRepair = async () => {
@@ -255,6 +258,7 @@ function OwnerRepairDetails(props) {
       }
     }
     const response = await put("/maintenanceRequests", body, null, files);
+    channel_maintenance.publish({ data: { te: body } });
 
     fetchBusinesses();
     setScheduleMaintenance(false);
@@ -280,6 +284,7 @@ function OwnerRepairDetails(props) {
     // console.log("Repair Object to be updated", newRepair);
 
     const response = await put("/maintenanceRequests", newRepair, null, files);
+    channel_maintenance.publish({ data: { te: newRepair } });
     fetchBusinesses();
   };
 
@@ -319,6 +324,7 @@ function OwnerRepairDetails(props) {
         const response = await put("/maintenanceQuotes", body);
       }
     });
+    channel_maintenance.publish({ data: { te: newRepair } });
     setShowSpinner(false);
     navigate(-1);
   };
@@ -342,6 +348,7 @@ function OwnerRepairDetails(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
+    channel_maintenance.publish({ data: { te: body } });
     fetchBusinesses();
   };
   const withdrawQuoteFunc = async (quote) => {
@@ -356,6 +363,7 @@ function OwnerRepairDetails(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await put("/maintenanceQuotes", body);
+    channel_maintenance.publish({ data: { te: body } });
     fetchBusinesses();
   };
   const acceptSchedule = async (quote) => {
@@ -385,6 +393,7 @@ function OwnerRepairDetails(props) {
       quote_adjustment_date: new Date(),
     };
     const responseMQ = await put("/maintenanceQuotes", updatedQuote);
+    channel_maintenance.publish({ data: { te: updatedQuote } });
 
     fetchBusinesses();
     setScheduleMaintenance(false);
@@ -407,6 +416,7 @@ function OwnerRepairDetails(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await post("/maintenanceQuotes", quote_details);
+    channel_maintenance.publish({ data: { te: quote_details } });
     const result = response.result;
     setRequestQuote(false);
     if (
