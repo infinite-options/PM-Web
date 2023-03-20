@@ -233,32 +233,34 @@ export default function ManagerDashboard() {
   const channel_maintenance = ably.channels.get("maintenance_status");
 
   useEffect(() => {
-    async function subscribe_host() {
+    async function management_message() {
       await channel.subscribe((message) => {
         console.log(message);
         setManagementStatus(message.data.te);
       });
     }
-    async function subscribe_host2() {
+    async function application_message() {
       await channel_application.subscribe((message) => {
         console.log(message);
         setApplicationStatus(message.data.te);
       });
     }
-    async function subscribe_host2() {
+    async function maintenance_message() {
       await channel_maintenance.subscribe((message) => {
         console.log(message);
-        setApplicationStatus(message.data.te);
+        setMaintenanceStatus(message.data.te);
       });
     }
-    subscribe_host();
-    subscribe_host2();
+    management_message();
+    application_message();
+    maintenance_message();
     fetchManagerDashboard();
     return function cleanup() {
       channel.unsubscribe();
       channel_application.unsubscribe();
+      channel_maintenance.unsubscribe();
     };
-  }, [access_token, managementStatus, applicationStatus]);
+  }, [access_token, managementStatus, applicationStatus, maintenanceStatus]);
 
   console.log(managerData);
   const fetchTenantDetails = async (tenant_id) => {
