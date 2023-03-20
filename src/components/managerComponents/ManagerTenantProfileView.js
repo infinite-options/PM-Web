@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import {
   Table,
@@ -24,6 +24,7 @@ import {
   headings,
 } from "../../utils/styles";
 import { MaskCharacter, ordinal_suffix_of } from "../../utils/helper";
+import AppContext from "../../AppContext";
 
 const useStyles = makeStyles({
   customTable: {
@@ -41,6 +42,8 @@ const useStyles = makeStyles({
 });
 function ManagerTenantProfileView(props) {
   const classes = useStyles();
+  const { ably } = useContext(AppContext);
+  const channel_application = ably.channels.get("application_status");
   const [contactState, setContactState] = useState([]);
   const [feeState, setFeeState] = useState([]);
   const [files, setFiles] = useState([]);
@@ -71,6 +74,7 @@ function ManagerTenantProfileView(props) {
     };
     // console.log(request_body)
     const response = await put("/applications", request_body);
+    channel_application.publish({ data: { te: request_body } });
     back();
   };
 

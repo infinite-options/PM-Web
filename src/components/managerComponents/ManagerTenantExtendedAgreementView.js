@@ -53,9 +53,10 @@ function ManagerTenantExtendedAgreementView(props) {
     closeAgreement,
   } = props;
   // console.log(property);
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { access_token, user } = userData;
-  // console.log(user);
+
+  const channel_application = ably.channels.get("application_status");
   const [tenantInfo, setTenantInfo] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -187,6 +188,8 @@ function ManagerTenantExtendedAgreementView(props) {
       message: message,
     };
     const response = await put("/endEarly", request_body);
+
+    channel_application.publish({ data: { te: request_body } });
     const new_announcement = {
       pm_id: property.managerInfo.linked_business_id,
       announcement_title: "Requested Lease End",
@@ -245,6 +248,8 @@ function ManagerTenantExtendedAgreementView(props) {
       };
       // console.log(newMessage);
       const responseMsg = await post("/message", newMessage);
+
+      channel_application.publish({ data: { te: request_body } });
       setShowSpinner(false);
       navigate("../manager");
     } else {
@@ -279,6 +284,7 @@ function ManagerTenantExtendedAgreementView(props) {
     };
 
     const response = await put("/endEarly", request_body);
+    channel_application.publish({ data: { te: request_body } });
     const newMessage = {
       sender_name: property.managerInfo.manager_business_name,
       sender_email: property.managerInfo.manager_email,
@@ -307,6 +313,7 @@ function ManagerTenantExtendedAgreementView(props) {
     };
 
     const response = await put("/extendLease", request_body);
+    channel_application.publish({ data: { te: request_body } });
     const newMessage = {
       sender_name: property.managerInfo.manager_business_name,
       sender_email: property.managerInfo.manager_email,

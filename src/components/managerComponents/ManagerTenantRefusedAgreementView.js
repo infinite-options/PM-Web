@@ -54,8 +54,9 @@ function ManagerTenantRefusedAgreementView(props) {
     closeAgreement,
   } = props;
   // console.log(property);
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { access_token, user } = userData;
+  const channel_application = ably.channels.get("application_status");
   // console.log(user);
   const [tenantInfo, setTenantInfo] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -204,6 +205,7 @@ function ManagerTenantRefusedAgreementView(props) {
       message: message,
     };
     const response = await put("/endEarly", request_body);
+    channel_application.publish({ data: { te: request_body } });
     const new_announcement = {
       pm_id: property.managerInfo.linked_business_id,
       announcement_title: "Requested Lease End",
@@ -262,6 +264,7 @@ function ManagerTenantRefusedAgreementView(props) {
       };
       // console.log(newMessage);
       const responseMsg = await post("/message", newMessage);
+      channel_application.publish({ data: { te: request_body } });
       setShowSpinner(false);
       navigate("../manager");
     } else {
@@ -280,6 +283,7 @@ function ManagerTenantRefusedAgreementView(props) {
       };
       // console.log(newMessage);
       const responseMsg = await post("/message", newMessage);
+      channel_application.publish({ data: { te: request_body } });
       setTenantEndEarly(false);
       setShowSpinner(false);
       closeAgreement();
@@ -296,6 +300,7 @@ function ManagerTenantRefusedAgreementView(props) {
     };
 
     const response = await put("/endEarly", request_body);
+    channel_application.publish({ data: { te: request_body } });
     const newMessage = {
       sender_name: property.managerInfo.manager_business_name,
       sender_email: property.managerInfo.manager_email,
@@ -324,6 +329,7 @@ function ManagerTenantRefusedAgreementView(props) {
     };
 
     const response = await put("/extendLease", request_body);
+    channel_application.publish({ data: { te: request_body } });
     const newMessage = {
       sender_name: property.managerInfo.manager_business_name,
       sender_email: property.managerInfo.manager_email,

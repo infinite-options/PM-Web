@@ -516,6 +516,7 @@ function ManagerTenantAgreement(props) {
                 "/applications",
                 request_body
               );
+              channel_application.publish({ data: { te: request_body } });
               // console.log(update_application);
             } else {
               const request_body = {
@@ -528,6 +529,7 @@ function ManagerTenantAgreement(props) {
                 "/applications",
                 request_body
               );
+              channel_application.publish({ data: { te: request_body } });
               // console.log(update_application);
             }
           } else {
@@ -538,6 +540,7 @@ function ManagerTenantAgreement(props) {
             };
             console.log(request_body);
             const update_application = await put("/applications", request_body);
+            channel_application.publish({ data: { te: request_body } });
             // console.log(update_application);
           }
         }
@@ -734,6 +737,7 @@ function ManagerTenantAgreement(props) {
         };
         console.log(request_body);
         const update_application = await put("/applications", request_body);
+        channel_application.publish({ data: { te: request_body } });
       }
       let newAgreement = {
         rental_property_id: property.property_uid,
@@ -843,6 +847,7 @@ function ManagerTenantAgreement(props) {
           property_uid: property.property_uid,
           message: "Requesting to Extend Lease",
         };
+        channel_application.publish({ data: { te: extendObject } });
         extendObject.application_uid =
           apps.length > 0 ? apps[0].application_uid : null;
         const newMessage = {
@@ -873,7 +878,7 @@ function ManagerTenantAgreement(props) {
       if (apps.length > 0) {
         const response6 = await put("/extendLease", extendObject);
       }
-
+      channel_application.publish({ data: { te: extendObject } });
       setShowSpinner(false);
       back();
     }
