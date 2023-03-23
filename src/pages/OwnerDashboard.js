@@ -704,6 +704,7 @@ export default function OwnerDashboard2() {
                             >
                               {property.num_beds + "/" + property.num_baths}
                             </TableCell>
+
                             <TableCell
                               padding="none"
                               size="small"
@@ -724,7 +725,14 @@ export default function OwnerDashboard2() {
                                       ? pm.manager_business_name
                                       : ""
                                 )
-                              ) : property.property_manager.length === 1 ? (
+                              ) : property.property_manager.length === 1 &&
+                                (property.property_manager[0]
+                                  .management_status === "ACCEPTED" ||
+                                  property.property_manager[0]
+                                    .management_status === "PM END EARLY" ||
+                                  property.property_manager[0]
+                                    .management_status ===
+                                    "OWNER END EARLY") ? (
                                 <div>
                                   {
                                     property.property_manager[0]
