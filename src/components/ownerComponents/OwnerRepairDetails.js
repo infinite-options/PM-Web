@@ -416,7 +416,7 @@ function OwnerRepairDetails(props) {
       quote_adjustment_date: new Date(),
     };
     const response = await post("/maintenanceQuotes", quote_details);
-    channel_maintenance.publish({ data: { te: quote_details } });
+
     const result = response.result;
     setRequestQuote(false);
     if (
@@ -426,7 +426,7 @@ function OwnerRepairDetails(props) {
     ) {
       setScheduleMaintenance(true);
     }
-
+    channel_maintenance.publish({ data: { te: quote_details } });
     fetchBusinesses();
   };
   // console.log(repair);

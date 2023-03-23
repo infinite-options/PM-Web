@@ -239,27 +239,31 @@ export default function TenantUpcomingPayments(props) {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
-
+  let pageURL = window.location.href.split("/");
   return (
     <div className="upcoming-payments">
       <Row className="mx-3">
         <Col>
           <h4>Upcoming Payments</h4>
         </Col>
-      </Row>
-      <Row className="m-3" style={subHeading}>
-        <Col xs={1}>
-          <h5> Pay All</h5>
-        </Col>
-        <Col>
-          <input
-            className="check"
-            type="checkbox"
-            name="selectall"
-            onClick={(source) => handleCheckAll(source)}
-          />
-        </Col>
-      </Row>
+      </Row>{" "}
+      {pageURL[3] !== "tenant" ? (
+        <Row className="m-3" style={subHeading}>
+          <Col xs={1}>
+            <h5> Pay All</h5>
+          </Col>
+          <Col>
+            <input
+              className="check"
+              type="checkbox"
+              name="selectall"
+              onClick={(source) => handleCheckAll(source)}
+            />
+          </Col>
+        </Row>
+      ) : (
+        ""
+      )}
       <div
         className="mx-3 my-3 p-2"
         style={{

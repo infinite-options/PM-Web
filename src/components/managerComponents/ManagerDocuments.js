@@ -13,8 +13,9 @@ import AppContext from "../../AppContext";
 import Header from "../Header";
 import SideBar from "./SideBar";
 import ManagerFooter from "./ManagerFooter";
+import DocumentsUploadPut from "../DocumentsUploadPut";
 import File from "../../icons/File.svg";
-import { get } from "../../utils/api";
+import { get, put } from "../../utils/api";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -28,13 +29,18 @@ function ManagerDocuments(props) {
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [documents, setDocuments] = useState([]);
+  const [managerID, setManagerID] = useState([]);
   const [activeLeaseDocuments, setActiveLeaseDocuments] = useState({});
   const [pastLeaseDocuments, setPastLeaseDocuments] = useState({});
   const [activeManagerDocuments, setActiveManagerDocuments] = useState({});
   const [pastManagerDocuments, setPastManagerDocuments] = useState({});
 
+  const [businessUploadDocuments, setBusinessUploadDocuments] = useState({});
+  const [newFile, setNewFile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [editingDoc, setEditingDoc] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [addDoc, setAddDoc] = useState(false);
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -69,6 +75,7 @@ function ManagerDocuments(props) {
     } else {
       management_buid = management_businesses[0].business_uid;
     }
+    setManagerID(management_buid);
     const response = await get(
       `/managerDocuments?manager_id=${management_buid}`
     );
@@ -110,6 +117,14 @@ function ManagerDocuments(props) {
       }, {});
     // console.log(past_manager_docs);
     setPastManagerDocuments(past_manager_docs);
+    var business_uploaded_docs = Object.keys(documents)
+      .filter((key) => key.includes("business_uploaded_docs"))
+      .reduce((cur, key) => {
+        return Object.assign(cur, { [key]: documents[key] });
+      }, {});
+    // console.log(business_uploaded_docs);
+    setBusinessUploadDocuments(business_uploaded_docs);
+    setFiles(Object.values(business_uploaded_docs)[0]);
     setIsLoading(false);
   };
   useEffect(() => {
@@ -118,8 +133,33 @@ function ManagerDocuments(props) {
     }
     fetchProfile();
   }, [access_token]);
-  // console.log(documents);
-  // console.log(activeLeaseDocuments.length);
+  const editDocument = (i) => {
+    const newFiles = [...files];
+    const file = newFiles.splice(i, 1)[0];
+    setFiles(newFiles);
+    setEditingDoc(file);
+    setNewFile({ ...file });
+  };
+  console.log(businessUploadDocuments);
+  const deleteDocument = async (i) => {
+    const newFiles = files.filter((file, index) => index !== i);
+    setFiles(newFiles);
+    const businessProfile = {};
+    for (let i = 0; i < newFiles.length; i++) {
+      let key = `doc_${i}`;
+      // businessProfile[key] = newFiles[i].file;
+      // delete newFiles[i].file;
+      if (newFiles[i].file !== undefined) {
+        businessProfile[key] = newFiles[i].file;
+      } else {
+        businessProfile[key] = newFiles[i].link;
+      }
+    }
+    businessProfile.business_documents = JSON.stringify(newFiles);
+    businessProfile.business_uid = managerID;
+    await put("/businesses", businessProfile, null, files);
+    setAddDoc(!addDoc);
+  };
 
   return (
     <div className="w-100 overflow-hidden">
@@ -600,6 +640,28 @@ function ManagerDocuments(props) {
                         )}
                       </TableBody>
                     </Table>
+                  </Row>
+                </div>
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row className="m-3">
+                    <h5>Business Documents</h5>{" "}
+                    <DocumentsUploadPut
+                      files={files}
+                      setFiles={setFiles}
+                      addDoc={addDoc}
+                      setAddDoc={setAddDoc}
+                      endpoint="/businesses"
+                      editingDoc={editingDoc}
+                      setEditingDoc={setEditingDoc}
+                      id={managerID}
+                    />
                   </Row>
                 </div>
               </div>

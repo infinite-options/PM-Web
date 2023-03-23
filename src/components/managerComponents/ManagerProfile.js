@@ -14,6 +14,7 @@ import AppContext from "../../AppContext";
 import Header from "../Header";
 import ManagerPaymentSelection from "./ManagerPaymentSelection";
 import ManagerLocations from "../ManagerLocations";
+import DocumentsUploadPut from "../DocumentsUploadPut";
 import ManagerFooter from "./ManagerFooter";
 import SideBar from "./SideBar";
 import ManagerFees from "../ManagerFees";
@@ -54,6 +55,8 @@ function ManagerProfile(props) {
   const [businessInfo, setBusinessInfo] = useState([]);
   const [editProfile, setEditProfile] = useState(false);
 
+  const [files, setFiles] = useState([]);
+  const [editingDoc, setEditingDoc] = useState(null);
   const [resetPassword, setResetPassword] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -66,6 +69,7 @@ function ManagerProfile(props) {
   const [einNumber, setEinNumber] = useState("");
   const [ssn, setSsn] = useState("");
   const [showSSN, setShowSSN] = useState(true);
+  const [addDoc, setAddDoc] = useState(false);
   const [paymentState, setPaymentState] = useState({
     paypal: "",
     applePay: "",
@@ -102,6 +106,7 @@ function ManagerProfile(props) {
     setPhoneNumber(profile.employee_phone_number);
     setEinNumber(profile.business_ein_number);
     setSsn(profile.employee_ssn);
+    setFiles(JSON.parse(profile.business_documents));
     setPaymentState({
       paypal: profile.business_paypal ? profile.business_paypal : "",
       applePay: profile.business_apple_pay ? profile.business_apple_pay : "",
@@ -131,16 +136,24 @@ function ManagerProfile(props) {
       // console.log("no manager profile");
       // props.onConfirm();
     }
-
+    const bus_uid = busi_res.result.filter(
+      (bus) => bus.business_type === "MANAGEMENT"
+    )[0].business_uid;
+    console.log(bus_uid);
     const employee_response = await get(`/employees?user_uid=${user.user_uid}`);
+    console.log(employee_response);
     if (employee_response.result.length !== 0) {
-      const employee = employee_response.result[0];
+      const employee = employee_response.result.filter(
+        (emp) => emp.business_uid === bus_uid
+      )[0];
+      console.log(employee);
       const business_response = await get(
         `/businesses?business_uid=${employee.business_uid}`
       );
+
       const business = business_response.result[0];
       setBusinessInfo(business);
-      // console.log(business);
+      console.log(business);
       const profile = { ...employee, ...business };
       // console.log(profile)
       loadProfile(profile);
@@ -155,17 +168,6 @@ function ManagerProfile(props) {
       // console.log("in if");
       const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
         paymentState;
-      // const employee_info = {
-      //   employee_uid: profileInfo.employee_uid,
-      //   user_uid: profileInfo.user_uid,
-      //   business_uid: profileInfo.business_uid,
-      //   first_name: firstName,
-      //   last_name: lastName,
-      //   phone_number: phoneNumber,
-      //   email: email,
-      //   ein_number: einNumber,
-      //   ssn: ssn,
-      // };
       const business_info = {
         // business_uid: profileInfo.business_uid,
         type: "MANAGEMENT",
@@ -568,6 +570,28 @@ function ManagerProfile(props) {
               editProfile={editProfile}
             />
           </div>
+          <div
+            className="mx-3 my-3"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
+            <div className="mx-3" style={{ overflow: "scroll" }}>
+              <DocumentsUploadPut
+                files={files}
+                setFiles={setFiles}
+                addDoc={addDoc}
+                setAddDoc={setAddDoc}
+                endpoint="/businesses"
+                editingDoc={editingDoc}
+                setEditingDoc={setEditingDoc}
+                id={businessInfo.business_uid}
+              />
+            </div>
+          </div>
+
           {editProfile ? (
             <div className="mt-2 mx-2">
               <Row>

@@ -94,6 +94,7 @@ function ManagerFees(props) {
     );
   return (
     <div>
+      {console.log(feeState)}
       {editProfile ? (
         <div>
           <Table classes={{ root: classes.customTable }} size="small">

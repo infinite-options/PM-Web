@@ -521,9 +521,9 @@ function TenantPropertyView(props) {
     });
   };
   // console.log(extendedAgreement);
-  useState(() => {
+  useEffect(() => {
     fetchProperty();
-  });
+  }, []);
 
   const headerBack = () => {
     showTenantProfile

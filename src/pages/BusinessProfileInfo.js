@@ -1,19 +1,27 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button } from "react-bootstrap";
-
+import * as ReactBootStrap from "react-bootstrap";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
 import ServicesProvided from "../components/ServicesProvided";
 import PaymentSelection from "../components/PaymentSelection";
 import ManagerFees from "../components/ManagerFees";
 import ManagerLocations from "../components/ManagerLocations";
+import DocumentsUploadPost from "../components/DocumentsUploadPost";
 import { get, post } from "../utils/api";
-import { pillButton, squareForm, hidden, red, small } from "../utils/styles";
+import {
+  pillButton,
+  squareForm,
+  hidden,
+  red,
+  small,
+  mediumBold,
+} from "../utils/styles";
 
 import { formatPhoneNumber, formatEIN } from "../utils/helper";
 function BusinessProfileInfo(props) {
-  const context = React.useContext(AppContext);
+  const context = useContext(AppContext);
   const { access_token, user } = context.userData;
   console.log("user", user);
   const { autofillState, setAutofillState, businessType } = props;
@@ -27,16 +35,18 @@ function BusinessProfileInfo(props) {
     setAutofillState(newAutofillState);
   };
   const navigate = useNavigate();
-  const [businessName, setBusinessName] = React.useState("");
-  const [phoneNumber, setPhoneNumber] = React.useState(
-    autofillState.phone_number
-  );
-  const [email, setEmail] = React.useState(autofillState.email);
-  const [einNumber, setEinNumber] = React.useState(autofillState.ein_number);
-  const [serviceState, setServiceState] = React.useState([]);
-  const [feeState, setFeeState] = React.useState([]);
-  const [locationState, setLocationState] = React.useState([]);
-  const paymentState = React.useState({
+  const [businessName, setBusinessName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(autofillState.phone_number);
+  const [showSpinner, setShowSpinner] = useState(false);
+  const [files, setFiles] = useState([]);
+  const [editingDoc, setEditingDoc] = useState(null);
+  const [addDoc, setAddDoc] = useState(false);
+  const [email, setEmail] = useState(autofillState.email);
+  const [einNumber, setEinNumber] = useState(autofillState.ein_number);
+  const [serviceState, setServiceState] = useState([]);
+  const [feeState, setFeeState] = useState([]);
+  const [locationState, setLocationState] = useState([]);
+  const paymentState = useState({
     paypal: autofillState.paypal,
     applePay: autofillState.apple_pay,
     zelle: autofillState.zelle,
@@ -44,8 +54,8 @@ function BusinessProfileInfo(props) {
     accountNumber: autofillState.account_number,
     routingNumber: autofillState.routing_number,
   });
-  const [errorMessage, setErrorMessage] = React.useState("");
-  React.useEffect(() => {
+  const [errorMessage, setErrorMessage] = useState("");
+  useEffect(() => {
     if (access_token === null) {
       navigate("/");
       return;
@@ -150,14 +160,18 @@ function BusinessProfileInfo(props) {
       setErrorMessage("Please add at least one location");
       return;
     }
+    setShowSpinner(true);
     const businessProfile = {
       type: businessType,
       name: businessName,
       phone_number: phoneNumber,
       email: email,
       ein_number: einNumber,
-      services_fees: businessType === "MANAGEMENT" ? feeState : serviceState,
-      locations: locationState,
+      services_fees:
+        businessType === "MANAGEMENT"
+          ? JSON.stringify(feeState)
+          : JSON.stringify(serviceState),
+      locations: JSON.stringify(locationState),
       paypal: paypal,
       apple_pay: applePay,
       zelle: zelle,
@@ -165,9 +179,23 @@ function BusinessProfileInfo(props) {
       account_number: accountNumber,
       routing_number: routingNumber,
     };
+    const newFiles = [...files];
+
+    for (let i = 0; i < newFiles.length; i++) {
+      let key = `doc_${i}`;
+      if (newFiles[i].file !== undefined) {
+        businessProfile[key] = newFiles[i].file;
+      } else {
+        businessProfile[key] = newFiles[i].link;
+      }
+
+      delete newFiles[i].file;
+    }
+    businessProfile.business_documents = JSON.stringify(newFiles);
     // console.log(businessProfile);
-    await post("/businesses", businessProfile, access_token);
+    await post("/businesses", businessProfile, access_token, files);
     updateAutofillState(businessProfile);
+    setShowSpinner(false);
     props.onConfirm();
   };
 
@@ -264,7 +292,27 @@ function BusinessProfileInfo(props) {
           setLocationState={setLocationState}
           editProfile={true}
         />
-
+        <div>
+          <h5 style={mediumBold}>Lease Documents</h5>
+          <div className="mx-2">
+            {" "}
+            <DocumentsUploadPost
+              files={files}
+              setFiles={setFiles}
+              addDoc={addDoc}
+              setAddDoc={setAddDoc}
+              editingDoc={editingDoc}
+              setEditingDoc={setEditingDoc}
+            />
+          </div>
+        </div>
+        {showSpinner ? (
+          <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+            <ReactBootStrap.Spinner animation="border" role="status" />
+          </div>
+        ) : (
+          ""
+        )}
         <div className="text-center" style={errorMessage === "" ? hidden : {}}>
           <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
         </div>

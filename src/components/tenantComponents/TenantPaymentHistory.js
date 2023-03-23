@@ -178,91 +178,101 @@ export default function TenantPaymentHistory(props) {
         }}
       >
         <Row className="m-3" style={{ overflow: "scroll" }}>
-          <Table
-            responsive="md"
-            classes={{ root: classes.customTable }}
-            size="small"
-          >
-            <EnhancedTableHeadPayments
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={history.length}
-            />{" "}
-            <TableBody>
-              {stableSort(history, getComparator(order, orderBy)).map(
-                (row, index) => {
-                  return row.purchase_status === "PAID" ? (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.purchase_uid}
-                    >
-                      <TableCell align="left">{row.purchase_uid}</TableCell>
-                      <TableCell
-                        align="left"
-                        style={{
-                          width: 'Dimensions.get("window").width * 0.7 ',
-                        }}
+          {history.filter((row) => row.purchase_status === "PAID").length ===
+          0 ? (
+            <Row className="m-3">
+              <div className="m-3">No Payment History</div>
+            </Row>
+          ) : (
+            <Table
+              responsive="md"
+              classes={{ root: classes.customTable }}
+              size="small"
+            >
+              <EnhancedTableHeadPayments
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+                rowCount={history.length}
+              />{" "}
+              <TableBody>
+                {stableSort(history, getComparator(order, orderBy)).map(
+                  (row, index) => {
+                    return row.purchase_status === "PAID" ? (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row.purchase_uid}
                       >
-                        {row.address +
-                          " " +
-                          row.unit +
-                          "," +
-                          row.city +
-                          ", " +
-                          row.state +
-                          " " +
-                          row.zip}
-                        <div className="d-flex">
-                          <div className="d-flex align-items-end">
-                            <p style={{ ...blue, ...xSmall }} className="mb-0">
-                              {row.payment_notes}
-                            </p>
+                        <TableCell align="left">{row.purchase_uid}</TableCell>
+                        <TableCell
+                          align="left"
+                          style={{
+                            width: 'Dimensions.get("window").width * 0.7 ',
+                          }}
+                        >
+                          {row.address +
+                            " " +
+                            row.unit +
+                            "," +
+                            row.city +
+                            ", " +
+                            row.state +
+                            " " +
+                            row.zip}
+                          <div className="d-flex">
+                            <div className="d-flex align-items-end">
+                              <p
+                                style={{ ...blue, ...xSmall }}
+                                className="mb-0"
+                              >
+                                {row.payment_notes}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </TableCell>
-                      <TableCell align="left">{row.description}</TableCell>
-                      <TableCell align="left">{row.purchase_type}</TableCell>
-                      <TableCell align="center">
-                        {row.linked_bill_id === null ? "No" : "Yes"}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.payment_date !== null
-                          ? row.payment_date.substring(0, 10)
-                          : "Not Available"}
-                      </TableCell>
-                      <TableCell align="right">
-                        {row.payment_type !== null
-                          ? row.payment_type
-                          : "Not Available"}
-                      </TableCell>
-                      <TableCell align="right" style={{ width: "83px" }}>
-                        {row.payment_verify === "Verified" ? (
-                          <img
-                            src={Verified}
-                            style={{
-                              width: "25px",
-                              height: "25px",
-                              objectFit: "contain",
-                            }}
-                          />
-                        ) : (
-                          "Unverified"
-                        )}
-                      </TableCell>
-                      <TableCell align="right">
-                        {row.amount_paid.toFixed(2)}
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    ""
-                  );
-                }
-              )}
-            </TableBody>
-          </Table>
+                        </TableCell>
+                        <TableCell align="left">{row.description}</TableCell>
+                        <TableCell align="left">{row.purchase_type}</TableCell>
+                        <TableCell align="center">
+                          {row.linked_bill_id === null ? "No" : "Yes"}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.payment_date !== null
+                            ? row.payment_date.substring(0, 10)
+                            : "Not Available"}
+                        </TableCell>
+                        <TableCell align="right">
+                          {row.payment_type !== null
+                            ? row.payment_type
+                            : "Not Available"}
+                        </TableCell>
+                        <TableCell align="right" style={{ width: "83px" }}>
+                          {row.payment_verify === "Verified" ? (
+                            <img
+                              src={Verified}
+                              style={{
+                                width: "25px",
+                                height: "25px",
+                                objectFit: "contain",
+                              }}
+                            />
+                          ) : (
+                            "Unverified"
+                          )}
+                        </TableCell>
+                        <TableCell align="right">
+                          {row.amount_paid.toFixed(2)}
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      ""
+                    );
+                  }
+                )}
+              </TableBody>
+            </Table>
+          )}
         </Row>
       </div>
     </div>
