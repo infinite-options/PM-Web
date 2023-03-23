@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 import AppContext from "../../AppContext";
 import Header from "../Header";
+import DocumentsUploadPut from "../DocumentsUploadPut";
 import ManagerLocations from "../ManagerLocations";
 import MaintenancePaymentSelection from "./MaintenancePaymentSelection";
 import MaintenanceFooter from "./MaintenanceFooter";
@@ -77,6 +78,9 @@ function MaintenanceProfile(props) {
   });
   const [serviceState, setServiceState] = useState([]);
   const [locationState, setLocationState] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [editingDoc, setEditingDoc] = useState(null);
+  const [addDoc, setAddDoc] = useState(false);
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -101,6 +105,7 @@ function MaintenanceProfile(props) {
     setPhoneNumber(profile.employee_phone_number);
     setEinNumber(profile.business_ein_number);
     setSsn(profile.employee_ssn);
+    setFiles(JSON.parse(profile.business_documents));
     setPaymentState({
       paypal: profile.business_paypal ? profile.business_paypal : "",
       applePay: profile.business_apple_pay ? profile.business_apple_pay : "",
@@ -162,17 +167,6 @@ function MaintenanceProfile(props) {
       // console.log("in if");
       const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
         paymentState;
-      // const employee_info = {
-      //   employee_uid: profileInfo.employee_uid,
-      //   user_uid: profileInfo.user_uid,
-      //   business_uid: profileInfo.business_uid,
-      //   first_name: firstName,
-      //   last_name: lastName,
-      //   phone_number: phoneNumber,
-      //   email: email,
-      //   ein_number: einNumber,
-      //   ssn: ssn,
-      // };
       const business_info = {
         // business_uid: profileInfo.business_uid,
         type: "MAINTENANCE",
@@ -577,7 +571,27 @@ function MaintenanceProfile(props) {
               editProfile={true}
             />
           </div>
-
+          <div
+            className="mx-3 my-3"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
+            <div className="mx-3" style={{ overflow: "scroll" }}>
+              <DocumentsUploadPut
+                files={files}
+                setFiles={setFiles}
+                addDoc={addDoc}
+                setAddDoc={setAddDoc}
+                endpoint="/businesses"
+                editingDoc={editingDoc}
+                setEditingDoc={setEditingDoc}
+                id={businessInfo.business_uid}
+              />
+            </div>
+          </div>
           {editProfile ? (
             <div className="mt-2 mx-2">
               <Row>

@@ -82,10 +82,15 @@ function DocumentsUploadPut(props) {
 
       delete newFiles[i].file;
     }
-    tenantProfile.documents = JSON.stringify(newFiles);
+
     if (endpoint === "/rentals") {
+      tenantProfile.documents = JSON.stringify(newFiles);
       tenantProfile.rental_uid = id;
+    } else if (endpoint === "/businesses") {
+      tenantProfile.business_documents = JSON.stringify(newFiles);
+      tenantProfile.business_uid = id;
     } else {
+      tenantProfile.documents = JSON.stringify(newFiles);
       tenantProfile.tenant_id = id;
     }
 
