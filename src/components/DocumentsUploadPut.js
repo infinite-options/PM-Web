@@ -119,7 +119,16 @@ function DocumentsUploadPut(props) {
         tenantProfile[key] = newFiles[i].link;
       }
     }
-    tenantProfile.documents = JSON.stringify(newFiles);
+    if (endpoint === "/rentals") {
+      tenantProfile.documents = JSON.stringify(newFiles);
+      tenantProfile.rental_uid = id;
+    } else if (endpoint === "/businesses") {
+      tenantProfile.business_documents = JSON.stringify(newFiles);
+      tenantProfile.business_uid = id;
+    } else {
+      tenantProfile.documents = JSON.stringify(newFiles);
+      tenantProfile.tenant_id = id;
+    }
     tenantProfile.tenant_id = id;
     await put(endpoint, tenantProfile, null, files);
     setAddDoc(!addDoc);
