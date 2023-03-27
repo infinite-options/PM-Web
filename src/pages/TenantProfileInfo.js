@@ -716,7 +716,7 @@ function TenantProfileInfo(props) {
     }
     const fetchProfileInfo = async () => {
       const response = await get(
-        `/tenantProfileInfo?tenant_id=${user.tenant_id[0].tenant_idd}`
+        `/tenantProfileInfo?tenant_id=${user.tenant_id[0].tenant_id}`
       );
       if (response.result && response.result.length !== 0) {
         // console.log("tenant profile already set up");
