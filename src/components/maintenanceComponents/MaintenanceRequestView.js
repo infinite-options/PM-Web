@@ -118,7 +118,7 @@ export default function MaintenanceRequestView() {
   };
 
   const fetchQuoteDetails = async () => {
-    console.log("in fetchquotedetails");
+    // console.log("in fetchquotedetails");
     let business_uid = "";
     for (const business of userData.user.businesses) {
       if (business.business_type === "MAINTENANCE") {
@@ -135,7 +135,7 @@ export default function MaintenanceRequestView() {
     );
     let quote_r = quotes_response.result[0];
     setQuote(quotes_response.result[0]);
-    console.log(quote_r.quote_status);
+    // console.log(quote_r.quote_status);
     if (quote_r.quote_status === "SENT") {
       setQuoteSent(true);
     }
@@ -184,7 +184,7 @@ export default function MaintenanceRequestView() {
   const headerBack = () => {
     navigate(-1);
   };
-  console.log(quoteSent, quoteRejected, quote.quote_status);
+  // console.log(quoteSent, quoteRejected, quote.quote_status);
   return (
     <div className="w-100 overflow-hidden">
       {!isLoading && quote !== null ? (

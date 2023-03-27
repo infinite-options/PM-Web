@@ -116,14 +116,14 @@ function MaintenanceScheduleRepair(props) {
       doubleDigitDay(date)
     );
   };
-  console.log(accessTokenTenant);
+  // console.log(accessTokenTenant);
   useEffect(() => {
     if (quotes.rentalInfo.length > 0) {
-      console.log("tenant get access token", quotes.rentalInfo[0]);
+      // console.log("tenant get access token", quotes.rentalInfo[0]);
       axios
         .get(BASE_URL + `/UserDetails/${quotes.rentalInfo[0].tenant_id}`)
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
           setAccessTokenTenant(response.data.result[0].google_auth_token);
           setUserEmail(response.data.result[0].email);
           setAttendees([{ email: response.data.result[0].email }]);
@@ -203,9 +203,9 @@ function MaintenanceScheduleRepair(props) {
           console.log(error);
         });
     } else if (quotes.property_manager.length > 0) {
-      console.log("pm get access token");
+      // console.log("pm get access token");
     } else {
-      console.log("owner get access token");
+      // console.log("owner get access token");
       axios
         .get(BASE_URL + `/UserDetails/${quotes.owner_id}`)
         .then((response) => {
@@ -806,7 +806,7 @@ function MaintenanceScheduleRepair(props) {
     setShowSpinner(false);
     navigate(-2);
   }
-  console.log(quotes);
+  // console.log(quotes);
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">

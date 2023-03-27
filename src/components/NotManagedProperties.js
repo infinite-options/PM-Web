@@ -37,7 +37,7 @@ function NotManagedProperties(props) {
     );
     let management_buid = null;
     if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
+      // console.log("No associated PM Businesses");
       return;
     } else if (management_businesses.length > 1) {
       // console.log("Multiple associated PM Businesses");

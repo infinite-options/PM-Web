@@ -36,21 +36,21 @@ function GoogleSignUp(props) {
     /* global google */
 
     if (window.google) {
-      console.log("in here signup");
-      console.log(CLIENT_ID, SCOPES);
+      // console.log("in here signup");
+      // console.log(CLIENT_ID, SCOPES);
       // initialize a code client for the authorization code flow.
       codeClient = google.accounts.oauth2.initCodeClient({
         client_id: CLIENT_ID,
         scope: SCOPES,
         callback: (tokenResponse) => {
-          console.log(tokenResponse);
+          // console.log(tokenResponse);
           // gets back authorization code
           if (tokenResponse && tokenResponse.code) {
             let auth_code = tokenResponse.code;
             let authorization_url =
               "https://accounts.google.com/o/oauth2/token";
 
-            console.log("auth_code", auth_code);
+            // console.log("auth_code", auth_code);
             var details = {
               code: auth_code,
               client_id: CLIENT_ID,
@@ -58,7 +58,7 @@ function GoogleSignUp(props) {
               redirectUri: "postmessage",
               grant_type: "authorization_code",
             };
-            console.log(details);
+            // console.log(details);
             var formBody = [];
             for (var property in details) {
               var encodedKey = encodeURIComponent(property);
@@ -79,13 +79,13 @@ function GoogleSignUp(props) {
                 return response.json();
               })
               .then((responseData) => {
-                console.log(responseData);
+                // console.log(responseData);
                 return responseData;
               })
               //   got ACCESS TOKEN n REFRESH TOKEN
 
               .then((data) => {
-                console.log(data);
+                // console.log(data);
                 let at = data["access_token"];
                 let rt = data["refresh_token"];
                 let ax = data["expires_in"];
@@ -101,7 +101,7 @@ function GoogleSignUp(props) {
                       at
                   )
                   .then((response) => {
-                    console.log(response.data);
+                    // console.log(response.data);
 
                     let data = response.data;
                     //setUserInfo(data);
@@ -129,7 +129,7 @@ function GoogleSignUp(props) {
                       };
                       // console.log(user);
                       const response = await post("/userSocialSignup", user);
-                      console.log(response);
+                      // console.log(response);
                       if (response.message == "User already exists") {
                         setSocialSignUpModalShow(!socialSignUpModalShow);
                         return;
@@ -143,7 +143,7 @@ function GoogleSignUp(props) {
                     socialGoogle();
                   })
                   .catch((error) => {
-                    console.log("its in landing page");
+                    // console.log("its in landing page");
                     console.log(error);
                   });
 

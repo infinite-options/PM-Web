@@ -164,7 +164,7 @@ function MaintenanceQuoteScheduledDetail(props) {
     channel_maintenance.publish({ data: { te: body } });
     navigate("../maintenance");
   };
-  console.log(quote.request_status);
+  // console.log(quote.request_status);
 
   return (
     <div className="h-100 d-flex flex-column">

@@ -104,7 +104,7 @@ function ManagerTenantAgreementView(props) {
     // loadAgreement(agg);
     let tenant = [];
     let ti = {};
-    console.log("selectedagg", agg);
+    // console.log("selectedagg", agg);
     if (agg !== null) {
       if (agg.tenant_first_name.includes(",")) {
         let tenant_ids = agg.tenant_id.split(",");

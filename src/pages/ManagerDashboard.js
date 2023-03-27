@@ -235,19 +235,19 @@ export default function ManagerDashboard() {
   useEffect(() => {
     async function management_message() {
       await channel.subscribe((message) => {
-        console.log(message);
+        // console.log(message);
         setManagementStatus(message.data.te);
       });
     }
     async function application_message() {
       await channel_application.subscribe((message) => {
-        console.log(message);
+        // console.log(message);
         setApplicationStatus(message.data.te);
       });
     }
     async function maintenance_message() {
       await channel_maintenance.subscribe((message) => {
-        console.log(message);
+        // console.log(message);
         setMaintenanceStatus(message.data.te);
       });
     }
@@ -262,7 +262,7 @@ export default function ManagerDashboard() {
     };
   }, [access_token, managementStatus, applicationStatus, maintenanceStatus]);
 
-  console.log(managerData);
+  // console.log(managerData);
   const fetchTenantDetails = async (tenant_id) => {
     if (access_token === null) {
       navigate("/");
@@ -1075,7 +1075,7 @@ export default function ManagerDashboard() {
                                     </div>
                                   )}
                                 </TableCell>
-                                {console.log(property)}
+                                {/* {console.log(property)} */}
                                 <TableCell
                                   padding="none"
                                   size="small"
@@ -1924,7 +1924,7 @@ export default function ManagerDashboard() {
                               )
                             }
                           >
-                            {console.log(request)}
+                            {/* {console.log(request)} */}
                             <TableCell
                               padding="none"
                               size="small"

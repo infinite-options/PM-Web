@@ -99,7 +99,7 @@ function ManagerPaymentPage(props) {
 
     let newPayment = {};
     if (allPurchases.length === 1) {
-      console.log("allPurchases", allPurchases[0]);
+      // console.log("allPurchases", allPurchases[0]);
       newPayment = {
         pay_purchase_id: allPurchases[0].purchase_uid,
         //Need to make change here
@@ -114,7 +114,7 @@ function ManagerPaymentPage(props) {
         maintenance_request_uid: allPurchases[0].linked_bill_id,
         quote_status: "PAID",
       };
-      console.log("allPurchases", body);
+      // console.log("allPurchases", body);
       const response = await put("/QuotePaid", body);
       channel_maintenance.publish({ data: { te: body } });
     } else {

@@ -160,7 +160,7 @@ function MaintenanceDashboard(props) {
   useEffect(() => {
     async function maintenance_message() {
       await channel_maintenance.subscribe((message) => {
-        console.log(message);
+        // console.log(message);
         setMaintenanceStatus(message.data.te);
       });
     }

@@ -130,7 +130,7 @@ function BusinessProfileInfo(props) {
     };
     fetchProfileInfo();
   }, []);
-  console.log(errorMessage, serviceState);
+  // console.log(errorMessage, serviceState);
   const submitInfo = async () => {
     const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
       paymentState[0];

@@ -252,13 +252,13 @@ export default function TenantDashboard() {
   useEffect(() => {
     async function application_message() {
       await channel_application.subscribe((message) => {
-        console.log(message);
+        // console.log(message);
         setApplicationStatus(message.data.te);
       });
     }
     async function maintenance_message() {
       await channel_maintenance.subscribe((message) => {
-        console.log(message);
+        // console.log(message);
         setMaintenanceStatus(message.data.te);
       });
     }

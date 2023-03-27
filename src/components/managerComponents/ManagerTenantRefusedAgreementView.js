@@ -163,21 +163,21 @@ function ManagerTenantRefusedAgreementView(props) {
     let appRef = property.applications.filter(
       (a) => a.application_status === "REFUSED"
     );
-    console.log("in useeffect");
+    // console.log("in useeffect");
     if (appRef.length > 0) {
       for (const ref in appRef) {
-        console.log("ref", ref);
+        // console.log("ref", ref);
         if (
           appRef[ref].application_uid ==
           JSON.parse(agg.linked_application_id)[0]
         ) {
-          console.log("if ref", appRef[ref]);
+          // console.log("if ref", appRef[ref]);
           setAcceptedTenantApplications([appRef[ref]]);
         }
       }
     }
   };
-  console.log(acceptedTenantApplications);
+  // console.log(acceptedTenantApplications);
   useEffect(() => {
     loadAgreement(selectedAgreement);
   }, [selectedAgreement]);

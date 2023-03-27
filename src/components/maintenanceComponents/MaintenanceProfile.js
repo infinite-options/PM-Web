@@ -130,7 +130,7 @@ function MaintenanceProfile(props) {
       return;
     }
     const busi_res = await get(`/businesses?business_email=${user.email}`);
-    console.log("busi_res", user.role.indexOf("MAINTENANCE"), busi_res.result);
+    // console.log("busi_res", user.role.indexOf("MAINTENANCE"), busi_res.result);
     if (user.role.indexOf("MAINTENANCE") === -1 || busi_res.result.length > 0) {
       // console.log("no Maintenance profile");
       // props.onConfirm();
@@ -138,21 +138,21 @@ function MaintenanceProfile(props) {
     const bus_uid = busi_res.result.filter(
       (bus) => bus.business_type === "MAINTENANCE"
     )[0].business_uid;
-    console.log(bus_uid);
+    // console.log(bus_uid);
     const employee_response = await get(`/employees?user_uid=${user.user_uid}`);
-    console.log(employee_response);
+    // console.log(employee_response);
     if (employee_response.result.length !== 0) {
       const employee = employee_response.result.filter(
         (emp) => emp.business_uid === bus_uid
       )[0];
-      console.log(employee);
+      // console.log(employee);
       const business_response = await get(
         `/businesses?business_uid=${employee.business_uid}`
       );
 
       const business = business_response.result[0];
       setBusinessInfo(business);
-      console.log(business);
+      // console.log(business);
       const profile = { ...employee, ...business };
       // console.log(profile)
       loadProfile(profile);
