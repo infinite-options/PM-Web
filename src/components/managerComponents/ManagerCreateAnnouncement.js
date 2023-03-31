@@ -41,7 +41,7 @@ const useStyles = makeStyles({
 function ManagerCreateAnnouncement(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { userData, refresh } = useContext(AppContext);
+  const { userData, refresh, ably } = useContext(AppContext);
   const { access_token, user } = userData;
   const [properties, setProperties] = useState([]);
   const [tenants, setTenants] = useState([]);
@@ -77,7 +77,7 @@ function ManagerCreateAnnouncement(props) {
   const responsiveSidebar = {
     showSidebar: width > 1023,
   };
-
+  const channel = ably.channels.get(`announcements`);
   const emptyAnnouncement = {
     pm_id: "",
     announcement_title: "",
@@ -237,6 +237,7 @@ function ManagerCreateAnnouncement(props) {
     };
     const response = await put("/DeleteAnnouncement", delAnnouncement);
     setDeleted(!deleted);
+    channel.publish({ data: { te: delAnnouncement } });
   };
   //post announcements to database and send out emails
   const postAnnouncement = async (newAnnouncement) => {
@@ -295,7 +296,9 @@ function ManagerCreateAnnouncement(props) {
     };
     // setShowSpinner(true);
     const response = await post("/announcement", new_announcement);
+    channel.publish({ data: { te: new_announcement } });
     setNewAnnouncement({ ...emptyAnnouncement });
+
     propertyState.forEach((prop) => (prop.checked = false));
     setPropertyState(propertyState);
     tenantState.forEach((prop) => (prop.checked = false));
@@ -308,13 +311,14 @@ function ManagerCreateAnnouncement(props) {
     newAnnouncementState.push({ ...newAnnouncement });
     setAnnouncementState(newAnnouncementState);
     setNewAnnouncement(null);
+
     fetchProperties();
     const send_announcement = {
       announcement_msg: new_announcement.announcement_msg,
       announcement_title: new_announcement.announcement_title,
-      name: response["tenant_name"],
-      pno: response["tenant_pno"],
-      email: response["tenant_email"],
+      name: response["name"],
+      pno: response["pno"],
+      email: response["email"],
     };
     const res = await post("/SendAnnouncement", send_announcement);
   };

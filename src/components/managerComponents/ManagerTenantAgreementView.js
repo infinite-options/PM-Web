@@ -104,7 +104,7 @@ function ManagerTenantAgreementView(props) {
     // loadAgreement(agg);
     let tenant = [];
     let ti = {};
-    console.log("selectedagg", agg);
+    // console.log("selectedagg", agg);
     if (agg !== null) {
       if (agg.tenant_first_name.includes(",")) {
         let tenant_ids = agg.tenant_id.split(",");
@@ -206,9 +206,9 @@ function ManagerTenantAgreementView(props) {
     const send_announcement = {
       announcement_msg: new_announcement.announcement_msg,
       announcement_title: new_announcement.announcement_title,
-      name: responseAnnouncement["tenant_name"],
-      pno: responseAnnouncement["tenant_pno"],
-      email: responseAnnouncement["tenant_email"],
+      name: responseAnnouncement["name"],
+      pno: responseAnnouncement["pno"],
+      email: responseAnnouncement["email"],
     };
     const resSendAnnouncement = await post(
       "/SendAnnouncement",

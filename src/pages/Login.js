@@ -15,6 +15,7 @@ function Login(props) {
   const { userData, updateUserData } = useContext(AppContext);
   const navigate = useNavigate();
   const [passModal, setpassModal] = useState(false);
+  const [emailLogin, setEmailLogin] = useState(false);
   const [loginStage, setLoginStage] = useState("LOGIN");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -66,21 +67,6 @@ function Login(props) {
       return;
       // add validation
     } else {
-      // console.log(response);
-      // const userSignUp = {
-      //   first_name: response.result.user.first_name,
-      //   last_name: response.result.user.last_name,
-      //   phone_number: response.result.user.phone_number,
-      //   email: email,
-      //   password: password,
-      //   role: props.role,
-      // };
-      // console.log(userSignUp);
-      // const res = await put("/users", userSignUp);
-      // console.log(res);
-      // console.log("login", res.result);
-      // context.updateUserData(res.result);
-      // props.onConfirm();
       props.onConfirm(response.result.user.role, email);
     }
 
@@ -114,87 +100,98 @@ function Login(props) {
       {<PasswordModal isOpen={passModal} onCancel={onCancel} />}
       {loginStage === "LOGIN" && props.signupStage !== "NAME" ? (
         <div className="d-flex flex-column h-100">
-          {/* <Header
-            title="Login"
-            leftText="< Back"
-            leftFn={() => navigate("/")}
-          /> */}
           <Container className="d-flex flex-column mt-3">
-            <div className="text-center">
-              {/* <img src={AppleLogin} alt="Apple Login" className="m-1" />
-              <img src={FacebookLogin} alt="Facebook Login" className="m-1" />
-              <img src={GoogleLogin} alt="Google Login" className="m-1" /> */}
-              {/* <SocialLogin
-                signupStage={props.signupStage}
-                loginStage={loginStage}
-                setLoginStage={setLoginStage}
-              /> */}
-              <GoogleSignIn
-                signupStage={props.signupStage}
-                loginStage={loginStage}
-                setLoginStage={setLoginStage}
-              />
-            </div>
-            <hr className="mt-4 mb-1" />
-            <div className="text-center mb-4">
-              <p style={boldSmall}>Or continue with email</p>
-            </div>
-            <Form>
-              <Form.Group className="mx-2 my-3">
-                <Form.Label as="h5" className="mb-0 ms-1">
-                  Email Address {email === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={{ borderRadius: 0 }}
-                  placeholder="Email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className="mx-2 my-3">
-                <Form.Label as="h5" className="mb-0 ms-1">
-                  Password {password === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={{ borderRadius: 0 }}
-                  placeholder="Password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </Form.Group>
-            </Form>
-
-            <div className="text-center pt-1 pb-2">
-              <div className="text-center mb-4">
-                <p style={boldSmall} onClick={onReset}>
-                  Forgot Password?
-                </p>
-              </div>
-              {showSpinner ? (
-                <div className="w-100 d-flex flex-column justify-content-center align-items-center">
-                  <ReactBootStrap.Spinner animation="border" role="status" />
+            {emailLogin ? (
+              <div>
+                {" "}
+                <Form>
+                  <Form.Group className="mx-2 my-3">
+                    <Form.Label as="h5" className="mb-0 ms-1">
+                      Email Address {email === "" ? required : ""}
+                    </Form.Label>
+                    <Form.Control
+                      style={{ borderRadius: 0 }}
+                      placeholder="Email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mx-2 my-3">
+                    <Form.Label as="h5" className="mb-0 ms-1">
+                      Password {password === "" ? required : ""}
+                    </Form.Label>
+                    <Form.Control
+                      style={{ borderRadius: 0 }}
+                      placeholder="Password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </Form.Group>
+                </Form>
+                <div className="text-center pt-1 pb-2">
+                  <div className="text-center mb-4">
+                    <p style={boldSmall} onClick={onReset}>
+                      Forgot Password?
+                    </p>
+                  </div>
+                  {showSpinner ? (
+                    <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                      <ReactBootStrap.Spinner
+                        animation="border"
+                        role="status"
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  <Button
+                    variant="outline-primary"
+                    style={pillButton}
+                    onClick={submitForm}
+                  >
+                    Login
+                  </Button>
                 </div>
-              ) : (
-                ""
-              )}
-              <Button
-                variant="outline-primary"
-                style={pillButton}
-                onClick={submitForm}
-              >
-                Login
-              </Button>
-            </div>
-            <div
-              className="text-center"
-              style={errorMessage === "" ? hidden : {}}
-            >
-              <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
-            </div>
+                <div
+                  className="text-center"
+                  style={errorMessage === "" ? hidden : {}}
+                >
+                  <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center mt-5" hidden={emailLogin}>
+                <GoogleSignIn
+                  signupStage={props.signupStage}
+                  loginStage={loginStage}
+                  setLoginStage={setLoginStage}
+                />
+              </div>
+            )}
           </Container>
-          <div className="flex-grow-1 d-flex flex-column justify-content-end">
+          {emailLogin ? (
+            <div className="flex-grow-1 d-flex flex-column justify-content-end text-center mt-2">
+              <p
+                style={{ ...boldSmall, cursor: "pointer" }}
+                onClick={() => setEmailLogin(false)}
+              >
+                Or continue with Google
+              </p>
+            </div>
+          ) : (
+            <div className="flex-grow-1 d-flex flex-column justify-content-end text-center mt-2">
+              <p
+                style={{ ...boldSmall, cursor: "pointer" }}
+                onClick={() => setEmailLogin(true)}
+              >
+                Or continue with Email
+              </p>
+            </div>
+          )}
+
+          <div className="flex-grow-1 d-flex flex-column justify-content-start">
             <div className="text-center">
               <p style={boldSmall} className="mb-1">
                 Don't have an account?
@@ -213,8 +210,6 @@ function Login(props) {
         </div>
       ) : loginStage === "ROLE" && props.signupStage !== "NAME" ? (
         <div className="d-flex flex-column h-100 pb-5">
-          {/* <Header title="Login" /> */}
-          {/* <SelectRole /> */}
           <Homepage />
         </div>
       ) : loginStage === "LOGIN" && props.signupStage === "NAME" ? (

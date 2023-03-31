@@ -57,6 +57,7 @@ const useStyles = makeStyles({
   },
 });
 function TenantProfile(props) {
+  var CryptoJS = require("crypto-js");
   const classes = useStyles();
   // console.log("in tenant profile");
   const context = useContext(AppContext);
@@ -184,7 +185,12 @@ function TenantProfile(props) {
       setTenantInfo(response.result);
       setFirstName(response.result[0].tenant_first_name);
       setLastName(response.result[0].tenant_last_name);
-      setSsn(response.result[0].tenant_ssn);
+      setSsn(
+        CryptoJS.AES.decrypt(
+          response.result[0].tenant_ssn,
+          process.env.REACT_APP_ENKEY
+        ).toString(CryptoJS.enc.Utf8)
+      );
       setPhone(response.result[0].tenant_phone_number);
       setEmail(response.result[0].tenant_email);
       setSalary(response.result[0].tenant_current_salary);
@@ -253,7 +259,7 @@ function TenantProfile(props) {
         salary_frequency: frequency,
         current_job_title: jobTitle,
         current_job_company: company,
-        ssn: ssn,
+        ssn: CryptoJS.AES.encrypt(ssn, process.env.REACT_APP_ENKEY).toString(),
         drivers_license_number: dlNumber,
         drivers_license_state: selectedDlState,
         current_address: JSON.stringify(currentAddressState[0]),
@@ -303,7 +309,10 @@ function TenantProfile(props) {
         tenant_salary_frequency: frequency,
         tenant_current_job_title: jobTitle,
         tenant_current_job_company: company,
-        tenant_ssn: ssn,
+        tenant_ssn: CryptoJS.AES.encrypt(
+          ssn,
+          process.env.REACT_APP_ENKEY
+        ).toString(),
         tenant_drivers_license_number: dlNumber,
         tenant_drivers_license_state: selectedDlState,
         tenant_current_address: JSON.stringify(currentAddressState[0]),

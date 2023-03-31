@@ -163,21 +163,21 @@ function ManagerTenantRefusedAgreementView(props) {
     let appRef = property.applications.filter(
       (a) => a.application_status === "REFUSED"
     );
-    console.log("in useeffect");
+    // console.log("in useeffect");
     if (appRef.length > 0) {
       for (const ref in appRef) {
-        console.log("ref", ref);
+        // console.log("ref", ref);
         if (
           appRef[ref].application_uid ==
           JSON.parse(agg.linked_application_id)[0]
         ) {
-          console.log("if ref", appRef[ref]);
+          // console.log("if ref", appRef[ref]);
           setAcceptedTenantApplications([appRef[ref]]);
         }
       }
     }
   };
-  console.log(acceptedTenantApplications);
+  // console.log(acceptedTenantApplications);
   useEffect(() => {
     loadAgreement(selectedAgreement);
   }, [selectedAgreement]);
@@ -220,9 +220,9 @@ function ManagerTenantRefusedAgreementView(props) {
     const send_announcement = {
       announcement_msg: new_announcement.announcement_msg,
       announcement_title: new_announcement.announcement_title,
-      name: responseAnnouncement["tenant_name"],
-      pno: responseAnnouncement["tenant_pno"],
-      email: responseAnnouncement["tenant_email"],
+      name: responseAnnouncement["name"],
+      pno: responseAnnouncement["pno"],
+      email: responseAnnouncement["email"],
     };
     const resSendAnnouncement = await post(
       "/SendAnnouncement",

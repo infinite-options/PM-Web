@@ -71,7 +71,7 @@ function ManagerRepairRequest(props) {
     }
 
     let selProp = sp === undefined ? properties : sp;
-    console.log(selProp);
+    // console.log(selProp);
     const newRequest = {
       property_uid: selProp.property_uid,
       title: title,

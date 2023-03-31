@@ -147,13 +147,13 @@ export default function OwnerDashboard2() {
   useEffect(() => {
     async function management_message() {
       await channel.subscribe((message) => {
-        console.log(message);
+        // console.log(message);
         setManagementStatus(message.data.te);
       });
     }
     async function maintenance_message() {
       await channel_maintenance.subscribe((message) => {
-        console.log(message);
+        // console.log(message);
         setMaintenanceStatus(message.data.te);
       });
     }

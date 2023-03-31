@@ -14,6 +14,7 @@ import { squareForm, pillButton, hidden, red, small } from "../utils/styles";
 import { formatPhoneNumber, formatEIN, formatSSN } from "../utils/helper";
 
 function ManagerProfileInfo(props) {
+  var CryptoJS = require("crypto-js");
   const context = useContext(AppContext);
   const { access_token, user } = context.userData;
   const { autofillState, setAutofillState } = props;
@@ -107,7 +108,9 @@ function ManagerProfileInfo(props) {
       phone_number: phoneNumber,
       email: email,
       ein_number: showEin ? einNumber : "",
-      ssn: showSsn ? ssn : "",
+      ssn: showSsn
+        ? CryptoJS.AES.encrypt(ssn, process.env.REACT_APP_ENKEY).toString()
+        : "",
       paypal: paypal,
       apple_pay: applePay,
       zelle: zelle,

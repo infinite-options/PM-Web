@@ -37,9 +37,9 @@ function RescheduleRepair(props) {
 
   const location = useLocation();
   const { quotes, setScheduleMaintenance } = props;
-  console.log(quotes);
-  console.log(new Date(+new Date() + 86400000));
-  console.log(new Date(+new Date(quotes.scheduled_date) + 86400000));
+  // console.log(quotes);
+  // console.log(new Date(+new Date() + 86400000));
+  // console.log(new Date(+new Date(quotes.scheduled_date) + 86400000));
   const user_book =
     quotes.rentalInfo.length > 0
       ? quotes.rentalInfo[0].tenant_id
@@ -644,7 +644,7 @@ function RescheduleRepair(props) {
     result = resultTenant.filter((o1) =>
       resultMaintenance.some((o2) => o1 === o2)
     );
-    console.log("TimeSlots joined", result);
+    // console.log("TimeSlots joined", result);
     return (
       <div className="m-5" style={{ height: "5rem" }}>
         <Grid
@@ -803,7 +803,7 @@ function RescheduleRepair(props) {
     navigate(-1);
     // setScheduleMaintenance(false);
   }
-  console.log(quotes);
+  // console.log(quotes);
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">

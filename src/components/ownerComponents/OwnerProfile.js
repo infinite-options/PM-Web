@@ -43,6 +43,7 @@ const useStyles = makeStyles({
   },
 });
 function OwnerProfile(props) {
+  var CryptoJS = require("crypto-js");
   const classes = useStyles();
   const context = useContext(AppContext);
   const { userData, refresh, logout } = context;
@@ -84,13 +85,19 @@ function OwnerProfile(props) {
     showSidebar: width > 1023,
   };
   const loadProfile = (profile) => {
+    console.log(profile.owner_ssn);
     setProfileInfo(profile);
     setFirstName(profile.owner_first_name);
     setLastName(profile.owner_last_name);
     setEmail(profile.owner_email);
     setPhoneNumber(profile.owner_phone_number);
     setEinNumber(profile.owner_ein_number);
-    setSsn(profile.owner_ssn);
+    setSsn(
+      CryptoJS.AES.decrypt(
+        profile.owner_ssn,
+        process.env.REACT_APP_ENKEY
+      ).toString(CryptoJS.enc.Utf8)
+    );
     setPaymentState({
       paypal: profile.owner_paypal ? profile.owner_paypal : "",
       applePay: profile.owner_apple_pay ? profile.owner_apple_pay : "",
@@ -136,12 +143,12 @@ function OwnerProfile(props) {
       paymentState;
 
     const ownerProfile = {
-      first_name: profileInfo.firstName,
-      last_name: profileInfo.lastName,
-      email: profileInfo.email,
-      phone_number: profileInfo.phoneNumber,
-      ssn: profileInfo.ssn,
-      ein_number: profileInfo.einNumber,
+      first_name: firstName,
+      last_name: lastName,
+      email: email,
+      phone_number: phoneNumber,
+      ssn: CryptoJS.AES.encrypt(ssn, process.env.REACT_APP_ENKEY).toString(),
+      ein_number: einNumber,
       paypal: paypal || null,
       apple_pay: applePay || null,
       zelle: zelle || null,
@@ -263,7 +270,7 @@ function OwnerProfile(props) {
                       <Form.Control
                         style={squareForm}
                         placeholder="(xxx)xxx-xxxx"
-                        value={lastName}
+                        value={phoneNumber}
                         onChange={(e) =>
                           setPhoneNumber(formatPhoneNumber(e.target.value))
                         }

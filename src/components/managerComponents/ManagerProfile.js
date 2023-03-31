@@ -46,6 +46,7 @@ const useStyles = makeStyles({
   },
 });
 function ManagerProfile(props) {
+  var CryptoJS = require("crypto-js");
   const classes = useStyles();
   const context = useContext(AppContext);
   const { userData, refresh, logout } = context;
@@ -131,7 +132,7 @@ function ManagerProfile(props) {
       return;
     }
     const busi_res = await get(`/businesses?business_email=${user.email}`);
-    console.log("busi_res", user.role, busi_res.result);
+    // console.log("busi_res", user.role, busi_res.result);
     if (user.role.indexOf("MANAGER") === -1 || busi_res.result.length > 0) {
       // console.log("no manager profile");
       // props.onConfirm();
@@ -139,21 +140,21 @@ function ManagerProfile(props) {
     const bus_uid = busi_res.result.filter(
       (bus) => bus.business_type === "MANAGEMENT"
     )[0].business_uid;
-    console.log(bus_uid);
+    // console.log(bus_uid);
     const employee_response = await get(`/employees?user_uid=${user.user_uid}`);
-    console.log(employee_response);
+    // console.log(employee_response);
     if (employee_response.result.length !== 0) {
       const employee = employee_response.result.filter(
         (emp) => emp.business_uid === bus_uid
       )[0];
-      console.log(employee);
+      // console.log(employee);
       const business_response = await get(
         `/businesses?business_uid=${employee.business_uid}`
       );
 
       const business = business_response.result[0];
       setBusinessInfo(business);
-      console.log(business);
+      // console.log(business);
       const profile = { ...employee, ...business };
       // console.log(profile)
       loadProfile(profile);
@@ -168,6 +169,7 @@ function ManagerProfile(props) {
       // console.log("in if");
       const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
         paymentState;
+      const newFiles = [...files];
       const business_info = {
         // business_uid: profileInfo.business_uid,
         type: "MANAGEMENT",
@@ -175,8 +177,8 @@ function ManagerProfile(props) {
         phone_number: phoneNumber,
         email: email,
         ein_number: einNumber,
-        services_fees: feeState,
-        locations: locationState,
+        services_fees: JSON.stringify(feeState),
+        locations: JSON.stringify(locationState),
         paypal: paypal || null,
         apple_pay: applePay || null,
         zelle: zelle || null,
@@ -185,11 +187,23 @@ function ManagerProfile(props) {
         routing_number: routingNumber || null,
       };
 
-      // const employee_response = await put("/employees", employee_info);
+      for (let i = 0; i < newFiles.length; i++) {
+        let key = `doc_${i}`;
+        if (newFiles[i].file !== undefined) {
+          business_info[key] = newFiles[i].file;
+        } else {
+          business_info[key] = newFiles[i].link;
+        }
+
+        delete newFiles[i].file;
+      }
+
+      business_info.businessdocuments = JSON.stringify(newFiles);
       const business_response = await post(
         "/businesses",
         business_info,
-        access_token
+        access_token,
+        newFiles
       );
       setEditProfile(false);
       fetchProfileInfo();
@@ -208,6 +222,7 @@ function ManagerProfile(props) {
         ein_number: einNumber,
         ssn: ssn,
       };
+      const newFiles = [...files];
       const business_info = {
         business_uid: profileInfo.business_uid,
         type: profileInfo.business_type,
@@ -215,8 +230,8 @@ function ManagerProfile(props) {
         phone_number: phoneNumber,
         email: profileInfo.business_email,
         ein_number: einNumber,
-        services_fees: feeState,
-        locations: locationState,
+        services_fees: JSON.stringify(feeState),
+        locations: JSON.stringify(locationState),
         paypal: paypal || null,
         apple_pay: applePay || null,
         zelle: zelle || null,
@@ -224,9 +239,25 @@ function ManagerProfile(props) {
         account_number: accountNumber || null,
         routing_number: routingNumber || null,
       };
+      for (let i = 0; i < newFiles.length; i++) {
+        let key = `doc_${i}`;
+        if (newFiles[i].file !== undefined) {
+          business_info[key] = newFiles[i].file;
+        } else {
+          business_info[key] = newFiles[i].link;
+        }
 
+        delete newFiles[i].file;
+      }
+
+      business_info.business_documents = JSON.stringify(newFiles);
       const employee_response = await put("/employees", employee_info);
-      const business_response = await put("/businesses", business_info);
+      const business_response = await put(
+        "/businesses",
+        business_info,
+        access_token,
+        newFiles
+      );
       setEditProfile(false);
       fetchProfileInfo();
     }

@@ -60,12 +60,12 @@ function ServicesProvidedQuotes(props) {
   const [errorMessage, setErrorMessage] = React.useState("");
 
   const calculateEstimate = () => {
-    console.log("in calculate estimate");
+    // console.log("in calculate estimate");
 
-    console.log("in calculate estimate serevicestate", serviceState);
+    // console.log("in calculate estimate serevicestate", serviceState);
     // console.log(eventType)
     if (newService !== null) {
-      console.log("in calculate estimate newservice", newService);
+      // console.log("in calculate estimate newservice", newService);
       let total = 0;
       let hours = parseInt(newService.event_type);
       if (
@@ -107,9 +107,9 @@ function ServicesProvidedQuotes(props) {
     calculateEstimate();
     calculateTotalEstimate();
   }, [newService, serviceState]);
-  console.log(serviceState);
-  console.log(eventType);
-  console.log(totalEstimate);
+  // console.log(serviceState);
+  // console.log(eventType);
+  // console.log(totalEstimate);
   const addService = () => {
     if (
       newService.service_name === "" ||

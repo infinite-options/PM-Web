@@ -457,7 +457,7 @@ function ManagerTenantAgreement(props) {
         effective_date: effectiveDate,
       };
 
-      console.log(newAgreement);
+      // console.log(newAgreement);
       newAgreement.linked_application_id = JSON.stringify(
         acceptedTenantApplications.map(
           (application) => application.application_uid
@@ -482,7 +482,7 @@ function ManagerTenantAgreement(props) {
 
       // console.log("in if");
       newAgreement.rental_uid = agreement.rental_uid;
-      console.log(newAgreement);
+      // console.log(newAgreement);
       const response = await put(`/rentals`, newAgreement, null, newFiles);
 
       setShowSpinner(false);
@@ -494,7 +494,7 @@ function ManagerTenantAgreement(props) {
         for (const application of acceptedTenantApplications.map(
           (application) => application.application_uid
         )) {
-          console.log(application);
+          // console.log(application);
           if (
             property.rentalInfo.some((rent) => rent.rental_status === "ACTIVE")
           ) {
@@ -511,7 +511,7 @@ function ManagerTenantAgreement(props) {
                 message: "Requesting to Extend Lease",
                 application_status: "LEASE EXTENSION",
               };
-              console.log(request_body);
+              // console.log(request_body);
               const update_application = await put(
                 "/applications",
                 request_body
@@ -524,7 +524,7 @@ function ManagerTenantAgreement(props) {
                 message: "Lease details forwarded for review",
                 application_status: "FORWARDED",
               };
-              console.log(request_body);
+              // console.log(request_body);
               const update_application = await put(
                 "/applications",
                 request_body
@@ -538,7 +538,7 @@ function ManagerTenantAgreement(props) {
               message: "Lease details forwarded for review",
               application_status: "FORWARDED",
             };
-            console.log(request_body);
+            // console.log(request_body);
             const update_application = await put("/applications", request_body);
             channel_application.publish({ data: { te: request_body } });
             // console.log(update_application);
@@ -548,10 +548,7 @@ function ManagerTenantAgreement(props) {
 
       let newAgreement = {};
       // if rental status is REFUSED
-      console.log(
-        rentalStatus === "REFUSED" &&
-          property.rentalInfo.some((rent) => rent.rental_status !== "ACTIVE")
-      );
+
       if (
         rentalStatus === "REFUSED" &&
         property.rentalInfo.some((rent) => rent.rental_status === "ACTIVE")
@@ -617,7 +614,7 @@ function ManagerTenantAgreement(props) {
         };
       }
 
-      console.log(newAgreement);
+      // console.log(newAgreement);
       newAgreement.linked_application_id = JSON.stringify(
         acceptedTenantApplications.map(
           (application) => application.application_uid
@@ -642,7 +639,7 @@ function ManagerTenantAgreement(props) {
 
       // console.log("in if");
       newAgreement.rental_uid = agreement.rental_uid;
-      console.log(newAgreement);
+      // console.log(newAgreement);
       const response = await put(`/rentals`, newAgreement, null, newFiles);
 
       setShowSpinner(false);
@@ -728,14 +725,14 @@ function ManagerTenantAgreement(props) {
       for (const application of acceptedTenantApplications.map(
         (application) => application.application_uid
       )) {
-        console.log(application);
+        // console.log(application);
 
         const request_body = {
           application_uid: application,
           message: "Lease details forwarded for review",
           application_status: "FORWARDED",
         };
-        console.log(request_body);
+        // console.log(request_body);
         const update_application = await put("/applications", request_body);
         channel_application.publish({ data: { te: request_body } });
       }
@@ -758,7 +755,7 @@ function ManagerTenantAgreement(props) {
         referred: JSON.stringify(referred),
         effective_date: effectiveDate,
       };
-      console.log(newAgreement);
+      // console.log(newAgreement);
       const newFiles = [...files];
 
       for (let i = 0; i < newFiles.length; i++) {
@@ -874,7 +871,7 @@ function ManagerTenantAgreement(props) {
         );
       }
 
-      console.log(extendObject);
+      // console.log(extendObject);
       if (apps.length > 0) {
         const response6 = await put("/extendLease", extendObject);
       }

@@ -396,7 +396,7 @@ function ManagerPropertyView(props) {
     showTenantAgreementEdit,
   ]);
   useEffect(() => {
-    console.log("in useeffect");
+    // console.log("in useeffect");
     fetchProperty();
   }, [addDoc]);
   const addContract = () => {
@@ -417,7 +417,7 @@ function ManagerPropertyView(props) {
     setShowTenantAgreement(true);
   };
   const selectAgreement = (agreement) => {
-    console.log("agreement in selectagreement", agreement);
+    // console.log("agreement in selectagreement", agreement);
     setSelectedAgreement(agreement);
     setShowTenantAgreement(true);
   };
@@ -428,7 +428,7 @@ function ManagerPropertyView(props) {
     setAcceptedTenantApplications([]);
     setSelectedAgreement(null);
     window.scrollTo(0, 0);
-    console.log("in close agreement");
+    // console.log("in close agreement");
     fetchProperty();
   };
 
@@ -436,7 +436,7 @@ function ManagerPropertyView(props) {
     setEditProperty(false);
     setShowAddRequest(false);
     window.scrollTo(0, 0);
-    console.log("in reload property");
+    // console.log("in reload property");
     fetchProperty();
   };
 

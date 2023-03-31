@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   Container,
   Row,
@@ -51,8 +52,10 @@ const useStyles = makeStyles({
     tableLayout: "fixed",
   },
 });
+
 function TenantProfileInfo(props) {
   const classes = useStyles();
+  var CryptoJS = require("crypto-js");
   const { userData } = useContext(AppContext);
   const { access_token, user } = userData;
   // console.log("user", user);
@@ -76,6 +79,7 @@ function TenantProfileInfo(props) {
     setAutofillState(newAutofillState);
   };
   const [anchorEl, setAnchorEl] = useState(null);
+
   // const [expandFrequency, setExpandFrequency] = useState(false);
   const [firstName, setFirstName] = useState(autofillState.first_name);
   const [lastName, setLastName] = useState(autofillState.last_name);
@@ -773,7 +777,10 @@ function TenantProfileInfo(props) {
       tenant_salary_frequency: frequency,
       tenant_current_job_title: jobTitle,
       tenant_current_job_company: company,
-      tenant_ssn: ssn,
+      tenant_ssn: CryptoJS.AES.encrypt(
+        ssn,
+        process.env.REACT_APP_ENKEY
+      ).toString(),
       tenant_drivers_license_number: dlNumber,
       tenant_drivers_license_state: selectedDlState,
       tenant_current_address: JSON.stringify(currentAddressState[0]),
@@ -800,6 +807,7 @@ function TenantProfileInfo(props) {
     }
     tenantProfile.documents = JSON.stringify(newFiles);
     tenantProfile.tenant_user_id = user.user_uid;
+    // console.log(tenantProfile);
     await post("/tenantProfileInfo", tenantProfile, null, newFiles);
     updateAutofillState(tenantProfile);
     props.onConfirm();
@@ -902,7 +910,7 @@ function TenantProfileInfo(props) {
       <div>
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
-            First Name {firstName === "" ? required : ""}
+            First Name (Required) {firstName === "" ? required : ""}
           </Form.Label>
           <Form.Control
             style={squareForm}
@@ -913,7 +921,7 @@ function TenantProfileInfo(props) {
         </Form.Group>
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
-            Last Name {lastName === "" ? required : ""}
+            Last Name (Required){lastName === "" ? required : ""}
           </Form.Label>
           <Form.Control
             style={squareForm}
@@ -926,7 +934,7 @@ function TenantProfileInfo(props) {
           <Col className="px-0">
             <Form.Group className="mx-2 my-3">
               <Form.Label as="h6" className="mb-0 ms-2">
-                Annual Salary {salary === "" ? required : ""}
+                Salary (Required) {salary === "" ? required : ""}
               </Form.Label>
               <Form.Control
                 style={squareForm}
@@ -945,7 +953,7 @@ function TenantProfileInfo(props) {
           >
             <Form.Group className="mx-2 my-3">
               <Form.Label as="h6" className="mb-0 ms-2">
-                Frequency
+                Frequency (Required)
               </Form.Label>
               <DropdownButton
                 variant="light"
@@ -968,7 +976,7 @@ function TenantProfileInfo(props) {
 
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
-            Current Job Title {jobTitle === "" ? required : ""}
+            Current Job Title (Required) {jobTitle === "" ? required : ""}
           </Form.Label>
           <Form.Control
             style={squareForm}
@@ -979,7 +987,7 @@ function TenantProfileInfo(props) {
         </Form.Group>
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
-            Company Name {company === "" ? required : ""}
+            Company Name (Required){company === "" ? required : ""}
           </Form.Label>
           <Form.Control
             style={squareForm}
@@ -990,7 +998,7 @@ function TenantProfileInfo(props) {
         </Form.Group>
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
-            Social Security Number {ssn === "" ? required : ""}
+            Social Security Number (Required) {ssn === "" ? required : ""}
           </Form.Label>
           <Form.Control
             style={squareForm}
@@ -1004,7 +1012,8 @@ function TenantProfileInfo(props) {
           <Col>
             <Form.Group className="mx-2">
               <Form.Label as="h6" className="mb-0 ms-2">
-                Driver's License Number {dlNumber === "" ? required : ""}
+                Driver's License Number (Required){" "}
+                {dlNumber === "" ? required : ""}
               </Form.Label>
               <Form.Control
                 style={squareForm}
@@ -1034,7 +1043,7 @@ function TenantProfileInfo(props) {
         </Row>
         <Row className="mx-1 my-3">
           {/* ===============================< Current Address form -- > Address form >=================================================== */}
-          <h5 className="mx-2 my-3">Current Address</h5>
+          <h5 className="mx-2 my-3">Current Address (Required)</h5>
           <AddressForm
             state={currentAddressState}
             errorMessage={errorMessage}

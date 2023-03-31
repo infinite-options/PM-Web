@@ -27,9 +27,9 @@ function GoogleSignIn(props) {
   let signupStage = props.signupStage;
   // gets back ID token, decoded to get email and other account info, used to sign in
   function handleCallBackResponse(response) {
-    console.log("Encoded JWT ID token:" + response.credential);
+    // console.log("Encoded JWT ID token:" + response.credential);
     var userObject = jwt_decode(response.credential);
-    console.log("User object", userObject);
+    // console.log("User object", userObject);
     if (userObject) {
       let email = userObject.email;
       setNewEmail(email);
@@ -170,7 +170,7 @@ function GoogleSignIn(props) {
     /* global google */
 
     if (window.google) {
-      console.log("in here singnin");
+      // console.log("in here singnin");
       //  initializes the Sign In With Google client based on the configuration object
       google.accounts.id.initialize({
         client_id: CLIENT_ID,

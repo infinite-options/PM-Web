@@ -63,6 +63,7 @@ export default function TenantDashboard() {
   const [managerInfo, setManagerInfo] = useState([]);
   const [applicationStatus, setApplicationStatus] = useState("");
   const [maintenanceStatus, setMaintenanceStatus] = useState("");
+  const [announcementsArrival, setAnnouncementsArrival] = useState("");
 
   // // search variables
   // const [search, setSearch] = useState("");
@@ -70,6 +71,7 @@ export default function TenantDashboard() {
 
   const channel_application = ably.channels.get("application_status");
   const channel_maintenance = ably.channels.get("maintenance_status");
+  const channel_announcements = ably.channels.get("announcements");
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
 
@@ -252,24 +254,37 @@ export default function TenantDashboard() {
   useEffect(() => {
     async function application_message() {
       await channel_application.subscribe((message) => {
-        console.log(message);
+        // console.log(message);
         setApplicationStatus(message.data.te);
       });
     }
     async function maintenance_message() {
       await channel_maintenance.subscribe((message) => {
-        console.log(message);
+        // console.log(message);
         setMaintenanceStatus(message.data.te);
+      });
+    }
+    async function announcements_message() {
+      await channel_announcements.subscribe((message) => {
+        // console.log(message);
+        setAnnouncementsArrival(message.data.te);
       });
     }
     application_message();
     maintenance_message();
     fetchTenantDashboard();
+    announcements_message();
     return function cleanup() {
       channel_application.unsubscribe();
       channel_maintenance.unsubscribe();
+      channel_announcements.unsubscribe();
     };
-  }, [access_token, applicationStatus, maintenanceStatus]);
+  }, [
+    access_token,
+    applicationStatus,
+    maintenanceStatus,
+    announcementsArrival,
+  ]);
 
   const addProperty = () => {
     fetchTenantDashboard();

@@ -45,10 +45,10 @@ function OwnerRepairRequest(props) {
       setErrorMessage("Please fill out all fields");
       return;
     }
-    console.log(sp);
-    console.log(properties);
+    // console.log(sp);
+    // console.log(properties);
     let selectedProperty = sp === undefined ? properties : JSON.parse(sp);
-    console.log(selectedProperty);
+    // console.log(selectedProperty);
     const newRequest = {
       property_uid:
         properties.length > 1
@@ -74,7 +74,7 @@ function OwnerRepairRequest(props) {
       }
     }
 
-    console.log(newRequest);
+    // console.log(newRequest);
 
     setShowSpinner(true);
     await post("/maintenanceRequests", newRequest, null, files);

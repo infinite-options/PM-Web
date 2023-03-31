@@ -9,6 +9,7 @@ import ArrowDown from "../icons/ArrowDown.svg";
 
 import { formatPhoneNumber, formatSSN } from "../utils/helper";
 function EmployeeProfile(props) {
+  var CryptoJS = require("crypto-js");
   const { businessType, onConfirm, autofillState, setAutofillState } = props;
   const updateAutofillState = (profile) => {
     const newAutofillState = { ...autofillState };
@@ -130,7 +131,7 @@ function EmployeeProfile(props) {
       last_name: lastName,
       phone_number: phoneNumber,
       email: email,
-      ssn: ssn,
+      ssn: CryptoJS.AES.encrypt(ssn, process.env.REACT_APP_ENKEY).toString(),
       ein_number: einNumber,
     };
     // console.log(employeeInfo);
