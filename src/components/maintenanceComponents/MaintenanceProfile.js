@@ -47,6 +47,7 @@ const useStyles = makeStyles({
   },
 });
 function MaintenanceProfile(props) {
+  var CryptoJS = require("crypto-js");
   const classes = useStyles();
   const context = useContext(AppContext);
   const { userData, refresh, logout } = context;
@@ -104,7 +105,12 @@ function MaintenanceProfile(props) {
     setEmail(profile.employee_email);
     setPhoneNumber(profile.employee_phone_number);
     setEinNumber(profile.business_ein_number);
-    setSsn(profile.employee_ssn);
+    setSsn(
+      CryptoJS.AES.decrypt(
+        profile.employee_ssn,
+        process.env.REACT_APP_ENKEY
+      ).toString(CryptoJS.enc.Utf8)
+    );
     setFiles(JSON.parse(profile.business_documents));
     setPaymentState({
       paypal: profile.business_paypal ? profile.business_paypal : "",
@@ -205,8 +211,9 @@ function MaintenanceProfile(props) {
         phone_number: phoneNumber,
         email: email,
         ein_number: einNumber,
-        ssn: ssn,
+        ssn: CryptoJS.AES.encrypt(ssn, process.env.REACT_APP_ENKEY).toString(),
       };
+      const newFiles = [...files];
       const business_info = {
         business_uid: profileInfo.business_uid,
         type: profileInfo.business_type,
@@ -214,8 +221,8 @@ function MaintenanceProfile(props) {
         phone_number: phoneNumber,
         email: profileInfo.business_email,
         ein_number: einNumber,
-        services_fees: serviceState,
-        locations: locationState,
+        services_fees: JSON.stringify(serviceState),
+        locations: JSON.stringify(locationState),
         paypal: paypal || null,
         apple_pay: applePay || null,
         zelle: zelle || null,
@@ -223,9 +230,25 @@ function MaintenanceProfile(props) {
         account_number: accountNumber || null,
         routing_number: routingNumber || null,
       };
+      for (let i = 0; i < newFiles.length; i++) {
+        let key = `doc_${i}`;
+        if (newFiles[i].file !== undefined) {
+          business_info[key] = newFiles[i].file;
+        } else {
+          business_info[key] = newFiles[i].link;
+        }
 
+        delete newFiles[i].file;
+      }
+
+      business_info.business_documents = JSON.stringify(newFiles);
       const employee_response = await put("/employees", employee_info);
-      const business_response = await put("/businesses", business_info);
+      const business_response = await put(
+        "/businesses",
+        business_info,
+        access_token,
+        newFiles
+      );
       setEditProfile(false);
       fetchProfileInfo();
     }

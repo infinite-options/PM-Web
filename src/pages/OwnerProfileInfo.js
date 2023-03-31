@@ -10,6 +10,7 @@ import { get, post } from "../utils/api";
 import { squareForm, pillButton, hidden, red, small } from "../utils/styles";
 import { formatEIN, formatPhoneNumber, formatSSN } from "../utils/helper";
 function OwnerProfileInfo(props) {
+  var CryptoJS = require("crypto-js");
   const context = React.useContext(AppContext);
   const { access_token, user } = context.userData;
   const navigate = useNavigate();
@@ -93,7 +94,9 @@ function OwnerProfileInfo(props) {
       phone_number: phoneNumber,
       email: email,
       ein_number: showEin ? einNumber : "",
-      ssn: showSsn ? ssn : "",
+      ssn: showSsn
+        ? CryptoJS.AES.encrypt(ssn, process.env.REACT_APP_ENKEY).toString()
+        : "",
       paypal: paypal,
       apple_pay: applePay,
       zelle: zelle,

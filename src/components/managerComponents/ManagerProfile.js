@@ -46,6 +46,7 @@ const useStyles = makeStyles({
   },
 });
 function ManagerProfile(props) {
+  var CryptoJS = require("crypto-js");
   const classes = useStyles();
   const context = useContext(AppContext);
   const { userData, refresh, logout } = context;
@@ -168,6 +169,7 @@ function ManagerProfile(props) {
       // console.log("in if");
       const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
         paymentState;
+      const newFiles = [...files];
       const business_info = {
         // business_uid: profileInfo.business_uid,
         type: "MANAGEMENT",
@@ -175,8 +177,8 @@ function ManagerProfile(props) {
         phone_number: phoneNumber,
         email: email,
         ein_number: einNumber,
-        services_fees: feeState,
-        locations: locationState,
+        services_fees: JSON.stringify(feeState),
+        locations: JSON.stringify(locationState),
         paypal: paypal || null,
         apple_pay: applePay || null,
         zelle: zelle || null,
@@ -185,11 +187,23 @@ function ManagerProfile(props) {
         routing_number: routingNumber || null,
       };
 
-      // const employee_response = await put("/employees", employee_info);
+      for (let i = 0; i < newFiles.length; i++) {
+        let key = `doc_${i}`;
+        if (newFiles[i].file !== undefined) {
+          business_info[key] = newFiles[i].file;
+        } else {
+          business_info[key] = newFiles[i].link;
+        }
+
+        delete newFiles[i].file;
+      }
+
+      business_info.businessdocuments = JSON.stringify(newFiles);
       const business_response = await post(
         "/businesses",
         business_info,
-        access_token
+        access_token,
+        newFiles
       );
       setEditProfile(false);
       fetchProfileInfo();
@@ -208,6 +222,7 @@ function ManagerProfile(props) {
         ein_number: einNumber,
         ssn: ssn,
       };
+      const newFiles = [...files];
       const business_info = {
         business_uid: profileInfo.business_uid,
         type: profileInfo.business_type,
@@ -215,8 +230,8 @@ function ManagerProfile(props) {
         phone_number: phoneNumber,
         email: profileInfo.business_email,
         ein_number: einNumber,
-        services_fees: feeState,
-        locations: locationState,
+        services_fees: JSON.stringify(feeState),
+        locations: JSON.stringify(locationState),
         paypal: paypal || null,
         apple_pay: applePay || null,
         zelle: zelle || null,
@@ -224,9 +239,25 @@ function ManagerProfile(props) {
         account_number: accountNumber || null,
         routing_number: routingNumber || null,
       };
+      for (let i = 0; i < newFiles.length; i++) {
+        let key = `doc_${i}`;
+        if (newFiles[i].file !== undefined) {
+          business_info[key] = newFiles[i].file;
+        } else {
+          business_info[key] = newFiles[i].link;
+        }
 
+        delete newFiles[i].file;
+      }
+
+      business_info.business_documents = JSON.stringify(newFiles);
       const employee_response = await put("/employees", employee_info);
-      const business_response = await put("/businesses", business_info);
+      const business_response = await put(
+        "/businesses",
+        business_info,
+        access_token,
+        newFiles
+      );
       setEditProfile(false);
       fetchProfileInfo();
     }

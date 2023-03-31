@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   Container,
   Row,
@@ -51,8 +52,10 @@ const useStyles = makeStyles({
     tableLayout: "fixed",
   },
 });
+
 function TenantProfileInfo(props) {
   const classes = useStyles();
+  var CryptoJS = require("crypto-js");
   const { userData } = useContext(AppContext);
   const { access_token, user } = userData;
   // console.log("user", user);
@@ -76,6 +79,7 @@ function TenantProfileInfo(props) {
     setAutofillState(newAutofillState);
   };
   const [anchorEl, setAnchorEl] = useState(null);
+
   // const [expandFrequency, setExpandFrequency] = useState(false);
   const [firstName, setFirstName] = useState(autofillState.first_name);
   const [lastName, setLastName] = useState(autofillState.last_name);
@@ -773,7 +777,10 @@ function TenantProfileInfo(props) {
       tenant_salary_frequency: frequency,
       tenant_current_job_title: jobTitle,
       tenant_current_job_company: company,
-      tenant_ssn: ssn,
+      tenant_ssn: CryptoJS.AES.encrypt(
+        ssn,
+        process.env.REACT_APP_ENKEY
+      ).toString(),
       tenant_drivers_license_number: dlNumber,
       tenant_drivers_license_state: selectedDlState,
       tenant_current_address: JSON.stringify(currentAddressState[0]),
@@ -800,6 +807,7 @@ function TenantProfileInfo(props) {
     }
     tenantProfile.documents = JSON.stringify(newFiles);
     tenantProfile.tenant_user_id = user.user_uid;
+    // console.log(tenantProfile);
     await post("/tenantProfileInfo", tenantProfile, null, newFiles);
     updateAutofillState(tenantProfile);
     props.onConfirm();
@@ -979,7 +987,7 @@ function TenantProfileInfo(props) {
         </Form.Group>
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
-            Company Name {company === "" ? required : ""}
+            Company Name (Required){company === "" ? required : ""}
           </Form.Label>
           <Form.Control
             style={squareForm}
