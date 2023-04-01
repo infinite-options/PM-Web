@@ -36,6 +36,7 @@ import {
   mediumBold,
   subHeading,
   smallImg,
+  red,
 } from "../utils/styles";
 
 const useStyles = makeStyles({
@@ -198,6 +199,21 @@ export default function TenantDashboard() {
         scheduled: scheduled_repairs.length,
         complete: completed_repairs.length,
       };
+
+      property.tenant_end_early_applications =
+        property.application_status === "TENANT END EARLY";
+
+      property.pm_end_early_applications =
+        property.application_status === "PM END EARLY";
+
+      property.extend_lease_applications =
+        property.application_status === "LEASE EXTENSION";
+
+      property.tenant_extend_lease_applications =
+        property.application_status === "TENANT LEASE EXTENSION";
+
+      property.tenant_refused_applications =
+        property.application_status === "REJECTED";
     });
 
     setTenantData(properties_unique);
@@ -324,6 +340,7 @@ export default function TenantDashboard() {
       ? (a, b) => descendingComparator(a, b, orderBy)
       : (a, b) => -descendingComparator(a, b, orderBy);
   }
+  console.log(tenantData);
 
   function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
@@ -903,6 +920,71 @@ export default function TenantDashboard() {
                                 ? " " + property.unit
                                 : ""}{" "}
                               {property.city}, {property.state}
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {property.tenant_end_early_applications
+                                      ? "You requested to end the lease early"
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {property.pm_end_early_applications
+                                      ? "PM requested to end the lease early"
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {property.tenant_extend_lease_applications
+                                      ? "You requested to extend the lease"
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {property.extend_lease_applications
+                                      ? "PM requested to extend the lease"
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                              {property.rental_status === "ACTIVE" ||
+                              property.rental_status === "PENDING" ? (
+                                ""
+                              ) : (
+                                <div className="d-flex">
+                                  <div className="d-flex align-items-end">
+                                    <p
+                                      style={{ ...red, ...xSmall }}
+                                      className="mb-0"
+                                    >
+                                      {property.pm_refused_applications
+                                        ? `${property.pm_refused_applications.length} PM refused the lease`
+                                        : ""}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
                             </TableCell>
                             <TableCell
                               padding="none"

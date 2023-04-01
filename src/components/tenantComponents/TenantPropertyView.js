@@ -37,6 +37,8 @@ import {
   mediumBold,
   bluePillButton,
   redPillButton,
+  hidden,
+  small,
 } from "../../utils/styles";
 import { ordinal_suffix_of, days } from "../../utils/helper";
 import { get, put, post } from "../../utils/api";
@@ -318,6 +320,10 @@ function TenantPropertyView(props) {
   const terminateLeaseAgreement = async () => {
     if (lastDate === "") {
       setErrorMessage("Please select a last date");
+      return;
+    }
+    if (message === "") {
+      setErrorMessage("Please provide a reason");
       return;
     }
     setShowSpinner(true);
@@ -1767,6 +1773,14 @@ function TenantPropertyView(props) {
                                   </Form.Group>
                                 </Col>
                               </Row>
+                              <div
+                                className="text-center"
+                                style={errorMessage === "" ? hidden : {}}
+                              >
+                                <p style={{ ...red, ...small }}>
+                                  {errorMessage || "error"}
+                                </p>
+                              </div>
 
                               <Row>
                                 {disableEndLease ? (

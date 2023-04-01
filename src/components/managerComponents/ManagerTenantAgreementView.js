@@ -28,6 +28,7 @@ import {
   mediumBold,
   bluePillButton,
   redPillButton,
+  hidden,
 } from "../../utils/styles";
 import { ordinal_suffix_of } from "../../utils/helper";
 const useStyles = makeStyles({
@@ -183,6 +184,10 @@ function ManagerTenantAgreementView(props) {
       setErrorMessage("Please select a last date");
       return;
     }
+    if (message === "") {
+      setErrorMessage("Please provide a reason");
+      return;
+    }
     setShowSpinner(true);
     const request_body = {
       application_status: "PM END EARLY",
@@ -235,6 +240,8 @@ function ManagerTenantAgreementView(props) {
       );
       request_body.application_uid =
         apps.length > 0 ? apps[0].application_uid : null;
+      const response = await put("/endEarly", request_body);
+      channel_application.publish({ data: { te: request_body } });
       const newMessage = {
         sender_name: property.managerInfo.manager_business_name,
         sender_email: property.managerInfo.manager_email,
@@ -767,6 +774,12 @@ function ManagerTenantAgreementView(props) {
                   </Form.Group>
                 </Col>
               </Row>
+              <div
+                className="text-center"
+                style={errorMessage === "" ? hidden : {}}
+              >
+                <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
+              </div>
               <Row>
                 <Col className="d-flex flex-row justify-content-evenly">
                   <Button
