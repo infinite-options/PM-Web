@@ -7,7 +7,6 @@ import SideBar from "./SideBar";
 import MaintenanceFooter from "./MaintenanceFooter";
 import UpcomingMaintenancePayments from "./UpcomingMaintenancePayments";
 import { get } from "../../utils/api";
-import "../../pages/maintenance.css";
 import MaintenancePaymentHistory from "./MaintenancePaymentHistory";
 export default function MaintenancePayments(props) {
   const [propertyData, setPropertyData] = React.useState([]);

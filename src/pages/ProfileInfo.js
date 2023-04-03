@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import BusinessProfileInfo from "./BusinessProfileInfo";
-import OwnerProfileInfo from "./OwnerProfileInfo";
-import TenantProfileInfo from "./TenantProfileInfo";
-import ManagerProfileInfo from "./ManagerProfileInfo";
+import BusinessProfileInfo from "../components/maintenanceComponents/BusinessProfileInfo";
+import OwnerProfileInfo from "../components/ownerComponents/OwnerProfileInfo";
+import TenantProfileInfo from "../components/tenantComponents/TenantProfileInfo";
+import ManagerProfileInfo from "../components/managerComponents/ManagerProfileInfo";
 import Header from "../components/Header";
 import EmployeeProfile from "../components/EmployeeProfile";
 import SelectRole from "../components/SelectRole";

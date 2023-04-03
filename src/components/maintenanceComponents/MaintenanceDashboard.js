@@ -15,14 +15,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
-import AppContext from "../AppContext";
-import Header from "../components/Header";
-import SideBar from "../components/maintenanceComponents/SideBar";
-import MaintenanceFooter from "../components/maintenanceComponents/MaintenanceFooter";
-import RepairImg from "../icons/RepairImg.svg";
-import { get } from "../utils/api";
-import { green, red, blue, xSmall } from "../utils/styles";
-import { days } from "../utils/helper";
+import AppContext from "../../AppContext";
+import Header from "../Header";
+import SideBar from "./SideBar";
+import MaintenanceFooter from "./MaintenanceFooter";
+import RepairImg from "../../icons/RepairImg.svg";
+import { get } from "../../utils/api";
+import { green, red, blue, xSmall } from "../../utils/styles";
+import { days } from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {

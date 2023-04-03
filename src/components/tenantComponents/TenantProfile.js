@@ -70,7 +70,9 @@ function TenantProfile(props) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   // console.log("user info", user);
-  const [editProfile, setEditProfile] = useState(false);
+  const [editProfile, setEditProfile] = useState(
+    user.tenant_id.length == 0 ? true : false
+  );
   const [addDoc, setAddDoc] = useState(false);
   const [tenantInfo, setTenantInfo] = useState([]);
   const [resetPassword, setResetPassword] = useState(false);
@@ -165,66 +167,70 @@ function TenantProfile(props) {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   const fetchProfile = async () => {
-    const response = await get(
-      `/tenantProfileInfo?tenant_id=${user.tenant_id[0].tenant_id}`
-    );
-    // console.log(response);
-
-    if (response.msg === "Token has expired") {
-      // console.log("here msg");
-      refresh();
-      return;
-    }
-
-    if (user.role.indexOf("TENANT") === -1) {
-      // console.log("no tenant profile");
-      // props.onConfirm();
-    }
-    if (response.result.length > 0) {
-      // console.log("Profile complete");
-      setTenantInfo(response.result);
-      setFirstName(response.result[0].tenant_first_name);
-      setLastName(response.result[0].tenant_last_name);
-      setSsn(
-        CryptoJS.AES.decrypt(
-          response.result[0].tenant_ssn,
-          process.env.REACT_APP_ENKEY
-        ).toString(CryptoJS.enc.Utf8)
+    console.log(user.tenant_id.length);
+    if (user.tenant_id.length !== 0) {
+      console.log("in if");
+      const response = await get(
+        `/tenantProfileInfo?tenant_id=${user.tenant_id[0].tenant_id}`
       );
-      setPhone(response.result[0].tenant_phone_number);
-      setEmail(response.result[0].tenant_email);
-      setSalary(response.result[0].tenant_current_salary);
-      setJobTitle(response.result[0].tenant_current_job_title);
-      setCompany(response.result[0].tenant_current_job_company);
-      setDLNumber(response.result[0].tenant_drivers_license_number);
-      setSelectedDlState(response.result[0].tenant_drivers_license_state);
-      setCompany(response.result[0].tenant_current_job_company);
+      // console.log(response);
 
-      setAdults(JSON.parse(response.result[0].tenant_adult_occupants));
+      if (response.msg === "Token has expired") {
+        // console.log("here msg");
+        refresh();
+        return;
+      }
 
-      setChildren(JSON.parse(response.result[0].tenant_children_occupants));
-
-      setPets(JSON.parse(response.result[0].tenant_pet_occupants));
-      setVehicles(JSON.parse(response.result[0].tenant_vehicle_info));
-      setReferences(JSON.parse(response.result[0].tenant_references));
-      const currentAddress = JSON.parse(
-        response.result[0].tenant_current_address
-      );
-      const documents = response.result[0].documents
-        ? JSON.parse(response.result[0].documents)
-        : [];
-      setFiles(JSON.parse(response.result[0].documents));
-      currentAddressState[1](currentAddress);
-      setSelectedState(currentAddress.state);
-      if (response.result[0].tenant_previous_address !== null) {
-        const prevAddress = JSON.parse(
-          response.result[0].tenant_previous_address
+      if (user.role.indexOf("TENANT") === -1) {
+        // console.log("no tenant profile");
+        // props.onConfirm();
+      }
+      if (response.result.length > 0) {
+        // console.log("Profile complete");
+        setTenantInfo(response.result);
+        setFirstName(response.result[0].tenant_first_name);
+        setLastName(response.result[0].tenant_last_name);
+        setSsn(
+          CryptoJS.AES.decrypt(
+            response.result[0].tenant_ssn,
+            process.env.REACT_APP_ENKEY
+          ).toString(CryptoJS.enc.Utf8)
         );
-        if (prevAddress) {
-          previousAddressState[1](prevAddress);
-          setSelectedPrevState(prevAddress.state);
-          if (prevAddress.street) {
-            setUsePreviousAddress(true);
+        setPhone(response.result[0].tenant_phone_number);
+        setEmail(response.result[0].tenant_email);
+        setSalary(response.result[0].tenant_current_salary);
+        setJobTitle(response.result[0].tenant_current_job_title);
+        setCompany(response.result[0].tenant_current_job_company);
+        setDLNumber(response.result[0].tenant_drivers_license_number);
+        setSelectedDlState(response.result[0].tenant_drivers_license_state);
+        setCompany(response.result[0].tenant_current_job_company);
+
+        setAdults(JSON.parse(response.result[0].tenant_adult_occupants));
+
+        setChildren(JSON.parse(response.result[0].tenant_children_occupants));
+
+        setPets(JSON.parse(response.result[0].tenant_pet_occupants));
+        setVehicles(JSON.parse(response.result[0].tenant_vehicle_info));
+        setReferences(JSON.parse(response.result[0].tenant_references));
+        const currentAddress = JSON.parse(
+          response.result[0].tenant_current_address
+        );
+        const documents = response.result[0].documents
+          ? JSON.parse(response.result[0].documents)
+          : [];
+        setFiles(JSON.parse(response.result[0].documents));
+        currentAddressState[1](currentAddress);
+        setSelectedState(currentAddress.state);
+        if (response.result[0].tenant_previous_address !== null) {
+          const prevAddress = JSON.parse(
+            response.result[0].tenant_previous_address
+          );
+          if (prevAddress) {
+            previousAddressState[1](prevAddress);
+            setSelectedPrevState(prevAddress.state);
+            if (prevAddress.street) {
+              setUsePreviousAddress(true);
+            }
           }
         }
       }
@@ -1813,7 +1819,7 @@ function TenantProfile(props) {
               </div>
             </div>
           )}
-          {editProfile ? (
+          {editProfile && user.tenant_id.length !== 0 ? (
             <div
               className="mx-3 my-3 p-2"
               style={{
@@ -1825,7 +1831,6 @@ function TenantProfile(props) {
               <Row className="mb-4" style={headings}>
                 <div>Tenant Documents</div>
               </Row>
-
               <DocumentsUploadPut
                 files={files}
                 setFiles={setFiles}

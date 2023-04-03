@@ -2,14 +2,14 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button } from "react-bootstrap";
 import * as ReactBootStrap from "react-bootstrap";
-import AppContext from "../AppContext";
-import Header from "../components/Header";
-import ServicesProvided from "../components/ServicesProvided";
-import PaymentSelection from "../components/PaymentSelection";
-import ManagerFees from "../components/ManagerFees";
-import ManagerLocations from "../components/ManagerLocations";
-import DocumentsUploadPost from "../components/DocumentsUploadPost";
-import { get, post } from "../utils/api";
+import AppContext from "../../AppContext";
+import Header from "../Header";
+import ServicesProvided from "../ServicesProvided";
+import PaymentSelection from "../PaymentSelection";
+import ManagerFees from "../ManagerFees";
+import ManagerLocations from "../ManagerLocations";
+import DocumentsUploadPost from "../DocumentsUploadPost";
+import { get, post } from "../../utils/api";
 import {
   pillButton,
   squareForm,
@@ -17,9 +17,9 @@ import {
   red,
   small,
   mediumBold,
-} from "../utils/styles";
+} from "../../utils/styles";
+import { formatPhoneNumber, formatEIN } from "../../utils/helper";
 
-import { formatPhoneNumber, formatEIN } from "../utils/helper";
 function BusinessProfileInfo(props) {
   const context = useContext(AppContext);
   const { access_token, user } = context.userData;

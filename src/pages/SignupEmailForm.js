@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Modal, Container, Col, Row } from "react-bootstrap";
 import * as ReactBootStrap from "react-bootstrap";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
@@ -26,6 +26,8 @@ function SignupEmailForm(props) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [showSpinner, setShowSpinner] = useState(false);
+
+  const [socialSignUpModalShow, setSocialSignUpModalShow] = useState(false);
   const submitForm = async () => {
     if (
       email === "" ||
@@ -58,19 +60,143 @@ function SignupEmailForm(props) {
       role: props.role,
     };
     const response = await post("/users", user);
-    if (response.code !== 200) {
-      setErrorMessage(response.message);
+    if (response.message == "User already exists") {
+      setSocialSignUpModalShow(!socialSignUpModalShow);
       return;
       // add validation
+    } else {
+      if (response.code !== 200) {
+        setErrorMessage(response.message);
+        return;
+        // add validation
+      }
+      setErrorMessage("");
+      context.updateUserData(response.result);
+      // save to app state / context
+      setShowSpinner(false);
+      props.onConfirm();
     }
-    setErrorMessage("");
-    context.updateUserData(response.result);
-    // save to app state / context
-    setShowSpinner(false);
-    props.onConfirm();
   };
   const goToLogin = () => {
     navigate("/login");
+  };
+  const hideSignUp = () => {
+    //setSignUpModalShow(false);
+    setSocialSignUpModalShow(false);
+    navigate("/");
+  };
+  const socialSignUpModal = () => {
+    const modalStyle = {
+      position: "absolute",
+      top: "30%",
+      left: "2%",
+      width: "400px",
+    };
+    const headerStyle = {
+      border: "none",
+      textAlign: "center",
+      display: "flex",
+      alignItems: "center",
+      fontSize: "20px",
+      fontWeight: "bold",
+      color: "#2C2C2E",
+      textTransform: "uppercase",
+      backgroundColor: " #F3F3F8",
+    };
+    const footerStyle = {
+      border: "none",
+      backgroundColor: " #F3F3F8",
+    };
+    const bodyStyle = {
+      backgroundColor: " #F3F3F8",
+    };
+
+    return (
+      <Modal
+        show={socialSignUpModalShow}
+        onHide={hideSignUp}
+        style={modalStyle}
+      >
+        <Form as={Container}>
+          <Modal.Header style={headerStyle} closeButton>
+            <Modal.Title>User Already Exists</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body style={bodyStyle}>
+            <div>The user {email} already exists! Please Log In!</div>
+          </Modal.Body>
+
+          <Modal.Footer style={footerStyle}>
+            <Row
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: "1rem",
+              }}
+            >
+              <Col
+                xs={6}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Button
+                  type="submit"
+                  onClick={hideSignUp}
+                  style={{
+                    marginTop: "1rem",
+                    width: "93px",
+                    height: "40px",
+
+                    font: "normal normal normal 18px/21px SF Pro Display",
+                    letterSpacing: "0px",
+                    color: "#F3F3F8",
+                    textTransform: "none",
+                    background: "#2C2C2E 0% 0% no-repeat padding-box",
+                    borderRadius: "3px",
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Col>
+              <Col
+                xs={6}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Button
+                  type="submit"
+                  onClick={() => navigate("/login")}
+                  style={{
+                    marginTop: "1rem",
+                    width: "93px",
+                    height: "40px",
+
+                    font: "normal normal normal 18px/21px SF Pro Display",
+                    letterSpacing: "0px",
+                    color: "#2C2C2E",
+                    textTransform: "none",
+                    border: " 2px solid #2C2C2E",
+                    borderRadius: " 3px",
+                  }}
+                >
+                  Login
+                </Button>
+              </Col>
+            </Row>
+          </Modal.Footer>
+        </Form>
+      </Modal>
+    );
   };
   const required =
     errorMessage === "Please fill out all fields" ? (
@@ -106,6 +232,8 @@ function SignupEmailForm(props) {
             phone_number={props.phoneNumber}
             role={props.role}
             onConfirm={props.onConfirm}
+            socialSignUpModalShow={socialSignUpModalShow}
+            setSocialSignUpModalShow={setSocialSignUpModalShow}
           />
         </div>
         <hr className={showEmailForm ? "mt-4 mb-1" : "my-4"} />
@@ -219,6 +347,7 @@ function SignupEmailForm(props) {
       ) : (
         ""
       )}
+      {socialSignUpModal()}
     </div>
   );
 }

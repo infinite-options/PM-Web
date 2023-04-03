@@ -15,21 +15,21 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
-import SideBar from "../components/tenantComponents/SideBar";
-import Header from "../components/Header";
-import AppContext from "../AppContext";
-import TenantFooter from "../components/tenantComponents/TenantFooter";
-import TenantUpcomingPayments from "../components/tenantComponents/TenantUpcomingPayments";
-import TenantPaymentHistory from "../components/tenantComponents/TenantPaymentHistory";
-import TenantRepairRequest from "../components/tenantComponents/TenantRepairRequest";
-import ConfirmDialog2 from "../components/ConfirmDialog2";
-import SearchProperties_Black from "../icons/SearchProperties_Black.svg";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
-import AddIcon from "../icons/AddIcon.svg";
-import PropertyIcon from "../icons/PropertyIcon.svg";
-import RepairImg from "../icons/RepairImg.svg";
-import { get } from "../utils/api";
+import SideBar from "./SideBar";
+import Header from "../Header";
+import AppContext from "../../AppContext";
+import TenantFooter from "./TenantFooter";
+import TenantUpcomingPayments from "./TenantUpcomingPayments";
+import TenantPaymentHistory from "./TenantPaymentHistory";
+import TenantRepairRequest from "./TenantRepairRequest";
+import ConfirmDialog2 from "../ConfirmDialog2";
+import SearchProperties_Black from "../../icons/SearchProperties_Black.svg";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
+import AddIcon from "../../icons/AddIcon.svg";
+import PropertyIcon from "../../icons/PropertyIcon.svg";
+import RepairImg from "../../icons/RepairImg.svg";
+import { get } from "../../utils/api";
 import {
   xSmall,
   blue,
@@ -37,7 +37,7 @@ import {
   subHeading,
   smallImg,
   red,
-} from "../utils/styles";
+} from "../../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {
@@ -113,20 +113,25 @@ export default function TenantDashboard() {
       return;
     }
     const check = await get("/CheckTenantProfileComplete", access_token);
+    console.log("check", check);
     if (check["message"] === "Incomplete Profile") {
       setShowDialog(true);
     }
 
     const response = await get("/tenantDashboard", access_token);
-    const appRes = await get(
-      `/applications?tenant_id=${user.tenant_id[0].tenant_id}`
-    );
-    if (response.msg === "Token has expired") {
+    console.log("response", response);
+    if (
+      response.msg === "Token has expired" ||
+      check.message === "Token has expired"
+    ) {
       // console.log("here msg");
       refresh();
 
       return;
     }
+    const appRes = await get(
+      `/applications?tenant_id=${user.tenant_id[0].tenant_id}`
+    );
 
     setTenantProfile(response.result[0]);
     let apps = [];

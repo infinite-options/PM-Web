@@ -15,19 +15,19 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
-import SideBar from "../components/ownerComponents/SideBar";
-import Header from "../components/Header";
-import AppContext from "../AppContext";
-import OwnerPropertyForm from "../components/ownerComponents/OwnerPropertyForm";
-import OwnerCreateExpense from "../components/ownerComponents/OwnerCreateExpense";
-import OwnerRepairRequest from "../components/ownerComponents/OwnerRepairRequest";
-import OwnerFooter from "../components/ownerComponents/OwnerFooter";
-import AddIcon from "../icons/AddIcon.svg";
-import PropertyIcon from "../icons/PropertyIcon.svg";
-import RepairImg from "../icons/RepairImg.svg";
-import { get } from "../utils/api";
-import { blue, xSmall } from "../utils/styles";
-import OwnerCashflow from "../components/ownerComponents/OwnerCashflow";
+import SideBar from "./SideBar";
+import Header from "../Header";
+import OwnerCashflow from "./OwnerCashflow";
+import AppContext from "../../AppContext";
+import OwnerPropertyForm from "./OwnerPropertyForm";
+import OwnerCreateExpense from "./OwnerCreateExpense";
+import OwnerRepairRequest from "./OwnerRepairRequest";
+import OwnerFooter from "./OwnerFooter";
+import AddIcon from "../../icons/AddIcon.svg";
+import PropertyIcon from "../../icons/PropertyIcon.svg";
+import RepairImg from "../../icons/RepairImg.svg";
+import { get } from "../../utils/api";
+import { blue, xSmall } from "../../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {

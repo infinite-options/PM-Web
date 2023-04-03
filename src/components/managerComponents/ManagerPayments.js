@@ -7,7 +7,6 @@ import SideBar from "./SideBar";
 import ManagerFooter from "./ManagerFooter";
 import UpcomingManagerPayments from "./UpcomingManagerPayments";
 import { get } from "../../utils/api";
-import "../../pages/maintenance.css";
 import ManagerPaymentHistory from "./ManagerPaymentHistory";
 export default function ManagerPayments(props) {
   const [propertyData, setPropertyData] = React.useState([]);

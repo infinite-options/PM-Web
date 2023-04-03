@@ -8,7 +8,6 @@ import OwnerFooter from "./OwnerFooter";
 import UpcomingOwnerPayments from "./UpcomingOwnerPayments";
 import OwnerPaymentHistory from "./OwnerPaymentHistory";
 import { get } from "../../utils/api";
-import "../../pages/maintenance.css";
 export default function OwnerPayments(props) {
   const [propertyData, setPropertyData] = React.useState([]);
 

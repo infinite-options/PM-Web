@@ -7,7 +7,6 @@ import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
 import TenantUpcomingPayments from "./TenantUpcomingPayments";
 import { get } from "../../utils/api";
-import "../../pages/maintenance.css";
 import TenantPaymentHistory from "./TenantPaymentHistory";
 export default function TenantPayments(props) {
   const [propertyData, setPropertyData] = React.useState([]);
