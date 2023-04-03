@@ -38,6 +38,7 @@ import {
   red,
   hidden,
   bluePillButton,
+  sidebarStyle,
 } from "../../utils/styles";
 import {
   MaskCharacter,
@@ -985,18 +986,11 @@ function TenantProfile(props) {
   // console.log(previousAddressState);
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5">
+        </Col>
+        <Col className="w-100 mb-5">
           <Header
             title="Profile"
             leftText={editProfile ? "Cancel" : ""}
@@ -2018,12 +2012,11 @@ function TenantProfile(props) {
               )}
             </div>
           )}
-        </div>
-      </div>
-
-      <div hidden={responsive.showSidebar} className="w-100 mt-3">
-        <TenantFooter />
-      </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <TenantFooter />
+          </div>
+        </Col>
+      </Row>
     </div>
   );
 }

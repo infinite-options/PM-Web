@@ -26,7 +26,7 @@ import AddIcon from "../../icons/AddIcon.svg";
 import PropertyIcon from "../../icons/PropertyIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import { get } from "../../utils/api";
-import { green, red, blue, xSmall } from "../../utils/styles";
+import { green, red, blue, xSmall, sidebarStyle } from "../../utils/styles";
 import { configureAbly, useChannel } from "@ably-labs/react-hooks";
 
 const useStyles = makeStyles({
@@ -634,15 +634,7 @@ export default function ManagerDashboard() {
       {!isLoading &&
       (managerData.length > 0 || processingManagerData.length > 0) ? (
         <Row>
-          <Col
-            xs={2}
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              // width: "12rem",
-              minHeight: "100%",
-            }}
-          >
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
           </Col>
           <Col className="w-100 mb-5 overflow-scroll">
@@ -2119,15 +2111,7 @@ export default function ManagerDashboard() {
         </Row>
       ) : !isLoading && processingManagerData.length === 0 ? (
         <Row>
-          <Col
-            xs={2}
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              // width: "12rem",
-              minHeight: "100%",
-            }}
-          >
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
           </Col>
           <Col className="w-100 mb-5 overflow-scroll">
@@ -2150,15 +2134,7 @@ export default function ManagerDashboard() {
         </Row>
       ) : !isLoading && processingManagerData.length === 0 ? (
         <Row>
-          <Col
-            xs={2}
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              // width: "12rem",
-              minHeight: "100%",
-            }}
-          >
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
           </Col>
           <Col className="w-100 mb-5 overflow-scroll">
@@ -2181,15 +2157,7 @@ export default function ManagerDashboard() {
         </Row>
       ) : (
         <Row>
-          <Col
-            xs={2}
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              // width: "12rem",
-              minHeight: "100%",
-            }}
-          >
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
           </Col>
           <Col className="w-100 d-flex flex-column justify-content-center align-items-center">

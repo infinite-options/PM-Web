@@ -22,6 +22,7 @@ import ManagerRepairRequest from "./ManagerRepairRequest";
 import RepairImg from "../../icons/RepairImg.svg";
 import AddIcon from "../../icons/AddIcon.svg";
 import { get } from "../../utils/api";
+import { sidebarStyle } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -314,18 +315,16 @@ function ManagerRepairsOverview(props) {
 
   return stage === "LIST" ? (
     <div>
-      <div className="flex-1">
-        <div
+      <Row>
+        {" "}
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header title="Maintenance and Repairs" />
           <Row className="m-3">
             <Col>
@@ -576,16 +575,18 @@ function ManagerRepairsOverview(props) {
               <div className="m-3">No maintenance and repairs</div>
             </Row>
           )}
+        </Col>
+        <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+          <ManagerFooter />
         </div>
-      </div>
-      <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
-        <ManagerFooter />
-      </div>
+      </Row>
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="OwnerRepairRequest">
-      <div className="flex-1">
-        <div
+      <Row>
+        {" "}
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
           style={{
             backgroundColor: "#229ebc",
@@ -594,8 +595,8 @@ function ManagerRepairsOverview(props) {
           }}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header title="Add Repair Request" />
           <ManagerRepairRequest
             properties={properties}
@@ -605,8 +606,8 @@ function ManagerRepairsOverview(props) {
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <ManagerFooter />
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   ) : (
     ""

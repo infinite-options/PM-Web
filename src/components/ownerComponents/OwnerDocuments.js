@@ -15,6 +15,7 @@ import SideBar from "./SideBar";
 import OwnerFooter from "./OwnerFooter";
 import File from "../../icons/File.svg";
 import { get } from "../../utils/api";
+import { sidebarStyle } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -109,18 +110,15 @@ function OwnerDocuments(props) {
 
   return (
     <div>
-      <div className="flex-1">
-        <div
+      <Row>
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header title="Documents" />
 
           {!isLoading ? (
@@ -574,8 +572,8 @@ function OwnerDocuments(props) {
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <OwnerFooter />
           </div>
-        </div>{" "}
-      </div>
+        </Col>{" "}
+      </Row>
     </div>
   );
 }

@@ -61,7 +61,6 @@ import TenantRepairList from "./components/tenantComponents/TenantRepairList";
 import OwnerRepairRequest from "./components/ownerComponents/OwnerRepairRequest";
 import PropertyManagersList from "./components/ownerComponents/PropertyManagersList";
 import ModifyExisiting from "./pages/ModifyExisiting";
-import PropertyInfo from "./components/tenantComponents/PropertyInfo";
 import ManagerTenantListDetail from "./components/managerComponents/ManagerTenantListDetail";
 import ManagerDocuments from "./components/managerComponents/ManagerDocuments";
 import ManagerProfile from "./components/managerComponents/ManagerProfile";
@@ -238,7 +237,6 @@ function App() {
 
             <Route path="/owner-list" element={<ManagerOwnerList />} />
             <Route path="/tenant-list" element={<ManagerTenantList />} />
-            <Route path="/propertyInfo" element={<PropertyInfo />} />
             <Route
               path="/tenant-list/:t_id"
               element={<ManagerTenantListDetail />}

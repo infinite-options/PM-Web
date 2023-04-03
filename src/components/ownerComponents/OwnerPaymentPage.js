@@ -32,6 +32,7 @@ import {
   subHeading,
   squareForm,
   pillButton,
+  sidebarStyle,
 } from "../../utils/styles";
 // import ApplePay from "./ApplePay";
 const useStyles = makeStyles({
@@ -158,18 +159,11 @@ function OwnerPaymentPage(props) {
   // console.log(totalSum);
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Payment"
             leftText={paymentConfirm === false ? `< Back` : ""}
@@ -513,11 +507,11 @@ function OwnerPaymentPage(props) {
               </div>
             )}
           </Row>
-        </div>
-        <div hidden={responsive.showSidebar} className="w-100 mt-3">
-          <OwnerFooter />
-        </div>
-      </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
+          </div>
+        </Col>
+      </Row>
     </div>
   );
 }

@@ -46,6 +46,7 @@ import {
   bluePillButton,
   redPillButton,
   smallImg,
+  sidebarStyle,
 } from "../../utils/styles";
 import "react-multi-carousel/lib/styles.css";
 
@@ -728,23 +729,20 @@ function OwnerPropertyView(props) {
           onConfirm={cancelAgreement}
           onCancel={onCancel2}
         />
-        <div className="flex-1 mb-5">
+        <Row className="mb-5">
           {location.state === null ? (
             ""
           ) : (
-            <div
+            <Col
+              xs={2}
               hidden={!responsiveSidebar.showSidebar}
-              style={{
-                backgroundColor: "#229ebc",
-                width: "11rem",
-                minHeight: "100%",
-              }}
+              style={sidebarStyle}
             >
               <SideBar />
-            </div>
+            </Col>
           )}
 
-          <div className="w-100 mb-5 overflow-scroll overflow-hidden">
+          <Col className="w-100 mb-5 overflow-scroll overflow-hidden">
             <Header
               title={
                 editProperty
@@ -3076,11 +3074,11 @@ function OwnerPropertyView(props) {
                 </div>
               )}
             </div>
-          </div>
-        </div>
-        <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
-          <OwnerFooter />
-        </div>
+            <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
+              <OwnerFooter />
+            </div>
+          </Col>
+        </Row>
       </div>
     )
   ) : (

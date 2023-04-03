@@ -34,6 +34,7 @@ import {
   smallImg,
   subHeading,
   gray,
+  sidebarStyle,
 } from "../../utils/styles";
 import AppContext from "../../AppContext";
 const useStyles = makeStyles({
@@ -928,7 +929,7 @@ function ManagerTenantAgreement(props) {
       ""
     );
   return (
-    <div className="flex-1">
+    <Row>
       <UpdateConfirmDialog
         title={"Review the lease"}
         updatedAgreement={updatedAgreement}
@@ -940,17 +941,10 @@ function ManagerTenantAgreement(props) {
         onCancel={onCancel}
         showSpinner={showSpinner}
       />
-      <div
-        hidden={!responsiveSidebar.showSidebar}
-        style={{
-          backgroundColor: "#229ebc",
-          width: "11rem",
-          minHeight: "100%",
-        }}
-      >
+      <Col xs={2} hidden={!responsiveSidebar.showSidebar} style={sidebarStyle}>
         <SideBar />
-      </div>
-      <div className="w-100 mb-5 overflow-hidden">
+      </Col>
+      <Col className="w-100 mb-5 overflow-hidden">
         <Header
           title="Tenant Agreement"
           leftText="< Back"
@@ -1593,8 +1587,8 @@ function ManagerTenantAgreement(props) {
         <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
           <ManagerFooter />
         </div>
-      </div>
-    </div>
+      </Col>
+    </Row>
   );
 }
 

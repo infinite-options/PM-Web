@@ -39,6 +39,7 @@ import {
   redPillButton,
   hidden,
   small,
+  sidebarStyle,
 } from "../../utils/styles";
 import { ordinal_suffix_of, days } from "../../utils/helper";
 import { get, put, post } from "../../utils/api";
@@ -676,18 +677,15 @@ function TenantPropertyView(props) {
 
   return Object.keys(property).length > 1 ? (
     <div>
-      <div className="flex-1">
-        <div
+      <Row className="flex-1">
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll overflow-hidden">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll overflow-hidden">
           <Header
             title="Property Details"
             leftText={location.state === null ? "" : "< Back"}
@@ -2234,11 +2232,11 @@ function TenantPropertyView(props) {
               </div>
             </div>
           )}
-        </div>
-      </div>
-      <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
-        <TenantFooter />
-      </div>
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
+            <TenantFooter />
+          </div>
+        </Col>
+      </Row>
     </div>
   ) : (
     <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">

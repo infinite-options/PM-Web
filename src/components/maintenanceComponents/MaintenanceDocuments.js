@@ -8,6 +8,7 @@ import AppContext from "../../AppContext";
 import DocumentsUploadPut from "../DocumentsUploadPut";
 import File from "../../icons/File.svg";
 import { get, put } from "../../utils/api";
+import { sidebarStyle } from "../../utils/styles";
 
 export default function MaintenanceDocuments() {
   const navigate = useNavigate();
@@ -114,18 +115,16 @@ export default function MaintenanceDocuments() {
   };
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
+      <Row>
+        {" "}
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header title="Maintenance Documents" />
           {!isLoading ? (
             <div>
@@ -164,8 +163,8 @@ export default function MaintenanceDocuments() {
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <MaintenanceFooter />
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   );
 }

@@ -20,6 +20,7 @@ function SignupEmailForm(props) {
   const context = useContext(AppContext);
   const navigate = useNavigate();
   const [showEmailForm, setShowEmailForm] = useState(false);
+  const [otherMethod, setOtherMethod] = useState(false);
   const [email, setEmail] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -238,16 +239,51 @@ function SignupEmailForm(props) {
         </div>
         <hr className={showEmailForm ? "mt-4 mb-1" : "my-4"} />
         <div className="text-center d-flex justify-content-center">
-          <div onClick={() => setShowEmailForm(!showEmailForm)}>
-            {/* <p
+          {/* <div onClick={() => setShowEmailForm(!showEmailForm)}> */}
+          {/* <div> */}
+          {/* <p
               style={showEmailForm ? boldSmall : { ...boldSmall, ...underline }}
               className={showEmailForm ? "" : "mb-4"}
             >
               Or continue with email
             </p> */}
-            <Button style={pillButton}>Or continue with email</Button>
+          {/* <Button style={pillButton}>Or continue with email</Button> */}
+          {/* </div> */}
+          <div
+            className="text-center mb-4"
+            onClick={() => setOtherMethod(true)}
+          >
+            <p style={boldSmall}>Choose another method</p>
           </div>
         </div>
+        {otherMethod ? (
+          <div
+            hidden={showEmailForm}
+            className="text-center d-flex justify-content-center"
+          >
+            <Col>
+              <Button style={pillButton} onClick={() => setShowEmailForm(true)}>
+                Continue with email
+              </Button>
+            </Col>
+            <Col>
+              <GoogleSignUp
+                first_name={props.firstName}
+                last_name={props.lastName}
+                phone_number={props.phoneNumber}
+                role={props.role}
+                onConfirm={props.onConfirm}
+                socialSignUpModalShow={socialSignUpModalShow}
+                setSocialSignUpModalShow={setSocialSignUpModalShow}
+              />
+              <p style={boldSmall} className="mt-4">
+                Choose Google to have access to more features
+              </p>
+            </Col>
+          </div>
+        ) : (
+          ""
+        )}
         {showEmailForm ? (
           <div className="flex-grow-1 d-flex flex-column justify-content-end">
             <Form>

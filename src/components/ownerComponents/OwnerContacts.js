@@ -32,6 +32,7 @@ import {
   small,
   red,
   formLabel,
+  sidebarStyle,
 } from "../../utils/styles";
 
 const useStyles = makeStyles({
@@ -253,18 +254,15 @@ function OwnerContacts() {
 
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
+      <Row>
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5">
+        </Col>
+        <Col className="w-100 mb-5">
           <Header title="Contacts" />
           {!isLoading ? (
             <div>
@@ -544,11 +542,11 @@ function OwnerContacts() {
               <ReactBootStrap.Spinner animation="border" role="status" />
             </div>
           )}
-        </div>
-      </div>
-      <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
-        <OwnerFooter />
-      </div>
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
+          </div>{" "}
+        </Col>
+      </Row>
     </div>
   );
 }

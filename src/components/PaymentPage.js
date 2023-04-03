@@ -33,6 +33,7 @@ import {
   subHeading,
   squareForm,
   pillButton,
+  sidebarStyle,
 } from "../utils/styles";
 const useStyles = makeStyles({
   customTable: {
@@ -147,18 +148,12 @@ function PaymentPage(props) {
   // console.log(purchases);
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        {" "}
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Payment"
             leftText={paymentConfirm === false ? `< Back` : ""}
@@ -515,8 +510,8 @@ function PaymentPage(props) {
           <div hidden={responsive.showSidebar} className="w-100 mt-3">
             <TenantFooter />
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   );
 }

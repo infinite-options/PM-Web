@@ -37,6 +37,7 @@ import {
   subHeading,
   smallImg,
   red,
+  sidebarStyle,
 } from "../../utils/styles";
 
 const useStyles = makeStyles({
@@ -746,18 +747,11 @@ export default function TenantDashboard() {
         onConfirm={ProfileNotComplete}
       />
       {!isLoading && tenantData.length > 0 ? (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 mb-5 overflow-scroll">
+          </Col>
+          <Col className="w-100 mb-5 overflow-scroll">
             <Header title="Tenant Dashboard" />
             <div
               className="mx-3 my-3 p-2"
@@ -1584,21 +1578,14 @@ export default function TenantDashboard() {
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <TenantFooter />
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       ) : !isLoading && tenantData.length === 0 ? (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 mb-5 overflow-scroll">
+          </Col>
+          <Col className="w-100 mb-5 overflow-scroll">
             <Header title="Tenant Dashboard" />
             <div
               style={{
@@ -1868,43 +1855,29 @@ export default function TenantDashboard() {
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <TenantFooter />
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       ) : (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+          </Col>
+          <Col className="w-100 d-flex flex-column justify-content-center align-items-center">
             <ReactBootStrap.Spinner animation="border" role="status" />
-          </div>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
-            <TenantFooter />
-          </div>
-        </div>
+            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+              <TenantFooter />
+            </div>
+          </Col>
+        </Row>
       )}
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="TenantDashboard">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Add Repair Request"
             leftText="< Back"
@@ -1915,11 +1888,11 @@ export default function TenantDashboard() {
             cancel={() => setStage("LIST")}
             onSubmit={addProperty}
           />
-        </div>
-        <div hidden={responsive.showSidebar}>
-          <TenantFooter />
-        </div>
-      </div>
+          <div hidden={responsive.showSidebar}>
+            <TenantFooter />
+          </div>
+        </Col>
+      </Row>
     </div>
   ) : (
     ""

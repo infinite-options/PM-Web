@@ -33,6 +33,7 @@ import {
   smallImg,
   bluePillButton,
   headings,
+  sidebarStyle,
 } from "../../utils/styles";
 import "react-multi-carousel/lib/styles.css";
 
@@ -188,18 +189,15 @@ export default function MaintenanceRequestView() {
   return (
     <div className="w-100 overflow-hidden">
       {!isLoading && quote !== null ? (
-        <div className="flex-1">
-          <div
+        <Row>
+          <Col
+            xs={2}
             hidden={!responsiveSidebar.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
+            style={sidebarStyle}
           >
             <SideBar />
-          </div>
-          <div className="w-100 mb-5 overflow-scroll">
+          </Col>
+          <Col className="w-100 mb-5 overflow-scroll">
             <Header
               title="Maintenance Request Details"
               leftText={location.state === null ? "" : "< Back"}
@@ -910,27 +908,20 @@ export default function MaintenanceRequestView() {
             <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
               <MaintenanceFooter />
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       ) : (
-        <div className="flex-1">
-          <div
-            hidden={!responsiveSidebar.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row xs={2}>
+          <Col hidden={!responsiveSidebar.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+          </Col>
+          <Col className="w-100 d-flex flex-column justify-content-center align-items-center">
             <ReactBootStrap.Spinner animation="border" role="status" />
-          </div>
-          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
-            <MaintenanceFooter />
-          </div>
-        </div>
+            <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+              <MaintenanceFooter />
+            </div>{" "}
+          </Col>
+        </Row>
       )}
     </div>
   );

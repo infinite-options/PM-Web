@@ -368,12 +368,19 @@ const editButton = {
   borderRadius: "20px",
   width: "50vw",
 };
+
+const sidebarStyle = {
+  backgroundColor: "#229ebc",
+  width: "11.75rem",
+  minHeight: "100%",
+};
 //Wrote code here
 export {
   //Wrote Code here
   newHeading,
   editButton,
   payNowButton,
+  sidebarStyle,
   //Wrote Code here
   pillButton,
   boldSmall,

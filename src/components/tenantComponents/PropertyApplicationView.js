@@ -23,7 +23,7 @@ import PropertyIcon from "../../icons/PropertyIcon.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import { get } from "../../utils/api";
-import { bluePillButton, smallImg } from "../../utils/styles";
+import { bluePillButton, sidebarStyle, smallImg } from "../../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {
@@ -181,8 +181,8 @@ function PropertyApplicationView(props) {
   console.log(forPropertyLease, property, width);
   return (
     <div className="w-100 overflow-hidden p-0 m-0">
-      <div
-        className="flex-1 mb-5"
+      <Row
+        className="mb-5"
         style={{
           maxWidth: forPropertyLease
             ? "100%"
@@ -196,19 +196,16 @@ function PropertyApplicationView(props) {
         {forPropertyLease ? (
           ""
         ) : (
-          <div
+          <Col
+            xs={2}
             hidden={!responsiveSidebar.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
+            style={sidebarStyle}
           >
             <SideBar />
-          </div>
+          </Col>
         )}
 
-        <div className="w-100">
+        <Col className="w-100">
           {forPropertyLease ? (
             ""
           ) : (
@@ -661,16 +658,15 @@ function PropertyApplicationView(props) {
               </Col>
             </Row>
           )}
-        </div>
-      </div>
-
-      {forPropertyLease ? (
-        ""
-      ) : (
-        <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
-          <TenantFooter />
-        </div>
-      )}
+          {forPropertyLease ? (
+            ""
+          ) : (
+            <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+              <TenantFooter />
+            </div>
+          )}
+        </Col>
+      </Row>
     </div>
   );
 }

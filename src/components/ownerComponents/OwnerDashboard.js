@@ -27,7 +27,7 @@ import AddIcon from "../../icons/AddIcon.svg";
 import PropertyIcon from "../../icons/PropertyIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import { get } from "../../utils/api";
-import { blue, xSmall } from "../../utils/styles";
+import { blue, sidebarStyle, xSmall } from "../../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {
@@ -468,18 +468,11 @@ export default function OwnerDashboard2() {
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
       {!isLoading && ownerData.length > 0 ? (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 mb-5 overflow-scroll">
+          </Col>
+          <Col className="w-100 mb-5 overflow-scroll">
             <Header title="Owner Dashboard" />
             <div
               className="mx-3 my-3 p-2"
@@ -1071,21 +1064,14 @@ export default function OwnerDashboard2() {
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <OwnerFooter />
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       ) : !isLoading && ownerData.length === 0 ? (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 mb-5 overflow-scroll">
+          </Col>
+          <Col className="w-100 mb-5 overflow-scroll">
             <Header title="Owner Dashboard" />
             <div
               className="mx-3 my-3 p-2"
@@ -1126,43 +1112,29 @@ export default function OwnerDashboard2() {
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <OwnerFooter />
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       ) : (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+          </Col>
+          <Col className="w-100 d-flex flex-column justify-content-center align-items-center">
             <ReactBootStrap.Spinner animation="border" role="status" />
-          </div>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
-            <OwnerFooter />
-          </div>
-        </div>
+            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+              <OwnerFooter />
+            </div>
+          </Col>
+        </Row>
       )}
     </div>
   ) : stage === "NEW" ? (
     <div className="OwnerDashboard2">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title={
               stage === "NEW" && editAppliances
@@ -1179,26 +1151,19 @@ export default function OwnerDashboard2() {
             setEditAppliances={setEditAppliances}
             onSubmit={addProperty}
           />
-        </div>
-        <div hidden={responsive.showSidebar}>
-          <OwnerFooter />
-        </div>
-      </div>
+          <div hidden={responsive.showSidebar}>
+            <OwnerFooter />
+          </div>
+        </Col>
+      </Row>
     </div>
   ) : stage === "ADDEXPENSE" ? (
     <div className="OwnerDashboard2">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Add Expense"
             leftText="< Back"
@@ -1209,26 +1174,19 @@ export default function OwnerDashboard2() {
             cancel={() => setStage("LIST")}
             onSubmit={addProperty}
           />
-        </div>
-        <div hidden={responsive.showSidebar}>
-          <OwnerFooter />
-        </div>
-      </div>
+          <div hidden={responsive.showSidebar}>
+            <OwnerFooter />
+          </div>{" "}
+        </Col>
+      </Row>
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="OwnerDashboard2">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Add Repair Request"
             leftText="< Back"
@@ -1238,12 +1196,12 @@ export default function OwnerDashboard2() {
             properties={ownerData}
             cancel={() => setStage("LIST")}
             onSubmit={addProperty}
-          />
-        </div>
-        <div hidden={responsive.showSidebar}>
-          <OwnerFooter />
-        </div>
-      </div>
+          />{" "}
+          <div hidden={responsive.showSidebar}>
+            <OwnerFooter />
+          </div>
+        </Col>
+      </Row>
     </div>
   ) : (
     ""
