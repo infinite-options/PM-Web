@@ -90,7 +90,7 @@ function SignupEmailForm(props) {
     const modalStyle = {
       position: "absolute",
       top: "30%",
-      left: "2%",
+      left: "35%",
       width: "400px",
     };
     const headerStyle = {
@@ -208,61 +208,30 @@ function SignupEmailForm(props) {
       ""
     );
   return (
-    <div className="d-flex flex-column h-100">
+    <div className="d-flex flex-column">
       <Header title="Sign Up" leftText="< Back" leftFn={props.back} />
-      <div className="px-4">
+      <div className="px-4 mb-5">
         <h5>Full Name</h5>
         <p style={gray}>{props.firstName + " " + props.lastName}</p>
         <h5>Phone Number</h5>
         <p style={gray}>{props.phoneNumber}</p>
-        {!showEmailForm ? <h5 className="mb-4">Choose login method:</h5> : ""}
-        <div className="text-center">
-          {/* <img src={AppleLogin} alt="Apple Login" className="m-1" />
-          <img src={FacebookLogin} alt="Facebook Login" className="m-1" />
-          <img src={GoogleLogin} alt="Google Login" className="m-1" /> */}
-          {/* <SocialSignUp
-            first_name={props.firstName}
-            last_name={props.lastName}
-            phone_number={props.phoneNumber}
-            role={props.role}
-            onConfirm={props.onConfirm}
-          /> */}
-          <GoogleSignUp
-            first_name={props.firstName}
-            last_name={props.lastName}
-            phone_number={props.phoneNumber}
-            role={props.role}
-            onConfirm={props.onConfirm}
-            socialSignUpModalShow={socialSignUpModalShow}
-            setSocialSignUpModalShow={setSocialSignUpModalShow}
-          />
-        </div>
-        <hr className={showEmailForm ? "mt-4 mb-1" : "my-4"} />
-        <div className="text-center d-flex justify-content-center">
-          {/* <div onClick={() => setShowEmailForm(!showEmailForm)}> */}
-          {/* <div> */}
-          {/* <p
-              style={showEmailForm ? boldSmall : { ...boldSmall, ...underline }}
-              className={showEmailForm ? "" : "mb-4"}
-            >
-              Or continue with email
-            </p> */}
-          {/* <Button style={pillButton}>Or continue with email</Button> */}
-          {/* </div> */}
-          <div
-            className="text-center mb-4"
-            onClick={() => setOtherMethod(true)}
-          >
-            <p style={boldSmall}>Choose another method</p>
-          </div>
-        </div>
+        {!showEmailForm && !otherMethod ? (
+          <h5 className="mb-4">Choose login method:</h5>
+        ) : (
+          ""
+        )}
+
         {otherMethod ? (
           <div
-            hidden={showEmailForm}
+            // hidden={!showEmailForm}
+
             className="text-center d-flex justify-content-center"
           >
             <Col>
-              <Button style={pillButton} onClick={() => setShowEmailForm(true)}>
+              <Button
+                style={pillButton}
+                onClick={() => setShowEmailForm(!showEmailForm)}
+              >
                 Continue with email
               </Button>
             </Col>
@@ -282,7 +251,43 @@ function SignupEmailForm(props) {
             </Col>
           </div>
         ) : (
-          ""
+          <div className="text-center">
+            {/* <img src={AppleLogin} alt="Apple Login" className="m-1" />
+          <img src={FacebookLogin} alt="Facebook Login" className="m-1" />
+          <img src={GoogleLogin} alt="Google Login" className="m-1" /> */}
+            {/* <SocialSignUp
+            first_name={props.firstName}
+            last_name={props.lastName}
+            phone_number={props.phoneNumber}
+            role={props.role}
+            onConfirm={props.onConfirm}
+          /> */}
+            <GoogleSignUp
+              first_name={props.firstName}
+              last_name={props.lastName}
+              phone_number={props.phoneNumber}
+              role={props.role}
+              onConfirm={props.onConfirm}
+              socialSignUpModalShow={socialSignUpModalShow}
+              setSocialSignUpModalShow={setSocialSignUpModalShow}
+            />
+            <hr className={showEmailForm ? "mt-4 mb-1" : "my-4"} />
+            <div
+              className={
+                otherMethod
+                  ? "hidden"
+                  : "text-center d-flex justify-content-center"
+              }
+              // className="text-center d-flex justify-content-center"
+            >
+              <div
+                className="text-center mb-4"
+                onClick={() => setOtherMethod(!otherMethod)}
+              >
+                <p style={boldSmall}>Choose another method</p>
+              </div>
+            </div>
+          </div>
         )}
         {showEmailForm ? (
           <div className="flex-grow-1 d-flex flex-column justify-content-end">
@@ -365,7 +370,7 @@ function SignupEmailForm(props) {
         )}
       </div>
       {!showEmailForm ? (
-        <div className="flex-grow-1 d-flex flex-column justify-content-end">
+        <div className="d-flex flex-column justify-content-start mt-5">
           <div className="text-center">
             <p style={boldSmall} className="mb-1">
               Already have an account?

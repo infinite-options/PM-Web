@@ -31,7 +31,7 @@ function Signup() {
     <>
       <div
         style={signupStage !== "ROLES" ? { display: "none" } : {}}
-        className="h-100"
+        // className="h-100"
       >
         <SignupRoleSelection onConfirm={confirmRoles} back={goToLanding} />
       </div>
