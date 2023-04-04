@@ -8,6 +8,7 @@ import PropertyCard2 from "./PropertyCard";
 import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
 import { get } from "../../utils/api";
+import { sidebarStyle } from "../../utils/styles";
 export default function TenantAvailableProperties(props) {
   const { hideBackButton } = props;
   const [properties, setProperties] = useState([]);
@@ -132,18 +133,11 @@ export default function TenantAvailableProperties(props) {
 
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5">
+        </Col>
+        <Col className="w-100 mb-5">
           <Header
             title="Available Properties"
             leftText={hideBackButton ? "" : "< Back"}
@@ -174,11 +168,11 @@ export default function TenantAvailableProperties(props) {
           ) : (
             <div className="p-container">{boxView}</div>
           )}
-        </div>
-      </div>{" "}
-      <div hidden={responsive.showSidebar} className="w-100 mt-3">
-        <TenantFooter />
-      </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <TenantFooter />
+          </div>
+        </Col>
+      </Row>{" "}
     </div>
   );
 }

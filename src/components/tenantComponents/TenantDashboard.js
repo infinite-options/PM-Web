@@ -15,28 +15,30 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
-import SideBar from "../components/tenantComponents/SideBar";
-import Header from "../components/Header";
-import AppContext from "../AppContext";
-import TenantFooter from "../components/tenantComponents/TenantFooter";
-import TenantUpcomingPayments from "../components/tenantComponents/TenantUpcomingPayments";
-import TenantPaymentHistory from "../components/tenantComponents/TenantPaymentHistory";
-import TenantRepairRequest from "../components/tenantComponents/TenantRepairRequest";
-import ConfirmDialog2 from "../components/ConfirmDialog2";
-import SearchProperties_Black from "../icons/SearchProperties_Black.svg";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
-import AddIcon from "../icons/AddIcon.svg";
-import PropertyIcon from "../icons/PropertyIcon.svg";
-import RepairImg from "../icons/RepairImg.svg";
-import { get } from "../utils/api";
+import SideBar from "./SideBar";
+import Header from "../Header";
+import AppContext from "../../AppContext";
+import TenantFooter from "./TenantFooter";
+import TenantUpcomingPayments from "./TenantUpcomingPayments";
+import TenantPaymentHistory from "./TenantPaymentHistory";
+import TenantRepairRequest from "./TenantRepairRequest";
+import ConfirmDialog2 from "../ConfirmDialog2";
+import SearchProperties_Black from "../../icons/SearchProperties_Black.svg";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
+import AddIcon from "../../icons/AddIcon.svg";
+import PropertyIcon from "../../icons/PropertyIcon.svg";
+import RepairImg from "../../icons/RepairImg.svg";
+import { get } from "../../utils/api";
 import {
   xSmall,
   blue,
   mediumBold,
   subHeading,
   smallImg,
-} from "../utils/styles";
+  red,
+  sidebarStyle,
+} from "../../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {
@@ -112,20 +114,25 @@ export default function TenantDashboard() {
       return;
     }
     const check = await get("/CheckTenantProfileComplete", access_token);
+    console.log("check", check);
     if (check["message"] === "Incomplete Profile") {
       setShowDialog(true);
     }
 
     const response = await get("/tenantDashboard", access_token);
-    const appRes = await get(
-      `/applications?tenant_id=${user.tenant_id[0].tenant_id}`
-    );
-    if (response.msg === "Token has expired") {
+    console.log("response", response);
+    if (
+      response.msg === "Token has expired" ||
+      check.message === "Token has expired"
+    ) {
       // console.log("here msg");
       refresh();
 
       return;
     }
+    const appRes = await get(
+      `/applications?tenant_id=${user.tenant_id[0].tenant_id}`
+    );
 
     setTenantProfile(response.result[0]);
     let apps = [];
@@ -198,6 +205,21 @@ export default function TenantDashboard() {
         scheduled: scheduled_repairs.length,
         complete: completed_repairs.length,
       };
+
+      property.tenant_end_early_applications =
+        property.application_status === "TENANT END EARLY";
+
+      property.pm_end_early_applications =
+        property.application_status === "PM END EARLY";
+
+      property.extend_lease_applications =
+        property.application_status === "LEASE EXTENSION";
+
+      property.tenant_extend_lease_applications =
+        property.application_status === "TENANT LEASE EXTENSION";
+
+      property.tenant_refused_applications =
+        property.application_status === "REJECTED";
     });
 
     setTenantData(properties_unique);
@@ -324,6 +346,7 @@ export default function TenantDashboard() {
       ? (a, b) => descendingComparator(a, b, orderBy)
       : (a, b) => -descendingComparator(a, b, orderBy);
   }
+  console.log(tenantData);
 
   function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
@@ -724,18 +747,11 @@ export default function TenantDashboard() {
         onConfirm={ProfileNotComplete}
       />
       {!isLoading && tenantData.length > 0 ? (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 mb-5 overflow-scroll">
+          </Col>
+          <Col className="w-100 mb-5 overflow-scroll">
             <Header title="Tenant Dashboard" />
             <div
               className="mx-3 my-3 p-2"
@@ -903,6 +919,71 @@ export default function TenantDashboard() {
                                 ? " " + property.unit
                                 : ""}{" "}
                               {property.city}, {property.state}
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {property.tenant_end_early_applications
+                                      ? "You requested to end the lease early"
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {property.pm_end_early_applications
+                                      ? "PM requested to end the lease early"
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {property.tenant_extend_lease_applications
+                                      ? "You requested to extend the lease"
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {property.extend_lease_applications
+                                      ? "PM requested to extend the lease"
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                              {property.rental_status === "ACTIVE" ||
+                              property.rental_status === "PENDING" ? (
+                                ""
+                              ) : (
+                                <div className="d-flex">
+                                  <div className="d-flex align-items-end">
+                                    <p
+                                      style={{ ...red, ...xSmall }}
+                                      className="mb-0"
+                                    >
+                                      {property.pm_refused_applications
+                                        ? `${property.pm_refused_applications.length} PM refused the lease`
+                                        : ""}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
                             </TableCell>
                             <TableCell
                               padding="none"
@@ -1497,21 +1578,14 @@ export default function TenantDashboard() {
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <TenantFooter />
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       ) : !isLoading && tenantData.length === 0 ? (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 mb-5 overflow-scroll">
+          </Col>
+          <Col className="w-100 mb-5 overflow-scroll">
             <Header title="Tenant Dashboard" />
             <div
               style={{
@@ -1781,43 +1855,29 @@ export default function TenantDashboard() {
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <TenantFooter />
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       ) : (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+          </Col>
+          <Col className="w-100 d-flex flex-column justify-content-center align-items-center">
             <ReactBootStrap.Spinner animation="border" role="status" />
-          </div>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
-            <TenantFooter />
-          </div>
-        </div>
+            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+              <TenantFooter />
+            </div>
+          </Col>
+        </Row>
       )}
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="TenantDashboard">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Add Repair Request"
             leftText="< Back"
@@ -1828,11 +1888,11 @@ export default function TenantDashboard() {
             cancel={() => setStage("LIST")}
             onSubmit={addProperty}
           />
-        </div>
-        <div hidden={responsive.showSidebar}>
-          <TenantFooter />
-        </div>
-      </div>
+          <div hidden={responsive.showSidebar}>
+            <TenantFooter />
+          </div>
+        </Col>
+      </Row>
     </div>
   ) : (
     ""

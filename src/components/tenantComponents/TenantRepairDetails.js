@@ -31,6 +31,7 @@ import {
   blue,
   subText,
   pillButton,
+  sidebarStyle,
 } from "../../utils/styles";
 import { get, put } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
@@ -320,18 +321,15 @@ function TenantRepairDetails(props) {
 
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
+      <Row>
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5">
+        </Col>
+        <Col className="w-100 mb-5">
           <Header
             title="Repairs"
             leftText={isEditing ? null : "< Back"}
@@ -986,8 +984,8 @@ function TenantRepairDetails(props) {
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <TenantFooter />
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   );
 }

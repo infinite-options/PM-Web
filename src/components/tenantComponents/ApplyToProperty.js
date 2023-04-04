@@ -6,7 +6,7 @@ import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
 import SearchPM from "../../icons/searchPM.svg";
 import Dashboard_Blue from "../../icons/Dashboard_Blue.svg";
-import { welcome } from "../../utils/styles";
+import { sidebarStyle, welcome } from "../../utils/styles";
 
 const divStyle = {
   fontSize: "20px",
@@ -36,18 +36,11 @@ function ApplyToProperty() {
 
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header />
           <Container>
             <div style={welcome}>
@@ -95,11 +88,11 @@ function ApplyToProperty() {
               </div>
             </div>
           </Container>
-        </div>
-      </div>
-      <div hidden={responsive.showSidebar} className="w-100 mt-3">
-        <TenantFooter />
-      </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <TenantFooter />
+          </div>
+        </Col>
+      </Row>
     </div>
   );
 }

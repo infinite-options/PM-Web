@@ -27,6 +27,7 @@ import {
   hidden,
   small,
   bluePillButton,
+  sidebarStyle,
 } from "../../utils/styles";
 import {
   formatPhoneNumber,
@@ -305,18 +306,16 @@ function MaintenanceProfile(props) {
     );
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
+      <Row>
+        {" "}
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Profile"
             leftText={editProfile ? "Cancel" : ""}
@@ -749,8 +748,8 @@ function MaintenanceProfile(props) {
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
             <MaintenanceFooter />
           </div>
-        </div>{" "}
-      </div>{" "}
+        </Col>{" "}
+      </Row>{" "}
     </div>
   );
 }

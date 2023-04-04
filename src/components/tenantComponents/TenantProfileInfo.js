@@ -19,17 +19,17 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Popover from "@material-ui/core/Popover";
-import AppContext from "../AppContext";
-import Header from "../components/Header";
-import Checkbox from "../components/Checkbox";
-import DocumentsUploadPost from "../components/DocumentsUploadPost";
-import AddressForm from "../components/AddressForm";
-import { get, post } from "../utils/api";
-import ArrowUp from "../icons/ArrowUp.svg";
-import ArrowDown from "../icons/ArrowDown.svg";
-import EditIcon from "../icons/EditIcon.svg";
-import AddIcon from "../icons/AddIcon.svg";
-import DeleteIcon from "../icons/DeleteIcon.svg";
+import AppContext from "../../AppContext";
+import Header from "../Header";
+import Checkbox from "../Checkbox";
+import DocumentsUploadPost from "../DocumentsUploadPost";
+import AddressForm from "../AddressForm";
+import { get, post } from "../../utils/api";
+import ArrowUp from "../../icons/ArrowUp.svg";
+import ArrowDown from "../../icons/ArrowDown.svg";
+import EditIcon from "../../icons/EditIcon.svg";
+import AddIcon from "../../icons/AddIcon.svg";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
 import {
   squareForm,
   pillButton,
@@ -39,8 +39,8 @@ import {
   hidden,
   mediumBold,
   smallPillButton,
-} from "../utils/styles";
-import { formatPhoneNumber, formatSSN } from "../utils/helper";
+} from "../../utils/styles";
+import { formatPhoneNumber, formatSSN } from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {

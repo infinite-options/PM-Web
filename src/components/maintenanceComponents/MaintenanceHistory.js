@@ -22,6 +22,7 @@ import RepairImg from "../../icons/RepairImg.svg";
 import AddIcon from "../../icons/AddIcon.svg";
 import { get } from "../../utils/api";
 import { days } from "../../utils/helper";
+import { sidebarStyle } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -237,25 +238,22 @@ function MaintenanceHistory(props) {
 
   return (
     <div>
-      <div className="flex-1">
-        <div
+      <Row>
+        {" "}
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header title="Maintenance History" />
           <Row className="m-3">
             <Col>
               <h3>Maintenance History</h3>
             </Col>
           </Row>
-
           {isLoading ? (
             <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
               <div className="w-100 d-flex flex-column justify-content-center align-items-center">
@@ -381,11 +379,11 @@ function MaintenanceHistory(props) {
               <div className="m-3">No maintenance and repairs</div>
             </Row>
           )}
-        </div>
-      </div>
-      <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
-        <MaintenanceFooter />
-      </div>
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+            <MaintenanceFooter />
+          </div>{" "}
+        </Col>
+      </Row>
     </div>
   );
 }

@@ -22,7 +22,7 @@ import MailDialog from "../MailDialog";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import { get, put } from "../../utils/api";
-import { smallImg, hidden } from "../../utils/styles";
+import { smallImg, hidden, sidebarStyle } from "../../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {
@@ -230,7 +230,7 @@ function ManagerOwnerList(props) {
 
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
+      <Row>
         <MailDialog
           title={"Message"}
           isOpen={showMailForm}
@@ -242,17 +242,10 @@ function ManagerOwnerList(props) {
           receiverEmail={selectedOwner.owner_email}
           onCancel={onCancel}
         />
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100  mb-5">
+        </Col>
+        <Col className="w-100  mb-5">
           <Header title="Owners" />
           <Row className="m-3">
             <Col>
@@ -412,11 +405,11 @@ function ManagerOwnerList(props) {
               <div className="m-3">No active owners</div>
             </Row>
           )}
-        </div>
-      </div>
-      <div hidden={responsive.showSidebar} className="w-100 mt-3">
-        <ManagerFooter />
-      </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <ManagerFooter />
+          </div>
+        </Col>
+      </Row>
     </div>
   );
 }

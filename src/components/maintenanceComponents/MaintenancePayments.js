@@ -1,14 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import AppContext from "../../AppContext";
 import Header from "../../components/Header";
 import SideBar from "./SideBar";
 import MaintenanceFooter from "./MaintenanceFooter";
 import UpcomingMaintenancePayments from "./UpcomingMaintenancePayments";
 import { get } from "../../utils/api";
-import "../../pages/maintenance.css";
 import MaintenancePaymentHistory from "./MaintenancePaymentHistory";
+import { sidebarStyle } from "../../utils/styles";
 export default function MaintenancePayments(props) {
   const [propertyData, setPropertyData] = React.useState([]);
 
@@ -100,18 +100,12 @@ export default function MaintenancePayments(props) {
 
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        {" "}
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5">
+        </Col>
+        <Col className="w-100 mb-5">
           <Header title="Payment Portal" />
           <Row>
             {propertyData.length !== 0 && (
@@ -137,8 +131,8 @@ export default function MaintenancePayments(props) {
           <div hidden={responsive.showSidebar} className="w-100 mt-3">
             <MaintenanceFooter />
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   );
 }

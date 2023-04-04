@@ -42,6 +42,7 @@ import {
   red,
   hidden,
   small,
+  sidebarStyle,
 } from "../../utils/styles";
 import { get, post, put } from "../../utils/api";
 import RescheduleRepair from "../maintenanceComponents/RescheduleRepair";
@@ -485,18 +486,15 @@ function ManagerRepairDetail(props) {
 
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1 mb-5">
-        <div
+      <Row className="mb-5">
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 ">
+        </Col>
+        <Col className="w-100 mb-5 ">
           <Header
             title="Repairs"
             leftText={
@@ -513,7 +511,6 @@ function ManagerRepairDetail(props) {
             rightFn={() => (edit ? updateRepair() : setEdit(true))}
           />
           <br />
-
           <div className="mx-2 my-4 p-3" hidden={requestQuote}>
             <Row style={headings}>
               <Row className=" d-flex align-items-center justify-content-center m-3">
@@ -1154,7 +1151,6 @@ function ManagerRepairDetail(props) {
               ""
             )}
           </div>
-
           <div
             className="mx-2 mt-2 mb-5 p-3"
             style={{
@@ -1278,7 +1274,6 @@ function ManagerRepairDetail(props) {
               </Col>
             </Row>
           </div>
-
           {!edit && !requestQuote && quotes && quotes.length > 0 && (
             <div className="pb-4 mb-4">
               {/* {console.log("here")} */}
@@ -1853,11 +1848,11 @@ function ManagerRepairDetail(props) {
           ) : (
             ""
           )}
-        </div>
-      </div>
-      <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
-        <ManagerFooter />
-      </div>
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+            <ManagerFooter />
+          </div>{" "}
+        </Col>
+      </Row>
     </div>
   );
 }

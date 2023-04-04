@@ -13,7 +13,7 @@ let SCOPES = "https://www.googleapis.com/auth/calendar";
 
 function GoogleSignUp(props) {
   const context = useContext(AppContext);
-
+  const { socialSignUpModalShow, setSocialSignUpModalShow } = props;
   const navigate = useNavigate();
   const [newEmail, setNewEmail] = useState("");
   const [newFName, setNewFName] = useState("");
@@ -22,7 +22,6 @@ function GoogleSignUp(props) {
   const [refreshToken, setRefreshToken] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [accessExpiresIn, setAccessExpiresIn] = useState("");
-  const [socialSignUpModalShow, setSocialSignUpModalShow] = useState(false);
 
   let codeClient = {};
 
@@ -167,124 +166,7 @@ function GoogleSignUp(props) {
       });
     }
   }, [getAuthorizationCode]);
-  const hideSignUp = () => {
-    //setSignUpModalShow(false);
-    setSocialSignUpModalShow(false);
-    navigate("/");
-  };
-  const socialSignUpModal = () => {
-    const modalStyle = {
-      position: "absolute",
-      top: "30%",
-      left: "2%",
-      width: "400px",
-    };
-    const headerStyle = {
-      border: "none",
-      textAlign: "center",
-      display: "flex",
-      alignItems: "center",
-      fontSize: "20px",
-      fontWeight: "bold",
-      color: "#2C2C2E",
-      textTransform: "uppercase",
-      backgroundColor: " #F3F3F8",
-    };
-    const footerStyle = {
-      border: "none",
-      backgroundColor: " #F3F3F8",
-    };
-    const bodyStyle = {
-      backgroundColor: " #F3F3F8",
-    };
 
-    return (
-      <Modal
-        show={socialSignUpModalShow}
-        onHide={hideSignUp}
-        style={modalStyle}
-      >
-        <Form as={Container}>
-          <Modal.Header style={headerStyle} closeButton>
-            <Modal.Title>User Already Exists</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body style={bodyStyle}>
-            <div>The user {newEmail} already exists! Please Log In!</div>
-          </Modal.Body>
-
-          <Modal.Footer style={footerStyle}>
-            <Row
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                marginTop: "1rem",
-              }}
-            >
-              <Col
-                xs={6}
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Button
-                  type="submit"
-                  onClick={hideSignUp}
-                  style={{
-                    marginTop: "1rem",
-                    width: "93px",
-                    height: "40px",
-
-                    font: "normal normal normal 18px/21px SF Pro Display",
-                    letterSpacing: "0px",
-                    color: "#F3F3F8",
-                    textTransform: "none",
-                    background: "#2C2C2E 0% 0% no-repeat padding-box",
-                    borderRadius: "3px",
-                  }}
-                >
-                  Cancel
-                </Button>
-              </Col>
-              <Col
-                xs={6}
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Button
-                  type="submit"
-                  onClick={() => navigate("/login")}
-                  style={{
-                    marginTop: "1rem",
-                    width: "93px",
-                    height: "40px",
-
-                    font: "normal normal normal 18px/21px SF Pro Display",
-                    letterSpacing: "0px",
-                    color: "#2C2C2E",
-                    textTransform: "none",
-                    border: " 2px solid #2C2C2E",
-                    borderRadius: " 3px",
-                  }}
-                >
-                  Login
-                </Button>
-              </Col>
-            </Row>
-          </Modal.Footer>
-        </Form>
-      </Modal>
-    );
-  };
   return (
     <Grid
       container
@@ -313,7 +195,6 @@ function GoogleSignUp(props) {
           Sign Up with Google
         </Button>
       </div>
-      {socialSignUpModal()}
     </Grid>
   );
 }

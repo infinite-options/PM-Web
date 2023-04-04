@@ -43,6 +43,7 @@ import {
   subHeading,
   bluePillButton,
   greenPill,
+  sidebarStyle,
 } from "../../utils/styles";
 import DocumentsUploadPost from "../DocumentsUploadPost.js";
 const useStyles = makeStyles({
@@ -1139,18 +1140,15 @@ function ManagerUtilities(props) {
   };
   return (
     <div>
-      <div className="flex-1">
-        <div
+      <Row>
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100">
+        </Col>
+        <Col className="w-100">
           <Header
             title="Expenses"
             leftText={
@@ -3110,8 +3108,8 @@ function ManagerUtilities(props) {
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <ManagerFooter />
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   );
 }

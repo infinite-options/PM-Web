@@ -43,6 +43,7 @@ import {
   subHeading,
   bluePillButton,
   greenPill,
+  sidebarStyle,
 } from "../../utils/styles";
 import DocumentsUploadPost from "../DocumentsUploadPost";
 const useStyles = makeStyles({
@@ -1098,18 +1099,15 @@ function OwnerUtilities(props) {
   };
   return (
     <div>
-      <div className="flex-1">
-        <div
+      <Row>
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Utilities"
             leftText={
@@ -3069,8 +3067,8 @@ function OwnerUtilities(props) {
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <OwnerFooter />
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   );
 }

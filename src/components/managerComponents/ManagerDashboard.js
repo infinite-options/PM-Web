@@ -15,18 +15,18 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
-import SideBar from "../components/managerComponents/SideBar";
-import Header from "../components/Header";
-import AppContext from "../AppContext";
-import ManagerCreateExpense from "../components/managerComponents/ManagerCreateExpense";
-import ManagerRepairRequest from "../components/managerComponents/ManagerRepairRequest";
-import ManagerFooter from "../components/managerComponents/ManagerFooter";
-import AddIcon from "../icons/AddIcon.svg";
-import PropertyIcon from "../icons/PropertyIcon.svg";
-import RepairImg from "../icons/RepairImg.svg";
-import { get } from "../utils/api";
-import { green, red, blue, xSmall } from "../utils/styles";
-import ManagerCashflow from "../components/managerComponents/ManagerCashflow";
+import SideBar from "./SideBar";
+import Header from "../Header";
+import ManagerCashflow from "./ManagerCashflow";
+import AppContext from "../../AppContext";
+import ManagerCreateExpense from "./ManagerCreateExpense";
+import ManagerRepairRequest from "./ManagerRepairRequest";
+import ManagerFooter from "./ManagerFooter";
+import AddIcon from "../../icons/AddIcon.svg";
+import PropertyIcon from "../../icons/PropertyIcon.svg";
+import RepairImg from "../../icons/RepairImg.svg";
+import { get } from "../../utils/api";
+import { green, red, blue, xSmall, sidebarStyle } from "../../utils/styles";
 import { configureAbly, useChannel } from "@ably-labs/react-hooks";
 
 const useStyles = makeStyles({
@@ -633,18 +633,11 @@ export default function ManagerDashboard() {
     <div className="w-100 overflow-hidden">
       {!isLoading &&
       (managerData.length > 0 || processingManagerData.length > 0) ? (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 mb-5 overflow-scroll">
+          </Col>
+          <Col className="w-100 mb-5 overflow-scroll">
             <Header title="Manager Dashboard" />
             <div
               className="mx-3 my-3 p-2"
@@ -2114,21 +2107,14 @@ export default function ManagerDashboard() {
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <ManagerFooter />
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       ) : !isLoading && processingManagerData.length === 0 ? (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 mb-5 overflow-scroll">
+          </Col>
+          <Col className="w-100 mb-5 overflow-scroll">
             <Header title="Manager Dashboard" />
             <div
               style={{
@@ -2144,21 +2130,14 @@ export default function ManagerDashboard() {
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <ManagerFooter />
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       ) : !isLoading && processingManagerData.length === 0 ? (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 mb-5 overflow-scroll">
+          </Col>
+          <Col className="w-100 mb-5 overflow-scroll">
             <Header title="Manager Dashboard" />
             <div
               style={{
@@ -2174,43 +2153,37 @@ export default function ManagerDashboard() {
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <ManagerFooter />
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       ) : (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+          </Col>
+          <Col className="w-100 d-flex flex-column justify-content-center align-items-center">
             <ReactBootStrap.Spinner animation="border" role="status" />
-          </div>
+          </Col>
           <div hidden={responsive.showSidebar} className="w-100 mt-3">
             <ManagerFooter />
           </div>
-        </div>
+        </Row>
       )}
     </div>
   ) : stage === "ADDEXPENSE" ? (
     <div className="ManagerDashboard">
-      <div className="flex-1">
-        <div
+      <Row>
+        <Col
+          xs={2}
           hidden={!responsive.showSidebar}
           style={{
             backgroundColor: "#229ebc",
-            width: "11rem",
+            // width: "12rem",
             minHeight: "100%",
           }}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Add Expense"
             leftText="< Back"
@@ -2221,26 +2194,27 @@ export default function ManagerDashboard() {
             cancel={() => setStage("LIST")}
             onSubmit={addProperty}
           />
-        </div>
+        </Col>
         <div hidden={responsive.showSidebar}>
           <ManagerFooter />
         </div>
-      </div>
+      </Row>
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="ManagerDashboard">
-      <div className="flex-1">
-        <div
+      <Row>
+        <Col
+          xs={2}
           hidden={!responsive.showSidebar}
           style={{
             backgroundColor: "#229ebc",
-            width: "11rem",
+            // width: "12rem",
             minHeight: "100%",
           }}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Add Repair Request"
             leftText="< Back"
@@ -2251,11 +2225,11 @@ export default function ManagerDashboard() {
             cancel={() => setStage("LIST")}
             onSubmit={addProperty}
           />
-        </div>
+        </Col>
         <div hidden={responsive.showSidebar}>
           <ManagerFooter />
         </div>
-      </div>
+      </Row>
     </div>
   ) : (
     ""

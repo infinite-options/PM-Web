@@ -1,19 +1,22 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-import AppContext from "../AppContext";
-import Header from "../components/Header";
-import Checkbox from "../components/Checkbox";
-import PaymentSelection from "../components/PaymentSelection";
-import { get, post } from "../utils/api";
-import { squareForm, pillButton, hidden, red, small } from "../utils/styles";
-import { formatEIN, formatPhoneNumber, formatSSN } from "../utils/helper";
-function OwnerProfileInfo(props) {
+import AppContext from "../../AppContext";
+import Header from "../Header";
+import Checkbox from "../Checkbox";
+import PaymentSelection from "../PaymentSelection";
+import ManagerFees from "../ManagerFees";
+import ManagerLocations from "../ManagerLocations";
+import { get, post } from "../../utils/api";
+import { squareForm, pillButton, hidden, red, small } from "../../utils/styles";
+
+import { formatPhoneNumber, formatEIN, formatSSN } from "../../utils/helper";
+
+function ManagerProfileInfo(props) {
   var CryptoJS = require("crypto-js");
-  const context = React.useContext(AppContext);
+  const context = useContext(AppContext);
   const { access_token, user } = context.userData;
-  const navigate = useNavigate();
   const { autofillState, setAutofillState } = props;
   const updateAutofillState = (profile) => {
     const newAutofillState = { ...autofillState };
@@ -24,15 +27,16 @@ function OwnerProfileInfo(props) {
     }
     setAutofillState(newAutofillState);
   };
-  const [firstName, setFirstName] = React.useState(autofillState.first_name);
-  const [lastName, setLastName] = React.useState(autofillState.last_name);
-  const [phoneNumber, setPhoneNumber] = React.useState(
-    autofillState.phone_number
-  );
-  const [email, setEmail] = React.useState(autofillState.email);
-  const [einNumber, setEinNumber] = React.useState(autofillState.ein_number);
-  const [ssn, setSsn] = React.useState(autofillState.ssn);
-  const paymentState = React.useState({
+  const navigate = useNavigate();
+  const [firstName, setFirstName] = useState(autofillState.first_name);
+  const [lastName, setLastName] = useState(autofillState.last_name);
+  const [phoneNumber, setPhoneNumber] = useState(autofillState.phone_number);
+  const [email, setEmail] = useState(autofillState.email);
+  const [einNumber, setEinNumber] = useState(autofillState.ein_number);
+  const [ssn, setSsn] = useState(autofillState.ssn);
+  const [showSsn, setShowSsn] = useState(false);
+  const [showEin, setShowEin] = useState(false);
+  const paymentState = useState({
     paypal: autofillState.paypal,
     applePay: autofillState.apple_pay,
     zelle: autofillState.zelle,
@@ -40,21 +44,21 @@ function OwnerProfileInfo(props) {
     accountNumber: autofillState.account_number,
     routingNumber: autofillState.routing_number,
   });
-  const [errorMessage, setErrorMessage] = React.useState("");
-  React.useEffect(() => {
-    if (context.userData.access_token === null) {
+  const [feeState, setFeeState] = useState([]);
+  const [locationState, setLocationState] = useState([]);
+  useEffect(() => {
+    if (access_token === null) {
       navigate("/");
       return;
     }
-    const userRole = context.userData.user.role;
-    if (userRole.indexOf("OWNER") === -1) {
-      // console.log("no owner profile");
+    if (user.role.indexOf("MANAGER") === -1) {
+      // console.log("no manager profile");
       props.onConfirm();
     }
     const fetchProfileInfo = async () => {
-      const response = await get("/ownerProfileInfo", access_token);
+      const response = await get("/managerProfileInfo", access_token);
       if (response.result.length !== 0) {
-        // console.log("owner profile already set up");
+        // console.log("manager profile already set up");
         // eventually update page with current info, allow user to update and save new info
         props.onConfirm();
         return;
@@ -62,7 +66,9 @@ function OwnerProfileInfo(props) {
     };
     fetchProfileInfo();
   }, []);
+  const [errorMessage, setErrorMessage] = useState("");
   const submitInfo = async () => {
+    // console.log(paymentState[0]);
     const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
       paymentState[0];
     if (
@@ -88,7 +94,15 @@ function OwnerProfileInfo(props) {
       setErrorMessage("Please add at least one payment method");
       return;
     }
-    const ownerProfile = {
+    if (feeState.length === 0) {
+      setErrorMessage("Please add at least one fee");
+      return;
+    }
+    if (locationState.length === 0) {
+      setErrorMessage("Please add at least one location");
+      return;
+    }
+    const managerProfile = {
       first_name: firstName,
       last_name: lastName,
       phone_number: phoneNumber,
@@ -103,13 +117,13 @@ function OwnerProfileInfo(props) {
       venmo: venmo,
       account_number: accountNumber,
       routing_number: routingNumber,
+      fees: JSON.stringify(feeState),
+      locations: JSON.stringify(locationState),
     };
-    await post("/ownerProfileInfo", ownerProfile, access_token);
-    updateAutofillState(ownerProfile);
+    await post("/managerProfileInfo", managerProfile, access_token);
+    updateAutofillState(managerProfile);
     props.onConfirm();
   };
-  const [showSsn, setShowSsn] = React.useState(false);
-  const [showEin, setShowEin] = React.useState(false);
 
   const required =
     errorMessage === "Please fill out all fields" ? (
@@ -120,15 +134,8 @@ function OwnerProfileInfo(props) {
       ""
     );
   return (
-    <div
-      className="pb-5 mb-5"
-      style={{
-        background: "#E9E9E9 0% 0% no-repeat padding-box",
-        borderRadius: "10px",
-        opacity: 1,
-      }}
-    >
-      <Header title="Owner Profile" />
+    <div className="pb-5">
+      <Header title="PM Profile" />
       <Container>
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
@@ -211,16 +218,29 @@ function OwnerProfileInfo(props) {
           </Row>
         </Container>
         <PaymentSelection state={paymentState} />
+        <Container className="px-2">
+          <h6 className="mb-3">Fees you charge:</h6>
+          <ManagerFees
+            feeState={feeState}
+            setFeeState={setFeeState}
+            editProfile={true}
+          />
+        </Container>
+        <ManagerLocations
+          locationState={locationState}
+          setLocationState={setLocationState}
+          editProfile={true}
+        />
         <div className="text-center" style={errorMessage === "" ? hidden : {}}>
           <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
         </div>
-        <div className="text-center mb-3">
+        <div className="text-center my-3">
           <Button
             variant="outline-primary"
             style={pillButton}
             onClick={submitInfo}
           >
-            Save Owner Profile
+            Save Manager Profile
           </Button>
         </div>
       </Container>
@@ -228,4 +248,4 @@ function OwnerProfileInfo(props) {
   );
 }
 
-export default OwnerProfileInfo;
+export default ManagerProfileInfo;

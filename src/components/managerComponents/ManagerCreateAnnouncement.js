@@ -29,6 +29,7 @@ import {
   hidden,
   headings,
   mediumBold,
+  sidebarStyle,
 } from "../../utils/styles";
 
 const useStyles = makeStyles({
@@ -512,18 +513,16 @@ function ManagerCreateAnnouncement(props) {
   };
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
+      <Row>
+        {" "}
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Announcements"
             leftText={editingAnnouncement || announcementDetail ? "< Back" : ""}
@@ -1031,8 +1030,8 @@ function ManagerCreateAnnouncement(props) {
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <ManagerFooter />
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   );
 }

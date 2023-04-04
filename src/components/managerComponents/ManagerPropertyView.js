@@ -44,6 +44,7 @@ import RepairImg from "../../icons/RepairImg.svg";
 import { get, put } from "../../utils/api";
 import { days } from "../../utils/helper";
 import "react-multi-carousel/lib/styles.css";
+import { sidebarStyle } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -621,24 +622,20 @@ function ManagerPropertyView(props) {
           onCancel={onCancel}
         />
         {/* {console.log("showdialog", showDialog)} */}
-        <div className="flex-1">
-          <div
+        <Row>
+          <Col
+            xs={2}
             hidden={!responsiveSidebar.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
+            style={sidebarStyle}
           >
             <SideBar />
-          </div>
-          <div className="w-100 mb-5  overflow-hidden">
+          </Col>
+          <Col className="w-100 mb-5  overflow-hidden">
             <Header
               title="Property Details"
               leftText={location.state === null ? "" : "< Back"}
               leftFn={headerBack}
             />
-
             {editProperty ? (
               <ManagerPropertyForm
                 property={property}
@@ -1763,11 +1760,11 @@ function ManagerPropertyView(props) {
                 </div>
               </div>
             )}
-          </div>
-        </div>
-        <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
-          <ManagerFooter />
-        </div>
+            <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
+              <ManagerFooter />
+            </div>{" "}
+          </Col>
+        </Row>
       </div>
     )
   ) : (

@@ -23,6 +23,7 @@ import {
   greenPill,
   redPillButton,
   mediumBold,
+  sidebarStyle,
 } from "../../utils/styles";
 import { ordinal_suffix_of } from "../../utils/helper";
 const useStyles = makeStyles({
@@ -388,18 +389,11 @@ function ReviewPropertyLease(props) {
   };
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-hidden">
+        </Col>
+        <Col className="w-100 mb-5 overflow-hidden">
           <Header
             title="Property Lease Details"
             leftText="< Back"
@@ -2172,8 +2166,8 @@ function ReviewPropertyLease(props) {
           <div hidden={responsive.showSidebar} className="w-100 mt-3">
             <TenantFooter />
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   );
 }

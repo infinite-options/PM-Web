@@ -27,6 +27,7 @@ import {
   mediumBold,
   headings,
   pillButton,
+  sidebarStyle,
 } from "../../utils/styles";
 import DocumentsUploadPost from "../DocumentsUploadPost";
 const useStyles = makeStyles({
@@ -179,18 +180,11 @@ function ManagerManagementContract(props) {
     );
   // console.log(property);
   return (
-    <div className="flex-1">
-      <div
-        hidden={!responsive.showSidebar}
-        style={{
-          backgroundColor: "#229ebc",
-          width: "11rem",
-          minHeight: "100%",
-        }}
-      >
+    <Row>
+      <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
         <SideBar />
-      </div>
-      <div className="w-100 mb-5 overflow-scroll">
+      </Col>
+      <Col className="w-100 mb-5 overflow-scroll">
         <Header
           title="Management Contract"
           leftText="< Back"
@@ -377,8 +371,8 @@ function ManagerManagementContract(props) {
         <div hidden={responsive.showSidebar} className="w-100 mt-3">
           <ManagerFooter />
         </div>
-      </div>
-    </div>
+      </Col>
+    </Row>
   );
 }
 

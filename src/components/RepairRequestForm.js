@@ -22,6 +22,7 @@ import {
   small,
   payNowButton,
   squareForm,
+  sidebarStyle,
 } from "../utils/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -110,18 +111,16 @@ function RepairRequest(props) {
 
   return (
     <div>
-      <div className="flex-1">
-        <div
+      <Row>
+        {" "}
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Repair Request Form"
             leftText={"< Back"}
@@ -326,11 +325,11 @@ function RepairRequest(props) {
               </Row>
             </div>
           </Container>
-        </div>
-      </div>
-      <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
-        <OwnerFooter />
-      </div>
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
+            <OwnerFooter />
+          </div>{" "}
+        </Col>
+      </Row>
     </div>
   );
 }

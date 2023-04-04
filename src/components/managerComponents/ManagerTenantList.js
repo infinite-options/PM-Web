@@ -32,6 +32,7 @@ import {
   hidden,
   redPill,
   greenPill,
+  sidebarStyle,
 } from "../../utils/styles";
 
 const useStyles = makeStyles({
@@ -377,7 +378,7 @@ function ManagerTenantList(props) {
 
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
+      <Row>
         <MailDialog
           title={"Message"}
           isOpen={showMailForm}
@@ -389,18 +390,11 @@ function ManagerTenantList(props) {
           receiverEmail={selectedTenant.tenant_email}
           onCancel={onCancel}
         />
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
+        </Col>
 
-        <div className="w-100 mb-5 overflow-scroll">
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header title="Tenants" />
           <Row className="m-3">
             <Col>
@@ -583,11 +577,11 @@ function ManagerTenantList(props) {
               <div className="m-3"> No tenants</div>
             </Row>
           )}
-        </div>
-      </div>
-      <div hidden={responsive.showSidebar} className="w-100 mt-3">
-        <ManagerFooter />
-      </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <ManagerFooter />
+          </div>
+        </Col>
+      </Row>
     </div>
   );
 }

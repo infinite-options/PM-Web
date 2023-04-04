@@ -30,6 +30,7 @@ import {
   redPill,
   greenPill,
   headings,
+  sidebarStyle,
 } from "../../utils/styles";
 import { ordinal_suffix_of, MaskCharacter } from "../../utils/helper";
 
@@ -236,18 +237,12 @@ function ManagerTenantListDetail(props) {
 
   return (
     <div>
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        {" "}
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Tenant Details"
             leftText="< Back"
@@ -835,11 +830,11 @@ function ManagerTenantListDetail(props) {
               </div>
             )}
           </div>
-        </div>
-      </div>
-      <div hidden={responsive.showSidebar} className="w-100 mt-3">
-        <ManagerFooter />
-      </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <ManagerFooter />
+          </div>
+        </Col>
+      </Row>
     </div>
   );
 }

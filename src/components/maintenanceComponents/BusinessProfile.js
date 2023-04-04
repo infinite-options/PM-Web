@@ -2,13 +2,13 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button } from "react-bootstrap";
 
-import AppContext from "../AppContext";
-import Header from "../components/Header";
-import ServicesProvided from "../components/ServicesProvided";
-import PaymentSelection from "../components/PaymentSelection";
-import BusinessContact from "../components/BusinessContact";
-import { get, post } from "../utils/api";
-import { pillButton, squareForm, hidden, red, small } from "../utils/styles";
+import AppContext from "../../AppContext";
+import Header from "../Header";
+import ServicesProvided from "../ServicesProvided";
+import PaymentSelection from "../PaymentSelection";
+import BusinessContact from "../BusinessContact";
+import { get, post } from "../../utils/api";
+import { pillButton, squareForm, hidden, red, small } from "../../utils/styles";
 
 function BusinessProfile(props) {
   const context = React.useContext(AppContext);

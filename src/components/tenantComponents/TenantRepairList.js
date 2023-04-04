@@ -22,6 +22,8 @@ import AppContext from "../../AppContext";
 import AddIcon from "../../icons/AddIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import { get } from "../../utils/api";
+import { sidebarStyle } from "../../utils/styles";
+import { Divider } from "@mui/material";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -313,18 +315,15 @@ function TenantRepairList(props) {
 
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
+      <Row>
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header title="Repairs" />
           <div>
             <Row className="m-3">
@@ -542,23 +541,20 @@ function TenantRepairList(props) {
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <TenantFooter />
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="tenantRepairRequest">
-      <div className="flex-1">
-        <div
+      <Row>
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header title="Add Repair Request" />
           <TenantRepairRequest
             properties={properties}
@@ -568,8 +564,8 @@ function TenantRepairList(props) {
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <TenantFooter />
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   ) : (
     ""

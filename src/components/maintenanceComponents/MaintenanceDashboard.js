@@ -15,14 +15,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
-import AppContext from "../AppContext";
-import Header from "../components/Header";
-import SideBar from "../components/maintenanceComponents/SideBar";
-import MaintenanceFooter from "../components/maintenanceComponents/MaintenanceFooter";
-import RepairImg from "../icons/RepairImg.svg";
-import { get } from "../utils/api";
-import { green, red, blue, xSmall } from "../utils/styles";
-import { days } from "../utils/helper";
+import AppContext from "../../AppContext";
+import Header from "../Header";
+import SideBar from "./SideBar";
+import MaintenanceFooter from "./MaintenanceFooter";
+import RepairImg from "../../icons/RepairImg.svg";
+import { get } from "../../utils/api";
+import { green, red, blue, xSmall, sidebarStyle } from "../../utils/styles";
+import { days } from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -321,18 +321,11 @@ function MaintenanceDashboard(props) {
   return (
     <div className="w-100 overflow-hidden">
       {!isLoading && quotes.length > 0 ? (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 mb-5 overflow-scroll">
+          </Col>
+          <Col className="w-100 mb-5 overflow-scroll">
             <Header title="Maintenance Dashboard" />
             {quotesRequested.length > 0 ? (
               <div
@@ -1977,21 +1970,14 @@ function MaintenanceDashboard(props) {
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <MaintenanceFooter />
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       ) : !isLoading && quotes.length === 0 ? (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 mb-5 overflow-scroll">
+          </Col>
+          <Col className="w-100 mb-5 overflow-scroll">
             <Header title="Maintenance Dashboard" />
             <div
               style={{
@@ -2007,27 +1993,20 @@ function MaintenanceDashboard(props) {
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <MaintenanceFooter />
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       ) : (
-        <div className="flex-1">
-          <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
+        <Row>
+          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
-          </div>
-          <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+          </Col>
+          <Col className="w-100 d-flex flex-column justify-content-center align-items-center">
             <ReactBootStrap.Spinner animation="border" role="status" />
-          </div>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
-            <MaintenanceFooter />
-          </div>
-        </div>
+            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+              <MaintenanceFooter />
+            </div>
+          </Col>
+        </Row>
       )}
     </div>
   );

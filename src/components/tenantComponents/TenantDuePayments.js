@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import AppContext from "../../AppContext";
 import Header from "../Header";
 import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
 import TenantUpcomingPayments from "./TenantUpcomingPayments";
 import { get } from "../../utils/api";
-import "../../pages/maintenance.css";
+import { sidebarStyle } from "../../utils/styles";
 export default function TenantDuePayments(props) {
   const [propertyData, setPropertyData] = React.useState([]);
   const [tenantExpenses, setTenantExpenses] = React.useState([]);
@@ -86,18 +86,11 @@ export default function TenantDuePayments(props) {
 
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5">
+        </Col>
+        <Col className="w-100 mb-5">
           <Header title="Payment Portal" />
           <Row className="m-3">
             {propertyData.length !== 0 && (
@@ -112,8 +105,8 @@ export default function TenantDuePayments(props) {
           <div hidden={responsive.showSidebar} className="w-100 mt-3">
             <TenantFooter />
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   );
 }

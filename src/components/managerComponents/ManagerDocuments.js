@@ -16,6 +16,7 @@ import ManagerFooter from "./ManagerFooter";
 import DocumentsUploadPut from "../DocumentsUploadPut";
 import File from "../../icons/File.svg";
 import { get, put } from "../../utils/api";
+import { sidebarStyle } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -163,18 +164,15 @@ function ManagerDocuments(props) {
 
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
+      <Row className="flex-1">
+        <Col
+          xs={2}
           hidden={!responsiveSidebar.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
+          style={sidebarStyle}
         >
           <SideBar />
-        </div>
-        <div className="w-100 mb-5">
+        </Col>
+        <Col className="w-100 mb-5">
           <Header title="Documents" />
           <Row>
             {!isLoading ? (
@@ -672,8 +670,8 @@ function ManagerDocuments(props) {
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <ManagerFooter />
           </div>
-        </div>{" "}
-      </div>
+        </Col>{" "}
+      </Row>
     </div>
   );
 }

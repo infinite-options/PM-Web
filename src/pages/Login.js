@@ -6,7 +6,7 @@ import AppContext from "../AppContext";
 import Header from "../components/Header";
 import SocialLogin from "./SocialLogin";
 import GoogleSignIn from "../Google/GoogleSignIn";
-import Homepage from "./Homepage";
+import Homepage from "../landingPages/Homepage";
 import PasswordModal from "./PasswordModal";
 import { post } from "../utils/api";
 import { pillButton, boldSmall, red, small, hidden } from "../utils/styles";
@@ -221,11 +221,11 @@ function Login(props) {
           />
           <Container className="px-4">
             <div className="text-center">
-              <SocialLogin
+              {/* <SocialLogin
                 signupStage={props.signupStage}
                 role={props.role}
                 onConfirm={props.onConfirm}
-              />
+              /> */}
               <GoogleSignIn
                 signupStage={props.signupStage}
                 role={props.role}

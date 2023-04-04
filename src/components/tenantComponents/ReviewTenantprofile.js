@@ -24,6 +24,7 @@ import {
   headings,
   subHeading,
   red,
+  sidebarStyle,
 } from "../../utils/styles";
 import { MaskCharacter } from "../../utils/helper";
 import { get, put, post } from "../../utils/api";
@@ -278,18 +279,11 @@ function ReviewTenantProfile(props) {
   // console.log(documentClick);
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Profile"
             leftText="< Back"
@@ -300,7 +294,6 @@ function ReviewTenantProfile(props) {
             }}
             //    rightFn ={() => setTab("PROFILE")}
           />
-
           {profile ? (
             <Row className="m-3" style={{ overflow: "scroll" }}>
               <div>
@@ -536,7 +529,6 @@ function ReviewTenantProfile(props) {
               <div className="mx-3 mb-4 px-5">None uploaded</div>
             )}
           </Row>
-
           <Row
             className="m-3"
             style={{
@@ -810,7 +802,6 @@ function ReviewTenantProfile(props) {
               )}
             </div>
           </Row>
-
           {/* =======================================Application
           Occupants================================================ */}
           {/* <Row className="m-3">
@@ -888,7 +879,6 @@ function ReviewTenantProfile(props) {
               />
             </div>
           </div>
-
           {/* =======================================Send Button================================================ */}
           <Row className="m-3">
             <Col
@@ -908,11 +898,11 @@ function ReviewTenantProfile(props) {
               </Button>
             </Col>
           </Row>
-        </div>
-      </div>
-      <div hidden={responsive.showSidebar} className="w-100 mt-3">
-        <TenantFooter />
-      </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <TenantFooter />
+          </div>{" "}
+        </Col>
+      </Row>
     </div>
   );
 }

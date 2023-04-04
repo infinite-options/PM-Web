@@ -19,6 +19,7 @@ import {
   activeTimeSlotButton,
   bluePillButton,
   subText,
+  sidebarStyle,
 } from "../../utils/styles";
 import { put } from "../../utils/api";
 import "./calendar.css";
@@ -809,18 +810,12 @@ function MaintenanceScheduleRepair(props) {
   // console.log(quotes);
   return (
     <div className="w-100 overflow-hidden">
-      <div className="flex-1">
-        <div
-          hidden={!responsive.showSidebar}
-          style={{
-            backgroundColor: "#229ebc",
-            width: "11rem",
-            minHeight: "100%",
-          }}
-        >
+      <Row>
+        {" "}
+        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
-        </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        </Col>
+        <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title={`Schedule Repair with a${
               quotes.rentalInfo.length > 0
@@ -1017,8 +1012,8 @@ function MaintenanceScheduleRepair(props) {
           <div hidden={responsive.showSidebar} className="w-100 mt-3">
             <MaintenanceFooter />
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   );
 }
