@@ -68,6 +68,10 @@ function MessageDialog(props) {
             <DialogContentText id="alert-dialog-description">
               {senderPhone}
             </DialogContentText>
+            <Form.Label as="h6">Receiver Phone</Form.Label>
+            <DialogContentText id="alert-dialog-description">
+              {receiverPhone}
+            </DialogContentText>
             <Form.Label as="h6">Message Subject</Form.Label>
             <Form.Control
               style={squareForm}
