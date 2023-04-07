@@ -53,6 +53,7 @@ import ManagerDashboard from "./components/managerComponents/ManagerDashboard"; 
 import Homepage from "./landingPages/Homepage";
 import LandingNavbar from "./pages/LandingNavbar";
 import RenterLanding from "./landingPages/renterLanding";
+import SignupToApply from "./landingPages/SignupToApply";
 import OwnersTab from "./landingPages/OwnersTab";
 import ManagerLanding from "./landingPages/ManagerLanding";
 import ContactTab from "./landingPages/ContactTab";
@@ -230,6 +231,8 @@ function App() {
               element={<ManagerPaymentPage />}
             />
             <Route path="renterLanding" element={<RenterLanding />} />
+            <Route path="SignupToApply" element={<SignupToApply />} />
+
             <Route path="PaymentPage" element={<PaymentPage />} />
             <Route
               path="ownerPaymentHistory"

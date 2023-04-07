@@ -13,8 +13,8 @@ export default function PropertyCard(props) {
   const navigate = useNavigate();
 
   const goToApplyToProperty = () => {
-    // navigate("/applyToProperty");
-    navigate(`/propertyApplicationView/${props.property_uid}`);
+    navigate("/SignupToApply");
+    // navigate(`/propertyApplicationView/${props.property_uid}`);
   };
   // const goToPropertyInfo = () => {
   //   navigate("/propertyInfo", {
