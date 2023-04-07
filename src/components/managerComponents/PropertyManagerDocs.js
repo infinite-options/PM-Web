@@ -10,11 +10,15 @@ import {
 } from "@material-ui/core";
 import * as ReactBootStrap from "react-bootstrap";
 import { makeStyles } from "@material-ui/core/styles";
-import MailDialog from "../MailDialog";
+import MailDialogContact from "../MailDialog";
+import MessageDialogContact from "../MessageDialog";
+import MailDialogOwner from "../MailDialog";
+import MessageDialogOwner from "../MessageDialog";
 import AppContext from "../../AppContext";
 import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
 import EditIconNew from "../../icons/EditIconNew.svg";
 import { get, put } from "../../utils/api";
 import {
@@ -65,9 +69,23 @@ function PropertyManagerDocs(props) {
   const [activeContract, setActiveContract] = useState(null);
   const [businesses, setBusinesses] = useState([]);
   const [addPropertyManager, setAddPropertyManager] = useState(false);
-  const [showMailForm, setShowMailForm] = useState(false);
-  const onCancel = () => {
-    setShowMailForm(false);
+  const [selectedContact, setSelectedContact] = useState("");
+  const [showMailFormContact, setShowMailFormContact] = useState(false);
+  const [showMessageFormContact, setShowMessageFormContact] = useState(false);
+  const onCancelContactMail = () => {
+    setShowMailFormContact(false);
+  };
+  const onCancelContactMessage = () => {
+    setShowMessageFormContact(false);
+  };
+  const [selectedOwner, setSelectedOwner] = useState("");
+  const [showMailFormOwner, setShowMailFormOwner] = useState(false);
+  const [showMessageFormOwner, setShowMessageFormOwner] = useState(false);
+  const onCancelOwnerMail = () => {
+    setShowMailFormOwner(false);
+  };
+  const onCancelOwnerMessage = () => {
+    setShowMessageFormOwner(false);
   };
 
   const rejectManagement = async () => {
@@ -217,18 +235,68 @@ function PropertyManagerDocs(props) {
           <Col xs={2}></Col>
         )}
       </Row>
-      <MailDialog
-        title={"Message"}
-        isOpen={showMailForm}
+
+      <MailDialogContact
+        title={"Email"}
+        isOpen={showMailFormContact}
         senderPhone={user.phone_number}
         senderEmail={user.email}
         senderName={user.first_name + " " + user.last_name}
         requestCreatedBy={user.user_uid}
-        userMessaged={property.owner_id}
+        userMessaged={
+          selectedContact.first_name + " " + selectedContact.last_name
+        }
+        receiverEmail={selectedContact.email}
+        receiverPhone={selectedContact.phone_number}
+        onCancel={onCancelContactMail}
+      />
+
+      <MessageDialogContact
+        title={"Text Message"}
+        isOpen={showMessageFormContact}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={
+          selectedContact.first_name + " " + selectedContact.last_name
+        }
+        receiverEmail={selectedContact.email}
+        receiverPhone={selectedContact.phone_number}
+        onCancel={onCancelContactMessage}
+      />
+      <MailDialogOwner
+        title={"Email"}
+        isOpen={showMailFormOwner}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={
+          selectedOwner.owner_first_name + " " + selectedOwner.owner_last_name
+        }
         receiverEmail={
           property.owner_id !== "" ? property.owner[0].owner_email : ""
         }
-        onCancel={onCancel}
+        receiverPhone={selectedOwner.owmer_phone_number}
+        onCancel={onCancelOwnerMail}
+      />
+
+      <MessageDialogOwner
+        title={"Text Message"}
+        isOpen={showMessageFormOwner}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={
+          selectedOwner.owner_first_name + " " + selectedOwner.owner_last_name
+        }
+        receiverEmail={
+          property.owner_id !== "" ? property.owner[0].owner_email : ""
+        }
+        receiverPhone={selectedOwner.owmer_phone_number}
+        onCancel={onCancelOwnerMessage}
       />
 
       {(property.management_status === "ACCEPTED" ||
@@ -300,9 +368,25 @@ function PropertyManagerDocs(props) {
                         </a>
                       </Col>
                       <Col className="d-flex justify-content-center">
-                        <a onClick={() => setShowMailForm(true)}>
+                        <a
+                          onClick={() => {
+                            setShowMessageFormOwner(true);
+                            setSelectedOwner(property.owner[0]);
+                          }}
+                        >
                           {/*  href={`mailto:${property.owner[0].owner_email}`}> */}
                           <img src={Message} alt="Message" style={smallImg} />
+                        </a>
+                      </Col>
+                      <Col className="d-flex justify-content-center">
+                        <a
+                          onClick={() => {
+                            setShowMailFormOwner(true);
+                            setSelectedOwner(property.owner[0]);
+                          }}
+                        >
+                          {/*  href={`mailto:${property.owner[0].owner_email}`}> */}
+                          <img src={Mail} alt="Mail" style={smallImg} />
                         </a>
                       </Col>
                     </Row>
@@ -373,8 +457,22 @@ function PropertyManagerDocs(props) {
                         <a href={`tel:${contact.phone_number}`}>
                           <img src={Phone} alt="Phone" style={smallImg} />
                         </a>
-                        <a href={`mailto:${contact.email}`}>
+
+                        <a
+                          onClick={() => {
+                            setShowMessageFormContact(true);
+                            setSelectedContact(contact);
+                          }}
+                        >
                           <img src={Message} alt="Message" style={smallImg} />
+                        </a>
+                        <a
+                          onClick={() => {
+                            setShowMailFormContact(true);
+                            setSelectedContact(contact);
+                          }}
+                        >
+                          <img src={Mail} alt="Mail" style={smallImg} />
                         </a>
                       </TableCell>
                     </TableRow>

@@ -19,6 +19,8 @@ import SideBar from "./SideBar";
 import Header from "../Header";
 import AppContext from "../../AppContext";
 import TenantFooter from "./TenantFooter";
+import MailDialogManager from "../MailDialog";
+import MessageDialogManager from "../MessageDialog";
 import TenantUpcomingPayments from "./TenantUpcomingPayments";
 import TenantPaymentHistory from "./TenantPaymentHistory";
 import TenantRepairRequest from "./TenantRepairRequest";
@@ -26,6 +28,7 @@ import ConfirmDialog2 from "../ConfirmDialog2";
 import SearchProperties_Black from "../../icons/SearchProperties_Black.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
 import AddIcon from "../../icons/AddIcon.svg";
 import PropertyIcon from "../../icons/PropertyIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
@@ -66,7 +69,15 @@ export default function TenantDashboard() {
   const [applicationStatus, setApplicationStatus] = useState("");
   const [maintenanceStatus, setMaintenanceStatus] = useState("");
   const [announcementsArrival, setAnnouncementsArrival] = useState("");
-
+  const [selectedManager, setSelectedManager] = useState("");
+  const [showMessageFormManager, setShowMessageFormManager] = useState(false);
+  const [showMailFormManager, setShowMailFormManager] = useState(false);
+  const onCancelManagerMail = () => {
+    setShowMailFormManager(false);
+  };
+  const onCancelManagerMessage = () => {
+    setShowMessageFormManager(false);
+  };
   // // search variables
   // const [search, setSearch] = useState("");
   // // sorting variables
@@ -114,13 +125,13 @@ export default function TenantDashboard() {
       return;
     }
     const check = await get("/CheckTenantProfileComplete", access_token);
-    console.log("check", check);
+    // console.log("check", check);
     if (check["message"] === "Incomplete Profile") {
       setShowDialog(true);
     }
 
     const response = await get("/tenantDashboard", access_token);
-    console.log("response", response);
+    // console.log("response", response);
     if (
       response.msg === "Token has expired" ||
       check.message === "Token has expired"
@@ -346,7 +357,7 @@ export default function TenantDashboard() {
       ? (a, b) => descendingComparator(a, b, orderBy)
       : (a, b) => -descendingComparator(a, b, orderBy);
   }
-  console.log(tenantData);
+  // console.log(tenantData);
 
   function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
@@ -741,6 +752,30 @@ export default function TenantDashboard() {
 
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
+      <MailDialogManager
+        title={"Email"}
+        isOpen={showMailFormManager}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedManager.manager_id}
+        receiverEmail={selectedManager.manager_email}
+        receiverPhone={selectedManager.manager_phone_number}
+        onCancel={onCancelManagerMail}
+      />
+      <MessageDialogManager
+        title={"Text Message"}
+        isOpen={showMessageFormManager}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedManager.manager_id}
+        receiverEmail={selectedManager.manager_email}
+        receiverPhone={selectedManager.manager_phone_number}
+        onCancel={onCancelManagerMessage}
+      />
       <ConfirmDialog2
         title={"Please Complete your Profile"}
         isOpen={showDialog}
@@ -1560,12 +1595,26 @@ export default function TenantDashboard() {
                             <a href={`tel:${manager.manager_phone_number}`}>
                               <img src={Phone} alt="Phone" style={smallImg} />
                             </a>
-                            <a href={`mailto:${manager.manager_email}`}>
+                            <a
+                              onClick={() => {
+                                setShowMessageFormManager(true);
+                                setSelectedManager(manager);
+                              }}
+                            >
                               <img
                                 src={Message}
                                 alt="Message"
                                 style={smallImg}
                               />
+                            </a>
+                            <a
+                              // href={`mailto:${tf.tenantEmail}`}
+                              onClick={() => {
+                                setShowMailFormManager(true);
+                                setSelectedManager(manager);
+                              }}
+                            >
+                              <img src={Mail} alt="Mail" style={smallImg} />
                             </a>
                           </TableCell>
                         </TableRow>

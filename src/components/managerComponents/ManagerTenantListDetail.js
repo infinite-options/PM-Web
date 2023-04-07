@@ -17,9 +17,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import moment from "moment";
 import SideBar from "./SideBar";
 import Header from "../Header";
+import AppContext from "../../AppContext";
+import MailDialogTenant from "../MailDialog";
+import MessageDialogTenant from "../MessageDialog";
 import ManagerFooter from "./ManagerFooter";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import { put } from "../../utils/api";
 import {
@@ -52,12 +56,24 @@ function ManagerTenantListDetail(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const classes = useStyles();
+  const { userData, ably } = useContext(AppContext);
+  const { access_token, user } = userData;
   // sorting variables
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [showDL, setShowDL] = useState(true);
   const [showSSN, setShowSSN] = useState(true);
   const selectedTenant = location.state.selectedTenant;
+
+  const [managementBusiness, setManagementBusiness] = useState("");
+  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [showMailForm, setShowMailForm] = useState(false);
+  const onCancelMail = () => {
+    setShowMailForm(false);
+  };
+  const onCancelMessage = () => {
+    setShowMessageForm(false);
+  };
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -72,6 +88,18 @@ function ManagerTenantListDetail(props) {
   const responsive = {
     showSidebar: width > 1023,
   };
+  useEffect(() => {
+    let business_uid = "";
+    for (const business of userData.user.businesses) {
+      if (business.business_type === "MANAGEMENT") {
+        business_uid = business.business_uid;
+        setManagementBusiness(business);
+        break;
+      }
+    }
+    if (business_uid === "") {
+    }
+  }, []);
 
   const paymentsByMonth = {};
   for (const payment of selectedTenant.user_payments) {
@@ -236,7 +264,32 @@ function ManagerTenantListDetail(props) {
   // console.log(selectedTenant);
 
   return (
-    <div>
+    <div className="w-100 overflow-hidden">
+      <MailDialogTenant
+        title={"Email"}
+        isOpen={showMailForm}
+        senderPhone={managementBusiness.business_phone_number}
+        senderEmail={managementBusiness.business_email}
+        senderName={managementBusiness.business_name}
+        requestCreatedBy={managementBusiness.business_uid}
+        userMessaged={selectedTenant.tenant_id}
+        receiverEmail={selectedTenant.tenant_email}
+        receiverPhone={selectedTenant.tenant_phone_number}
+        onCancel={onCancelMail}
+      />
+
+      <MessageDialogTenant
+        title={"Text Message"}
+        isOpen={showMessageForm}
+        senderPhone={managementBusiness.business_phone_number}
+        senderEmail={managementBusiness.business_email}
+        senderName={managementBusiness.business_name}
+        requestCreatedBy={managementBusiness.business_uid}
+        userMessaged={selectedTenant.tenant_id}
+        receiverEmail={selectedTenant.tenant_email}
+        receiverPhone={selectedTenant.tenant_phone_number}
+        onCancel={onCancelMessage}
+      />
       <Row>
         {" "}
         <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
@@ -337,12 +390,25 @@ function ManagerTenantListDetail(props) {
                             >
                               <img src={Phone} alt="Phone" style={smallImg} />
                             </a>
-                            <a href={`mailto:${selectedTenant.tenant_email}`}>
+                            <a
+                              onClick={() => {
+                                setShowMessageForm(true);
+                                // setSelectedTenant(tf);
+                              }}
+                            >
                               <img
                                 src={Message}
                                 alt="Message"
                                 style={smallImg}
                               />
+                            </a>
+                            <a
+                              onClick={() => {
+                                setShowMailForm(true);
+                                // setSelectedTenant(tf);
+                              }}
+                            >
+                              <img src={Mail} alt="Mail" style={smallImg} />
                             </a>
                           </div>
                         </div>

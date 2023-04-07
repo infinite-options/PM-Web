@@ -30,11 +30,16 @@ import OwnerCashflow from "./OwnerCashflow";
 import ConfirmDialog from "../ConfirmDialog";
 import BusinessContact from "../BusinessContact";
 import ManagerFees from "../ManagerFees";
+import MailDialogManager from "../MailDialog";
+import MessageDialogManager from "../MessageDialog";
+import MailDialogTenant from "../MailDialog";
+import MessageDialogTenant from "../MessageDialog";
 import SideBar from "./SideBar";
 import AppContext from "../../AppContext";
 import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
 import EditIconNew from "../../icons/EditIconNew.svg";
 import AddIcon from "../../icons/AddIcon.svg";
 import PropertyIcon from "../../icons/PropertyIcon.svg";
@@ -100,6 +105,25 @@ function OwnerPropertyView(props) {
     },
   };
   const [editAppliances, setEditAppliances] = useState(false);
+  const [selectedManager, setSelectedManager] = useState("");
+  const [showMailFormManager, setShowMailFormManager] = useState(false);
+  const [showMessageFormManager, setShowMessageFormManager] = useState(false);
+  const onCancelManagerMail = () => {
+    setShowMailFormManager(false);
+  };
+  const onCancelManagerMessage = () => {
+    setShowMessageFormManager(false);
+  };
+
+  const [selectedTenant, setSelectedTenant] = useState("");
+  const [showMailFormTenant, setShowMailFormTenant] = useState(false);
+  const [showMessageFormTenant, setShowMessageFormTenant] = useState(false);
+  const onCancelTenantMail = () => {
+    setShowMailFormTenant(false);
+  };
+  const onCancelTenantMessage = () => {
+    setShowMessageFormTenant(false);
+  };
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -255,11 +279,13 @@ function OwnerPropertyView(props) {
     let ti = {};
     response.result[0].rentalInfo.map((rentalInfo) => {
       if (rentalInfo.tenant_first_name.includes(",")) {
+        let tenant_ids = rentalInfo.tenant_id.split(",");
         let tenant_fns = rentalInfo.tenant_first_name.split(",");
         let tenant_lns = rentalInfo.tenant_last_name.split(",");
         let tenant_emails = rentalInfo.tenant_email.split(",");
         let tenant_phones = rentalInfo.tenant_phone_number.split(",");
         for (let i = 0; i < tenant_fns.length; i++) {
+          ti["tenantId"] = tenant_ids[i];
           ti["tenantFirstName"] = tenant_fns[i];
           ti["tenantLastName"] = tenant_lns[i];
           ti["tenantEmail"] = tenant_emails[i];
@@ -269,6 +295,7 @@ function OwnerPropertyView(props) {
         }
       } else {
         ti = {
+          tenantId: rentalInfo.tenant_id,
           tenantFirstName: rentalInfo.tenant_first_name,
           tenantLastName: rentalInfo.tenant_last_name,
           tenantEmail: rentalInfo.tenant_email,
@@ -703,7 +730,7 @@ function OwnerPropertyView(props) {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
-  // console.log(cashflowData);
+  console.log(selectedTenant);
 
   return Object.keys(property).length > 1 ? (
     showManagementContract ? (
@@ -715,6 +742,56 @@ function OwnerPropertyView(props) {
       />
     ) : (
       <div className="w-100">
+        <MailDialogManager
+          title={"Email"}
+          isOpen={showMailFormManager}
+          senderPhone={user.phone_number}
+          senderEmail={user.email}
+          senderName={user.first_name + " " + user.last_name}
+          requestCreatedBy={user.user_uid}
+          userMessaged={selectedManager.manager_id}
+          receiverEmail={selectedManager.manager_email}
+          receiverPhone={selectedManager.manager_phone_number}
+          onCancel={onCancelManagerMail}
+        />
+
+        <MessageDialogManager
+          title={"Text Message"}
+          isOpen={showMessageFormManager}
+          senderPhone={user.phone_number}
+          senderEmail={user.email}
+          senderName={user.first_name + " " + user.last_name}
+          requestCreatedBy={user.user_uid}
+          userMessaged={selectedManager.manager_id}
+          receiverEmail={selectedManager.manager_email}
+          receiverPhone={selectedManager.manager_phone_number}
+          onCancel={onCancelManagerMessage}
+        />
+        <MailDialogTenant
+          title={"Email"}
+          isOpen={showMailFormTenant}
+          senderPhone={user.phone_number}
+          senderEmail={user.email}
+          senderName={user.first_name + " " + user.last_name}
+          requestCreatedBy={user.user_uid}
+          userMessaged={selectedTenant.tenant_id}
+          receiverEmail={selectedTenant.tenantEmail}
+          receiverPhone={selectedTenant.tenantPhoneNumber}
+          onCancel={onCancelTenantMail}
+        />
+
+        <MessageDialogTenant
+          title={"Text Message"}
+          isOpen={showMessageFormTenant}
+          senderPhone={user.phone_number}
+          senderEmail={user.email}
+          senderName={user.first_name + " " + user.last_name}
+          requestCreatedBy={user.user_uid}
+          userMessaged={selectedTenant.tenant_id}
+          receiverEmail={selectedTenant.tenantEmail}
+          receiverPhone={selectedTenant.tenantPhoneNumber}
+          onCancel={onCancelTenantMessage}
+        />
         <ConfirmDialog
           title={"Are you sure you want to reject this Property Manager?"}
           isOpen={showDialog}
@@ -1789,11 +1866,31 @@ function OwnerPropertyView(props) {
                                       />
                                     </a>
                                     <a
-                                      href={`mailto:${property.managerInfo.manager_email}`}
+                                      onClick={() => {
+                                        setShowMessageFormManager(true);
+                                        setSelectedManager(
+                                          property.managerInfo
+                                        );
+                                      }}
                                     >
                                       <img
                                         src={Message}
                                         alt="Message"
+                                        style={smallImg}
+                                      />
+                                    </a>
+                                    <a
+                                      // href={`mailto:${tf.tenantEmail}`}
+                                      onClick={() => {
+                                        setShowMailFormManager(true);
+                                        setSelectedManager(
+                                          property.managerInfo
+                                        );
+                                      }}
+                                    >
+                                      <img
+                                        src={Mail}
+                                        alt="Mail"
                                         style={smallImg}
                                       />
                                     </a>
@@ -2122,12 +2219,26 @@ function OwnerPropertyView(props) {
                                     style={smallImg}
                                   />
                                 </a>
-                                <a href={`mailto:${p.manager_email}`}>
+                                <a
+                                  onClick={() => {
+                                    setShowMessageFormManager(true);
+                                    setSelectedManager(p);
+                                  }}
+                                >
                                   <img
                                     src={Message}
                                     alt="Message"
                                     style={smallImg}
                                   />
+                                </a>
+                                <a
+                                  // href={`mailto:${tf.tenantEmail}`}
+                                  onClick={() => {
+                                    setShowMailFormManager(true);
+                                    setSelectedManager(p);
+                                  }}
+                                >
+                                  <img src={Mail} alt="Mail" style={smallImg} />
                                 </a>
                               </Col>
                             </Row>
@@ -2291,13 +2402,29 @@ function OwnerPropertyView(props) {
                               <img src={Phone} alt="Phone" style={smallImg} />
                             </a>
                             <a
-                              href={`mailto:${property.property_manager[0].manager_email}`}
+                              onClick={() => {
+                                setShowMessageFormManager(true);
+                                setSelectedManager(
+                                  property.property_manager[0]
+                                );
+                              }}
                             >
                               <img
                                 src={Message}
                                 alt="Message"
                                 style={smallImg}
                               />
+                            </a>
+                            <a
+                              // href={`mailto:${tf.tenantEmail}`}
+                              onClick={() => {
+                                setShowMailFormManager(true);
+                                setSelectedManager(
+                                  property.property_manager[0]
+                                );
+                              }}
+                            >
+                              <img src={Mail} alt="Mail" style={smallImg} />
                             </a>
                           </Col>
                         </Row>
@@ -2515,11 +2642,31 @@ function OwnerPropertyView(props) {
                                         />
                                       </a>
                                       <a
-                                        href={`mailto:${property.managerInfo.manager_email}`}
+                                        onClick={() => {
+                                          setShowMessageFormManager(true);
+                                          setSelectedManager(
+                                            property.managerInfo
+                                          );
+                                        }}
                                       >
                                         <img
                                           src={Message}
                                           alt="Message"
+                                          style={smallImg}
+                                        />
+                                      </a>
+                                      <a
+                                        // href={`mailto:${tf.tenantEmail}`}
+                                        onClick={() => {
+                                          setShowMailFormManager(true);
+                                          setSelectedManager(
+                                            property.managerInfo
+                                          );
+                                        }}
+                                      >
+                                        <img
+                                          src={Mail}
+                                          alt="Mail"
                                           style={smallImg}
                                         />
                                       </a>
@@ -2762,11 +2909,27 @@ function OwnerPropertyView(props) {
                                     />
                                   </a>
                                   <a
-                                    href={`mailto:${property.managerInfo.manager_email}`}
+                                    onClick={() => {
+                                      setShowMessageFormManager(true);
+                                      setSelectedManager(property.managerInfo);
+                                    }}
                                   >
                                     <img
                                       src={Message}
                                       alt="Message"
+                                      style={smallImg}
+                                    />
+                                  </a>
+                                  <a
+                                    // href={`mailto:${tf.tenantEmail}`}
+                                    onClick={() => {
+                                      setShowMailFormManager(true);
+                                      setSelectedManager(property.managerInfo);
+                                    }}
+                                  >
+                                    <img
+                                      src={Mail}
+                                      alt="Mail"
                                       style={smallImg}
                                     />
                                   </a>
@@ -3045,11 +3208,29 @@ function OwnerPropertyView(props) {
                                                 />
                                               </a>
                                               <a
-                                                href={`mailto:${tf.tenantEmail}`}
+                                                onClick={() => {
+                                                  setShowMessageFormTenant(
+                                                    true
+                                                  );
+                                                  setSelectedTenant(tf);
+                                                }}
                                               >
                                                 <img
                                                   src={Message}
                                                   alt="Message"
+                                                  style={smallImg}
+                                                />
+                                              </a>
+                                              <a
+                                                // href={`mailto:${tf.tenantEmail}`}
+                                                onClick={() => {
+                                                  setShowMailFormTenant(true);
+                                                  setSelectedTenant(tf);
+                                                }}
+                                              >
+                                                <img
+                                                  src={Mail}
+                                                  alt="Mail"
                                                   style={smallImg}
                                                 />
                                               </a>

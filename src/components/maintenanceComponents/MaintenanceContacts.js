@@ -16,6 +16,8 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import Header from "../Header";
 import SideBar from "./SideBar";
+import MailDialogManager from "../MailDialog";
+import MessageDialogManager from "../MessageDialog";
 import MaintenanceFooter from "./MaintenanceFooter";
 import AppContext from "../../AppContext";
 import Phone from "../../icons/Phone.svg";
@@ -62,7 +64,16 @@ function MaintenanceContacts() {
   // sorting variables
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
-
+  const [selectedManager, setSelectedManager] = useState("");
+  const [maintenanceBusiness, setMaintenanceBusiness] = useState("");
+  const [showMailFormManager, setShowMailFormManager] = useState(false);
+  const [showMessageFormManager, setShowMessageFormManager] = useState(false);
+  const onCancelManagerMail = () => {
+    setShowMailFormManager(false);
+  };
+  const onCancelManagerMessage = () => {
+    setShowMessageFormManager(false);
+  };
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -83,7 +94,7 @@ function MaintenanceContacts() {
     for (const business of userData.user.businesses) {
       if (business.business_type === "MAINTENANCE") {
         business_uid = business.business_uid;
-
+        setMaintenanceBusiness(business);
         break;
       }
     }
@@ -255,9 +266,34 @@ function MaintenanceContacts() {
     ) : (
       ""
     );
-
+  // console.log(userData);
   return (
     <div className="w-100 overflow-hidden">
+      <MailDialogManager
+        title={"Email"}
+        isOpen={showMailFormManager}
+        senderPhone={maintenanceBusiness.business_phone_number}
+        senderEmail={maintenanceBusiness.business_email}
+        senderName={maintenanceBusiness.business_name}
+        requestCreatedBy={maintenanceBusiness.business_uid}
+        userMessaged={selectedManager.first_name}
+        receiverEmail={selectedManager.contact_email}
+        receiverPhone={selectedManager.contact_phone_number}
+        onCancel={onCancelManagerMail}
+      />
+
+      <MessageDialogManager
+        title={"Text Message"}
+        isOpen={showMessageFormManager}
+        senderPhone={maintenanceBusiness.business_phone_number}
+        senderEmail={maintenanceBusiness.business_email}
+        senderName={maintenanceBusiness.business_name}
+        requestCreatedBy={maintenanceBusiness.business_uid}
+        userMessaged={selectedManager.first_name}
+        receiverEmail={selectedManager.contact_email}
+        receiverPhone={selectedManager.contact_phone_number}
+        onCancel={onCancelManagerMessage}
+      />
       <Row>
         {" "}
         <Col
@@ -511,7 +547,10 @@ function MaintenanceContacts() {
                                         />
                                       </a>
                                       <a
-                                        href={`mailto:${property.contact_email}`}
+                                        onClick={() => {
+                                          setShowMessageFormManager(true);
+                                          setSelectedManager(property);
+                                        }}
                                       >
                                         <img
                                           src={Message}
@@ -520,7 +559,10 @@ function MaintenanceContacts() {
                                         />
                                       </a>
                                       <a
-                                        href={`mailto:${property.contact_email}`}
+                                        onClick={() => {
+                                          setShowMailFormManager(true);
+                                          setSelectedManager(property);
+                                        }}
                                       >
                                         <img
                                           src={Mail}

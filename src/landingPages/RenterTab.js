@@ -191,9 +191,9 @@ export default function RenterLanding() {
     rowCount: PropTypes.number.isRequired,
   };
 
-  const goToApplyToProperty = (pid) => {
+  const goToApplyToProperty = () => {
     // navigate("/applyToProperty");
-    navigate(`/propertyApplicationView/${pid}`);
+    navigate(`/SignupToApply`);
   };
 
   const mapProperty = featuredProperties?.map((prop, index) => {
@@ -298,9 +298,7 @@ export default function RenterLanding() {
                             {/* {console.log("im trying to print an apply button")} */}
                             <img
                               src={Apply}
-                              onClick={() =>
-                                goToApplyToProperty(property.property_uid)
-                              }
+                              onClick={() => goToApplyToProperty()}
                               alt="documentIcon"
                             />
                             <div className="mask flex-center">

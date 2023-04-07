@@ -8,7 +8,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { post } from "../utils/api";
 import { squareForm } from "../utils/styles";
-function MailDialog(props) {
+function MessageDialog(props) {
   const {
     title,
     isOpen,
@@ -38,7 +38,7 @@ function MailDialog(props) {
       receiver_phone: receiverPhone,
     };
     // console.log(newMessage);
-    const response = await post("/messageEmail", newMessage);
+    const response = await post("/messageText", newMessage);
     onCancel();
   };
   return (
@@ -101,4 +101,4 @@ function MailDialog(props) {
   );
 }
 
-export default MailDialog;
+export default MessageDialog;

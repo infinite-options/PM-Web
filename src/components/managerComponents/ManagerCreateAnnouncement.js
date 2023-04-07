@@ -45,6 +45,7 @@ function ManagerCreateAnnouncement(props) {
   const { userData, refresh, ably } = useContext(AppContext);
   const { access_token, user } = userData;
   const [properties, setProperties] = useState([]);
+  const [newTenants, setNewTenants] = useState([]);
   const [tenants, setTenants] = useState([]);
   const [owners, setOwners] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
@@ -54,10 +55,12 @@ function ManagerCreateAnnouncement(props) {
   const [newAnnouncement, setNewAnnouncement] = useState(null);
   const [editingAnnouncement, setEditingAnnouncement] = useState(false);
   const [propertyState, setPropertyState] = useState([]);
+  const [newTenantsState, setNewTenantsState] = useState([]);
   const [tenantState, setTenantState] = useState([]);
   const [ownerState, setOwnerState] = useState([]);
   const [byProperty, setByProperty] = useState(false);
   const [byTenants, setByTenants] = useState(false);
+  const [byNewTenants, setByNewTenants] = useState(false);
   const [byOwners, setByOwners] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const [announcementDetail, setAnnouncementDetail] = useState(false);
@@ -164,6 +167,13 @@ function ManagerCreateAnnouncement(props) {
       }
     });
     // console.log(properties_unique);
+    let new_tenant_info = [];
+    let new_tenant_details = {
+      tenant_id: "",
+      tenant_name: "",
+      address: "",
+      property_uid: "",
+    };
     let tenant_info = [];
     let tenant_details = {
       tenant_id: "",
@@ -179,6 +189,12 @@ function ManagerCreateAnnouncement(props) {
       property_uid: "",
     };
     properties_unique.forEach((property) => {
+      console.log(
+        property,
+        property.property_uid,
+        property.rentalInfo,
+        property.owner_id
+      );
       if (property.owner_id !== "") {
         owner_details = {
           owner_id: property.owner_id,
@@ -219,8 +235,31 @@ function ManagerCreateAnnouncement(props) {
           tenant_info.push(tenant_details);
         });
       }
+      if (property.rentalInfo === "Not Rented" || property.rentalInfo === "") {
+        property.applications.forEach((tenant) => {
+          new_tenant_details = {
+            tenant_id: tenant.tenant_id,
+            tenant_name:
+              tenant.tenant_first_name + " " + tenant.tenant_last_name,
+            property_uid: property.property_uid,
+            address:
+              property.address +
+              " " +
+              property.unit +
+              ", " +
+              property.city +
+              ", " +
+              property.state +
+              " " +
+              property.zip,
+          };
+          new_tenant_info.push(new_tenant_details);
+        });
+      }
     });
     // console.log(tenant_info);
+    setNewTenants(new_tenant_info);
+    setNewTenantsState(new_tenant_info);
     setTenants(tenant_info);
     setTenantState(tenant_info);
     setOwners(owner_info);
@@ -277,6 +316,12 @@ function ManagerCreateAnnouncement(props) {
         receiver_properties_id.push(tenant.property_uid);
       });
     }
+    if (byNewTenants) {
+      newAnnouncement.newTenants.forEach((tenant) => {
+        receiver_uid.push(tenant.tenant_id);
+        receiver_properties_id.push(tenant.property_uid);
+      });
+    }
     if (byOwners) {
       newAnnouncement.owners.forEach((owner) => {
         receiver_uid.push(owner.owner_id);
@@ -287,7 +332,9 @@ function ManagerCreateAnnouncement(props) {
       pm_id: managerID,
       announcement_title: newAnnouncement.announcement_title,
       announcement_msg: newAnnouncement.announcement_msg,
-      announcement_mode: byTenants
+      announcement_mode: byNewTenants
+        ? "New Tenants"
+        : byTenants
         ? "Tenants"
         : byProperty
         ? "Properties"
@@ -302,6 +349,8 @@ function ManagerCreateAnnouncement(props) {
 
     propertyState.forEach((prop) => (prop.checked = false));
     setPropertyState(propertyState);
+    newTenantsState.forEach((prop) => (prop.checked = false));
+    setNewTenantsState(newTenantsState);
     tenantState.forEach((prop) => (prop.checked = false));
     setTenantState(tenantState);
     ownerState.forEach((prop) => (prop.checked = false));
@@ -337,16 +386,25 @@ function ManagerCreateAnnouncement(props) {
       }
       newAnnouncement.properties = [...propertyState.filter((p) => p.checked)];
     }
+    if (byNewTenants) {
+      if (newTenantsState.filter((p) => p.checked).length < 1) {
+        setErrorMessage("Select at least one tenant");
+        return;
+      }
+      newAnnouncement.newTenants = [
+        ...newTenantsState.filter((p) => p.checked),
+      ];
+    }
     if (byTenants) {
       if (tenantState.filter((p) => p.checked).length < 1) {
-        setErrorMessage("Select at least one property");
+        setErrorMessage("Select at least one tenant");
         return;
       }
       newAnnouncement.tenants = [...tenantState.filter((p) => p.checked)];
     }
     if (byOwners) {
       if (ownerState.filter((p) => p.checked).length < 1) {
-        setErrorMessage("Select at least one property");
+        setErrorMessage("Select at least one owner");
         return;
       }
       newAnnouncement.owners = [...ownerState.filter((p) => p.checked)];
@@ -383,6 +441,11 @@ function ManagerCreateAnnouncement(props) {
     const newPropertyState = [...propertyState];
     newPropertyState[i].checked = !newPropertyState[i].checked;
     setPropertyState(newPropertyState);
+  };
+  const toggleNewTenant = (i) => {
+    const newTenantState = [...newTenantsState];
+    newTenantState[i].checked = !newTenantState[i].checked;
+    setNewTenantsState(newTenantState);
   };
   const toggleTenant = (i) => {
     const newTenantState = [...tenantState];
@@ -530,11 +593,14 @@ function ManagerCreateAnnouncement(props) {
               setNewAnnouncement(null);
               setAnnouncementDetail(false);
               propertyState.forEach((prop) => (prop.checked = false));
+              newTenantsState.forEach((prop) => (prop.checked = false));
               tenantState.forEach((prop) => (prop.checked = false));
               ownerState.forEach((prop) => (prop.checked = false));
+              setNewTenantsState(newTenantsState);
               setTenantState(tenantState);
               setOwnerState(ownerState);
               setPropertyState(propertyState);
+              setByNewTenants(false);
               setByProperty(false);
               setByTenants(false);
               setByOwners(false);
@@ -544,11 +610,14 @@ function ManagerCreateAnnouncement(props) {
             rightFn={() => {
               setNewAnnouncement({ ...emptyAnnouncement });
               propertyState.forEach((prop) => (prop.checked = false));
-              setPropertyState(propertyState);
+              newTenantsState.forEach((prop) => (prop.checked = false));
               tenantState.forEach((prop) => (prop.checked = false));
               ownerState.forEach((prop) => (prop.checked = false));
+              setPropertyState(propertyState);
+              setNewTenantsState(newTenantsState);
               setTenantState(tenantState);
               setOwnerState(ownerState);
+              setByNewTenants(false);
               setByProperty(false);
               setByTenants(false);
               setByOwners(false);
@@ -617,7 +686,7 @@ function ManagerCreateAnnouncement(props) {
                   </Col>
                 </Row>
                 <Row>
-                  <Col xs={4}>
+                  <Col xs={3}>
                     <Form.Group
                       className="mx-2 mb-3"
                       controlId="formBasicCheckbox"
@@ -635,13 +704,14 @@ function ManagerCreateAnnouncement(props) {
                             setByProperty(!byProperty);
                             setByTenants(false);
                             setByOwners(false);
+                            setByNewTenants(false);
                           }}
                         />
                         <p className="ms-1 mb-1">Tenants By Property</p>
                       </div>
                     </Form.Group>
                   </Col>
-                  <Col xs={4}>
+                  <Col xs={3}>
                     <Form.Group
                       className="mx-2 mb-3"
                       controlId="formBasicCheckbox"
@@ -660,13 +730,14 @@ function ManagerCreateAnnouncement(props) {
                             setByTenants(!byTenants);
                             setByProperty(false);
                             setByOwners(false);
+                            setByNewTenants(false);
                           }}
                         />
                         <p className="ms-1 mb-1">Tenants By Name</p>
                       </div>
                     </Form.Group>
                   </Col>
-                  <Col xs={4}>
+                  <Col xs={3}>
                     <Form.Group
                       className="mx-2 mb-3"
                       controlId="formBasicCheckbox"
@@ -685,9 +756,36 @@ function ManagerCreateAnnouncement(props) {
                             setByOwners(!byOwners);
                             setByProperty(false);
                             setByTenants(false);
+                            setByNewTenants(false);
                           }}
                         />
                         <p className="ms-1 mb-1">Owners By Name</p>
+                      </div>
+                    </Form.Group>
+                  </Col>
+                  <Col xs={3}>
+                    <Form.Group
+                      className="mx-2 mb-3"
+                      controlId="formBasicCheckbox"
+                    >
+                      <div
+                        className="d-flex mx-2 ps-2 align-items-center my-2"
+                        style={{
+                          font: "normal normal normal 18px Bahnschrift-Regular",
+                        }}
+                      >
+                        {" "}
+                        <Checkbox
+                          type="BOX"
+                          checked={byNewTenants}
+                          onClick={() => {
+                            setByNewTenants(!byNewTenants);
+                            setByProperty(false);
+                            setByTenants(false);
+                            setByOwners(false);
+                          }}
+                        />
+                        <p className="ms-1 mb-1">New Tenants By Name</p>
                       </div>
                     </Form.Group>
                   </Col>
@@ -771,6 +869,45 @@ function ManagerCreateAnnouncement(props) {
                                 type="BOX"
                                 checked={tenantState[i].checked}
                                 onClick={() => toggleTenant(i)}
+                              />
+                            </TableCell>
+
+                            <TableCell align="left">
+                              <p className="ms-1 mb-1">{tenant.tenant_name}</p>
+                            </TableCell>
+
+                            <TableCell align="left">{tenant.address}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                ) : (
+                  <div></div>
+                )}
+                {byNewTenants ? (
+                  <Row className="mx-1 mt-3 mb-2">
+                    <h6 style={mediumBold}>Tenants</h6>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell></TableCell>
+                          <TableCell align="left">Tenant</TableCell>
+                          <TableCell align="left">Address</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {newTenants.map((tenant, i) => (
+                          <TableRow key={i}>
+                            <TableCell>
+                              <Checkbox
+                                type="BOX"
+                                checked={newTenantsState[i].checked}
+                                onClick={() => toggleNewTenant(i)}
                               />
                             </TableCell>
 

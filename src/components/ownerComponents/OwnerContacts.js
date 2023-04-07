@@ -16,6 +16,8 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import Header from "../Header";
 import SideBar from "./SideBar";
+import MailDialogManager from "../MailDialog";
+import MessageDialogManager from "../MessageDialog";
 import OwnerFooter from "./OwnerFooter";
 import AppContext from "../../AppContext";
 import Phone from "../../icons/Phone.svg";
@@ -62,7 +64,15 @@ function OwnerContacts() {
   // sorting variables
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
-
+  const [selectedManager, setSelectedManager] = useState("");
+  const [showMailFormManager, setShowMailFormManager] = useState(false);
+  const [showMessageFormManager, setShowMessageFormManager] = useState(false);
+  const onCancelManagerMail = () => {
+    setShowMailFormManager(false);
+  };
+  const onCancelManagerMessage = () => {
+    setShowMessageFormManager(false);
+  };
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -254,6 +264,31 @@ function OwnerContacts() {
 
   return (
     <div className="w-100 overflow-hidden">
+      <MailDialogManager
+        title={"Email"}
+        isOpen={showMailFormManager}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedManager.contact_name}
+        receiverEmail={selectedManager.contact_email}
+        receiverPhone={selectedManager.contact_phone_number}
+        onCancel={onCancelManagerMail}
+      />
+
+      <MessageDialogManager
+        title={"Text Message"}
+        isOpen={showMessageFormManager}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedManager.contact_name}
+        receiverEmail={selectedManager.contact_email}
+        receiverPhone={selectedManager.contact_phone_number}
+        onCancel={onCancelManagerMessage}
+      />
       <Row>
         <Col
           xs={2}
@@ -506,7 +541,10 @@ function OwnerContacts() {
                                         />
                                       </a>
                                       <a
-                                        href={`mailto:${property.contact_email}`}
+                                        onClick={() => {
+                                          setShowMessageFormManager(true);
+                                          setSelectedManager(property);
+                                        }}
                                       >
                                         <img
                                           src={Message}
@@ -515,7 +553,11 @@ function OwnerContacts() {
                                         />
                                       </a>
                                       <a
-                                        href={`mailto:${property.contact_email}`}
+                                        // href={`mailto:${tf.tenantEmail}`}
+                                        onClick={() => {
+                                          setShowMailFormManager(true);
+                                          setSelectedManager(property);
+                                        }}
                                       >
                                         <img
                                           src={Mail}

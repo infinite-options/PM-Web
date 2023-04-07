@@ -11,6 +11,8 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import OwnerFooter from "./OwnerFooter";
 import AppContext from "../../AppContext";
+import MailDialogManager from "../MailDialog";
+import MessageDialogManager from "../MessageDialog";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import BlueFilledBox from "../../icons/BlueFilledBox.svg";
@@ -44,6 +46,16 @@ function PropertyManagersList(props) {
   const { access_token, user } = userData;
   const [propertyManagers, setPropertyManagers] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
+
+  const [selectedManager, setSelectedManager] = useState("");
+  const [showMailFormManager, setShowMailFormManager] = useState(false);
+  const [showMessageFormManager, setShowMessageFormManager] = useState(false);
+  const onCancelManagerMail = () => {
+    setShowMailFormManager(false);
+  };
+  const onCancelManagerMessage = () => {
+    setShowMessageFormManager(false);
+  };
   const [selectedPropertyManagers, setSelectedPropertyManagers] =
     useState(null);
   const [stage, setStage] = React.useState("LIST");
@@ -159,6 +171,31 @@ function PropertyManagersList(props) {
   };
   return stage === "LIST" ? (
     <div className="flex-1">
+      <MailDialogManager
+        title={"Email"}
+        isOpen={showMailFormManager}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedManager.business_uid}
+        receiverEmail={selectedManager.business_email}
+        receiverPhone={selectedManager.business_phone_number}
+        onCancel={onCancelManagerMail}
+      />
+
+      <MessageDialogManager
+        title={"Text Message"}
+        isOpen={showMessageFormManager}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedManager.business_uid}
+        receiverEmail={selectedManager.business_email}
+        receiverPhone={selectedManager.business_phone_number}
+        onCancel={onCancelManagerMessage}
+      />
       <div className="w-100  mb-5">
         <Row className="m-3">
           {propertyManagers.map((pm, i) => (
@@ -215,10 +252,21 @@ function PropertyManagersList(props) {
                       <a href={`tel:${pm.business_phone_number}`}>
                         <img src={Phone} alt="Phone" style={smallImg} />
                       </a>
-                      <a href={`mailto:${pm.business_email}`}>
+                      <a
+                        onClick={() => {
+                          setShowMessageFormManager(true);
+                          setSelectedManager(pm);
+                        }}
+                      >
                         <img src={Message} alt="Message" style={smallImg} />
                       </a>
-                      <a href={`mailto:${pm.business_email}`}>
+                      <a
+                        // href={`mailto:${tf.tenantEmail}`}
+                        onClick={() => {
+                          setShowMailFormManager(true);
+                          setSelectedManager(pm);
+                        }}
+                      >
                         <img src={Mail} alt="Mail" style={smallImg} />
                       </a>
                     </div>

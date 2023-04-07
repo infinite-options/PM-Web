@@ -1,19 +1,30 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import MailDialogManager from "./MailDialog";
+import MessageDialogManager from "./MessageDialog";
+import AppContext from "../AppContext";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
-import Document from "../icons/documents.svg";
+import Mail from "../icons/Mail.svg";
 import Apply from "../icons/ApplyIcon.svg";
-import ReApply from "../icons/ReApply.svg";
-import Check from "../icons/Check.svg";
-import { useNavigate } from "react-router-dom";
-import { greenPill, redPillButton } from "../utils/styles";
+
 import No_Image from "../icons/No_Image_Available.jpeg";
-import { fontSize } from "@mui/system";
 
 function PropertyCard(props) {
-  const { property, applied } = props;
   const navigate = useNavigate();
+  const { property, applied } = props;
+  const { userData, refresh } = useContext(AppContext);
+  const { access_token, user } = userData;
+  const [selectedManager, setSelectedManager] = useState("");
+  const [showMailFormManager, setShowMailFormManager] = useState(false);
+  const [showMessageFormManager, setShowMessageFormManager] = useState(false);
+  const onCancelManagerMail = () => {
+    setShowMailFormManager(false);
+  };
+  const onCancelManagerMessage = () => {
+    setShowMessageFormManager(false);
+  };
 
   const goToApplyToProperty = () => {
     // navigate("/applyToProperty");
@@ -23,14 +34,7 @@ function PropertyCard(props) {
     e.stopPropagation();
     e.preventDefault();
   };
-  // const goToPropertyInfo = () => {
-  //   navigate("/propertyInfo", {
-  //     state: {
-  //       property: props.property,
-  //     },
-  //   });
-  // };
-  // console.log(property);
+
   return (
     <div
       className="mx-3 my-3 p-2"
@@ -42,8 +46,33 @@ function PropertyCard(props) {
         borderRadius: "10px",
         opacity: 1,
       }}
-      onClick={goToApplyToProperty}
+      // onClick={goToApplyToProperty}
     >
+      <MailDialogManager
+        title={"Email"}
+        isOpen={showMailFormManager}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedManager.manager_id}
+        receiverEmail={selectedManager.manager_email}
+        receiverPhone={selectedManager.manager_phone_number}
+        onCancel={onCancelManagerMail}
+      />
+
+      <MessageDialogManager
+        title={"Text Message"}
+        isOpen={showMessageFormManager}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedManager.manager_id}
+        receiverEmail={selectedManager.manager_email}
+        receiverPhone={selectedManager.manager_phone_number}
+        onCancel={onCancelManagerMessage}
+      />
       <div className="img">
         {property.images && property.images.length > 0 ? (
           <img
@@ -105,7 +134,7 @@ function PropertyCard(props) {
           </Row>
           {/*//Remove property management*/}
         </div>
-        <Row className="btns" style={{ width: "250px" }}>
+        <Row className="btns" style={{ width: "350px" }}>
           {applied === "REFUSED" ? (
             <Col className="view overlay zoom" style={{ marginRight: "8px" }}>
               <img
@@ -150,11 +179,28 @@ function PropertyCard(props) {
           </Col>
           <Col>
             <img
-              onClick={() =>
-                (window.location.href = `mailto:${property.business_email}`)
-              }
+              onClick={() => {
+                setShowMessageFormManager(true);
+                setSelectedManager(property);
+              }}
               src={Message}
               alt="Message"
+              style={{ marginRight: "10px" }}
+            />
+            <div className="mask flex-center">
+              <p className="white-text" style={{ fontSize: "14px" }}>
+                Text
+              </p>
+            </div>
+          </Col>
+          <Col>
+            <img
+              onClick={() => {
+                setShowMailFormManager(true);
+                setSelectedManager(property);
+              }}
+              src={Mail}
+              alt="Mail"
               style={{ marginRight: "10px" }}
             />
             <div className="mask flex-center">

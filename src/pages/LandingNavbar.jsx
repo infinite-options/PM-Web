@@ -300,7 +300,7 @@ function LandingNavbar() {
                     Home
                   </Link>
                   <Link
-                    to="/buyparts"
+                    to="/ContactTab"
                     class="navButtons"
                     onClick={closeMenuProjects}
                   >
@@ -314,35 +314,35 @@ function LandingNavbar() {
                     Owners
                   </Link>
                   <Link
-                    to="/managerLanding"
+                    to="/ManagerTab"
                     class="navButtons"
                     onClick={closeMenuProjects}
                   >
                     Property Managers
                   </Link>
                   <Link
-                    to="/renterLanding"
+                    to="/RenterTab"
                     class="navButtons"
                     onClick={closeMenuProjects}
                   >
                     Renters
                   </Link>
                   <Link
-                    to="/addparts"
+                    to="/MaintenanceTab"
                     class="navButtons"
                     onClick={closeMenuProjects}
                   >
                     Maintenace
                   </Link>
                   <Link
-                    to="/inventory"
+                    to="/InvestorsTab"
                     class="navButtons"
                     onClick={closeMenuProjects}
                   >
                     Investors
                   </Link>
                   <Link
-                    to="/editpart"
+                    to="/BlogTab"
                     class="navButtons"
                     onClick={closeMenuProjects}
                   >

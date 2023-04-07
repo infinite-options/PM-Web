@@ -19,10 +19,12 @@ import moment from "moment";
 import SideBar from "./SideBar";
 import Header from "../Header";
 import ManagerFooter from "./ManagerFooter";
-import MailDialog from "../MailDialog";
+import MailDialogTenant from "../MailDialog";
+import MessageDialogTenant from "../MessageDialog";
 import AppContext from "../../AppContext";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import { get, put } from "../../utils/api";
 import {
@@ -59,9 +61,15 @@ function ManagerTenantList(props) {
   const [dueDate, setDueDate] = useState("1");
   const [rentDetails, setRentDetails] = useState([]);
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
+
+  const [managementBusiness, setManagementBusiness] = useState("");
+  const [showMessageForm, setShowMessageForm] = useState(false);
   const [showMailForm, setShowMailForm] = useState(false);
-  const onCancel = () => {
+  const onCancelMail = () => {
     setShowMailForm(false);
+  };
+  const onCancelMessage = () => {
+    setShowMessageForm(false);
   };
   // search variables
   const [search, setSearch] = useState("");
@@ -93,6 +101,7 @@ function ManagerTenantList(props) {
     const management_businesses = user.businesses.filter(
       (business) => business.business_type === "MANAGEMENT"
     );
+
     let management_buid = null;
     if (management_businesses.length < 1) {
       // console.log("No associated PM Businesses");
@@ -100,8 +109,10 @@ function ManagerTenantList(props) {
     } else if (management_businesses.length > 1) {
       // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
+      setManagementBusiness(management_businesses[0]);
     } else {
       management_buid = management_businesses[0].business_uid;
+      setManagementBusiness(management_businesses[0]);
     }
 
     const response = await get(
@@ -379,16 +390,30 @@ function ManagerTenantList(props) {
   return (
     <div className="w-100 overflow-hidden">
       <Row>
-        <MailDialog
-          title={"Message"}
+        <MailDialogTenant
+          title={"Email"}
           isOpen={showMailForm}
-          senderPhone={user.phone_number}
-          senderEmail={user.email}
-          senderName={user.first_name + " " + user.last_name}
-          requestCreatedBy={user.user_uid}
+          senderPhone={managementBusiness.business_phone_number}
+          senderEmail={managementBusiness.business_email}
+          senderName={managementBusiness.business_name}
+          requestCreatedBy={managementBusiness.business_uid}
           userMessaged={selectedTenant.tenant_id}
           receiverEmail={selectedTenant.tenant_email}
-          onCancel={onCancel}
+          receiverPhone={selectedTenant.tenant_phone_number}
+          onCancel={onCancelMail}
+        />
+
+        <MessageDialogTenant
+          title={"Text Message"}
+          isOpen={showMessageForm}
+          senderPhone={managementBusiness.business_phone_number}
+          senderEmail={managementBusiness.business_email}
+          senderName={managementBusiness.business_name}
+          requestCreatedBy={managementBusiness.business_uid}
+          userMessaged={selectedTenant.tenant_id}
+          receiverEmail={selectedTenant.tenant_email}
+          receiverPhone={selectedTenant.tenant_phone_number}
+          onCancel={onCancelMessage}
         />
         <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
@@ -552,13 +577,25 @@ function ManagerTenantList(props) {
                                   </a>
                                   <a
                                     onClick={() => {
-                                      setShowMailForm(true);
+                                      setShowMessageForm(true);
                                       setSelectedTenant(tenant);
                                     }}
                                   >
                                     <img
                                       src={Message}
                                       alt="Message"
+                                      style={smallImg}
+                                    />
+                                  </a>
+                                  <a
+                                    onClick={() => {
+                                      setShowMailForm(true);
+                                      setSelectedTenant(tenant);
+                                    }}
+                                  >
+                                    <img
+                                      src={Mail}
+                                      alt="Mail"
                                       style={smallImg}
                                     />
                                   </a>

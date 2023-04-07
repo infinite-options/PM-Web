@@ -261,9 +261,10 @@ function ManagerTenantRefusedAgreementView(props) {
         user_messaged: property.rentalInfo[0].tenant_id,
         message_status: "PENDING",
         receiver_email: property.rentalInfo[0].tenant_email,
+        receiver_phone: property.rentalInfo[0].tenant_phone_number,
       };
       // console.log(newMessage);
-      const responseMsg = await post("/message", newMessage);
+      const responseMsg = await post("/messageEmail", newMessage);
       channel_application.publish({ data: { te: request_body } });
       setShowSpinner(false);
       navigate("../manager");
@@ -280,9 +281,10 @@ function ManagerTenantRefusedAgreementView(props) {
         user_messaged: property.rentalInfo[0].tenant_id,
         message_status: "PENDING",
         receiver_email: property.rentalInfo[0].tenant_email,
+        receiver_phone: property.rentalInfo[0].tenant_phone_number,
       };
       // console.log(newMessage);
-      const responseMsg = await post("/message", newMessage);
+      const responseMsg = await post("/messageEmail", newMessage);
       channel_application.publish({ data: { te: request_body } });
       setTenantEndEarly(false);
       setShowSpinner(false);
@@ -313,9 +315,10 @@ function ManagerTenantRefusedAgreementView(props) {
       user_messaged: property.rentalInfo[0].tenant_id,
       message_status: "PENDING",
       receiver_email: property.rentalInfo[0].tenant_email,
+      receiver_phone: property.rentalInfo[0].tenant_phone_number,
     };
     // console.log(newMessage);
-    const responseMsg = await post("/message", newMessage);
+    const responseMsg = await post("/messageEmail", newMessage);
     setShowSpinner(false);
     setTerminateLease(false);
     setPmEndEarly(false);
@@ -340,9 +343,10 @@ function ManagerTenantRefusedAgreementView(props) {
       user_messaged: property.rentalInfo[0].tenant_id,
       message_status: "PENDING",
       receiver_email: property.rentalInfo[0].tenant_email,
+      receiver_phone: property.rentalInfo[0].tenant_phone_number,
     };
     // console.log(newMessage);
-    const responseMsg = await post("/message", newMessage);
+    const responseMsg = await post("/messageEmail", newMessage);
     setTenantExtendLease(false);
     setShowSpinner(false);
     closeAgreement();
@@ -367,6 +371,7 @@ function ManagerTenantRefusedAgreementView(props) {
             requestCreatedBy={user.user_uid}
             userMessaged={selectedTenant.tenantID}
             receiverEmail={selectedTenant.tenantEmail}
+            receiverPhone={selectedTenant.tenantPhoneNumber}
             onCancel={onCancel}
           />
           <MailDialogContact
@@ -378,6 +383,7 @@ function ManagerTenantRefusedAgreementView(props) {
             requestCreatedBy={user.user_uid}
             userMessaged={selectedContact.first_name}
             receiverEmail={selectedContact.email}
+            receiverPhone={selectedContact.phone_number}
             onCancel={onCancelContact}
           />
           {/* {console.log(agreement)} */}

@@ -17,10 +17,15 @@ import SideBar from "./SideBar";
 import MaintenanceFooter from "./MaintenanceFooter";
 import DetailQuoteRequest from "./DetailQuoteRequest";
 import MaintenanceQuoteScheduledDetail from "./MaintenanceQuoteScheduledDetail";
+import MailDialogManager from "../MailDialog";
+import MessageDialogManager from "../MessageDialog";
+import MailDialogOwner from "../MailDialog";
+import MessageDialogOwner from "../MessageDialog";
 import ImageModal from "../ImageModal";
 import AppContext from "../../AppContext";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
 import HighPriority from "../../icons/highPriority.svg";
 import MediumPriority from "../../icons/mediumPriority.svg";
 import LowPriority from "../../icons/lowPriority.svg";
@@ -88,6 +93,26 @@ export default function MaintenanceRequestView() {
     showSidebar: width > 1023,
   };
 
+  const [maintenanceBusiness, setMaintenanceBusiness] = useState("");
+  const [selectedManager, setSelectedManager] = useState("");
+  const [showMailFormManager, setShowMailFormManager] = useState(false);
+  const [showMessageFormManager, setShowMessageFormManager] = useState(false);
+  const onCancelManagerMail = () => {
+    setShowMailFormManager(false);
+  };
+  const onCancelManagerMessage = () => {
+    setShowMessageFormManager(false);
+  };
+  const [selectedOwner, setSelectedOwner] = useState("");
+  const [showMailFormOwner, setShowMailFormOwner] = useState(false);
+  const [showMessageFormOwner, setShowMessageFormOwner] = useState(false);
+  const onCancelOwnerMail = () => {
+    setShowMailFormOwner(false);
+  };
+  const onCancelOwnerMessage = () => {
+    setShowMessageFormOwner(false);
+  };
+
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -124,7 +149,7 @@ export default function MaintenanceRequestView() {
     for (const business of userData.user.businesses) {
       if (business.business_type === "MAINTENANCE") {
         business_uid = business.business_uid;
-
+        setMaintenanceBusiness(business);
         break;
       }
     }
@@ -188,6 +213,60 @@ export default function MaintenanceRequestView() {
   // console.log(quoteSent, quoteRejected, quote.quote_status);
   return (
     <div className="w-100 overflow-hidden">
+      <MailDialogManager
+        title={"Email"}
+        isOpen={showMailFormManager}
+        senderPhone={maintenanceBusiness.business_phone_number}
+        senderEmail={maintenanceBusiness.business_email}
+        senderName={maintenanceBusiness.business_name}
+        requestCreatedBy={maintenanceBusiness.business_uid}
+        userMessaged={selectedManager.manager_business_name}
+        receiverEmail={selectedManager.manager_email}
+        receiverPhone={selectedManager.manager_phone_number}
+        onCancel={onCancelManagerMail}
+      />
+
+      <MessageDialogManager
+        title={"Text Message"}
+        isOpen={showMessageFormManager}
+        senderPhone={maintenanceBusiness.business_phone_number}
+        senderEmail={maintenanceBusiness.business_email}
+        senderName={maintenanceBusiness.business_name}
+        requestCreatedBy={maintenanceBusiness.business_uid}
+        userMessaged={selectedManager.manager_business_name}
+        receiverEmail={selectedManager.manager_email}
+        receiverPhone={selectedManager.manager_phone_number}
+        onCancel={onCancelManagerMessage}
+      />
+      <MailDialogOwner
+        title={"Email"}
+        isOpen={showMailFormOwner}
+        senderPhone={maintenanceBusiness.business_phone_number}
+        senderEmail={maintenanceBusiness.business_email}
+        senderName={maintenanceBusiness.business_name}
+        requestCreatedBy={maintenanceBusiness.business_uid}
+        userMessaged={
+          selectedOwner.owner_first_name + " " + selectedOwner.owner_last_name
+        }
+        receiverEmail={selectedOwner.owmer_email}
+        receiverPhone={selectedOwner.owmer_phone_number}
+        onCancel={onCancelOwnerMail}
+      />
+
+      <MessageDialogOwner
+        title={"Text Message"}
+        isOpen={showMessageFormOwner}
+        senderPhone={maintenanceBusiness.business_phone_number}
+        senderEmail={maintenanceBusiness.business_email}
+        senderName={maintenanceBusiness.business_name}
+        requestCreatedBy={maintenanceBusiness.business_uid}
+        userMessaged={
+          selectedOwner.owner_first_name + " " + selectedOwner.owner_last_name
+        }
+        receiverEmail={selectedOwner.owmer_email}
+        receiverPhone={selectedOwner.owmer_phone_number}
+        onCancel={onCancelOwnerMessage}
+      />
       {!isLoading && quote !== null ? (
         <Row>
           <Col
@@ -865,12 +944,25 @@ export default function MaintenanceRequestView() {
                               <a href={`tel:${contact.owner_phone_number}`}>
                                 <img src={Phone} alt="Phone" style={smallImg} />
                               </a>
-                              <a href={`mailto:${contact.owner_email}`}>
+                              <a
+                                onClick={() => {
+                                  setShowMessageFormOwner(true);
+                                  setSelectedOwner(contact);
+                                }}
+                              >
                                 <img
                                   src={Message}
                                   alt="Message"
                                   style={smallImg}
                                 />
+                              </a>
+                              <a
+                                onClick={() => {
+                                  setShowMailFormOwner(true);
+                                  setSelectedOwner(contact);
+                                }}
+                              >
+                                <img src={Mail} alt="Mail" style={smallImg} />
                               </a>
                             </TableCell>
                           </TableRow>
@@ -890,12 +982,26 @@ export default function MaintenanceRequestView() {
                               <a href={`tel:${contact.manager_phone_number}`}>
                                 <img src={Phone} alt="Phone" style={smallImg} />
                               </a>
-                              <a href={`mailto:${contact.manager_email}`}>
+
+                              <a
+                                onClick={() => {
+                                  setShowMessageFormManager(true);
+                                  setSelectedManager(contact);
+                                }}
+                              >
                                 <img
                                   src={Message}
                                   alt="Message"
                                   style={smallImg}
                                 />
+                              </a>
+                              <a
+                                onClick={() => {
+                                  setShowMailFormManager(true);
+                                  setSelectedManager(contact);
+                                }}
+                              >
+                                <img src={Mail} alt="Mail" style={smallImg} />
                               </a>
                             </TableCell>
                           </TableRow>

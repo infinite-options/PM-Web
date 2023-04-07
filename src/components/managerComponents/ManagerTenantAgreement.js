@@ -330,6 +330,20 @@ function ManagerTenantAgreement(props) {
     newAgreement.rental_status = "PROCESSING";
     // console.log(newAgreement);
     const create_rental = await post("/rentals", newAgreement, null, files);
+    const newMessage = {
+      sender_name: property.managerInfo.manager_business_name,
+      sender_email: property.managerInfo.manager_email,
+      sender_phone: property.managerInfo.manager_phone_number,
+      message_subject: "New Lease Uploaded",
+      message_details: "PM has started the lease process",
+      message_created_by: property.managerInfo.manager_id,
+      user_messaged: property.rentalInfo[0].tenant_id,
+      message_status: "PENDING",
+      receiver_email: property.rentalInfo[0].tenant_email,
+      receiver_phone: property.rentalInfo[0].tenant_phone_number,
+    };
+    // console.log(newMessage);
+    const responseMsg = await post("/messageEmail", newMessage);
 
     setShowSpinner(false);
     back();
@@ -858,9 +872,10 @@ function ManagerTenantAgreement(props) {
           user_messaged: property.rentalInfo[0].tenant_id,
           message_status: "PENDING",
           receiver_email: property.rentalInfo[0].tenant_email,
+          receiver_phone: property.rentalInfo[0].tenant_phone_number,
         };
         // console.log(newMessage);
-        const responseMsg = await post("/message", newMessage);
+        const responseMsg = await post("/messageEmail", newMessage);
       } else {
         extendObject = {
           application_status: "FORWARDED",
@@ -870,6 +885,20 @@ function ManagerTenantAgreement(props) {
         extendObject.application_uid = acceptedTenantApplications.map(
           (application) => application.application_uid
         );
+        const newMessage = {
+          sender_name: property.managerInfo.manager_business_name,
+          sender_email: property.managerInfo.manager_email,
+          sender_phone: property.managerInfo.manager_phone_number,
+          message_subject: "New Lease Uploaded",
+          message_details: "PM has started the lease process",
+          message_created_by: property.managerInfo.manager_id,
+          user_messaged: property.rentalInfo[0].tenant_id,
+          message_status: "PENDING",
+          receiver_email: property.rentalInfo[0].tenant_email,
+          receiver_phone: property.rentalInfo[0].tenant_phone_number,
+        };
+        // console.log(newMessage);
+        const responseMsg = await post("/messageEmail", newMessage);
       }
 
       // console.log(extendObject);
