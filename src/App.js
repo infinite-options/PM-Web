@@ -55,6 +55,10 @@ import LandingNavbar from "./pages/LandingNavbar";
 import RenterLanding from "./landingPages/renterLanding";
 import OwnersTab from "./landingPages/OwnersTab";
 import ManagerLanding from "./landingPages/ManagerLanding";
+import ContactTab from "./landingPages/ContactTab";
+import InvestorsTab from "./landingPages/InvestorsTab";
+import BlogTab from "./landingPages/BlogTab";
+import MaintenanceTab from "./landingPages/MaintenanceTab";
 import ZellePayment from "./components/ZellePaymentPage";
 import OwnerRepairList from "./components/ownerComponents/OwnerRepairList";
 import TenantRepairList from "./components/tenantComponents/TenantRepairList";
@@ -174,6 +178,10 @@ function App() {
               element={<TenantAvailableProperties />}
             />
             <Route path="OwnersTab" element={<OwnersTab />} />
+            <Route path="MaintenanceTab" element={<MaintenanceTab />} />
+            <Route path="InvestorsTab" element={<InvestorsTab />} />
+            <Route path="ContactTab" element={<ContactTab />} />
+            <Route path="BlogTab" element={<BlogTab />} />
             <Route path="applyToProperty" element={<ApplyToProperty />} />
             <Route
               path="reviewTenantProfile/:property_uid"
