@@ -12,8 +12,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import ServicesProvidedQuotes from "../ServicesProvidedQuotes";
 import ConfirmDialog from "../ConfirmDialog";
 import AppContext from "../../AppContext";
-import Phone from "../../icons/Phone.svg";
-import Message from "../../icons/Message.svg";
 import { get, put } from "../../utils/api";
 import {
   headings,

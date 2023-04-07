@@ -8,9 +8,15 @@ import {
   TableHead,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import MailDialogTenant from "../MailDialog";
+import MailDialogContact from "../MailDialog";
+
+import MessageDialogTenant from "../MessageDialog";
+import MessageDialogContact from "../MessageDialog";
 import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
 import { put } from "../../utils/api";
 import {
   mediumBold,
@@ -42,13 +48,33 @@ const useStyles = makeStyles({
 });
 function ManagerTenantProfileView(props) {
   const classes = useStyles();
-  const { ably } = useContext(AppContext);
+  const { userData, ably } = useContext(AppContext);
+  const { access_token, user } = userData;
   const channel_application = ably.channels.get("application_status");
   const [contactState, setContactState] = useState([]);
   const [feeState, setFeeState] = useState([]);
   const [files, setFiles] = useState([]);
   const [showDL, setShowDL] = useState(true);
   const [showSSN, setShowSSN] = useState(true);
+  const [managementBusiness, setManagementBusiness] = useState("");
+  const [selectedTenant, setSelectedTenant] = useState("");
+  const [selectedContact, setSelectedContact] = useState("");
+  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [showMessageFormContact, setShowMessageFormContact] = useState(false);
+  const [showMailForm, setShowMailForm] = useState(false);
+  const [showMailFormContact, setShowMailFormContact] = useState(false);
+  const onCancelMail = () => {
+    setShowMailForm(false);
+  };
+  const onCancelContactMail = () => {
+    setShowMailFormContact(false);
+  };
+  const onCancelMessage = () => {
+    setShowMessageForm(false);
+  };
+  const onCancelContactMessage = () => {
+    setShowMessageFormContact(false);
+  };
   const { back, application, createNewTenantAgreement } = props;
   useEffect(() => {
     if (application.rental_uid !== null) {
@@ -56,8 +82,17 @@ function ManagerTenantProfileView(props) {
       setFiles(JSON.parse(application["r.documents"]));
       setContactState(JSON.parse(application.assigned_contacts));
     }
+    let business_uid = "";
+    for (const business of userData.user.businesses) {
+      if (business.business_type === "MANAGEMENT") {
+        business_uid = business.business_uid;
+        setManagementBusiness(business);
+        break;
+      }
+    }
+    if (business_uid === "") {
+    }
   }, []);
-
   // console.log(application);
   const stopPropagation = (e) => {
     e.stopPropagation();
@@ -79,7 +114,55 @@ function ManagerTenantProfileView(props) {
   };
 
   return (
-    <div className="mb-5 pb-5">
+    <div className="w-100 mb-5 pb-5">
+      <MailDialogTenant
+        title={"Email"}
+        isOpen={showMailForm}
+        senderPhone={managementBusiness.business_phone_number}
+        senderEmail={managementBusiness.business_email}
+        senderName={managementBusiness.business_name}
+        requestCreatedBy={managementBusiness.business_uid}
+        userMessaged={selectedTenant.tenant_id}
+        receiverEmail={selectedTenant.tenant_email}
+        receiverPhone={selectedTenant.tenant_phone_number}
+        onCancel={onCancelMail}
+      />
+      <MailDialogContact
+        title={"Email"}
+        isOpen={showMailFormContact}
+        senderPhone={managementBusiness.business_phone_number}
+        senderEmail={managementBusiness.business_email}
+        senderName={managementBusiness.business_name}
+        requestCreatedBy={managementBusiness.business_uid}
+        userMessaged={selectedContact.first_name}
+        receiverEmail={selectedContact.email}
+        receiverPhone={selectedContact.phone_number}
+        onCancel={onCancelContactMail}
+      />
+      <MessageDialogTenant
+        title={"Text Message"}
+        isOpen={showMessageForm}
+        senderPhone={managementBusiness.business_phone_number}
+        senderEmail={managementBusiness.business_email}
+        senderName={managementBusiness.business_name}
+        requestCreatedBy={managementBusiness.business_uid}
+        userMessaged={selectedTenant.tenant_id}
+        receiverEmail={selectedTenant.tenant_email}
+        receiverPhone={selectedTenant.tenant_phone_number}
+        onCancel={onCancelMessage}
+      />
+      <MessageDialogContact
+        title={"Text Message"}
+        isOpen={showMessageFormContact}
+        senderPhone={managementBusiness.business_phone_number}
+        senderEmail={managementBusiness.business_email}
+        senderName={managementBusiness.business_name}
+        requestCreatedBy={managementBusiness.business_uid}
+        userMessaged={selectedContact.first_name}
+        receiverEmail={selectedContact.email}
+        receiverPhone={selectedContact.phone_number}
+        onCancel={onCancelContactMessage}
+      />
       <div
         className="mx-2 my-2 p-3"
         style={{
@@ -160,8 +243,21 @@ function ManagerTenantProfileView(props) {
                         <a href={`tel:${application.tenant_phone_number}`}>
                           <img src={Phone} alt="Phone" style={smallImg} />
                         </a>
-                        <a href={`mailto:${application.tenant_email}`}>
+                        <a
+                          onClick={() => {
+                            setShowMessageForm(true);
+                            setSelectedTenant(application);
+                          }}
+                        >
                           <img src={Message} alt="Message" style={smallImg} />
+                        </a>
+                        <a
+                          onClick={() => {
+                            setShowMailForm(true);
+                            setSelectedTenant(application);
+                          }}
+                        >
+                          <img src={Mail} alt="Mail" style={smallImg} />
                         </a>
                       </div>
                     </div>
@@ -362,12 +458,25 @@ function ManagerTenantProfileView(props) {
                                     style={smallImg}
                                   />
                                 </a>
-                                <a href={`mailto:${applicant.tenant_email}`}>
+                                <a
+                                  onClick={() => {
+                                    setShowMessageForm(true);
+                                    setSelectedTenant(applicant);
+                                  }}
+                                >
                                   <img
                                     src={Message}
                                     alt="Message"
                                     style={smallImg}
                                   />
+                                </a>
+                                <a
+                                  onClick={() => {
+                                    setShowMailForm(true);
+                                    setSelectedTenant(applicant);
+                                  }}
+                                >
+                                  <img src={Mail} alt="Mail" style={smallImg} />
                                 </a>
                               </div>
                             </div>
@@ -802,8 +911,21 @@ function ManagerTenantProfileView(props) {
                         <a href={`tel:${contact.phone_number}`}>
                           <img src={Phone} alt="Phone" style={smallImg} />
                         </a>
-                        <a href={`mailto:${contact.email}`}>
+                        <a
+                          onClick={() => {
+                            setShowMessageFormContact(true);
+                            setSelectedContact(contact);
+                          }}
+                        >
                           <img src={Message} alt="Message" style={smallImg} />
+                        </a>
+                        <a
+                          onClick={() => {
+                            setShowMailFormContact(true);
+                            setSelectedContact(contact);
+                          }}
+                        >
+                          <img src={Mail} alt="Mail" style={smallImg} />
                         </a>
                       </TableCell>
                     </TableRow>

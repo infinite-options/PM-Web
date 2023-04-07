@@ -15,18 +15,23 @@ import { visuallyHidden } from "@mui/utils";
 import { useNavigate } from "react-router-dom";
 import * as ReactBootStrap from "react-bootstrap";
 import Checkbox from "../Checkbox";
+import MailDialogManager from "../MailDialog";
+import MessageDialogManager from "../MessageDialog";
 import Header from "../Header";
 import AppContext from "../../AppContext";
 import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+
+import Mail from "../../icons/Mail.svg";
 import { post, get } from "../../utils/api";
 import {
   headings,
   subHeading,
   subText,
   mediumBold,
+  smallImg,
   sidebarStyle,
 } from "../../utils/styles";
 
@@ -46,10 +51,18 @@ function TenantAnnouncements(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [announcementDetail, setAnnouncementDetail] = useState(false);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState("");
+  const [selectedManager, setSelectedManager] = useState("");
+  const [showMessageFormManager, setShowMessageFormManager] = useState(false);
+  const [showMailFormManager, setShowMailFormManager] = useState(false);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [width, setWindowWidth] = useState(0);
-  console.log(userData);
+  const onCancelManagerMail = () => {
+    setShowMailFormManager(false);
+  };
+  const onCancelManagerMessage = () => {
+    setShowMessageFormManager(false);
+  };
   useEffect(() => {
     updateDimensions();
 
@@ -196,6 +209,30 @@ function TenantAnnouncements(props) {
   };
   return (
     <div className="w-100 overflow-hidden">
+      <MailDialogManager
+        title={"Email"}
+        isOpen={showMailFormManager}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedManager.manager_id}
+        receiverEmail={selectedManager.manager_email}
+        receiverPhone={selectedManager.manager_phone_number}
+        onCancel={onCancelManagerMail}
+      />
+      <MessageDialogManager
+        title={"Text Message"}
+        isOpen={showMessageFormManager}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedManager.manager_id}
+        receiverEmail={selectedManager.manager_email}
+        receiverPhone={selectedManager.manager_phone_number}
+        onCancel={onCancelManagerMessage}
+      />
       <Row>
         <Col
           xs={2}
@@ -378,8 +415,32 @@ function TenantAnnouncements(props) {
                             </a>
                           </Col>
                           <Col xs={2} className="mt-1 mb-1">
-                            <img src={Message} alt="Message" />
+                            <a
+                              onClick={() => {
+                                setShowMessageFormManager(true);
+                                setSelectedManager(receiver);
+                              }}
+                            >
+                              <img
+                                src={Message}
+                                alt="Message"
+                                style={smallImg}
+                              />
+                            </a>
                           </Col>
+                          <Col>
+                            {" "}
+                            <a
+                              // href={`mailto:${tf.tenantEmail}`}
+                              onClick={() => {
+                                setShowMailFormManager(true);
+                                setSelectedManager(receiver);
+                              }}
+                            >
+                              <img src={Mail} alt="Mail" style={smallImg} />
+                            </a>
+                          </Col>
+
                           <hr />
                         </Row>
                       );
@@ -416,7 +477,30 @@ function TenantAnnouncements(props) {
                             </a>
                           </Col>
                           <Col xs={2} className="mt-1 mb-1">
-                            <img src={Message} alt="Message" />
+                            <a
+                              onClick={() => {
+                                setShowMessageFormManager(true);
+                                setSelectedManager(receiver);
+                              }}
+                            >
+                              <img
+                                src={Message}
+                                alt="Message"
+                                style={smallImg}
+                              />
+                            </a>
+                          </Col>
+                          <Col>
+                            {" "}
+                            <a
+                              // href={`mailto:${tf.tenantEmail}`}
+                              onClick={() => {
+                                setShowMailFormManager(true);
+                                setSelectedManager(receiver);
+                              }}
+                            >
+                              <img src={Mail} alt="Mail" style={smallImg} />
+                            </a>
                           </Col>
                           <hr />
                         </Row>

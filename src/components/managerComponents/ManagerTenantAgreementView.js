@@ -12,11 +12,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import MailDialogTenant from "../MailDialog";
 import MailDialogContact from "../MailDialog";
+
+import MessageDialogTenant from "../MessageDialog";
+import MessageDialogContact from "../MessageDialog";
 import DocumentsUploadPut from "../DocumentsUploadPut";
 import AppContext from "../../AppContext";
 import EditIconNew from "../../icons/EditIconNew.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
 import File from "../../icons/File.svg";
 import { put, post, get } from "../../utils/api";
 import {
@@ -84,13 +88,23 @@ function ManagerTenantAgreementView(props) {
 
   // const [addDoc, setAddDoc] = useState(false);
   const [editingDoc, setEditingDoc] = useState(null);
-  const [showMailForm, setShowMailForm] = useState(false);
+
   const [showSpinner, setShowSpinner] = useState(false);
-  const onCancel = () => {
+
+  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [showMessageFormContact, setShowMessageFormContact] = useState(false);
+  const [showMailForm, setShowMailForm] = useState(false);
+  const [showMailFormContact, setShowMailFormContact] = useState(false);
+  const onCancelMail = () => {
     setShowMailForm(false);
   };
-  const [showMessageFormContact, setShowMessageFormContact] = useState(false);
-  const onCancelContact = () => {
+  const onCancelContactMail = () => {
+    setShowMailFormContact(false);
+  };
+  const onCancelMessage = () => {
+    setShowMessageForm(false);
+  };
+  const onCancelContactMessage = () => {
     setShowMessageFormContact(false);
   };
   // useEffect(() => {
@@ -254,9 +268,10 @@ function ManagerTenantAgreementView(props) {
         user_messaged: property.rentalInfo[0].tenant_id,
         message_status: "PENDING",
         receiver_email: property.rentalInfo[0].tenant_email,
+        receiver_phone: property.rentalInfo[0].tenant_phone_number,
       };
       // console.log(newMessage);
-      const responseMsg = await post("/message", newMessage);
+      const responseMsg = await post("/messageEmail", newMessage);
       setShowSpinner(false);
       navigate("../manager");
     } else {
@@ -272,9 +287,10 @@ function ManagerTenantAgreementView(props) {
         user_messaged: property.rentalInfo[0].tenant_id,
         message_status: "PENDING",
         receiver_email: property.rentalInfo[0].tenant_email,
+        receiver_phone: property.rentalInfo[0].tenant_phone_number,
       };
       // console.log(newMessage);
-      const responseMsg = await post("/message", newMessage);
+      const responseMsg = await post("/messageEmail", newMessage);
       setTenantEndEarly(false);
       setShowSpinner(false);
       closeAgreement();
@@ -304,9 +320,10 @@ function ManagerTenantAgreementView(props) {
       user_messaged: property.rentalInfo[0].tenant_id,
       message_status: "PENDING",
       receiver_email: property.rentalInfo[0].tenant_email,
+      receiver_phone: property.rentalInfo[0].tenant_phone_number,
     };
     // console.log(newMessage);
-    const responseMsg = await post("/message", newMessage);
+    const responseMsg = await post("/messageEmail", newMessage);
     setShowSpinner(false);
     setTerminateLease(false);
     setPmEndEarly(false);
@@ -331,9 +348,10 @@ function ManagerTenantAgreementView(props) {
       user_messaged: property.rentalInfo[0].tenant_id,
       message_status: "PENDING",
       receiver_email: property.rentalInfo[0].tenant_email,
+      receiver_phone: property.rentalInfo[0].tenant_phone_number,
     };
     // console.log(newMessage);
-    const responseMsg = await post("/message", newMessage);
+    const responseMsg = await post("/messageEmail", newMessage);
     setTenantExtendLease(false);
     setShowSpinner(false);
     closeAgreement();
@@ -350,7 +368,7 @@ function ManagerTenantAgreementView(props) {
       {agreement ? (
         <div>
           <MailDialogTenant
-            title={"Message"}
+            title={"Email"}
             isOpen={showMailForm}
             senderPhone={user.phone_number}
             senderEmail={user.email}
@@ -358,10 +376,35 @@ function ManagerTenantAgreementView(props) {
             requestCreatedBy={user.user_uid}
             userMessaged={selectedTenant.tenantID}
             receiverEmail={selectedTenant.tenantEmail}
-            onCancel={onCancel}
+            receiverPhone={selectedTenant.tenantPhoneNumber}
+            onCancel={onCancelMail}
           />
           <MailDialogContact
-            title={"Message"}
+            title={"Email"}
+            isOpen={showMailFormContact}
+            senderPhone={user.phone_number}
+            senderEmail={user.email}
+            senderName={user.first_name + " " + user.last_name}
+            requestCreatedBy={user.user_uid}
+            userMessaged={selectedContact.first_name}
+            receiverEmail={selectedContact.email}
+            receiverPhone={selectedContact.phone_number}
+            onCancel={onCancelContactMail}
+          />
+          <MessageDialogTenant
+            title={"Text Message"}
+            isOpen={showMessageForm}
+            senderPhone={user.phone_number}
+            senderEmail={user.email}
+            senderName={user.first_name + " " + user.last_name}
+            requestCreatedBy={user.user_uid}
+            userMessaged={selectedTenant.tenantID}
+            receiverEmail={selectedTenant.tenantEmail}
+            receiverPhone={selectedTenant.tenantPhoneNumber}
+            onCancel={onCancelMessage}
+          />
+          <MessageDialogContact
+            title={"Text Message"}
             isOpen={showMessageFormContact}
             senderPhone={user.phone_number}
             senderEmail={user.email}
@@ -369,7 +412,8 @@ function ManagerTenantAgreementView(props) {
             requestCreatedBy={user.user_uid}
             userMessaged={selectedContact.first_name}
             receiverEmail={selectedContact.email}
-            onCancel={onCancelContact}
+            receiverPhone={selectedContact.phone_number}
+            onCancel={onCancelContactMessage}
           />
           {/* {console.log(agreement)} */}
           <Row>
@@ -463,11 +507,12 @@ function ManagerTenantAgreementView(props) {
                                 <img src={Phone} alt="Phone" style={smallImg} />
                               </a>
                             </Col>
+
                             <Col className="d-flex justify-content-center">
                               <a
                                 // href={`mailto:${tf.tenantEmail}`}
                                 onClick={() => {
-                                  setShowMailForm(true);
+                                  setShowMessageForm(true);
                                   setSelectedTenant(tf);
                                 }}
                               >
@@ -476,6 +521,17 @@ function ManagerTenantAgreementView(props) {
                                   alt="Message"
                                   style={smallImg}
                                 />
+                              </a>
+                            </Col>
+                            <Col className="d-flex justify-content-center">
+                              <a
+                                // href={`mailto:${tf.tenantEmail}`}
+                                onClick={() => {
+                                  setShowMailForm(true);
+                                  setSelectedTenant(tf);
+                                }}
+                              >
+                                <img src={Mail} alt="Mail" style={smallImg} />
                               </a>
                             </Col>
                           </Row>
@@ -617,6 +673,14 @@ function ManagerTenantAgreementView(props) {
                           }}
                         >
                           <img src={Message} alt="Message" style={smallImg} />
+                        </a>
+                        <a
+                          onClick={() => {
+                            setShowMailFormContact(true);
+                            setSelectedContact(contact);
+                          }}
+                        >
+                          <img src={Mail} alt="Mail" style={smallImg} />
                         </a>
                       </TableCell>
                     </TableRow>

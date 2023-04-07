@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Row, Col, Button, Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
@@ -17,11 +17,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import Header from "../Header";
 import SideBar from "./SideBar";
+import AppContext from "../../AppContext";
 import TenantFooter from "./TenantFooter";
+import MailDialogManager from "../MailDialog";
+import MessageDialogManager from "../MessageDialog";
 import ImageModal from "../ImageModal";
 import PropertyIcon from "../../icons/PropertyIcon.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
 import { get } from "../../utils/api";
 import { bluePillButton, sidebarStyle, smallImg } from "../../utils/styles";
 
@@ -42,6 +46,8 @@ function PropertyApplicationView(props) {
   const { property_uid } = useParams();
   const { forPropertyLease } = props;
   const navigate = useNavigate();
+  const { userData, refresh } = useContext(AppContext);
+  const { access_token, user } = userData;
   const [property, setProperty] = React.useState(null);
   const [openImage, setOpenImage] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
@@ -125,6 +131,15 @@ function PropertyApplicationView(props) {
       images: [],
     },
   });
+  const [selectedManager, setSelectedManager] = useState("");
+  const [showMailFormManager, setShowMailFormManager] = useState(false);
+  const [showMessageFormManager, setShowMessageFormManager] = useState(false);
+  const onCancelManagerMail = () => {
+    setShowMailFormManager(false);
+  };
+  const onCancelManagerMessage = () => {
+    setShowMessageFormManager(false);
+  };
   const appliances = Object.keys(applianceState[0]);
   const responsive = {
     superLargeDesktop: {
@@ -178,9 +193,35 @@ function PropertyApplicationView(props) {
     fetchProperty();
   }, []);
   // console.log("propertyApplicationView", property);
-  console.log(forPropertyLease, property, width);
+  // console.log(forPropertyLease, property, width);
   return (
     <div className="w-100 overflow-hidden p-0 m-0">
+      <MailDialogManager
+        title={"Email"}
+        isOpen={showMailFormManager}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedManager.manager_id}
+        receiverEmail={selectedManager.manager_email}
+        receiverPhone={selectedManager.manager_phone_number}
+        onCancel={onCancelManagerMail}
+      />
+
+      <MessageDialogManager
+        title={"Text Message"}
+        isOpen={showMessageFormManager}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedManager.manager_id}
+        receiverEmail={selectedManager.manager_email}
+        receiverPhone={selectedManager.manager_phone_number}
+        onCancel={onCancelManagerMessage}
+      />
+
       <Row
         className="mb-5"
         style={{
@@ -617,8 +658,22 @@ function PropertyApplicationView(props) {
                         <a href={`tel:${property.manager_phone_number}`}>
                           <img src={Phone} alt="Phone" style={smallImg} />
                         </a>
-                        <a href={`mailto:${property.manager_email}`}>
+                        <a
+                          onClick={() => {
+                            setShowMessageFormManager(true);
+                            setSelectedManager(property);
+                          }}
+                        >
                           <img src={Message} alt="Message" style={smallImg} />
+                        </a>
+                        <a
+                          // href={`mailto:${tf.tenantEmail}`}
+                          onClick={() => {
+                            setShowMailFormManager(true);
+                            setSelectedManager(property);
+                          }}
+                        >
+                          <img src={Mail} alt="Mail" style={smallImg} />
                         </a>
                       </TableCell>
                     </TableRow>

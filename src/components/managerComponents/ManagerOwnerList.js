@@ -19,8 +19,10 @@ import Header from "../Header";
 import ManagerFooter from "./ManagerFooter";
 import AppContext from "../../AppContext";
 import MailDialog from "../MailDialog";
+import MessageDialog from "../MessageDialog";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
 import { get, put } from "../../utils/api";
 import { smallImg, hidden, sidebarStyle } from "../../utils/styles";
 
@@ -51,6 +53,10 @@ function ManagerOwnerList(props) {
   const [showMailForm, setShowMailForm] = useState(false);
   const onCancel = () => {
     setShowMailForm(false);
+  };
+  const [showMessageForm, setShowMessageForm] = useState(false);
+  const onCancelMessage = () => {
+    setShowMessageForm(false);
   };
   useEffect(() => {
     updateDimensions();
@@ -232,7 +238,7 @@ function ManagerOwnerList(props) {
     <div className="w-100 overflow-hidden">
       <Row>
         <MailDialog
-          title={"Message"}
+          title={"Email"}
           isOpen={showMailForm}
           senderPhone={user.phone_number}
           senderEmail={user.email}
@@ -240,7 +246,20 @@ function ManagerOwnerList(props) {
           requestCreatedBy={user.user_uid}
           userMessaged={selectedOwner.owner_id}
           receiverEmail={selectedOwner.owner_email}
+          receiverPhone={selectedOwner.owner_phone_number}
           onCancel={onCancel}
+        />
+        <MessageDialog
+          title={"Text Message"}
+          isOpen={showMessageForm}
+          senderPhone={user.phone_number}
+          senderEmail={user.email}
+          senderName={user.first_name + " " + user.last_name}
+          requestCreatedBy={user.user_uid}
+          userMessaged={selectedOwner.owner_id}
+          receiverEmail={selectedOwner.owner_email}
+          receiverPhone={selectedOwner.owner_phone_number}
+          onCancel={onCancelMessage}
         />
         <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
@@ -380,13 +399,25 @@ function ManagerOwnerList(props) {
                                   </a>
                                   <a
                                     onClick={() => {
-                                      setShowMailForm(true);
+                                      setShowMessageForm(true);
                                       setSelectedOwner(owner);
                                     }}
                                   >
                                     <img
                                       src={Message}
                                       alt="Message"
+                                      style={smallImg}
+                                    />
+                                  </a>
+                                  <a
+                                    onClick={() => {
+                                      setShowMailForm(true);
+                                      setSelectedOwner(owner);
+                                    }}
+                                  >
+                                    <img
+                                      src={Mail}
+                                      alt="Mail"
                                       style={smallImg}
                                     />
                                   </a>

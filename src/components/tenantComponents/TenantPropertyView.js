@@ -21,12 +21,18 @@ import TenantFooter from "./TenantFooter";
 import TenantRepairRequest from "./TenantRepairRequest";
 import AppContext from "../../AppContext";
 import ImageModal from "../ImageModal";
-import ConfirmDialog from "../ConfirmDialog";
+
+import MailDialogManager from "../MailDialog";
+import MailDialogContact from "../MailDialog";
+
+import MessageDialogManager from "../MessageDialog";
+import MessageDialogContact from "../MessageDialog";
 import DocumentsUploadPut from "../DocumentsUploadPut";
 import SideBar from "./SideBar";
 import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
 import AddIcon from "../../icons/AddIcon.svg";
 import PropertyIcon from "../../icons/PropertyIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
@@ -93,6 +99,7 @@ function TenantPropertyView(props) {
   const [pmEndEarly, setPmEndEarly] = useState(false);
   const [showTenantProfile, setShowTenantProfile] = useState(false);
   const [disableEndLease, setDisable] = useState(false);
+
   // sorting variables
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -180,6 +187,25 @@ function TenantPropertyView(props) {
   });
   const appliances = Object.keys(applianceState[0]);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const [selectedManager, setSelectedManager] = useState("");
+  const [selectedContact, setSelectedContact] = useState("");
+  const [showMessageFormManager, setShowMessageFormManager] = useState(false);
+  const [showMessageFormContact, setShowMessageFormContact] = useState(false);
+  const [showMailFormManager, setShowMailFormManager] = useState(false);
+  const [showMailFormContact, setShowMailFormContact] = useState(false);
+  const onCancelManagerMail = () => {
+    setShowMailFormManager(false);
+  };
+  const onCancelContactMail = () => {
+    setShowMailFormContact(false);
+  };
+  const onCancelManagerMessage = () => {
+    setShowMessageFormManager(false);
+  };
+  const onCancelContactMessage = () => {
+    setShowMessageFormContact(false);
+  };
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -259,9 +285,10 @@ function TenantPropertyView(props) {
       user_messaged: property.property_manager[0].manager_id,
       message_status: "PENDING",
       receiver_email: property.property_manager[0].manager_email,
+      receiver_phone: property.rentalInfo[0].manager_phone_number,
     };
     // console.log(newMessage);
-    const responseMsg = await post("/message", newMessage);
+    const responseMsg = await post("/messageEmail", newMessage);
     // console.log(response6.result);
     setShowSpinner(false);
     navigate("/tenant");
@@ -276,18 +303,24 @@ function TenantPropertyView(props) {
     const response = await put("/extendLease", request_body);
     channel_application.publish({ data: { te: request_body } });
     const newMessage = {
-      sender_name: property.managerInfo.manager_business_name,
-      sender_email: property.managerInfo.manager_email,
-      sender_phone: property.managerInfo.manager_phone_number,
-      message_subject: "Extend Lease Request Withdraw",
-      message_details: "Tenant has withdrawn the request to extend the lease",
-      message_created_by: property.managerInfo.manager_id,
-      user_messaged: property.rentalInfo[0].tenant_id,
+      sender_name:
+        property.rentalInfo[0].tenant_first_name +
+        " " +
+        property.rentalInfo[0].tenant_last_name,
+      sender_email: property.rentalInfo[0].tenant_email,
+      sender_phone: property.rentalInfo[0].tenant_phone_number,
+      message_subject: "End Lease Early Request Withdraw",
+      message_details:
+        "Tenant has withdrawn the request to end the lease early on " +
+        lastDate,
+      message_created_by: property.rentalInfo[0].tenant_id,
+      user_messaged: property.property_manager[0].manager_id,
       message_status: "PENDING",
-      receiver_email: property.rentalInfo[0].tenant_email,
+      receiver_email: property.property_manager[0].manager_email,
+      receiver_phone: property.rentalInfo[0].manager_phone_number,
     };
     // console.log(newMessage);
-    const responseMsg = await post("/message", newMessage);
+    const responseMsg = await post("/messageEmail", newMessage);
     setTenantExtendLease(false);
     setShowSpinner(false);
   };
@@ -351,9 +384,10 @@ function TenantPropertyView(props) {
       user_messaged: property.property_manager[0].manager_id,
       message_status: "PENDING",
       receiver_email: property.property_manager[0].manager_email,
+      receiver_phone: property.rentalInfo[0].manager_phone_number,
     };
     // console.log(newMessage);
-    const responseMsg = await post("/message", newMessage);
+    const responseMsg = await post("/messageEmail", newMessage);
     setTenantEndEarly(true);
     setShowSpinner(false);
     reloadProperty();
@@ -395,9 +429,10 @@ function TenantPropertyView(props) {
         user_messaged: property.property_manager[0].manager_id,
         message_status: "PENDING",
         receiver_email: property.property_manager[0].manager_email,
+        receiver_phone: property.rentalInfo[0].manager_phone_number,
       };
       // console.log(newMessage);
-      const responseMsg = await post("/message", newMessage);
+      const responseMsg = await post("/messageEmail", newMessage);
       navigate("../tenant");
     } else {
       const newMessage = {
@@ -414,9 +449,10 @@ function TenantPropertyView(props) {
         user_messaged: property.property_manager[0].manager_id,
         message_status: "PENDING",
         receiver_email: property.property_manager[0].manager_email,
+        receiver_phone: property.rentalInfo[0].manager_phone_number,
       };
       // console.log(newMessage);
-      const responseMsg = await post("/message", newMessage);
+      const responseMsg = await post("/messageEmail", newMessage);
       setShowSpinner(false);
       setPmEndEarly(false);
       reloadProperty();
@@ -448,9 +484,10 @@ function TenantPropertyView(props) {
       user_messaged: property.property_manager[0].manager_id,
       message_status: "PENDING",
       receiver_email: property.property_manager[0].manager_email,
+      receiver_phone: property.rentalInfo[0].manager_phone_number,
     };
     // console.log(newMessage);
-    const responseMsg = await post("/message", newMessage);
+    const responseMsg = await post("/messageEmail", newMessage);
     setTerminateLease(false);
     setTenantEndEarly(false);
     setShowSpinner(false);
@@ -677,6 +714,54 @@ function TenantPropertyView(props) {
 
   return Object.keys(property).length > 1 ? (
     <div>
+      <MailDialogManager
+        title={"Email"}
+        isOpen={showMailFormManager}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedManager.manager_id}
+        receiverEmail={selectedManager.manager_email}
+        receiverPhone={selectedManager.manager_phone_number}
+        onCancel={onCancelManagerMail}
+      />
+      <MailDialogContact
+        title={"Email"}
+        isOpen={showMailFormContact}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedContact.first_name}
+        receiverEmail={selectedContact.email}
+        receiverPhone={selectedContact.phone_number}
+        onCancel={onCancelContactMail}
+      />
+      <MessageDialogManager
+        title={"Text Message"}
+        isOpen={showMessageFormManager}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedManager.manager_id}
+        receiverEmail={selectedManager.manager_email}
+        receiverPhone={selectedManager.manager_phone_number}
+        onCancel={onCancelManagerMessage}
+      />
+      <MessageDialogContact
+        title={"Text Message"}
+        isOpen={showMessageFormContact}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedContact.first_name}
+        receiverEmail={selectedContact.email}
+        receiverPhone={selectedContact.phone_number}
+        onCancel={onCancelContactMessage}
+      />
       <Row className="flex-1">
         <Col
           xs={2}
@@ -1608,10 +1693,28 @@ function TenantPropertyView(props) {
                                       style={smallImg}
                                     />
                                   </a>
-                                  <a href={`mailto:${contact.email}`}>
+                                  <a
+                                    onClick={() => {
+                                      setShowMessageFormContact(true);
+                                      setSelectedContact(contact);
+                                    }}
+                                  >
                                     <img
                                       src={Message}
                                       alt="Message"
+                                      style={smallImg}
+                                    />
+                                  </a>
+                                  <a
+                                    // href={`mailto:${tf.tenantEmail}`}
+                                    onClick={() => {
+                                      setShowMailFormContact(true);
+                                      setSelectedContact(contact);
+                                    }}
+                                  >
+                                    <img
+                                      src={Mail}
+                                      alt="Mail"
                                       style={smallImg}
                                     />
                                   </a>
@@ -2080,10 +2183,28 @@ function TenantPropertyView(props) {
                                       style={smallImg}
                                     />
                                   </a>
-                                  <a href={`mailto:${contact.email}`}>
+                                  <a
+                                    onClick={() => {
+                                      setShowMessageFormContact(true);
+                                      setSelectedContact(contact);
+                                    }}
+                                  >
                                     <img
                                       src={Message}
                                       alt="Message"
+                                      style={smallImg}
+                                    />
+                                  </a>
+                                  <a
+                                    // href={`mailto:${tf.tenantEmail}`}
+                                    onClick={() => {
+                                      setShowMailFormContact(true);
+                                      setSelectedContact(contact);
+                                    }}
+                                  >
+                                    <img
+                                      src={Mail}
+                                      alt="Mail"
                                       style={smallImg}
                                     />
                                   </a>
@@ -2220,9 +2341,21 @@ function TenantPropertyView(props) {
                             <img src={Phone} alt="Phone" style={smallImg} />
                           </a>
                           <a
-                            href={`mailto:${property.property_manager[0].manager_email}`}
+                            onClick={() => {
+                              setShowMessageFormManager(true);
+                              setSelectedManager(property.property_manager[0]);
+                            }}
                           >
                             <img src={Message} alt="Message" style={smallImg} />
+                          </a>
+                          <a
+                            // href={`mailto:${tf.tenantEmail}`}
+                            onClick={() => {
+                              setShowMailFormManager(true);
+                              setSelectedManager(property.property_manager[0]);
+                            }}
+                          >
+                            <img src={Mail} alt="Mail" style={smallImg} />
                           </a>
                         </TableCell>
                       </TableRow>

@@ -8,10 +8,15 @@ import * as ReactBootStrap from "react-bootstrap";
 import Calendar from "react-calendar";
 import AppContext from "../../AppContext";
 import MaintenanceFooter from "./MaintenanceFooter";
+import MailDialogManager from "../MailDialog";
+import MessageDialogManager from "../MessageDialog";
+import MailDialogOwner from "../MailDialog";
+import MessageDialogOwner from "../MessageDialog";
 import Header from "../Header";
 import SideBar from "./SideBar";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
 import {
   headings,
   subHeading,
@@ -72,6 +77,27 @@ function MaintenanceScheduleRepair(props) {
   const [accessTokenTenant, setAccessTokenTenant] = useState("");
   const [accessTokenMaintenance, setAccessTokenMaintenance] = useState("");
   const [userEmail, setUserEmail] = useState("");
+
+  const [maintenanceBusiness, setMaintenanceBusiness] = useState("");
+  const [selectedManager, setSelectedManager] = useState("");
+  const [showMailFormManager, setShowMailFormManager] = useState(false);
+  const [showMessageFormManager, setShowMessageFormManager] = useState(false);
+  const onCancelManagerMail = () => {
+    setShowMailFormManager(false);
+  };
+  const onCancelManagerMessage = () => {
+    setShowMessageFormManager(false);
+  };
+  const [selectedOwner, setSelectedOwner] = useState("");
+  const [showMailFormOwner, setShowMailFormOwner] = useState(false);
+  const [showMessageFormOwner, setShowMessageFormOwner] = useState(false);
+  const onCancelOwnerMail = () => {
+    setShowMailFormOwner(false);
+  };
+  const onCancelOwnerMessage = () => {
+    setShowMessageFormOwner(false);
+  };
+
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -287,6 +313,18 @@ function MaintenanceScheduleRepair(props) {
         .catch((error) => {
           console.log(error);
         });
+    }
+  }, []);
+  useEffect(() => {
+    let business_uid = "";
+    for (const business of userData.user.businesses) {
+      if (business.business_type === "MAINTENANCE") {
+        business_uid = business.business_uid;
+        setMaintenanceBusiness(business);
+        break;
+      }
+    }
+    if (business_uid === "") {
     }
   }, []);
 
@@ -651,6 +689,60 @@ function MaintenanceScheduleRepair(props) {
     // console.log("TimeSlots joined", result);
     return (
       <div className="m-5" style={{ height: "5rem" }}>
+        <MailDialogManager
+          title={"Email"}
+          isOpen={showMailFormManager}
+          senderPhone={maintenanceBusiness.business_phone_number}
+          senderEmail={maintenanceBusiness.business_email}
+          senderName={maintenanceBusiness.business_name}
+          requestCreatedBy={maintenanceBusiness.business_uid}
+          userMessaged={selectedManager.manager_business_name}
+          receiverEmail={selectedManager.manager_email}
+          receiverPhone={selectedManager.manager_phone_number}
+          onCancel={onCancelManagerMail}
+        />
+
+        <MessageDialogManager
+          title={"Text Message"}
+          isOpen={showMessageFormManager}
+          senderPhone={maintenanceBusiness.business_phone_number}
+          senderEmail={maintenanceBusiness.business_email}
+          senderName={maintenanceBusiness.business_name}
+          requestCreatedBy={maintenanceBusiness.business_uid}
+          userMessaged={selectedManager.manager_business_name}
+          receiverEmail={selectedManager.manager_email}
+          receiverPhone={selectedManager.manager_phone_number}
+          onCancel={onCancelManagerMessage}
+        />
+        <MailDialogOwner
+          title={"Email"}
+          isOpen={showMailFormOwner}
+          senderPhone={maintenanceBusiness.business_phone_number}
+          senderEmail={maintenanceBusiness.business_email}
+          senderName={maintenanceBusiness.business_name}
+          requestCreatedBy={maintenanceBusiness.business_uid}
+          userMessaged={
+            selectedOwner.owner_first_name + " " + selectedOwner.owner_last_name
+          }
+          receiverEmail={selectedOwner.owmer_email}
+          receiverPhone={selectedOwner.owmer_phone_number}
+          onCancel={onCancelOwnerMail}
+        />
+
+        <MessageDialogOwner
+          title={"Text Message"}
+          isOpen={showMessageFormOwner}
+          senderPhone={maintenanceBusiness.business_phone_number}
+          senderEmail={maintenanceBusiness.business_email}
+          senderName={maintenanceBusiness.business_name}
+          requestCreatedBy={maintenanceBusiness.business_uid}
+          userMessaged={
+            selectedOwner.owner_first_name + " " + selectedOwner.owner_last_name
+          }
+          receiverEmail={selectedOwner.owmer_email}
+          receiverPhone={selectedOwner.owmer_phone_number}
+          onCancel={onCancelOwnerMessage}
+        />
         <Grid
           container
           direction="column"
@@ -970,11 +1062,22 @@ function MaintenanceScheduleRepair(props) {
                 </Col>
                 <Col xs={2} className="mt-1 mb-1">
                   <img
-                    onClick={() =>
-                      (window.location.href = `mailto:${quotes.property_manager[0].manager_email}`)
-                    }
+                    onClick={() => {
+                      setShowMessageFormManager(true);
+                      setSelectedManager(quotes.property_manager[0]);
+                    }}
                     src={Message}
                     alt="Message"
+                  />
+                </Col>
+                <Col xs={2} className="mt-1 mb-1">
+                  <img
+                    onClick={() => {
+                      setShowMailFormManager(true);
+                      setSelectedManager(quotes.property_manager[0]);
+                    }}
+                    src={Mail}
+                    alt="Mail"
                   />
                 </Col>
               </Row>
@@ -998,11 +1101,22 @@ function MaintenanceScheduleRepair(props) {
                 </Col>
                 <Col xs={2} className="mt-1 mb-1">
                   <img
-                    onClick={() =>
-                      (window.location.href = `mailto:${quotes.owner[0].manager_email}`)
-                    }
+                    onClick={() => {
+                      setShowMessageFormOwner(true);
+                      setSelectedOwner(quotes.owner[0]);
+                    }}
                     src={Message}
                     alt="Message"
+                  />
+                </Col>
+                <Col xs={2} className="mt-1 mb-1">
+                  <img
+                    onClick={() => {
+                      setShowMailFormOwner(true);
+                      setSelectedOwner(quotes.owner[0]);
+                    }}
+                    src={Mail}
+                    alt="Mail"
                   />
                 </Col>
               </Row>
