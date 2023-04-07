@@ -314,14 +314,14 @@ function LandingNavbar() {
                     Owners
                   </Link>
                   <Link
-                    to="/managerLanding"
+                    to="/ManagerTab"
                     class="navButtons"
                     onClick={closeMenuProjects}
                   >
                     Property Managers
                   </Link>
                   <Link
-                    to="/renterLanding"
+                    to="/RenterTab"
                     class="navButtons"
                     onClick={closeMenuProjects}
                   >

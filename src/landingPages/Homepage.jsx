@@ -233,7 +233,7 @@ function Homepage() {
               <div style={{ textAlign: "right" }}>
                 <img
                   src={Next}
-                  onClick={() => navigate("/managerLanding")}
+                  onClick={() => navigate("/ManagerTab")}
                   style={{ height: "55px", width: "55px" }}
                 />
               </div>
@@ -282,7 +282,7 @@ function Homepage() {
                 <img
                   src={Next}
                   style={{ height: "55px", width: "55px" }}
-                  onClick={() => navigate("/renterLanding")}
+                  onClick={() => navigate("/RenterTab")}
                 />
               </div>
             </div>

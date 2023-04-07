@@ -52,10 +52,10 @@ import OwnerDashboard from "./components/ownerComponents/OwnerDashboard"; //upda
 import ManagerDashboard from "./components/managerComponents/ManagerDashboard"; //updated owner dashboard
 import Homepage from "./landingPages/Homepage";
 import LandingNavbar from "./pages/LandingNavbar";
-import RenterLanding from "./landingPages/renterLanding";
+import RenterTab from "./landingPages/RenterTab";
 import SignupToApply from "./landingPages/SignupToApply";
 import OwnersTab from "./landingPages/OwnersTab";
-import ManagerLanding from "./landingPages/ManagerLanding";
+import ManagerTab from "./landingPages/ManagerTab";
 import ContactTab from "./landingPages/ContactTab";
 import InvestorsTab from "./landingPages/InvestorsTab";
 import BlogTab from "./landingPages/BlogTab";
@@ -202,7 +202,7 @@ function App() {
               element={<ReviewPropertyLease />}
             />
             <Route path="manager" element={<ManagerDashboard />} />
-            <Route path="managerLanding" element={<ManagerLanding />} />
+            <Route path="ManagerTab" element={<ManagerTab />} />
             <Route
               path="/:property_uid/repairRequest"
               element={<RepairRequest />}
@@ -230,7 +230,7 @@ function App() {
               path="/managerPaymentPage/:purchase_uid"
               element={<ManagerPaymentPage />}
             />
-            <Route path="renterLanding" element={<RenterLanding />} />
+            <Route path="RenterTab" element={<RenterTab />} />
             <Route path="SignupToApply" element={<SignupToApply />} />
 
             <Route path="PaymentPage" element={<PaymentPage />} />
