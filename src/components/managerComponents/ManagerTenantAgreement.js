@@ -815,6 +815,13 @@ function ManagerTenantAgreement(props) {
         late_by: lateAfter,
         late_fee: lateFee,
         perDay_late_fee: lateFeePer,
+        adults: adults,
+        children: children,
+        pets: pets,
+        vehicles: vehicles,
+        referred: referred,
+        documents: files,
+        effective_date: effectiveDate,
       };
       const newFiles = [...files];
 
