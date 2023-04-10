@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
+import * as ReactBootStrap from "react-bootstrap";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -23,8 +24,10 @@ function MessageDialog(props) {
   } = props;
   const [messageSubject, setMessageSubject] = useState("");
   const [messageDetails, setMessageDetails] = useState("");
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const submitMessage = async () => {
+    setShowSpinner(true);
     const newMessage = {
       sender_name: senderName,
       sender_email: senderEmail,
@@ -39,6 +42,8 @@ function MessageDialog(props) {
     };
     // console.log(newMessage);
     const response = await post("/messageText", newMessage);
+    alert("Message Sent");
+    setShowSpinner(false);
     onCancel();
   };
   return (
@@ -82,12 +87,19 @@ function MessageDialog(props) {
             <Form.Label as="h6">Message Details</Form.Label>
             <Form.Control
               style={squareForm}
-              type="text"
+              as="textarea"
               value={messageDetails}
               onChange={(e) => setMessageDetails(e.target.value)}
             />
           </Form.Group>
         </DialogContent>
+        {showSpinner ? (
+          <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+            <ReactBootStrap.Spinner animation="border" role="status" />
+          </div>
+        ) : (
+          ""
+        )}
         <DialogActions>
           <Button onClick={submitMessage} color="primary">
             Yes
