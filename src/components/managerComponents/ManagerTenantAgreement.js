@@ -321,6 +321,21 @@ function ManagerTenantAgreement(props) {
       const update_application = await put("/applications", request_body);
       channel_application.publish({ data: { te: request_body } });
       // console.log(response)
+      console.log(application);
+      const newMessage = {
+        sender_name: application.business_name,
+        sender_email: application.business_email,
+        sender_phone: application.business_phone_number,
+        message_subject: "New Lease Uploaded",
+        message_details: "PM has started the lease process",
+        message_created_by: application.business_uid,
+        user_messaged: application.tenant_id,
+        message_status: "PENDING",
+        receiver_email: application.tenant_email,
+        receiver_phone: application.tenant_phone_number,
+      };
+      // console.log(newMessage);
+      const responseMsg = await post("/messageEmail", newMessage);
     }
 
     // const tenant_ids = acceptedTenantApplications.map(application => application.tenant_id)
@@ -330,22 +345,9 @@ function ManagerTenantAgreement(props) {
     newAgreement.rental_status = "PROCESSING";
     // console.log(newAgreement);
     const create_rental = await post("/rentals", newAgreement, null, files);
-    const newMessage = {
-      sender_name: property.managerInfo.manager_business_name,
-      sender_email: property.managerInfo.manager_email,
-      sender_phone: property.managerInfo.manager_phone_number,
-      message_subject: "New Lease Uploaded",
-      message_details: "PM has started the lease process",
-      message_created_by: property.managerInfo.manager_id,
-      user_messaged: property.rentalInfo[0].tenant_id,
-      message_status: "PENDING",
-      receiver_email: property.rentalInfo[0].tenant_email,
-      receiver_phone: property.rentalInfo[0].tenant_phone_number,
-    };
-    // console.log(newMessage);
-    const responseMsg = await post("/messageEmail", newMessage);
 
     setShowSpinner(false);
+
     back();
   };
   // save
@@ -815,6 +817,13 @@ function ManagerTenantAgreement(props) {
         late_by: lateAfter,
         late_fee: lateFee,
         perDay_late_fee: lateFeePer,
+        adults: adults,
+        children: children,
+        pets: pets,
+        vehicles: vehicles,
+        referred: referred,
+        documents: files,
+        effective_date: effectiveDate,
       };
       const newFiles = [...files];
 
