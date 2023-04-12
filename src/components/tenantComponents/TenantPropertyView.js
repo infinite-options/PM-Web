@@ -50,6 +50,7 @@ import {
 import { ordinal_suffix_of, days } from "../../utils/helper";
 import { get, put, post } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
+import Appliances from "./Appliances";
 
 const useStyles = makeStyles({
   customTable: {
@@ -108,7 +109,7 @@ function TenantPropertyView(props) {
   const applianceState = useState({
     Microwave: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -118,10 +119,11 @@ function TenantPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Dishwasher: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -131,10 +133,11 @@ function TenantPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Refrigerator: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -144,10 +147,11 @@ function TenantPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Washer: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -157,10 +161,11 @@ function TenantPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Dryer: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -170,10 +175,11 @@ function TenantPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Range: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -183,6 +189,7 @@ function TenantPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
   });
   const appliances = Object.keys(applianceState[0]);
@@ -1170,7 +1177,7 @@ function TenantPropertyView(props) {
                   <Col></Col>
                 </Row>
                 <Row className="m-3" style={{ overflow: "scroll" }}>
-                  <Table
+                  {/* <Table
                     responsive="md"
                     classes={{ root: classes.customTable }}
                     size="small"
@@ -1178,7 +1185,7 @@ function TenantPropertyView(props) {
                     <TableHead>
                       <TableRow>
                         <TableCell>Appliance</TableCell>
-                        <TableCell>Name</TableCell>
+                        <TableCell>Manufacturer</TableCell>
                         <TableCell>Purchased From</TableCell>
                         <TableCell>Purchased On</TableCell>
                         <TableCell>Purchase Order Number</TableCell>
@@ -1190,7 +1197,7 @@ function TenantPropertyView(props) {
                         <TableCell>Images</TableCell>
                       </TableRow>
                     </TableHead>
-                    {/* {console.log("appliances", appliances, applianceState)} */}
+
                     <TableBody>
                       {appliances.map((appliance, i) => {
                         return applianceState[0][appliance]["available"] ==
@@ -1200,7 +1207,7 @@ function TenantPropertyView(props) {
                           <TableRow>
                             <TableCell>{appliance}</TableCell>
                             <TableCell>
-                              {applianceState[0][appliance]["name"]}
+                              {applianceState[0][appliance]["manufacturer"]}
                             </TableCell>
                             <TableCell>
                               {applianceState[0][appliance]["purchased_from"]}
@@ -1225,6 +1232,9 @@ function TenantPropertyView(props) {
                             </TableCell>
                             <TableCell>
                               {applianceState[0][appliance]["warranty_info"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["url"]}
                             </TableCell>
 
                             {applianceState[0][appliance]["images"] !==
@@ -1269,7 +1279,11 @@ function TenantPropertyView(props) {
                         );
                       })}
                     </TableBody>
-                  </Table>
+                  </Table> */}
+                  <Appliances
+                    applianceState={applianceState}
+                    appliances={appliances}
+                  />
                 </Row>
               </div>
               <div

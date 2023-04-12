@@ -9,7 +9,8 @@ import { post } from "../utils/api";
 let CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 let CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
 const GOOGLE_LOGIN = process.env.REACT_APP_GOOGLE_LOGIN;
-let SCOPES = "https://www.googleapis.com/auth/calendar";
+let SCOPES =
+  "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.profile";
 
 function GoogleSignUp(props) {
   const context = useContext(AppContext);
@@ -57,7 +58,7 @@ function GoogleSignUp(props) {
               redirectUri: "postmessage",
               grant_type: "authorization_code",
             };
-            // console.log(details);
+            console.log(details);
             var formBody = [];
             for (var property in details) {
               var encodedKey = encodeURIComponent(property);
@@ -77,14 +78,9 @@ function GoogleSignUp(props) {
               .then((response) => {
                 return response.json();
               })
-              .then((responseData) => {
-                // console.log(responseData);
-                return responseData;
-              })
-              //   got ACCESS TOKEN n REFRESH TOKEN
 
               .then((data) => {
-                // console.log(data);
+                console.log(data);
                 let at = data["access_token"];
                 let rt = data["refresh_token"];
                 let ax = data["expires_in"];

@@ -33,6 +33,7 @@ import {
   mediumBold,
 } from "../../utils/styles";
 import { post, put } from "../../utils/api";
+import Appliances from "../tenantComponents/Appliances";
 
 const useStyles = makeStyles({
   customTable: {
@@ -53,7 +54,7 @@ function OwnerPropertyForm(props) {
   const applianceState = useState({
     Microwave: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -63,10 +64,11 @@ function OwnerPropertyForm(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Dishwasher: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -76,10 +78,11 @@ function OwnerPropertyForm(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Refrigerator: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -89,10 +92,11 @@ function OwnerPropertyForm(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Washer: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -102,10 +106,11 @@ function OwnerPropertyForm(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Dryer: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -115,10 +120,11 @@ function OwnerPropertyForm(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Range: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -128,6 +134,7 @@ function OwnerPropertyForm(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
   });
   const utilityState = useState({
@@ -968,7 +975,7 @@ function OwnerPropertyForm(props) {
           </Row>
           <Row className="m-2" style={{ overflow: "scroll" }}>
             <div>
-              <Table
+              {/* <Table
                 responsive="md"
                 classes={{ root: classes.customTable }}
                 size="small"
@@ -976,7 +983,7 @@ function OwnerPropertyForm(props) {
                 <TableHead>
                   <TableRow>
                     <TableCell>Appliance</TableCell>
-                    <TableCell>Name</TableCell>
+                    <TableCell>Manufacturer</TableCell>
                     <TableCell>Purchased From</TableCell>
                     <TableCell>Purchased On</TableCell>
                     <TableCell>Purchase Order Number</TableCell>
@@ -995,7 +1002,7 @@ function OwnerPropertyForm(props) {
                       <TableRow>
                         <TableCell>{appliance}</TableCell>
                         <TableCell>
-                          {applianceState[0][appliance]["name"]}
+                          {applianceState[0][appliance]["manufacturer"]}
                         </TableCell>
                         <TableCell>
                           {applianceState[0][appliance]["purchased_from"]}
@@ -1052,7 +1059,11 @@ function OwnerPropertyForm(props) {
                     );
                   })}
                 </TableBody>
-              </Table>
+              </Table> */}
+              <Appliances
+                applianceState={applianceState}
+                appliances={appliances}
+              />
             </div>
           </Row>
         </div>

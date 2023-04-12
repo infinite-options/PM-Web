@@ -54,7 +54,7 @@ function PropertyApplicationView(props) {
   const applianceState = useState({
     Microwave: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -64,10 +64,11 @@ function PropertyApplicationView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Dishwasher: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -77,10 +78,11 @@ function PropertyApplicationView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Refrigerator: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -90,10 +92,11 @@ function PropertyApplicationView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Washer: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -103,10 +106,11 @@ function PropertyApplicationView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Dryer: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -116,10 +120,11 @@ function PropertyApplicationView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Range: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -129,6 +134,7 @@ function PropertyApplicationView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
   });
   const [selectedManager, setSelectedManager] = useState("");
@@ -461,7 +467,7 @@ function PropertyApplicationView(props) {
                   <TableHead>
                     <TableRow>
                       <TableCell>Appliance</TableCell>
-                      <TableCell>Name</TableCell>
+                      <TableCell>Manufacturer</TableCell>
 
                       <TableCell>Images</TableCell>
                     </TableRow>
@@ -475,7 +481,7 @@ function PropertyApplicationView(props) {
                         <TableRow>
                           <TableCell>{appliance}</TableCell>
                           <TableCell>
-                            {applianceState[0][appliance]["name"]}
+                            {applianceState[0][appliance]["anufacturer"]}
                           </TableCell>
 
                           {applianceState[0][appliance]["images"] !==

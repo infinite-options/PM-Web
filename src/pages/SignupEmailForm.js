@@ -280,11 +280,14 @@ function SignupEmailForm(props) {
               }
               // className="text-center d-flex justify-content-center"
             >
-              <div
-                className="text-center mb-4"
-                onClick={() => setOtherMethod(!otherMethod)}
-              >
-                <p style={boldSmall}>Choose another method</p>
+              <div className="text-center mb-4">
+                <Button
+                  variant="outline-primary"
+                  style={pillButton}
+                  onClick={() => setOtherMethod(!otherMethod)}
+                >
+                  Choose another method
+                </Button>
               </div>
             </div>
           </div>

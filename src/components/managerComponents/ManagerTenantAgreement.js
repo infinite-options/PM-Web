@@ -305,8 +305,6 @@ function ManagerTenantAgreement(props) {
         (application) => application.application_uid
       )
     );
-    // alert('ok')
-    // return
 
     for (const application of acceptedTenantApplications) {
       newAgreement.tenant_id = application.tenant_id;

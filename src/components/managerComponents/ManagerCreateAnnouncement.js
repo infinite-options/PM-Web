@@ -295,7 +295,7 @@ function ManagerCreateAnnouncement(props) {
       management_buid = management_businesses[0].business_uid;
     }
     setManagerID(management_buid);
-    // console.log(newAnnouncement);
+
     let receiver_uid = [];
     let receiver_properties_id = [];
     if (byProperty) {
@@ -342,7 +342,7 @@ function ManagerCreateAnnouncement(props) {
       receiver: receiver_uid,
       receiver_properties: receiver_properties_id,
     };
-    // setShowSpinner(true);
+    setShowSpinner(true);
     const response = await post("/announcement", new_announcement);
     channel.publish({ data: { te: new_announcement } });
     setNewAnnouncement({ ...emptyAnnouncement });
@@ -355,7 +355,7 @@ function ManagerCreateAnnouncement(props) {
     setTenantState(tenantState);
     ownerState.forEach((prop) => (prop.checked = false));
     setOwnerState(ownerState);
-    // setShowSpinner(false);
+    setShowSpinner(false);
     setEditingAnnouncement(null);
     const newAnnouncementState = [...announcementState];
     newAnnouncementState.push({ ...newAnnouncement });
@@ -369,6 +369,9 @@ function ManagerCreateAnnouncement(props) {
       name: response["name"],
       pno: response["pno"],
       email: response["email"],
+      sender_name: management_businesses[0]["business_name"],
+      sender_email: management_businesses[0]["business_email"],
+      sender_phone: management_businesses[0]["business_phone_number"],
     };
     const res = await post("/SendAnnouncement", send_announcement);
   };

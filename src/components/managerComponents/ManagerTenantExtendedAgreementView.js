@@ -207,6 +207,9 @@ function ManagerTenantExtendedAgreementView(props) {
       name: responseAnnouncement["name"],
       pno: responseAnnouncement["pno"],
       email: responseAnnouncement["email"],
+      sender_name: property.managerInfo.business_name,
+      sender_email: property.managerInfo.business_email,
+      sender_phone: property.managerInfo.business_phone_number,
     };
     const resSendAnnouncement = await post(
       "/SendAnnouncement",

@@ -122,7 +122,7 @@ function ManagerRepairRequest(props) {
         );
   }
   return (
-    <div className="d-flex flex-column w-100 p-2 overflow-hidden">
+    <div className="d-flex flex-column w-100 overflow-hidden">
       <Row style={headings} className="m-2">
         <div>New Repair Request</div>
       </Row>

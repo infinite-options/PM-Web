@@ -227,7 +227,11 @@ export default function RenterLanding() {
         {/* <div className="o">All cities</div>
         <div className="o">All neighborhoods</div>
         <div className="o">Bedrooms</div> */}
-        <div className="o search" onClick={() => setShowTable(true)}>
+        <div
+          className="o search"
+          style={{ cursor: "pointer" }}
+          onClick={() => window.scrollTo(0, 1300)}
+        >
           Search
         </div>
       </div>
@@ -235,123 +239,120 @@ export default function RenterLanding() {
       <h3>Featured Properties</h3>
       {/* <PropertyCard propImg={PropImg}/> */}
       {data.length !== 0 && <div className="p-container">{mapProperty}</div>}
-      {showTable ? (
-        <Row className="m-3">
-          <Table classes={{ root: classes.customTable }} size="small">
-            <EnhancedTableHead
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={data.length}
-            />{" "}
-            <TableBody>
-              {stableSort(data, getComparator(order, orderBy)).map(
-                (property, index) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={property.address}
-                    >
-                      <TableCell padding="none" size="small" align="center">
-                        {property.images.length > 0 ? (
+
+      <Row className="m-3">
+        <Table classes={{ root: classes.customTable }} size="small">
+          <EnhancedTableHead
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+            rowCount={data.length}
+          />{" "}
+          <TableBody>
+            {stableSort(data, getComparator(order, orderBy)).map(
+              (property, index) => {
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={property.address}
+                  >
+                    <TableCell padding="none" size="small" align="center">
+                      {property.images.length > 0 ? (
+                        <img
+                          src={property.images[0]}
+                          alt="Property"
+                          style={{
+                            borderRadius: "4px",
+                            objectFit: "cover",
+                            width: "100px",
+                            height: "100px",
+                          }}
+                        />
+                      ) : (
+                        ""
+                      )}
+                    </TableCell>
+                    <TableCell padding="none" size="small" align="center">
+                      {property.address}
+                      {property.unit !== "" ? " " + property.unit : ""}
+                    </TableCell>
+                    <TableCell padding="none" size="small" align="center">
+                      {property.city}, {property.state}
+                    </TableCell>
+                    <TableCell padding="none" size="small" align="center">
+                      {property.zip}
+                    </TableCell>
+                    <TableCell padding="none" size="small" align="center">
+                      {property.listed_rent}
+                    </TableCell>
+                    <TableCell padding="none" size="small" align="center">
+                      {property.property_type}
+                    </TableCell>
+                    <TableCell padding="none" size="small" align="center">
+                      {property.num_beds + "/" + property.num_baths}
+                    </TableCell>
+                    <TableCell padding="none" size="small" align="center">
+                      {property.business_name}
+                    </TableCell>
+                    <TableCell padding="none" size="small" align="center">
+                      <div className="contacts">
+                        <div style={{ marginRight: "10px" }}>
+                          {/* {console.log("im trying to print an apply button")} */}
                           <img
-                            src={property.images[0]}
-                            alt="Property"
-                            style={{
-                              borderRadius: "4px",
-                              objectFit: "cover",
-                              width: "100px",
-                              height: "100px",
-                            }}
+                            src={Apply}
+                            onClick={() => goToApplyToProperty()}
+                            alt="documentIcon"
                           />
-                        ) : (
-                          ""
-                        )}
-                      </TableCell>
-                      <TableCell padding="none" size="small" align="center">
-                        {property.address}
-                        {property.unit !== "" ? " " + property.unit : ""}
-                      </TableCell>
-                      <TableCell padding="none" size="small" align="center">
-                        {property.city}, {property.state}
-                      </TableCell>
-                      <TableCell padding="none" size="small" align="center">
-                        {property.zip}
-                      </TableCell>
-                      <TableCell padding="none" size="small" align="center">
-                        {property.listed_rent}
-                      </TableCell>
-                      <TableCell padding="none" size="small" align="center">
-                        {property.property_type}
-                      </TableCell>
-                      <TableCell padding="none" size="small" align="center">
-                        {property.num_beds + "/" + property.num_baths}
-                      </TableCell>
-                      <TableCell padding="none" size="small" align="center">
-                        {property.business_name}
-                      </TableCell>
-                      <TableCell padding="none" size="small" align="center">
-                        <div className="contacts">
-                          <div style={{ marginRight: "10px" }}>
-                            {/* {console.log("im trying to print an apply button")} */}
-                            <img
-                              src={Apply}
-                              onClick={() => goToApplyToProperty()}
-                              alt="documentIcon"
-                            />
-                            <div className="mask flex-center">
-                              <p
-                                className="white-text"
-                                style={{ fontSize: "14px" }}
-                              >
-                                Apply
-                              </p>
-                            </div>
-                          </div>
-                          <div>
-                            <img
-                              src={Phone}
-                              alt="Phone"
-                              style={{ marginRight: "10px" }}
-                            />
-                            <div className="mask flex-center">
-                              <p
-                                className="white-text"
-                                style={{ fontSize: "14px", marginRight: "0px" }}
-                              >
-                                Call
-                              </p>
-                            </div>
-                          </div>
-                          <div>
-                            <img
-                              src={Message}
-                              alt="Message"
-                              style={{ marginRight: "10px" }}
-                            />
-                            <div className="mask flex-center">
-                              <p
-                                className="white-text"
-                                style={{ fontSize: "14px", marginLeft: "0px" }}
-                              >
-                                Email
-                              </p>
-                            </div>
+                          <div className="mask flex-center">
+                            <p
+                              className="white-text"
+                              style={{ fontSize: "14px" }}
+                            >
+                              Apply
+                            </p>
                           </div>
                         </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                }
-              )}
-            </TableBody>
-          </Table>
-        </Row>
-      ) : (
-        ""
-      )}
+                        <div>
+                          <img
+                            src={Phone}
+                            alt="Phone"
+                            style={{ marginRight: "10px" }}
+                          />
+                          <div className="mask flex-center">
+                            <p
+                              className="white-text"
+                              style={{ fontSize: "14px", marginRight: "0px" }}
+                            >
+                              Call
+                            </p>
+                          </div>
+                        </div>
+                        <div>
+                          <img
+                            src={Message}
+                            alt="Message"
+                            style={{ marginRight: "10px" }}
+                          />
+                          <div className="mask flex-center">
+                            <p
+                              className="white-text"
+                              style={{ fontSize: "14px", marginLeft: "0px" }}
+                            >
+                              Email
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              }
+            )}
+          </TableBody>
+        </Table>
+      </Row>
     </div>
   );
 }
