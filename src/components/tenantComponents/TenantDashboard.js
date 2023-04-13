@@ -410,12 +410,6 @@ export default function TenantDashboard() {
     },
 
     {
-      id: "listed_rent",
-      numeric: true,
-      label: "Rent",
-    },
-
-    {
       id: "lease_end",
       numeric: true,
       label: "Lease End",
@@ -686,12 +680,6 @@ export default function TenantDashboard() {
     },
 
     {
-      id: "listed_rent",
-      numeric: true,
-      label: "Rent",
-    },
-
-    {
       id: "application_status",
       numeric: true,
       label: "Application Status",
@@ -847,24 +835,6 @@ export default function TenantDashboard() {
                 <Col></Col>
               </Row>
 
-              {/* <Row className="w-100 m-3">
-                <Col xs={2}> Search by</Col>
-
-                <Col>
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    onChange={(event) => {
-                      setSearch(event.target.value);
-                    }}
-                    style={{
-                      width: "400px",
-                      border: "1px solid black",
-                      padding: "5px",
-                    }}
-                  />
-                </Col>
-              </Row> */}
               <Row className="m-3" style={{ overflow: "scroll" }}>
                 <Table
                   responsive="xl"
@@ -878,23 +848,8 @@ export default function TenantDashboard() {
                     rowCount={tenantData.length}
                   />{" "}
                   <TableBody>
-                    {stableSort(tenantData, getComparator(order, orderBy))
-                      // for filtering
-                      // .filter((val) => {
-                      //   const query = search.toLowerCase();
-
-                      //   return (
-                      //     val.address.toLowerCase().indexOf(query) >= 0 ||
-                      //     val.city.toLowerCase().indexOf(query) >= 0 ||
-                      //     val.zip.toLowerCase().indexOf(query) >= 0 ||
-                      //     String(val.oldestOpenMR)
-                      //       .toLowerCase()
-                      //       .indexOf(query) >= 0 ||
-                      //     String(val.late_date).toLowerCase().indexOf(query) >=
-                      //       0
-                      //   );
-                      // })
-                      .map((property, index) => {
+                    {stableSort(tenantData, getComparator(order, orderBy)).map(
+                      (property, index) => {
                         return (
                           <TableRow
                             hover
@@ -1060,13 +1015,7 @@ export default function TenantDashboard() {
                             >
                               {property.num_beds + "/" + property.num_baths}
                             </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              ${property.listed_rent}
-                            </TableCell>
+
                             <TableCell
                               padding="none"
                               size="small"
@@ -1076,7 +1025,8 @@ export default function TenantDashboard() {
                             </TableCell>
                           </TableRow>
                         );
-                      })}
+                      }
+                    )}
                   </TableBody>
                 </Table>
               </Row>
@@ -1223,13 +1173,6 @@ export default function TenantDashboard() {
                                 {application.num_beds +
                                   "/" +
                                   application.num_baths}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                ${application.listed_rent}
                               </TableCell>
 
                               <TableCell
@@ -1830,13 +1773,7 @@ export default function TenantDashboard() {
                                   "/" +
                                   application.num_baths}
                               </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                ${application.listed_rent}
-                              </TableCell>
+
                               <TableCell
                                 padding="none"
                                 size="small"

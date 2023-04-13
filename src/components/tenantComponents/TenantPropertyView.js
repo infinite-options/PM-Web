@@ -891,7 +891,6 @@ function TenantPropertyView(props) {
                         <TableCell>Manager</TableCell>
                         <TableCell>Type</TableCell>
                         <TableCell>Size</TableCell>
-                        <TableCell>Rent</TableCell>
                         <TableCell>Lease End</TableCell>
                       </TableRow>
                     </TableHead>
@@ -954,9 +953,6 @@ function TenantPropertyView(props) {
                           {property.num_beds + "/" + property.num_baths}
                         </TableCell>
 
-                        <TableCell padding="none" size="small" align="center">
-                          {"$" + property.listed_rent}
-                        </TableCell>
                         <TableCell padding="none" size="small" align="center">
                           {property.rentalInfo.length !== 0
                             ? property.rentalInfo[0].lease_end

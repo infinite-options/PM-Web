@@ -1,6 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { TextField } from "@mui/material";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import {
   Container,
   Row,
@@ -18,16 +22,13 @@ import {
   TableHead,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Popover from "@material-ui/core/Popover";
 import AppContext from "../../AppContext";
 import Header from "../Header";
 import Checkbox from "../Checkbox";
 import DocumentsUploadPost from "../DocumentsUploadPost";
 import AddressForm from "../AddressForm";
 import { get, post } from "../../utils/api";
-import ArrowUp from "../../icons/ArrowUp.svg";
 import ArrowDown from "../../icons/ArrowDown.svg";
-import EditIcon from "../../icons/EditIcon.svg";
 import AddIcon from "../../icons/AddIcon.svg";
 import DeleteIcon from "../../icons/DeleteIcon.svg";
 import {
@@ -38,9 +39,9 @@ import {
   red,
   hidden,
   mediumBold,
-  smallPillButton,
 } from "../../utils/styles";
 import { formatPhoneNumber, formatSSN } from "../../utils/helper";
+
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -67,7 +68,12 @@ function TenantProfileInfo(props) {
   const [pets, setPets] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [references, setReferences] = useState([]);
-
+  const handleChangeFrequency = (event) => {
+    setFrequency(event.target.value);
+  };
+  const handleChangeDLState = (event) => {
+    setSelectedDlState(event.target.value);
+  };
   const updateAutofillState = (profile) => {
     const newAutofillState = { ...autofillState };
 
@@ -142,61 +148,6 @@ function TenantProfileInfo(props) {
     setAdults(fields);
   }
 
-  // function addAdults() {
-  //   return adults.map((adult, idx) => (
-  //     <Row key={idx}>
-  //       <Col>
-  //         <label htmlFor="numAdults"> Adult {idx + 1} Name </label>
-  //         <input
-  //           type="text"
-  //           className="form-control"
-  //           name="name"
-  //           value={adult.name}
-  //           onChange={(e) => handleChangeAdults(idx, e)}
-  //         />
-  //       </Col>
-  //       <Col>
-  //         <label htmlFor="numAdults">Relationship to Applicant </label>
-  //         <input
-  //           type="text"
-  //           className="form-control"
-  //           name="relationship"
-  //           value={adult.relationship}
-  //           onChange={(e) => handleChangeAdults(idx, e)}
-  //         />
-  //       </Col>
-  //       <Col>
-  //         <label htmlFor="numAdults">Date of Birth (MM/DD/YYYY)</label>
-  //         <input
-  //           type="date"
-  //           className="form-control"
-  //           name="dob"
-  //           value={adult.dob}
-  //           onChange={(e) => handleChangeAdults(idx, e)}
-  //         />
-  //       </Col>
-  //       <Col
-  //         xs={2}
-  //         style={{
-  //           paddingTop: "1.5rem",
-  //           display: "flex",
-  //           alignItems: "center",
-  //           justifyContent: "center",
-  //         }}
-  //       >
-  //         <img
-  //           src={DeleteIcon}
-  //           alt="Delete Icon"
-  //           onClick={() => handleRemoveAdults(idx)}
-  //           style={{
-  //             width: "15px",
-  //             height: "15px",
-  //           }}
-  //         />
-  //       </Col>
-  //     </Row>
-  //   ));
-  // }
   function addAdults() {
     return (
       <div>
@@ -249,7 +200,7 @@ function TenantProfileInfo(props) {
                 <TableCell
                   xs={2}
                   style={{
-                    paddingTop: "1.5rem",
+                    padding: "1.2rem",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -340,7 +291,7 @@ function TenantProfileInfo(props) {
                 <TableCell
                   xs={2}
                   style={{
-                    padding: "1.5rem",
+                    padding: "1.2rem",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -442,7 +393,7 @@ function TenantProfileInfo(props) {
                 <TableCell
                   xs={2}
                   style={{
-                    padding: "1.5rem",
+                    padding: "1.2rem",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -554,7 +505,7 @@ function TenantProfileInfo(props) {
                 <TableCell
                   xs={2}
                   style={{
-                    padding: "1.5rem",
+                    padding: "1.2rem",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -674,7 +625,7 @@ function TenantProfileInfo(props) {
                 <TableCell
                   xs={2}
                   style={{
-                    padding: "1.5rem",
+                    padding: "1.2rem",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -813,11 +764,6 @@ function TenantProfileInfo(props) {
     props.onConfirm();
   };
 
-  //popover open and close
-  function handleClick(event) {
-    setAnchorEl(event.currentTarget);
-  }
-
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -833,66 +779,243 @@ function TenantProfileInfo(props) {
     "Hourly Rate",
   ];
 
-  const usDlStates = [
-    { name: "ALABAMA", abbreviation: "AL" },
-    { name: "ALASKA", abbreviation: "AK" },
-    { name: "AMERICAN SAMOA", abbreviation: "AS" },
-    { name: "ARIZONA", abbreviation: "AZ" },
-    { name: "ARKANSAS", abbreviation: "AR" },
-    { name: "CALIFORNIA", abbreviation: "CA" },
-    { name: "COLORADO", abbreviation: "CO" },
-    { name: "CONNECTICUT", abbreviation: "CT" },
-    { name: "DELAWARE", abbreviation: "DE" },
-    { name: "DISTRICT OF COLUMBIA", abbreviation: "DC" },
-    { name: "FEDERATED STATES OF MICRONESIA", abbreviation: "FM" },
-    { name: "FLORIDA", abbreviation: "FL" },
-    { name: "GEORGIA", abbreviation: "GA" },
-    { name: "GUAM", abbreviation: "GU" },
-    { name: "HAWAII", abbreviation: "HI" },
-    { name: "IDAHO", abbreviation: "ID" },
-    { name: "ILLINOIS", abbreviation: "IL" },
-    { name: "INDIANA", abbreviation: "IN" },
-    { name: "IOWA", abbreviation: "IA" },
-    { name: "KANSAS", abbreviation: "KS" },
-    { name: "KENTUCKY", abbreviation: "KY" },
-    { name: "LOUISIANA", abbreviation: "LA" },
-    { name: "MAINE", abbreviation: "ME" },
-    { name: "MARSHALL ISLANDS", abbreviation: "MH" },
-    { name: "MARYLAND", abbreviation: "MD" },
-    { name: "MASSACHUSETTS", abbreviation: "MA" },
-    { name: "MICHIGAN", abbreviation: "MI" },
-    { name: "MINNESOTA", abbreviation: "MN" },
-    { name: "MISSISSIPPI", abbreviation: "MS" },
-    { name: "MISSOURI", abbreviation: "MO" },
-    { name: "MONTANA", abbreviation: "MT" },
-    { name: "NEBRASKA", abbreviation: "NE" },
-    { name: "NEVADA", abbreviation: "NV" },
-    { name: "NEW HAMPSHIRE", abbreviation: "NH" },
-    { name: "NEW JERSEY", abbreviation: "NJ" },
-    { name: "NEW MEXICO", abbreviation: "NM" },
-    { name: "NEW YORK", abbreviation: "NY" },
-    { name: "NORTH CAROLINA", abbreviation: "NC" },
-    { name: "NORTH DAKOTA", abbreviation: "ND" },
-    { name: "NORTHERN MARIANA ISLANDS", abbreviation: "MP" },
-    { name: "OHIO", abbreviation: "OH" },
-    { name: "OKLAHOMA", abbreviation: "OK" },
-    { name: "OREGON", abbreviation: "OR" },
-    { name: "PALAU", abbreviation: "PW" },
-    { name: "PENNSYLVANIA", abbreviation: "PA" },
-    { name: "PUERTO RICO", abbreviation: "PR" },
-    { name: "RHODE ISLAND", abbreviation: "RI" },
-    { name: "SOUTH CAROLINA", abbreviation: "SC" },
-    { name: "SOUTH DAKOTA", abbreviation: "SD" },
-    { name: "TENNESSEE", abbreviation: "TN" },
-    { name: "TEXAS", abbreviation: "TX" },
-    { name: "UTAH", abbreviation: "UT" },
-    { name: "VERMONT", abbreviation: "VT" },
-    { name: "VIRGIN ISLANDS", abbreviation: "VI" },
-    { name: "VIRGINIA", abbreviation: "VA" },
-    { name: "WASHINGTON", abbreviation: "WA" },
-    { name: "WEST VIRGINIA", abbreviation: "WV" },
-    { name: "WISCONSIN", abbreviation: "WI" },
-    { name: "WYOMING", abbreviation: "WY" },
+  const usStates = [
+    {
+      name: "Alabama",
+      abbreviation: "AL",
+    },
+    {
+      name: "Alaska",
+      abbreviation: "AK",
+    },
+    {
+      name: "American Samoa",
+      abbreviation: "AS",
+    },
+    {
+      name: "Arizona",
+      abbreviation: "AZ",
+    },
+    {
+      name: "Arkansas",
+      abbreviation: "AR",
+    },
+    {
+      name: "California",
+      abbreviation: "CA",
+    },
+    {
+      name: "Colorado",
+      abbreviation: "CO",
+    },
+    {
+      name: "Connecticut",
+      abbreviation: "CT",
+    },
+    {
+      name: "Delaware",
+      abbreviation: "DE",
+    },
+    {
+      name: "District Of Columbia",
+      abbreviation: "DC",
+    },
+    {
+      name: "Federated States Of Micronesia",
+      abbreviation: "FM",
+    },
+    {
+      name: "Florida",
+      abbreviation: "FL",
+    },
+    {
+      name: "Georgia",
+      abbreviation: "GA",
+    },
+    {
+      name: "Guam",
+      abbreviation: "GU",
+    },
+    {
+      name: "Hawaii",
+      abbreviation: "HI",
+    },
+    {
+      name: "Idaho",
+      abbreviation: "ID",
+    },
+    {
+      name: "Illinois",
+      abbreviation: "IL",
+    },
+    {
+      name: "Indiana",
+      abbreviation: "IN",
+    },
+    {
+      name: "Iowa",
+      abbreviation: "IA",
+    },
+    {
+      name: "Kansas",
+      abbreviation: "KS",
+    },
+    {
+      name: "Kentucky",
+      abbreviation: "KY",
+    },
+    {
+      name: "Louisiana",
+      abbreviation: "LA",
+    },
+    {
+      name: "Maine",
+      abbreviation: "ME",
+    },
+    {
+      name: "Marshall Islands",
+      abbreviation: "MH",
+    },
+    {
+      name: "Maryland",
+      abbreviation: "MD",
+    },
+    {
+      name: "Massachusetts",
+      abbreviation: "MA",
+    },
+    {
+      name: "Michigan",
+      abbreviation: "MI",
+    },
+    {
+      name: "Minnesota",
+      abbreviation: "MN",
+    },
+    {
+      name: "Mississippi",
+      abbreviation: "MS",
+    },
+    {
+      name: "Missouri",
+      abbreviation: "MO",
+    },
+    {
+      name: "Montana",
+      abbreviation: "MT",
+    },
+    {
+      name: "Nebraska",
+      abbreviation: "NE",
+    },
+    {
+      name: "Nevada",
+      abbreviation: "NV",
+    },
+    {
+      name: "New Hampshire",
+      abbreviation: "NH",
+    },
+    {
+      name: "New Jersey",
+      abbreviation: "NJ",
+    },
+    {
+      name: "New Mexico",
+      abbreviation: "NM",
+    },
+    {
+      name: "New York",
+      abbreviation: "NY",
+    },
+    {
+      name: "North Carolina",
+      abbreviation: "NC",
+    },
+    {
+      name: "North Dakota",
+      abbreviation: "ND",
+    },
+    {
+      name: "Northern Mariana Islands",
+      abbreviation: "MP",
+    },
+    {
+      name: "Ohio",
+      abbreviation: "OH",
+    },
+    {
+      name: "Oklahoma",
+      abbreviation: "OK",
+    },
+    {
+      name: "Oregon",
+      abbreviation: "OR",
+    },
+    {
+      name: "Palau",
+      abbreviation: "PW",
+    },
+    {
+      name: "Pennsylvania",
+      abbreviation: "PA",
+    },
+    {
+      name: "Puerto Rico",
+      abbreviation: "PR",
+    },
+    {
+      name: "Rhode Island",
+      abbreviation: "RI",
+    },
+    {
+      name: "South Carolina",
+      abbreviation: "SC",
+    },
+    {
+      name: "South Dakota",
+      abbreviation: "SD",
+    },
+    {
+      name: "Tennessee",
+      abbreviation: "TN",
+    },
+    {
+      name: "Texas",
+      abbreviation: "TX",
+    },
+    {
+      name: "Utah",
+      abbreviation: "UT",
+    },
+    {
+      name: "Vermont",
+      abbreviation: "VT",
+    },
+    {
+      name: "Virgin Islands",
+      abbreviation: "VI",
+    },
+    {
+      name: "Virginia",
+      abbreviation: "VA",
+    },
+    {
+      name: "Washington",
+      abbreviation: "WA",
+    },
+    {
+      name: "West Virginia",
+      abbreviation: "WV",
+    },
+    {
+      name: "Wisconsin",
+      abbreviation: "WI",
+    },
+    {
+      name: "Wyoming",
+      abbreviation: "WY",
+    },
   ];
 
   const required =
@@ -908,139 +1031,134 @@ function TenantProfileInfo(props) {
     <div className="pb-4 w-100 overflow-hidden">
       <Header title="Tenant Profile" />
       <div>
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            First Name (Required) {firstName === "" ? required : ""}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="First"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Last Name (Required){lastName === "" ? required : ""}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="Last"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-        </Form.Group>
-        <Row className="mx-0 my-0">
-          <Col className="px-0">
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Salary (Required) {salary === "" ? required : ""}
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="Amount"
-                value={salary}
-                onChange={(e) => setSalary(e.target.value)}
-              />
-            </Form.Group>
+        <Row className="mx-5 my-3">
+          <Col className="my-2">
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="First Name"
+              size="small"
+              error={Boolean(errorMessage)}
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </Col>
+          <Col className="my-2">
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Last Name"
+              size="small"
+              error={Boolean(errorMessage)}
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </Col>
+        </Row>
+        <Row className="mx-5 my-3">
+          <Col className="my-2">
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Salary"
+              size="small"
+              error={Boolean(errorMessage)}
+              value={salary}
+              onChange={(e) => setSalary(e.target.value)}
+            />
           </Col>
 
-          <Col
-            className="px-0"
-            onClick={(e) => {
-              handleClick(e);
-            }}
-          >
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Frequency (Required)
-              </Form.Label>
-              <DropdownButton
-                variant="light"
-                id="dropdown-basic-button"
-                title={frequency}
+          <Col className="my-2">
+            <FormControl fullWidth>
+              <InputLabel>Frequency</InputLabel>
+              <Select
+                value={frequency}
+                label="Frequency"
+                size="small"
+                error={Boolean(errorMessage)}
+                onChange={handleChangeFrequency}
               >
                 {allFrequency.map((freq, i) => (
-                  <Dropdown.Item
-                    onClick={() => setFrequency(freq)}
-                    // href="#/action-1"
-                  >
-                    {" "}
-                    {freq}{" "}
-                  </Dropdown.Item>
+                  <MenuItem value={freq}> {freq} </MenuItem>
                 ))}
-              </DropdownButton>
-            </Form.Group>
+              </Select>
+            </FormControl>
           </Col>
         </Row>
-
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Current Job Title (Required) {jobTitle === "" ? required : ""}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="Title"
-            value={jobTitle}
-            onChange={(e) => setJobTitle(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Company Name (Required){company === "" ? required : ""}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="Company"
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Social Security Number (Required) {ssn === "" ? required : ""}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="xxx-xx-xxxx"
-            value={ssn}
-            pattern="[0-9]{3}-[0-9]{2}-[0-9]{4}"
-            onChange={(e) => setSsn(formatSSN(e.target.value))}
-          />
-        </Form.Group>
-        <Row className="my-3">
-          <Col>
-            <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Driver's License Number (Required){" "}
-                {dlNumber === "" ? required : ""}
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="xxxxxxxx"
-                value={dlNumber}
-                onChange={(e) => setDLNumber(e.target.value)}
-              />
-            </Form.Group>
+        <Row className="mx-5 my-3">
+          <Col className="my-2">
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Current Job Title"
+              size="small"
+              error={Boolean(errorMessage)}
+              value={jobTitle}
+              onChange={(e) => setJobTitle(e.target.value)}
+            />
           </Col>
-          <Col>
-            <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Driver's License State {selectedDlState === "" ? required : ""}
-              </Form.Label>
+          <Col className="my-2">
+            {" "}
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Company Name"
+              size="small"
+              error={Boolean(errorMessage)}
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+            />
+          </Col>
+        </Row>
+        <Row className="mx-5 my-3">
+          <Col className="my-2">
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Social Security Number"
+              size="small"
+              error={Boolean(errorMessage)}
+              value={ssn}
+              pattern="[0-9]{3}-[0-9]{2}-[0-9]{4}"
+              onChange={(e) => setSsn(formatSSN(e.target.value))}
+            />
+          </Col>
+          <Col className="my-2"> </Col>
+        </Row>
+        <Row className="mx-5 my-3">
+          <Col className="my-2">
+            <TextField
+              fullWidth
+              variant="outlined"
+              label=" Driver's License Number"
+              size="small"
+              error={Boolean(errorMessage)}
+              value={dlNumber}
+              onChange={(e) => setDLNumber(e.target.value)}
+            />
+          </Col>
 
-              <Form.Select
-                style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+          <Col className="my-2">
+            <FormControl fullWidth>
+              <InputLabel> Driver's License State</InputLabel>
+              <Select
                 value={selectedDlState}
-                onChange={(e) => setSelectedDlState(e.target.value)}
+                label=" Driver's License State"
+                size="small"
+                error={Boolean(errorMessage)}
+                onChange={handleChangeDLState}
               >
-                {usDlStates.map((state, i) => (
-                  <option key={i}>{state.abbreviation}</option>
+                {usStates.map((state, i) => (
+                  <MenuItem value={state.abbreviation} key={i}>
+                    {" "}
+                    {state.name}{" "}
+                  </MenuItem>
                 ))}
-              </Form.Select>
-            </Form.Group>
+              </Select>
+            </FormControl>
           </Col>
         </Row>
+
         <Row className="mx-1 my-3">
           {/* ===============================< Current Address form -- > Address form >=================================================== */}
           <h5 className="mx-2 my-3">Current Address (Required)</h5>
