@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { boldSmall, pillButton } from "../utils/styles";
 export default function SignupToApply() {
-  const navigate = useNavigate;
+  const navigate = useNavigate();
   return (
     <div>
       <div className="h-100 pb-5">

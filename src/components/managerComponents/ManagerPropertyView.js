@@ -45,6 +45,7 @@ import { get, put } from "../../utils/api";
 import { days } from "../../utils/helper";
 import "react-multi-carousel/lib/styles.css";
 import { sidebarStyle } from "../../utils/styles";
+import Appliances from "../tenantComponents/Appliances";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -121,7 +122,7 @@ function ManagerPropertyView(props) {
   const applianceState = useState({
     Microwave: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -131,10 +132,11 @@ function ManagerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Dishwasher: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -144,10 +146,11 @@ function ManagerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Refrigerator: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -157,10 +160,11 @@ function ManagerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Washer: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -170,10 +174,11 @@ function ManagerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Dryer: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -183,10 +188,11 @@ function ManagerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
     Range: {
       available: false,
-      name: "",
+      manufacturer: "",
       purchased: "",
       purchased_from: "",
       purchased_order: "",
@@ -196,6 +202,7 @@ function ManagerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      url: "",
     },
   });
   const appliances = Object.keys(applianceState[0]);
@@ -690,7 +697,7 @@ function ManagerPropertyView(props) {
                 back={() => setShowCreateRevenue(false)}
               />
             ) : (
-              <div className="w-100 my-5">
+              <div className="w-100 my-5 overflow-hidden">
                 <ImageModal
                   src={imageSrc}
                   isOpen={openImage}
@@ -1068,7 +1075,7 @@ function ManagerPropertyView(props) {
                   </Row>
                 </div>
                 <div
-                  className="mx-3 my-3 p-2"
+                  className="mx-3 my-3 p-2 "
                   style={{
                     background: "#E9E9E9 0% 0% no-repeat padding-box",
                     borderRadius: "10px",
@@ -1251,7 +1258,7 @@ function ManagerPropertyView(props) {
                   </Row>
                 </div>
                 <div
-                  className="mx-3 my-3 p-2"
+                  className="mx-3 my-3  p-2"
                   style={{
                     background: "#E9E9E9 0% 0% no-repeat padding-box",
                     borderRadius: "10px",
@@ -1295,217 +1302,225 @@ function ManagerPropertyView(props) {
                           <div className="m-3">Add Appliance Information</div>
                         </Row>
                       ) : (
-                        <Table
-                          responsive="md"
-                          classes={{ root: classes.customTable }}
-                          size="small"
-                        >
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Appliance</TableCell>
-                              <TableCell>Name</TableCell>
-                              <TableCell>Purchased From</TableCell>
-                              <TableCell>Purchased On</TableCell>
-                              <TableCell>Purchase Order Number</TableCell>
-                              <TableCell>Installed On</TableCell>
-                              <TableCell>Serial Number</TableCell>
-                              <TableCell>Model Number</TableCell>
-                              <TableCell>Warranty Till</TableCell>
-                              <TableCell>Warranty Info</TableCell>
-                              <TableCell>Images</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          {/* {console.log("appliances", appliances, applianceState)} */}
+                        // <Table
+                        //   responsive="md"
+                        //   classes={{ root: classes.customTable }}
+                        //   size="small"
+                        // >
+                        //   <TableHead>
+                        //     <TableRow>
+                        //       <TableCell>Appliance</TableCell>
+                        //       <TableCell>Manufacturer</TableCell>
+                        //       <TableCell>Purchased From</TableCell>
+                        //       <TableCell>Purchased On</TableCell>
+                        //       <TableCell>Purchase Order Number</TableCell>
+                        //       <TableCell>Installed On</TableCell>
+                        //       <TableCell>Serial Number</TableCell>
+                        //       <TableCell>Model Number</TableCell>
+                        //       <TableCell>Warranty Till</TableCell>
+                        //       <TableCell>Warranty Info</TableCell>
+                        //       <TableCell>Images</TableCell>
+                        //     </TableRow>
+                        //   </TableHead>
+                        //   {/* {console.log("appliances", appliances, applianceState)} */}
 
-                          <TableBody>
-                            {appliances.map((appliance, i) => {
-                              return applianceState[0][appliance][
-                                "available"
-                              ] == true ||
-                                applianceState[0][appliance]["available"] ==
-                                  "True" ? (
-                                <TableRow>
-                                  <TableCell
-                                    onClick={
-                                      property.management_status === "ACCEPTED"
-                                        ? () => {
-                                            window.scrollTo(0, 1000);
-                                            setEditProperty(true);
-                                          }
-                                        : () => {}
-                                    }
-                                  >
-                                    {appliance}
-                                  </TableCell>
-                                  <TableCell
-                                    onClick={
-                                      property.management_status === "ACCEPTED"
-                                        ? () => {
-                                            window.scrollTo(0, 1000);
-                                            setEditProperty(true);
-                                          }
-                                        : () => {}
-                                    }
-                                  >
-                                    {applianceState[0][appliance]["name"]}
-                                  </TableCell>
-                                  <TableCell
-                                    onClick={
-                                      property.management_status === "ACCEPTED"
-                                        ? () => {
-                                            window.scrollTo(0, 1000);
-                                            setEditProperty(true);
-                                          }
-                                        : () => {}
-                                    }
-                                  >
-                                    {
-                                      applianceState[0][appliance][
-                                        "purchased_from"
-                                      ]
-                                    }
-                                  </TableCell>
-                                  <TableCell
-                                    onClick={
-                                      property.management_status === "ACCEPTED"
-                                        ? () => {
-                                            window.scrollTo(0, 1000);
-                                            setEditProperty(true);
-                                          }
-                                        : () => {}
-                                    }
-                                  >
-                                    {applianceState[0][appliance]["purchased"]}
-                                  </TableCell>
-                                  <TableCell
-                                    onClick={
-                                      property.management_status === "ACCEPTED"
-                                        ? () => {
-                                            window.scrollTo(0, 1000);
-                                            setEditProperty(true);
-                                          }
-                                        : () => {}
-                                    }
-                                  >
-                                    {
-                                      applianceState[0][appliance][
-                                        "purchased_order"
-                                      ]
-                                    }
-                                  </TableCell>
-                                  <TableCell
-                                    onClick={
-                                      property.management_status === "ACCEPTED"
-                                        ? () => {
-                                            window.scrollTo(0, 1000);
-                                            setEditProperty(true);
-                                          }
-                                        : () => {}
-                                    }
-                                  >
-                                    {applianceState[0][appliance]["installed"]}
-                                  </TableCell>
-                                  <TableCell
-                                    onClick={
-                                      property.management_status === "ACCEPTED"
-                                        ? () => {
-                                            window.scrollTo(0, 1000);
-                                            setEditProperty(true);
-                                          }
-                                        : () => {}
-                                    }
-                                  >
-                                    {applianceState[0][appliance]["serial_num"]}
-                                  </TableCell>
-                                  <TableCell
-                                    onClick={
-                                      property.management_status === "ACCEPTED"
-                                        ? () => {
-                                            window.scrollTo(0, 1000);
-                                            setEditProperty(true);
-                                          }
-                                        : () => {}
-                                    }
-                                  >
-                                    {applianceState[0][appliance]["model_num"]}
-                                  </TableCell>
-                                  <TableCell
-                                    onClick={
-                                      property.management_status === "ACCEPTED"
-                                        ? () => {
-                                            window.scrollTo(0, 1000);
-                                            setEditProperty(true);
-                                          }
-                                        : () => {}
-                                    }
-                                  >
-                                    {
-                                      applianceState[0][appliance][
-                                        "warranty_till"
-                                      ]
-                                    }
-                                  </TableCell>
-                                  <TableCell
-                                    onClick={
-                                      property.management_status === "ACCEPTED"
-                                        ? () => {
-                                            window.scrollTo(0, 1000);
-                                            setEditProperty(true);
-                                          }
-                                        : () => {}
-                                    }
-                                  >
-                                    {
-                                      applianceState[0][appliance][
-                                        "warranty_info"
-                                      ]
-                                    }
-                                  </TableCell>
+                        //   <TableBody>
+                        //     {appliances.map((appliance, i) => {
+                        //       return applianceState[0][appliance][
+                        //         "available"
+                        //       ] == true ||
+                        //         applianceState[0][appliance]["available"] ==
+                        //           "True" ? (
+                        //         <TableRow>
+                        //           <TableCell
+                        //             onClick={
+                        //               property.management_status === "ACCEPTED"
+                        //                 ? () => {
+                        //                     window.scrollTo(0, 1000);
+                        //                     setEditProperty(true);
+                        //                   }
+                        //                 : () => {}
+                        //             }
+                        //           >
+                        //             {appliance}
+                        //           </TableCell>
+                        //           <TableCell
+                        //             onClick={
+                        //               property.management_status === "ACCEPTED"
+                        //                 ? () => {
+                        //                     window.scrollTo(0, 1000);
+                        //                     setEditProperty(true);
+                        //                   }
+                        //                 : () => {}
+                        //             }
+                        //           >
+                        //             {
+                        //               applianceState[0][appliance][
+                        //                 "manufacturer"
+                        //               ]
+                        //             }
+                        //           </TableCell>
+                        //           <TableCell
+                        //             onClick={
+                        //               property.management_status === "ACCEPTED"
+                        //                 ? () => {
+                        //                     window.scrollTo(0, 1000);
+                        //                     setEditProperty(true);
+                        //                   }
+                        //                 : () => {}
+                        //             }
+                        //           >
+                        //             {
+                        //               applianceState[0][appliance][
+                        //                 "purchased_from"
+                        //               ]
+                        //             }
+                        //           </TableCell>
+                        //           <TableCell
+                        //             onClick={
+                        //               property.management_status === "ACCEPTED"
+                        //                 ? () => {
+                        //                     window.scrollTo(0, 1000);
+                        //                     setEditProperty(true);
+                        //                   }
+                        //                 : () => {}
+                        //             }
+                        //           >
+                        //             {applianceState[0][appliance]["purchased"]}
+                        //           </TableCell>
+                        //           <TableCell
+                        //             onClick={
+                        //               property.management_status === "ACCEPTED"
+                        //                 ? () => {
+                        //                     window.scrollTo(0, 1000);
+                        //                     setEditProperty(true);
+                        //                   }
+                        //                 : () => {}
+                        //             }
+                        //           >
+                        //             {
+                        //               applianceState[0][appliance][
+                        //                 "purchased_order"
+                        //               ]
+                        //             }
+                        //           </TableCell>
+                        //           <TableCell
+                        //             onClick={
+                        //               property.management_status === "ACCEPTED"
+                        //                 ? () => {
+                        //                     window.scrollTo(0, 1000);
+                        //                     setEditProperty(true);
+                        //                   }
+                        //                 : () => {}
+                        //             }
+                        //           >
+                        //             {applianceState[0][appliance]["installed"]}
+                        //           </TableCell>
+                        //           <TableCell
+                        //             onClick={
+                        //               property.management_status === "ACCEPTED"
+                        //                 ? () => {
+                        //                     window.scrollTo(0, 1000);
+                        //                     setEditProperty(true);
+                        //                   }
+                        //                 : () => {}
+                        //             }
+                        //           >
+                        //             {applianceState[0][appliance]["serial_num"]}
+                        //           </TableCell>
+                        //           <TableCell
+                        //             onClick={
+                        //               property.management_status === "ACCEPTED"
+                        //                 ? () => {
+                        //                     window.scrollTo(0, 1000);
+                        //                     setEditProperty(true);
+                        //                   }
+                        //                 : () => {}
+                        //             }
+                        //           >
+                        //             {applianceState[0][appliance]["model_num"]}
+                        //           </TableCell>
+                        //           <TableCell
+                        //             onClick={
+                        //               property.management_status === "ACCEPTED"
+                        //                 ? () => {
+                        //                     window.scrollTo(0, 1000);
+                        //                     setEditProperty(true);
+                        //                   }
+                        //                 : () => {}
+                        //             }
+                        //           >
+                        //             {
+                        //               applianceState[0][appliance][
+                        //                 "warranty_till"
+                        //               ]
+                        //             }
+                        //           </TableCell>
+                        //           <TableCell
+                        //             onClick={
+                        //               property.management_status === "ACCEPTED"
+                        //                 ? () => {
+                        //                     window.scrollTo(0, 1000);
+                        //                     setEditProperty(true);
+                        //                   }
+                        //                 : () => {}
+                        //             }
+                        //           >
+                        //             {
+                        //               applianceState[0][appliance][
+                        //                 "warranty_info"
+                        //               ]
+                        //             }
+                        //           </TableCell>
 
-                                  {applianceState[0][appliance]["images"] !==
-                                    undefined &&
-                                  applianceState[0][appliance]["images"]
-                                    .length > 0 ? (
-                                    <TableCell>
-                                      <Row className="d-flex justify-content-center align-items-center p-1">
-                                        <Col className="d-flex justify-content-center align-items-center p-0 m-0">
-                                          <img
-                                            // key={Date.now()}
-                                            src={`${
-                                              applianceState[0][appliance][
-                                                "images"
-                                              ][0]
-                                            }?${Date.now()}`}
-                                            onClick={() =>
-                                              showImage(
-                                                `${
-                                                  applianceState[0][appliance][
-                                                    "images"
-                                                  ][0]
-                                                }?${Date.now()}`
-                                              )
-                                            }
-                                            style={{
-                                              borderRadius: "4px",
-                                              objectFit: "contain",
-                                              width: "50px",
-                                              height: "50px",
-                                            }}
-                                            alt="Property"
-                                          />
-                                        </Col>
-                                      </Row>
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell>None</TableCell>
-                                  )}
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            })}
-                          </TableBody>
-                        </Table>
+                        //           {applianceState[0][appliance]["images"] !==
+                        //             undefined &&
+                        //           applianceState[0][appliance]["images"]
+                        //             .length > 0 ? (
+                        //             <TableCell>
+                        //               <Row className="d-flex justify-content-center align-items-center p-1">
+                        //                 <Col className="d-flex justify-content-center align-items-center p-0 m-0">
+                        //                   <img
+                        //                     // key={Date.now()}
+                        //                     src={`${
+                        //                       applianceState[0][appliance][
+                        //                         "images"
+                        //                       ][0]
+                        //                     }?${Date.now()}`}
+                        //                     onClick={() =>
+                        //                       showImage(
+                        //                         `${
+                        //                           applianceState[0][appliance][
+                        //                             "images"
+                        //                           ][0]
+                        //                         }?${Date.now()}`
+                        //                       )
+                        //                     }
+                        //                     style={{
+                        //                       borderRadius: "4px",
+                        //                       objectFit: "contain",
+                        //                       width: "50px",
+                        //                       height: "50px",
+                        //                     }}
+                        //                     alt="Property"
+                        //                   />
+                        //                 </Col>
+                        //               </Row>
+                        //             </TableCell>
+                        //           ) : (
+                        //             <TableCell>None</TableCell>
+                        //           )}
+                        //         </TableRow>
+                        //       ) : (
+                        //         ""
+                        //       );
+                        //     })}
+                        //   </TableBody>
+                        // </Table>
+                        <Appliances
+                          appliances={appliances}
+                          applianceState={applianceState}
+                        />
                       )}
                     </div>
                   </Row>

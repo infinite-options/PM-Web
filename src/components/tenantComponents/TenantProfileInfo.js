@@ -938,7 +938,7 @@ function TenantProfileInfo(props) {
               </Form.Label>
               <Form.Control
                 style={squareForm}
-                placeholder="75000"
+                placeholder="Amount"
                 value={salary}
                 onChange={(e) => setSalary(e.target.value)}
               />
@@ -1017,7 +1017,7 @@ function TenantProfileInfo(props) {
               </Form.Label>
               <Form.Control
                 style={squareForm}
-                placeholder="1234567890"
+                placeholder="xxxxxxxx"
                 value={dlNumber}
                 onChange={(e) => setDLNumber(e.target.value)}
               />
