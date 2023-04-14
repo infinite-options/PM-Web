@@ -67,7 +67,7 @@ function ApplianceImages(props) {
     if (file.type !== "application/pdf") {
       readImage(newFile);
     }
-    console.log(newFile);
+    // console.log(newFile);
   };
   const updateNewFile = (field, value) => {
     const newFileCopy = { ...newFile };
@@ -90,7 +90,7 @@ function ApplianceImages(props) {
 
     newFiles.push(newFile);
     setFiles(newFiles);
-    console.log(newFiles);
+    // console.log(newFiles);
     setAddDoc(!addDoc);
     setNewFile(null);
   };

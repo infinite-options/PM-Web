@@ -397,7 +397,7 @@ function ReviewPropertyLease(props) {
   };
   const rejectLease = async () => {
     if (rentals.length > 0) {
-      console.log("in approvelease", rentals);
+      // console.log("in approvelease", rentals);
       if (rentals.some((rental) => rental.rental_status === "PROCESSING")) {
         let i = rentals.findIndex(
           (rental) => rental.rental_status === "PROCESSING"

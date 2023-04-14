@@ -86,7 +86,7 @@ function OwnerProfile(props) {
     showSidebar: width > 1023,
   };
   const loadProfile = (profile) => {
-    console.log(profile.owner_ssn);
+    // console.log(profile.owner_ssn);
     setProfileInfo(profile);
     setFirstName(profile.owner_first_name);
     setLastName(profile.owner_last_name);

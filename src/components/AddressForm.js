@@ -7,6 +7,11 @@ import {
   DropdownButton,
   Dropdown,
 } from "react-bootstrap";
+import { TextField } from "@mui/material";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import {
   Table,
   TableRow,
@@ -357,85 +362,73 @@ function AddressForm(props) {
     <div>
       {editProfile ? (
         <div>
-          <Row>
-            <Col className="px-0">
-              <Form.Group className="mx-2 mb-3">
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Street {street === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="Street"
-                  value={street}
-                  onChange={(e) => updateAddressState(e, "street")}
-                />
-              </Form.Group>
+          <Row className="mx-5 my-3">
+            <Col className="my-2">
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Street"
+                size="small"
+                error={Boolean(errorMessage)}
+                value={street}
+                onChange={(e) => updateAddressState(e, "street")}
+              />
             </Col>
           </Row>
-          <Row>
-            <Col className="px-0">
-              <Form.Group className="mx-2 mb-3">
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Unit
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="Unit"
-                  value={unit}
-                  onChange={(e) => updateAddressState(e, "unit")}
-                />
-              </Form.Group>
+          <Row className="mx-5 my-3">
+            <Col className="my-2">
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="City"
+                size="small"
+                error={Boolean(errorMessage)}
+                value={unit}
+                onChange={(e) => updateAddressState(e, "unit")}
+              />
             </Col>
-            <Col className="px-0">
-              <Form.Group className="mx-2 mb-3">
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  City {city === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="City"
-                  value={city}
-                  onChange={(e) => updateAddressState(e, "city")}
-                />
-              </Form.Group>
+            <Col className="my-2">
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Unit"
+                size="small"
+                error={Boolean(errorMessage)}
+                value={city}
+                onChange={(e) => updateAddressState(e, "city")}
+              />
             </Col>
           </Row>
-          <Row>
-            <Col className="px-0">
-              <Form.Group className="mx-2 mb-3">
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  State {state === "" ? required : ""}
-                </Form.Label>
-
-                <Form.Select
-                  style={{
-                    ...squareForm,
-                    backgroundImage: `url(${ArrowDown})`,
-                  }}
+          <Row className="mx-5 my-3">
+            <Col className="my-2">
+              <FormControl fullWidth>
+                <InputLabel>State</InputLabel>
+                <Select
                   value={selectedState}
+                  label="State"
+                  size="small"
+                  error={Boolean(errorMessage)}
                   onChange={(e) => setSelectedState(e.target.value)}
                 >
                   {usStates.map((state, i) => (
-                    <option value={state.abbreviation} key={i}>
+                    <MenuItem value={state.abbreviation} key={i}>
                       {state.name}
-                    </option>
+                    </MenuItem>
                   ))}
-                </Form.Select>
-              </Form.Group>
+                </Select>
+              </FormControl>
             </Col>
 
-            <Col className="px-0">
-              <Form.Group className="mx-2 mb-3">
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Zip Code {zip === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="Zip"
-                  value={zip}
-                  onChange={(e) => updateAddressState(e, "zip")}
-                />
-              </Form.Group>
+            <Col className="my-2">
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Zip Code"
+                size="small"
+                error={Boolean(errorMessage)}
+                value={zip}
+                onChange={(e) => updateAddressState(e, "zip")}
+              />
             </Col>
           </Row>
           <Row>
@@ -470,103 +463,65 @@ function AddressForm(props) {
           {useDetailsIfRenting || hideRentingCheckbox ? (
             <div>
               <h5 className="mx-2 my-3">Additional details</h5>
-              <Row>
-                <Col className="px-0">
-                  <Form.Group className="mx-2 mb-3">
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      Name of Property Manager (if renting)
-                    </Form.Label>
-                    <Form.Control
-                      style={squareForm}
-                      placeholder="Name"
-                      value={pm_name}
-                      onChange={(e) => updateAddressState(e, "pm_name")}
-                    />
-                  </Form.Group>
+              <Row className="mx-5 my-3">
+                <Col className="my-2">
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    label=" Name of Property Manager (if renting)"
+                    size="small"
+                    value={pm_name}
+                    onChange={(e) => updateAddressState(e, "pm_name")}
+                  />
                 </Col>
               </Row>
-              <Row>
-                <Col className="px-0">
-                  <Form.Group className="mx-2 mb-3">
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      Property Manager's phone number (if renting)
-                    </Form.Label>
-                    <Form.Control
-                      style={squareForm}
-                      value={pm_number}
-                      placeholder="(xxx)xxx-xxxx"
-                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                      // onChange={(e) => updateAddressState(e, "pm_number")}
-                      onChange={(e) => handlePhoneNumber(e, "pm_number")}
-                    />
-                  </Form.Group>
+              <Row className="mx-5 my-3">
+                <Col className="my-2">
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    label="Property Manager's phone number (if renting)"
+                    size="small"
+                    value={pm_number}
+                    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                    onChange={(e) => handlePhoneNumber(e, "pm_number")}
+                  />
                 </Col>
               </Row>
-              <Row>
-                <Col className="px-0">
-                  <Form.Group className="mx-2 mb-3">
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      Lease Start Date {lease_start === "" ? required : ""}
-                    </Form.Label>
-                    <Form.Control
-                      style={squareForm}
-                      placeholder="MM/YYYY"
-                      value={lease_start}
-                      onChange={(e) => updateAddressState(e, "lease_start")}
-                    />
-                  </Form.Group>
+              <Row className="mx-5 my-3">
+                <Col className="my-2">
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    label=" Lease Start Date"
+                    size="small"
+                    value={lease_start}
+                    onChange={(e) => updateAddressState(e, "lease_start")}
+                  />
                 </Col>
-                <Col className="px-0">
-                  <Form.Group className="mx-2 mb-3">
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      Lease End Date
-                    </Form.Label>
-                    <Form.Control
-                      style={squareForm}
-                      placeholder="MM/YYYY"
-                      value={lease_end}
-                      onChange={(e) => updateAddressState(e, "lease_end")}
-                    />
-                  </Form.Group>
+                <Col className="my-2">
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    label=" Lease End Date"
+                    size="small"
+                    value={lease_end}
+                    onChange={(e) => updateAddressState(e, "lease_end")}
+                  />
                 </Col>
               </Row>
-              <Row>
-                <Col className="px-0">
-                  <Form.Group className="mx-2 mb-3">
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      Monthly Rent {rent === "" ? required : ""}
-                    </Form.Label>
-                    <Form.Control
-                      style={squareForm}
-                      placeholder="Amount($)"
-                      value={rent}
-                      onChange={(e) => updateAddressState(e, "rent")}
-                    />
-                  </Form.Group>
+              <Row className="mx-5 my-3">
+                <Col className="my-2">
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    label="Monthly Rent "
+                    size="small"
+                    value={rent}
+                    onChange={(e) => updateAddressState(e, "rent")}
+                  />
                 </Col>
               </Row>
-              {/* <Row>
-                <Col
-                  xs={2}
-                  className="px-0 d-flex justify-content-end align-items-center"
-                >
-                  <div>
-                    <Checkbox
-                      type="BOX"
-                      onClick={() => setUsePreviousAddress(!usePreviousAddress)}
-                    />
-                  </div>
-                </Col>
-                <Col>
-                  <p
-                    style={{ ...underline, ...small }}
-                    className="text-primary mb-1 me-3"
-                  >
-                    Add another property manager reference if your last lease
-                    was for less than 2 years.
-                  </p>
-                </Col>
-              </Row> */}
             </div>
           ) : (
             ""

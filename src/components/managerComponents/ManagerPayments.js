@@ -21,6 +21,7 @@ export default function ManagerPayments(props) {
   const [verified, setVerified] = useState(false);
 
   const [deleted, setDeleted] = useState(false);
+  const [paid, setPaid] = useState(false);
   useEffect(() => {
     updateDimensions();
 
@@ -82,7 +83,7 @@ export default function ManagerPayments(props) {
   useEffect(() => {
     // console.log("in use effect");
     fetchManagerPayments();
-  }, [paymentOptions, verified, deleted]);
+  }, [paymentOptions, verified, deleted, paid]);
   const handlePaymentOption = (index) => {
     // console.log("payment choice called");
     let temp = paymentOptions.slice();
@@ -114,6 +115,8 @@ export default function ManagerPayments(props) {
                 type={false}
                 deleted={deleted}
                 setDeleted={setDeleted}
+                paid={paid}
+                setPaid={setPaid}
                 managerID={managerID}
                 selectedProperty={propertyData.result[0]}
                 paymentSelection={paymentOptions}

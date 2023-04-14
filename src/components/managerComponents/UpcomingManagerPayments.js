@@ -9,12 +9,23 @@ import {
   TableSortLabel,
   Box,
 } from "@material-ui/core";
-import { Container, Row, Col } from "react-bootstrap";
+import { TextField } from "@mui/material";
+import Dialog from "@material-ui/core/Dialog";
+import * as ReactBootStrap from "react-bootstrap";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { Form, Button, Container, Row, Col, Modal } from "react-bootstrap";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import DeleteIcon from "../../icons/DeleteIcon.svg";
-import { put } from "../../utils/api";
+import confirmCheck from "../../icons/confirmCheck.svg";
+import WF_Logo from "../../icons/WF-Logo.png";
+import BofA_Logo from "../../icons/BofA-Logo.png";
+import Chase_Logo from "../../icons/Chase-Logo.png";
+import Citi_Logo from "../../icons/Citi-Logo.png";
+import { post, put } from "../../utils/api";
 import { headings, subHeading } from "../../utils/styles";
 
 const useStyles = makeStyles({
@@ -29,19 +40,203 @@ export default function UpcomingManagerPayments(props) {
   const navigate = useNavigate();
   const classes = useStyles();
   const [totalSum, setTotalSum] = useState(0);
-
+  const [showSpinner, setShowSpinner] = useState(false);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("next_payment");
   const [orderIncoming, setOrderIncoming] = useState("asc");
   const [orderIncomingBy, setOrderIncomingBy] = useState("next_payment");
+  const [paidModalShow, setPaidModalShow] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState("");
   const [purchaseUIDs, setPurchaseUIDs] = useState([]); //figure out which payment is being payed for
   const [purchases, setPurchases] = useState([]); //figure out which payment is being payed for
+  const [chargeID, setChargeID] = useState("");
+  const [paymentNotes, setPaymentNotes] = useState("");
+  const [paymentType, setPaymentType] = useState("");
   const rents = props.data; //array of objects
-  const { deleted, setDeleted } = props;
+  const { deleted, setDeleted, paid, setPaid } = props;
   const managerID = props.managerID;
   const goToPayment = () => {
     navigate("/manager-payments");
     // <PaymentComponent data = {rents}/>
+  };
+  const hideModal = () => {
+    setPaidModalShow(false);
+  };
+  const makePayment = async () => {
+    setShowSpinner(true);
+    var newPayment = {
+      pay_purchase_id: selectedPayment.purchase_uid,
+      amount: selectedPayment.amount_due,
+      payment_notes: paymentNotes,
+      charge_id: chargeID,
+      payment_type: paymentType,
+    };
+    const response = await post("/payments", newPayment);
+    setShowSpinner(false);
+    setPaid(true);
+    setPaidModalShow(false);
+  };
+  const selectPaymentType = (id) => {
+    var childImages = document.getElementById("payment").children;
+
+    var i;
+
+    // clear any other borders that might be set
+    for (i = 0; i < childImages.length; i++) {
+      childImages[i].style.border = "";
+    }
+    document.getElementById(id).style.border = "1px solid black";
+  };
+
+  const paidModal = () => {
+    const footerStyle = {
+      border: "none",
+      backgroundColor: " #F3F3F8",
+    };
+    const bodyStyle = {
+      backgroundColor: " #F3F3F8",
+    };
+    return (
+      <Dialog
+        open={paidModalShow}
+        onClose={hideModal}
+        maxWidth="md"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle closeButton>{selectedPayment.description}</DialogTitle>
+        <DialogContent>
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                disabled
+                variant="outlined"
+                label="Type"
+                size="small"
+                value={selectedPayment.purchase_type}
+              />
+            </Col>
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                disabled
+                variant="outlined"
+                label="Amount"
+                size="small"
+                value={selectedPayment.amount_due}
+              />
+            </Col>
+          </Row>
+          <Row className="my-2">
+            <Col>
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Charge ID"
+                size="small"
+                value={chargeID}
+                onChange={(e) => setChargeID(e.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Message"
+                size="small"
+                value={paymentNotes}
+                onChange={(e) => setPaymentNotes(e.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row className="text-center mt-5" id="payment">
+            <img
+              id="bofa"
+              alt="Bank of America Logo"
+              onClick={() => {
+                setPaymentType("BANK OF AMERICA");
+                selectPaymentType("bofa");
+              }}
+              src={BofA_Logo}
+              style={{
+                width: "160px",
+                height: "100px",
+                objectFit: "contain",
+                cursor: "pointer",
+              }}
+            />
+
+            <img
+              id="chase"
+              alt="Chase Logo"
+              onClick={() => {
+                setPaymentType("CHASE");
+                selectPaymentType("chase");
+              }}
+              src={Chase_Logo}
+              style={{
+                width: "160px",
+                height: "100px",
+                objectFit: "contain",
+                cursor: "pointer",
+              }}
+            />
+            <img
+              id="citi"
+              alt="Citi Logo"
+              onClick={() => {
+                setPaymentType("CITI");
+                selectPaymentType("citi");
+              }}
+              src={Citi_Logo}
+              style={{
+                width: "160px",
+                height: "100px",
+                objectFit: "contain",
+                cursor: "pointer",
+              }}
+            />
+
+            <img
+              id="wf"
+              alt="Wells Fargo Logo"
+              onClick={() => {
+                setPaymentType("WELLS FARGO");
+                selectPaymentType("wf");
+              }}
+              src={WF_Logo}
+              style={{
+                width: "160px",
+                height: "100px",
+                objectFit: "contain",
+                cursor: "pointer",
+              }}
+            />
+          </Row>
+        </DialogContent>
+        {showSpinner ? (
+          <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
+            <ReactBootStrap.Spinner animation="border" role="status" />
+          </div>
+        ) : (
+          ""
+        )}
+        <DialogActions>
+          <Button onClick={makePayment} color="primary">
+            Yes
+          </Button>
+          <Button onClick={hideModal} color="primary">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
   };
 
   function handleCheck(event, pur, amt, pid) {
@@ -347,6 +542,7 @@ export default function UpcomingManagerPayments(props) {
       numeric: true,
       label: "Amount",
     },
+    { id: "", numeric: false, label: "Mark Paid" },
   ];
 
   function EnhancedTableHeadIncomingPayments(props) {
@@ -631,7 +827,7 @@ export default function UpcomingManagerPayments(props) {
                         >
                           {row.next_payment.substring(0, 10)}
                         </TableCell>
-                        <TableCell align="right" style={{ width: "83px" }}>
+                        <TableCell align="center" style={{ width: "83px" }}>
                           <img
                             src={DeleteIcon}
                             alt="Delete Icon"
@@ -642,6 +838,18 @@ export default function UpcomingManagerPayments(props) {
                         <TableCell align="right">
                           {Math.abs(row.amount_due).toFixed(2)}
                         </TableCell>
+                        <TableCell align="center" style={{ width: "83px" }}>
+                          <img
+                            src={confirmCheck}
+                            alt="Mark as Paid"
+                            style={{ width: "30px" }}
+                            className="px-1 mx-2"
+                            onClick={() => {
+                              setPaidModalShow(true);
+                              setSelectedPayment(row);
+                            }}
+                          />
+                        </TableCell>
                       </TableRow>
                     ) : (
                       ""
@@ -651,6 +859,7 @@ export default function UpcomingManagerPayments(props) {
             </TableBody>
           </Table>
         </Row>
+        {paidModal()}
       </div>
     </div>
   );

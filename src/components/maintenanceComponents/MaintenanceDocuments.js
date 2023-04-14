@@ -93,7 +93,7 @@ export default function MaintenanceDocuments() {
     setEditingDoc(file);
     setNewFile({ ...file });
   };
-  console.log(businessUploadDocuments);
+  // console.log(businessUploadDocuments);
   const deleteDocument = async (i) => {
     const newFiles = files.filter((file, index) => index !== i);
     setFiles(newFiles);

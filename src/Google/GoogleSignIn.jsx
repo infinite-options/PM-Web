@@ -23,7 +23,7 @@ function GoogleSignIn(props) {
   const [showSpinner, setShowSpinner] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [accessToken, setAccessToken] = useState("");
-  const { userData, updateUserData } = useContext(AppContext);
+  const { userData, updateUserData, setTimeLoggedIn } = useContext(AppContext);
   let signupStage = props.signupStage;
   // gets back ID token, decoded to get email and other account info, used to sign in
   function handleCallBackResponse(response) {
@@ -138,6 +138,7 @@ function GoogleSignIn(props) {
         // add validation
       } else {
         // console.log(response);
+        setTimeLoggedIn(new Date().toLocaleString());
         props.onConfirm(response.result.user.role, e);
       }
     } else {
@@ -154,6 +155,7 @@ function GoogleSignIn(props) {
       }
       // console.log("login", response.result);
       updateUserData(response.result);
+      setTimeLoggedIn(new Date().toLocaleString());
       // save to app state / context
       setShowSpinner(false);
       setLoginStage("ROLE");

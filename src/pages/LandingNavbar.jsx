@@ -11,7 +11,7 @@ function LandingNavbar() {
   const [open, setOpen] = useState(false);
   const [openRoles, setOpenRoles] = useState(false);
   const navigate = useNavigate();
-  const { userData } = React.useContext(AppContext);
+  const { userData, timeLoggedIn } = React.useContext(AppContext);
   const { user } = userData;
   // console.log(user);
   const availableRoles = user !== null ? user.role.split(",") : [];
@@ -261,6 +261,7 @@ function LandingNavbar() {
                   Modify Existing
                 </Button>
               </div>
+              <div>Logged in: {timeLoggedIn}</div>
             </Col>
           )}
         </div>
