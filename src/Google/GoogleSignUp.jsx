@@ -58,7 +58,7 @@ function GoogleSignUp(props) {
               redirectUri: "postmessage",
               grant_type: "authorization_code",
             };
-            console.log(details);
+            // console.log(details);
             var formBody = [];
             for (var property in details) {
               var encodedKey = encodeURIComponent(property);
@@ -80,7 +80,7 @@ function GoogleSignUp(props) {
               })
 
               .then((data) => {
-                console.log(data);
+                // console.log(data);
                 let at = data["access_token"];
                 let rt = data["refresh_token"];
                 let ax = data["expires_in"];

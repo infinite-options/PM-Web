@@ -187,18 +187,18 @@ function PropertyAppliances(props) {
 
       const newFiles = [...files];
 
-      console.log(newFiles);
+      // console.log(newFiles);
       let i = 0;
       for (let i = 0; i < newFiles.length; i++) {
-        console.log(i);
+        // console.log(i);
         let key = newFiles[i].coverPhoto
           ? `img_${appliance}_cover`
           : `img_${appliance}_${i++}`;
-        console.log(key);
-        console.log(newFiles[i]);
+        // console.log(key);
+        // console.log(newFiles[i]);
 
         if (newFiles[i].file !== undefined) {
-          console.log(newFiles[i]);
+          // console.log(newFiles[i]);
           newProperty[key] = newFiles[i].file;
         } else {
           newProperty[key] = newFiles[i].link;

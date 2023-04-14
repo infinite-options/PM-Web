@@ -12,7 +12,8 @@ import { post } from "../utils/api";
 import { pillButton, boldSmall, red, small, hidden } from "../utils/styles";
 
 function Login(props) {
-  const { userData, updateUserData } = useContext(AppContext);
+  const { userData, updateUserData, timeLoggedIn, setTimeLoggedIn } =
+    useContext(AppContext);
   const navigate = useNavigate();
   const [passModal, setpassModal] = useState(false);
   const [emailLogin, setEmailLogin] = useState(false);
@@ -21,7 +22,6 @@ function Login(props) {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [showSpinner, setShowSpinner] = useState(false);
-  // console.log("stage", loginStage, props.signupStage);
   useEffect(() => {
     if (userData.access_token !== null) {
       setLoginStage("ROLE");
@@ -45,7 +45,7 @@ function Login(props) {
       return;
       // add validation
     }
-    // console.log("login", response.result);
+    setTimeLoggedIn(new Date().toLocaleString());
     updateUserData(response.result);
     setShowSpinner(false);
     // save to app state / context

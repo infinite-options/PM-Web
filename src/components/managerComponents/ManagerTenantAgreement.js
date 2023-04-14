@@ -319,7 +319,7 @@ function ManagerTenantAgreement(props) {
       const update_application = await put("/applications", request_body);
       channel_application.publish({ data: { te: request_body } });
       // console.log(response)
-      console.log(application);
+      // console.log(application);
       const newMessage = {
         sender_name: application.business_name,
         sender_email: application.business_email,

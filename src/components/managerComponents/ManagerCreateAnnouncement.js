@@ -189,12 +189,12 @@ function ManagerCreateAnnouncement(props) {
       property_uid: "",
     };
     properties_unique.forEach((property) => {
-      console.log(
-        property,
-        property.property_uid,
-        property.rentalInfo,
-        property.owner_id
-      );
+      // console.log(
+      //   property,
+      //   property.property_uid,
+      //   property.rentalInfo,
+      //   property.owner_id
+      // );
       if (property.owner_id !== "") {
         owner_details = {
           owner_id: property.owner_id,

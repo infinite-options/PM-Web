@@ -168,9 +168,9 @@ function TenantProfile(props) {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   const fetchProfile = async () => {
-    console.log(user.tenant_id.length);
+    // console.log(user.tenant_id.length);
     if (user.tenant_id.length !== 0) {
-      console.log("in if");
+      // console.log("in if");
       const response = await get(
         `/tenantProfileInfo?tenant_id=${user.tenant_id[0].tenant_id}`
       );

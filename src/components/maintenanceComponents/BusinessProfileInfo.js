@@ -23,7 +23,7 @@ import { formatPhoneNumber, formatEIN } from "../../utils/helper";
 function BusinessProfileInfo(props) {
   const context = useContext(AppContext);
   const { access_token, user } = context.userData;
-  console.log("user", user);
+  // console.log("user", user);
   const { autofillState, setAutofillState, businessType } = props;
   const updateAutofillState = (profile) => {
     const newAutofillState = { ...autofillState };

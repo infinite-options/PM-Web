@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppContext from "./AppContext";
 import Landing from "./pages/LandingNavbar";
@@ -88,6 +88,7 @@ function App() {
     refresh_token: JSON.parse(localStorage.getItem("refresh_token")),
     user: JSON.parse(localStorage.getItem("user")),
   });
+  const [timeLoggedIn, setTimeLoggedIn] = useState("");
   const ably_api_key = process.env.REACT_APP_ABLY_API_KEY;
   const ably = new Ably.Realtime(ably_api_key);
   const updateUserData = (newUserData) => {
@@ -116,7 +117,15 @@ function App() {
   // console.log(userData);
   return (
     <AppContext.Provider
-      value={{ userData, updateUserData, logout, refresh, ably }}
+      value={{
+        userData,
+        updateUserData,
+        logout,
+        refresh,
+        ably,
+        timeLoggedIn,
+        setTimeLoggedIn,
+      }}
     >
       <BrowserRouter>
         <LandingNavbar />

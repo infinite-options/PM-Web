@@ -495,7 +495,6 @@ function OwnerRepairList(props) {
                                   />
                                 )}
                               </TableCell>
-                              {console.log(row, repair)}
                               <TableCell
                                 padding="none"
                                 size="small"

@@ -737,7 +737,7 @@ function OwnerPropertyView(props) {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
-  console.log(selectedTenant);
+  // console.log(selectedTenant);
 
   return Object.keys(property).length > 1 ? (
     showManagementContract ? (
