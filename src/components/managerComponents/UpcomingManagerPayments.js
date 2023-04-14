@@ -158,6 +158,7 @@ export default function UpcomingManagerPayments(props) {
           <Row className="text-center mt-5" id="payment">
             <img
               id="bofa"
+              alt="Bank of America Logo"
               onClick={() => {
                 setPaymentType("BANK OF AMERICA");
                 selectPaymentType("bofa");
@@ -173,6 +174,7 @@ export default function UpcomingManagerPayments(props) {
 
             <img
               id="chase"
+              alt="Chase Logo"
               onClick={() => {
                 setPaymentType("CHASE");
                 selectPaymentType("chase");
@@ -187,6 +189,7 @@ export default function UpcomingManagerPayments(props) {
             />
             <img
               id="citi"
+              alt="Citi Logo"
               onClick={() => {
                 setPaymentType("CITI");
                 selectPaymentType("citi");
@@ -202,6 +205,7 @@ export default function UpcomingManagerPayments(props) {
 
             <img
               id="wf"
+              alt="Wells Fargo Logo"
               onClick={() => {
                 setPaymentType("WELLS FARGO");
                 selectPaymentType("wf");
