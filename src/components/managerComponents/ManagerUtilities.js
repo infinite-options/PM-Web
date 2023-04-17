@@ -2548,7 +2548,7 @@ function ManagerUtilities(props) {
                   <Form.Group style={mediumBold}>
                     <Form.Label>Message</Form.Label>
                     <Form.Control
-                      placeholder="PMTEST"
+                      placeholder="Enter a payment message"
                       style={squareForm}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
@@ -2860,7 +2860,7 @@ function ManagerUtilities(props) {
                     <Form.Group style={mediumBold}>
                       <Form.Label>Message</Form.Label>
                       <Form.Control
-                        placeholder="PMTEST"
+                        placeholder="Enter a payment message"
                         style={squareForm}
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
