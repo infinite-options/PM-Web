@@ -73,7 +73,10 @@ export default function UpcomingManagerPayments(props) {
     };
     const response = await post("/payments", newPayment);
     setShowSpinner(false);
-    setPaid(true);
+    setPaid(!paid);
+    setChargeID("");
+    setPaymentType("");
+    setPaymentNotes("");
     setPaidModalShow(false);
   };
   const selectPaymentType = (id) => {
