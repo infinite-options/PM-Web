@@ -785,7 +785,7 @@ function ManagerTenantAgreementView(props) {
             Math.floor(
               (new Date(agreement.lease_end).getTime() - new Date().getTime()) /
                 (1000 * 60 * 60 * 24)
-            ) < 60 ? (
+            ) < 90 ? (
               <Row
                 className="pt-4 my-4"
                 hidden={
