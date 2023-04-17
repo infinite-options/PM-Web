@@ -67,12 +67,15 @@ function StripePayment(props) {
         payment_type: "STRIPE",
       };
       await post("/payments", newPayment);
-      const body = {
-        maintenance_request_uid: purchases[0].linked_bill_id,
-        quote_status: "PAID",
-      };
-      const response = await put("/QuotePaid", body);
-      channel_maintenance.publish({ data: { te: body } });
+      console.log(purchases[0].linked_bill_id);
+      if (purchases[0].linked_bill_id !== null) {
+        const body = {
+          maintenance_request_uid: purchases[0].linked_bill_id,
+          quote_status: "PAID",
+        };
+        const response = await put("/QuotePaid", body);
+      }
+      channel_maintenance.publish({ data: { te: newPayment } });
     } else {
       for (let purchase of purchases) {
         // console.log(purchase);
@@ -85,12 +88,14 @@ function StripePayment(props) {
           payment_type: "STRIPE",
         };
         await post("/payments", newPayment);
-        const body = {
-          maintenance_request_uid: purchase.linked_bill_id,
-          quote_status: "PAID",
-        };
-        const response = await put("/QuotePaid", body);
-        channel_maintenance.publish({ data: { te: body } });
+        if (purchase.linked_bill_id !== null) {
+          const body = {
+            maintenance_request_uid: purchase.linked_bill_id,
+            quote_status: "PAID",
+          };
+          const response = await put("/QuotePaid", body);
+        }
+        channel_maintenance.publish({ data: { te: newPayment } });
       }
     }
     setShowSpinner(false);

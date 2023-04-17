@@ -110,14 +110,15 @@ function ManagerPaymentPage(props) {
         payment_type: paymentType,
       };
       await post("/payments", newPayment);
-
-      const body = {
-        maintenance_request_uid: allPurchases[0].linked_bill_id,
-        quote_status: "PAID",
-      };
-      // console.log("allPurchases", body);
-      const response = await put("/QuotePaid", body);
-      channel_maintenance.publish({ data: { te: body } });
+      if (allPurchases[0].linked_bill_id !== null) {
+        const body = {
+          maintenance_request_uid: allPurchases[0].linked_bill_id,
+          quote_status: "PAID",
+        };
+        // console.log("allPurchases", body);
+        const response = await put("/QuotePaid", body);
+      }
+      channel_maintenance.publish({ data: { te: newPayment } });
     } else {
       for (let purchase of allPurchases) {
         // console.log(purchase);
@@ -132,12 +133,14 @@ function ManagerPaymentPage(props) {
           payment_type: paymentType,
         };
         await post("/payments", newPayment);
-        const body = {
-          maintenance_request_uid: purchase.linked_bill_id,
-          quote_status: "PAID",
-        };
-        await put("/QuotePaid", body);
-        channel_maintenance.publish({ data: { te: body } });
+        if (purchase.linked_bill_id !== null) {
+          const body = {
+            maintenance_request_uid: purchase.linked_bill_id,
+            quote_status: "PAID",
+          };
+          await put("/QuotePaid", body);
+        }
+        channel_maintenance.publish({ data: { te: newPayment } });
       }
     }
 
