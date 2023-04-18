@@ -176,7 +176,22 @@ export default function Appliances(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle closeButton></DialogTitle>
-        <DialogContent></DialogContent>
+        <DialogContent>
+          {selectedAppliance["url"].length > 0 ? (
+            <div>
+              {selectedAppliance["url"].map((url, i) => (
+                <li key={i}>
+                  <a href={url} target="_blank" rel="noreferrer">
+                    {" "}
+                    {url}
+                  </a>
+                </li>
+              ))}
+            </div>
+          ) : (
+            ""
+          )}
+        </DialogContent>
         <DialogActions>
           <Button style={pillButton} onClick={hideModal} color="primary">
             Okay

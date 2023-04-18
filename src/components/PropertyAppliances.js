@@ -110,6 +110,16 @@ function PropertyAppliances(props) {
     setAddNewModalShow(false);
     cancelAppliance(applianceType);
   };
+  function handleAddUrl() {
+    const fields = [...applianceURL];
+    fields.push([]);
+    setApplianceURL(fields);
+  }
+  const handleChangeUrl = (i, event) => {
+    const fields = [...applianceURL];
+    fields[i] = event.target.value;
+    setApplianceURL(fields);
+  };
 
   const addDetailsModal = () => {
     return (
@@ -288,15 +298,38 @@ function PropertyAppliances(props) {
           <Row className="my-2">
             <Col>
               {" "}
-              <TextField
-                fullWidth
-                variant="outlined"
-                label="URL"
-                size="small"
-                value={applianceURL || applianceState[applianceType]["url"]}
-                onChange={(e) => setApplianceURL(e.target.value)}
+              URLs:
+              <img
+                src={AddIcon}
+                alt="Add Icon"
+                onClick={handleAddUrl}
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  marginLeft: "5rem",
+                }}
               />
             </Col>
+
+            {applianceURL && Object.values(applianceURL).length > 0 ? (
+              <div>
+                {applianceURL.map((item, idx) => {
+                  return (
+                    <Col>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="URL"
+                        size="small"
+                        value={item}
+                        name="url"
+                        onChange={(e) => handleChangeUrl(idx, e)}
+                      />
+                    </Col>
+                  );
+                })}
+              </div>
+            ) : null}
           </Row>
           <Row className="my-2">
             {" "}
@@ -487,17 +520,37 @@ function PropertyAppliances(props) {
             </Col>
           </Row>{" "}
           <Row className="my-2">
-            <Col>
-              {" "}
-              <TextField
-                fullWidth
-                variant="outlined"
-                label="URL"
-                size="small"
-                value={applianceURL}
-                onChange={(e) => setApplianceURL(e.target.value)}
-              />
-            </Col>
+            <img
+              src={AddIcon}
+              alt="Add Icon"
+              onClick={handleAddUrl}
+              style={{
+                width: "15px",
+                height: "15px",
+                float: "left",
+                marginRight: "5rem",
+              }}
+            />
+            {applianceURL && Object.values(applianceURL).length > 0 ? (
+              <div>
+                {applianceURL.map((item, i) => {
+                  return (
+                    <Col>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="URL"
+                        size="small"
+                        value={
+                          applianceURL || applianceState[applianceType]["url"]
+                        }
+                        onChange={(e) => handleChangeUrl(i, e)}
+                      />
+                    </Col>
+                  );
+                })}
+              </div>
+            ) : null}
           </Row>
           <Row className="my-2">
             {" "}
@@ -558,7 +611,9 @@ function PropertyAppliances(props) {
     setApplianceModelNum(applianceState[appliance]["model_num"]);
     setApplianceWarrantyTill(applianceState[appliance]["warranty_till"]);
     setApplianceWarrantyInfo(applianceState[appliance]["warranty_info"]);
-    setApplianceURL(applianceState[appliance]["url"]);
+    if (applianceState[appliance]["url"] !== undefined) {
+      setApplianceURL(applianceState[appliance]["url"]);
+    }
     if (applianceState[appliance]["images"] !== undefined) {
       const imageFiles = [];
 
