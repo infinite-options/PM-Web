@@ -62,7 +62,7 @@ function TenantProfile(props) {
   const classes = useStyles();
   // console.log("in tenant profile");
   const context = useContext(AppContext);
-  const { userData, refresh, logout } = context;
+  const { userData, refresh, logout, updateUserData } = context;
   const { user } = userData;
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -450,9 +450,10 @@ function TenantProfile(props) {
       return;
       // add validation
     }
-    logout();
+
     navigate("/");
     window.scrollTo(0, 0);
+    logout();
   };
   const required =
     errorMessage === "Please fill out all fields" ? (
@@ -986,7 +987,7 @@ function TenantProfile(props) {
   // console.log(previousAddressState);
   return (
     <div className="w-100 overflow-hidden">
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
         </Col>

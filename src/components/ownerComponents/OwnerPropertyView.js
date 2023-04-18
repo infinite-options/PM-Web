@@ -813,7 +813,7 @@ function OwnerPropertyView(props) {
           onConfirm={cancelAgreement}
           onCancel={onCancel2}
         />
-        <Row className="mb-5">
+        <Row className="w-100 mb-5 overflow-hidden">
           {location.state === null ? (
             ""
           ) : (

@@ -315,7 +315,7 @@ function ManagerRepairsOverview(props) {
 
   return stage === "LIST" ? (
     <div>
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         {" "}
         <Col
           xs={2}
@@ -583,7 +583,7 @@ function ManagerRepairsOverview(props) {
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="OwnerRepairRequest">
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         {" "}
         <Col
           xs={2}

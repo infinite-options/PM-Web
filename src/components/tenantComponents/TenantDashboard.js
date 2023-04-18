@@ -770,7 +770,7 @@ export default function TenantDashboard() {
         onConfirm={ProfileNotComplete}
       />
       {!isLoading && tenantData.length > 0 ? (
-        <Row>
+        <Row className="w-100 mb-5 overflow-hidden">
           <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
           </Col>
@@ -1573,7 +1573,7 @@ export default function TenantDashboard() {
           </Col>
         </Row>
       ) : !isLoading && tenantData.length === 0 ? (
-        <Row>
+        <Row className="w-100 mb-5 overflow-hidden">
           <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
           </Col>
@@ -1844,7 +1844,7 @@ export default function TenantDashboard() {
           </Col>
         </Row>
       ) : (
-        <Row>
+        <Row className="w-100 mb-5 overflow-hidden">
           <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
           </Col>
@@ -1859,7 +1859,7 @@ export default function TenantDashboard() {
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="TenantDashboard">
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
         </Col>

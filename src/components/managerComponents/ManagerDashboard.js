@@ -633,7 +633,7 @@ export default function ManagerDashboard() {
     <div className="w-100 overflow-hidden">
       {!isLoading &&
       (managerData.length > 0 || processingManagerData.length > 0) ? (
-        <Row>
+        <Row className="w-100 mb-5 overflow-hidden">
           <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
           </Col>
@@ -2110,7 +2110,7 @@ export default function ManagerDashboard() {
           </Col>
         </Row>
       ) : !isLoading && processingManagerData.length === 0 ? (
-        <Row>
+        <Row className="w-100 mb-5 overflow-hidden">
           <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
           </Col>
@@ -2133,7 +2133,7 @@ export default function ManagerDashboard() {
           </Col>
         </Row>
       ) : !isLoading && processingManagerData.length === 0 ? (
-        <Row>
+        <Row className="w-100 mb-5 overflow-hidden">
           <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
           </Col>
@@ -2156,7 +2156,7 @@ export default function ManagerDashboard() {
           </Col>
         </Row>
       ) : (
-        <Row>
+        <Row className="w-100 mb-5 overflow-hidden">
           <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
           </Col>
@@ -2171,7 +2171,7 @@ export default function ManagerDashboard() {
     </div>
   ) : stage === "ADDEXPENSE" ? (
     <div className="ManagerDashboard">
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
           hidden={!responsive.showSidebar}
@@ -2202,7 +2202,7 @@ export default function ManagerDashboard() {
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="ManagerDashboard">
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
           hidden={!responsive.showSidebar}

@@ -966,7 +966,7 @@ function ManagerTenantAgreement(props) {
       ""
     );
   return (
-    <Row>
+    <Row className="w-100 mb-5 overflow-hidden">
       <UpdateConfirmDialog
         title={"Review the lease"}
         updatedAgreement={updatedAgreement}

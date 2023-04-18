@@ -236,7 +236,7 @@ function ManagerOwnerList(props) {
 
   return (
     <div className="w-100 overflow-hidden">
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         <MailDialog
           title={"Email"}
           isOpen={showMailForm}

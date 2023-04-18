@@ -371,7 +371,7 @@ const editButton = {
 
 const sidebarStyle = {
   backgroundColor: "#229ebc",
-  width: "11.75rem",
+  width: "12rem",
   minHeight: "100%",
 };
 //Wrote code here

@@ -471,7 +471,7 @@ function OwnerRepairDetails(props) {
         receiverPhone={selectedBusiness.business_phone_number}
         onCancel={onCancelBusinessMessage}
       />
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         {" "}
         <Col
           xs={2}

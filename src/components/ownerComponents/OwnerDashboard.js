@@ -468,7 +468,7 @@ export default function OwnerDashboard2() {
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
       {!isLoading && ownerData.length > 0 ? (
-        <Row>
+        <Row className="w-100 mb-5 overflow-hidden">
           <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
           </Col>
@@ -1067,7 +1067,7 @@ export default function OwnerDashboard2() {
           </Col>
         </Row>
       ) : !isLoading && ownerData.length === 0 ? (
-        <Row>
+        <Row className="w-100 mb-5 overflow-hidden">
           <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
           </Col>
@@ -1115,7 +1115,7 @@ export default function OwnerDashboard2() {
           </Col>
         </Row>
       ) : (
-        <Row>
+        <Row className="w-100 mb-5 overflow-hidden">
           <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
             <SideBar />
           </Col>
@@ -1130,7 +1130,7 @@ export default function OwnerDashboard2() {
     </div>
   ) : stage === "NEW" ? (
     <div className="OwnerDashboard2">
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
         </Col>
@@ -1159,7 +1159,7 @@ export default function OwnerDashboard2() {
     </div>
   ) : stage === "ADDEXPENSE" ? (
     <div className="OwnerDashboard2">
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
         </Col>
@@ -1182,7 +1182,7 @@ export default function OwnerDashboard2() {
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="OwnerDashboard2">
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
         </Col>

@@ -629,7 +629,7 @@ function ManagerPropertyView(props) {
           onCancel={onCancel}
         />
         {/* {console.log("showdialog", showDialog)} */}
-        <Row>
+        <Row className="w-100 mb-5 overflow-hidden">
           <Col
             xs={2}
             hidden={!responsiveSidebar.showSidebar}
@@ -637,7 +637,7 @@ function ManagerPropertyView(props) {
           >
             <SideBar />
           </Col>
-          <Col className="w-100 mb-5  overflow-hidden">
+          <Col className="w-100 mb-5 overflow-hidden">
             <Header
               title="Property Details"
               leftText={location.state === null ? "" : "< Back"}

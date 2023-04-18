@@ -110,7 +110,7 @@ function OwnerDocuments(props) {
 
   return (
     <div>
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
           hidden={!responsiveSidebar.showSidebar}

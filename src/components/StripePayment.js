@@ -67,7 +67,6 @@ function StripePayment(props) {
         payment_type: "STRIPE",
       };
       await post("/payments", newPayment);
-      console.log(purchases[0].linked_bill_id);
       if (purchases[0].linked_bill_id !== null) {
         const body = {
           maintenance_request_uid: purchases[0].linked_bill_id,

@@ -164,7 +164,7 @@ function ManagerDocuments(props) {
 
   return (
     <div className="w-100 overflow-hidden">
-      <Row className="flex-1">
+      <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
           hidden={!responsiveSidebar.showSidebar}

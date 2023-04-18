@@ -381,7 +381,7 @@ function OwnerRepairList(props) {
   // console.log(repairIter);
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
           hidden={!responsiveSidebar.showSidebar}
@@ -616,7 +616,7 @@ function OwnerRepairList(props) {
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="OwnerRepairRequest">
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
           hidden={!responsiveSidebar.showSidebar}
