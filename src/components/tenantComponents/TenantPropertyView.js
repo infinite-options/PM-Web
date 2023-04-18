@@ -120,7 +120,7 @@ function TenantPropertyView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Dishwasher: {
       available: false,
@@ -135,7 +135,7 @@ function TenantPropertyView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Refrigerator: {
       available: false,
@@ -150,7 +150,7 @@ function TenantPropertyView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Washer: {
       available: false,
@@ -165,7 +165,7 @@ function TenantPropertyView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Dryer: {
       available: false,
@@ -180,7 +180,7 @@ function TenantPropertyView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Range: {
       available: false,
@@ -195,7 +195,7 @@ function TenantPropertyView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
   });
   const appliances = Object.keys(applianceState[0]);

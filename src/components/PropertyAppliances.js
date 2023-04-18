@@ -8,6 +8,11 @@ import {
   TableBody,
   TableHead,
 } from "@material-ui/core";
+import { TextField } from "@mui/material";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import Checkbox from "./Checkbox";
@@ -18,6 +23,9 @@ import ImageModal from "./ImageModal";
 import AddIcon from "../icons/AddIcon.svg";
 import File from "../icons/File.svg";
 import EditIcon from "../icons/EditIcon.svg";
+import ImgIcon from "../icons/ImgIcon.png";
+import LinkIcon from "../icons/LinkIcon.svg";
+import DocIcon from "../icons/DocIcon.png";
 import DeleteIcon from "../icons/DeleteIcon.svg";
 import {
   squareForm,
@@ -53,10 +61,12 @@ function PropertyAppliances(props) {
     "Refrigerator",
   ];
 
+  const [addDetailsModalShow, setAddDetailsModalShow] = useState(false);
+  const [addNewModalShow, setAddNewModalShow] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [newAppliance, setNewAppliance] = useState(null);
-  const [applianceType, setApplianceType] = useState(null);
-  const [applianceName, setApplianceName] = useState(null);
+  const [applianceType, setApplianceType] = useState("Dryer");
+  const [applianceManufacturer, setApplianceManufacturer] = useState(null);
   const [applianceModelNum, setApplianceModelNum] = useState(null);
   const [applianceSerialNum, setApplianceSerialNum] = useState(null);
   const [appliancePurchasedOn, setAppliancePurchasedOn] = useState(null);
@@ -66,7 +76,7 @@ function PropertyAppliances(props) {
   const [applianceInstalledOn, setApplianceInstalledOn] = useState(null);
   const [applianceWarrantyTill, setApplianceWarrantyTill] = useState(null);
   const [applianceWarrantyInfo, setApplianceWarrantyInfo] = useState(null);
-  const [applianceURL, setApplianceURL] = useState(null);
+  const [applianceURL, setApplianceURL] = useState([]);
   const imageState = useState([]);
   const [addDoc, setAddDoc] = useState(false);
   const [editingDoc, setEditingDoc] = useState(null);
@@ -92,14 +102,452 @@ function PropertyAppliances(props) {
     setOpenImage(false);
     setImageSrc(null);
   };
+  const hideModal = () => {
+    setAddDetailsModalShow(false);
+    cancelAppliance(applianceType);
+  };
+  const hideNewModal = () => {
+    setAddNewModalShow(false);
+    cancelAppliance(applianceType);
+  };
+
+  const addDetailsModal = () => {
+    return (
+      <Dialog
+        open={addDetailsModalShow}
+        onClose={hideModal}
+        fullWidth
+        maxWidth="md"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle closeButton>{applianceType}</DialogTitle>
+        <DialogContent>
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                disabled
+                variant="outlined"
+                label="Type"
+                size="small"
+                value={applianceType}
+              />
+            </Col>
+          </Row>
+          <Row className="my-2">
+            <Col>
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Manufacturer Name"
+                size="small"
+                value={
+                  applianceManufacturer ||
+                  applianceState[applianceType]["manufacturer"]
+                }
+                onChange={(e) => setApplianceManufacturer(e.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Purchased From"
+                size="small"
+                value={
+                  appliancePurchasedFrom ||
+                  applianceState[applianceType]["purchased_from"]
+                }
+                onChange={(e) => setAppliancePurchasedFrom(e.target.value)}
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                type="date"
+                variant="outlined"
+                label="Purchased On"
+                size="small"
+                value={
+                  appliancePurchasedOn ||
+                  applianceState[applianceType]["purchased"]
+                }
+                onChange={(e) => setAppliancePurchasedOn(e.target.value)}
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Purchase Order Number"
+                size="small"
+                value={
+                  appliancePurchasesOrderNumber ||
+                  applianceState[applianceType]["purchased_order"]
+                }
+                onChange={(e) =>
+                  setAppliancePurchasesOrderNumber(e.target.value)
+                }
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                variant="outlined"
+                label="Installed On"
+                size="small"
+                value={
+                  applianceInstalledOn ||
+                  applianceState[applianceType]["installed"]
+                }
+                onChange={(e) => setApplianceInstalledOn(e.target.value)}
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Serial Number"
+                size="small"
+                value={
+                  applianceSerialNum ||
+                  applianceState[applianceType]["serial_num"]
+                }
+                onChange={(e) => setApplianceSerialNum(e.target.value)}
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Model Number"
+                size="small"
+                value={
+                  applianceModelNum ||
+                  applianceState[applianceType]["model_num"]
+                }
+                onChange={(e) => setApplianceModelNum(e.target.value)}
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Warranty Info"
+                size="small"
+                value={
+                  applianceWarrantyInfo ||
+                  applianceState[applianceType]["warranty_info"]
+                }
+                onChange={(e) => setApplianceWarrantyInfo(e.target.value)}
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Warranty Till"
+                size="small"
+                value={
+                  applianceWarrantyTill ||
+                  applianceState[applianceType]["warranty_till"]
+                }
+                onChange={(e) => setApplianceWarrantyTill(e.target.value)}
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="URL"
+                size="small"
+                value={applianceURL || applianceState[applianceType]["url"]}
+                onChange={(e) => setApplianceURL(e.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row className="my-2">
+            {" "}
+            <Col> {property ? <ApplianceImages state={imageState} /> : ""}</Col>
+          </Row>
+          <Row className="my-2">
+            {" "}
+            <Col>
+              {" "}
+              <DocumentsUploadPost
+                files={docFiles}
+                setFiles={setDocFiles}
+                addDoc={addDoc}
+                setAddDoc={setAddDoc}
+                editingDoc={editingDoc}
+                setEditingDoc={setEditingDoc}
+              />
+            </Col>
+          </Row>
+        </DialogContent>
+        {showSpinner ? (
+          <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
+            <ReactBootStrap.Spinner animation="border" role="status" />
+          </div>
+        ) : (
+          ""
+        )}
+        <DialogActions>
+          <Button
+            style={pillButton}
+            onClick={edit ? () => updateAppliance(applianceType) : () => {}}
+            color="primary"
+          >
+            Save
+          </Button>
+          <Button style={pillButton} onClick={hideModal} color="primary">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+  const addNewModal = () => {
+    return (
+      <Dialog
+        open={addNewModalShow}
+        onClose={hideNewModal}
+        fullWidth
+        maxWidth="md"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle closeButton>{newAppliance}</DialogTitle>
+        <DialogContent>
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Type"
+                size="small"
+                value={newAppliance}
+                onChange={(e) => setNewAppliance(e.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row className="my-2">
+            <Col>
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Manufacturer Name"
+                size="small"
+                value={applianceManufacturer}
+                onChange={(e) => setApplianceManufacturer(e.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Purchased From"
+                size="small"
+                value={appliancePurchasedFrom}
+                onChange={(e) => setAppliancePurchasedFrom(e.target.value)}
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                type="date"
+                variant="outlined"
+                label="Purchased On"
+                size="small"
+                value={appliancePurchasedOn}
+                onChange={(e) => setAppliancePurchasedOn(e.target.value)}
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Purchase Order Number"
+                size="small"
+                value={appliancePurchasesOrderNumber}
+                onChange={(e) =>
+                  setAppliancePurchasesOrderNumber(e.target.value)
+                }
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                variant="outlined"
+                label="Installed On"
+                size="small"
+                value={applianceInstalledOn}
+                onChange={(e) => setApplianceInstalledOn(e.target.value)}
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Serial Number"
+                size="small"
+                value={applianceSerialNum}
+                onChange={(e) => setApplianceSerialNum(e.target.value)}
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Model Number"
+                size="small"
+                value={applianceModelNum}
+                onChange={(e) => setApplianceModelNum(e.target.value)}
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Warranty Info"
+                size="small"
+                value={applianceWarrantyInfo}
+                onChange={(e) => setApplianceWarrantyInfo(e.target.value)}
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Warranty Till"
+                size="small"
+                value={applianceWarrantyTill}
+                onChange={(e) => setApplianceWarrantyTill(e.target.value)}
+              />
+            </Col>
+          </Row>{" "}
+          <Row className="my-2">
+            <Col>
+              {" "}
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="URL"
+                size="small"
+                value={applianceURL}
+                onChange={(e) => setApplianceURL(e.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row className="my-2">
+            {" "}
+            <Col> {property ? <ApplianceImages state={imageState} /> : ""}</Col>
+          </Row>
+          <Row className="my-2">
+            {" "}
+            <Col>
+              {" "}
+              <DocumentsUploadPost
+                files={docFiles}
+                setFiles={setDocFiles}
+                addDoc={addDoc}
+                setAddDoc={setAddDoc}
+                editingDoc={editingDoc}
+                setEditingDoc={setEditingDoc}
+              />
+            </Col>
+          </Row>
+        </DialogContent>
+        {showSpinner ? (
+          <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
+            <ReactBootStrap.Spinner animation="border" role="status" />
+          </div>
+        ) : (
+          ""
+        )}
+        <DialogActions>
+          <Button
+            style={pillButton}
+            onClick={edit ? () => addAppliance(applianceType) : () => {}}
+            color="primary"
+          >
+            Save
+          </Button>
+          <Button style={pillButton} onClick={hideNewModal} color="primary">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
   const showApplianceDetail = (appliance) => {
     setApplianceType(appliance);
-    setShowDetails(!showDetails);
-
+    // setShowDetails(!showDetails);
+    setAddDetailsModalShow(!addDetailsModalShow);
     setAddApplianceInfo(!addApplianceInfo);
     setApplianceType(appliance);
     setApplianceState(applianceState);
-    setApplianceName(applianceState[appliance]["name"]);
+    setApplianceManufacturer(applianceState[appliance]["manufacturer"]);
     setAppliancePurchasedOn(applianceState[appliance]["purchased"]);
     setAppliancePurchasedFrom(applianceState[appliance]["purchased_from"]);
     setAppliancePurchasesOrderNumber(
@@ -125,11 +573,13 @@ function PropertyAppliances(props) {
       }
       imageState[1](imageFiles);
     }
-    if (applianceState[appliance]["documents"] !== undefined) {
-      setDocFiles(JSON.parse(applianceState[appliance]["documents"]));
+    if (
+      applianceState[appliance]["documents"] !== undefined &&
+      applianceState[appliance]["documents"].length !== 0
+    ) {
+      setDocFiles(applianceState[appliance]["documents"]);
     }
   };
-
   const onCancel = () => {
     setShowDialog(false);
   };
@@ -149,7 +599,11 @@ function PropertyAppliances(props) {
       }
     }
     const response = await put("/RemoveAppliance", rem_app, null, files);
-
+    const getNewApplianceInfo = await get(
+      `/appliances?property_uid=${property.property_uid}`
+    );
+    let newinfo = JSON.parse(getNewApplianceInfo.result[0].appliances);
+    setApplianceState(newinfo);
     setShowDialog(false);
   };
 
@@ -167,7 +621,7 @@ function PropertyAppliances(props) {
       newApplianceState[appliance]["available"]
     );
     newApplianceState[appliance]["model_num"] = applianceModelNum;
-    newApplianceState[appliance]["name"] = applianceName;
+    newApplianceState[appliance]["manufacturer"] = applianceManufacturer;
     newApplianceState[appliance]["purchased"] = appliancePurchasedOn;
     newApplianceState[appliance]["purchased_from"] = appliancePurchasedFrom;
     newApplianceState[appliance]["purchased_order"] =
@@ -206,7 +660,6 @@ function PropertyAppliances(props) {
           newProperty[key] = file.image;
         }
       }
-
       const docuFiles = [...docFiles];
       for (let i = 0; i < docuFiles.length; i++) {
         let key = `doc_${appliance}_${i}`;
@@ -219,7 +672,9 @@ function PropertyAppliances(props) {
         delete docuFiles[i].file;
       }
       newProperty.documents = JSON.stringify(docuFiles);
-      allFiles.push(docuFiles);
+      if (docuFiles.length > 0) {
+        allFiles.push(docuFiles);
+      }
       setShowSpinner(true);
 
       const response = await put("/appliances", newProperty, null, allFiles);
@@ -234,7 +689,8 @@ function PropertyAppliances(props) {
     setApplianceState(newinfo);
     imageState[0] = [];
     setDocFiles([]);
-    setApplianceName("");
+    setAddDetailsModalShow(!addDetailsModalShow);
+    setApplianceManufacturer("");
     setAppliancePurchasedOn("");
     setAppliancePurchasesOrderNumber("");
     setAppliancePurchasedFrom("");
@@ -244,7 +700,6 @@ function PropertyAppliances(props) {
     setApplianceWarrantyTill("");
     setApplianceWarrantyInfo("");
     setApplianceURL("");
-    setApplianceType("");
     setShowSpinner(false);
   };
 
@@ -255,7 +710,7 @@ function PropertyAppliances(props) {
     setAddApplianceInfo(false);
     setShowDetails(false);
     setApplianceState(newApplianceState);
-    setApplianceName("");
+    setApplianceManufacturer("");
     setAppliancePurchasedOn("");
     setAppliancePurchasedFrom("");
     setAppliancePurchasesOrderNumber("");
@@ -265,7 +720,6 @@ function PropertyAppliances(props) {
     setApplianceWarrantyTill("");
     setApplianceWarrantyInfo("");
     setApplianceURL("");
-    setApplianceType("");
   };
 
   const addAppliance = async () => {
@@ -274,8 +728,8 @@ function PropertyAppliances(props) {
     newApplianceState[newAppliance]["available"] = "True";
     newApplianceState[newAppliance]["model_num"] =
       applianceModelNum === null ? "" : applianceModelNum;
-    newApplianceState[newAppliance]["name"] =
-      applianceName === null ? "" : applianceName;
+    newApplianceState[newAppliance]["manufacturer"] =
+      applianceManufacturer === null ? "" : applianceManufacturer;
     newApplianceState[newAppliance]["purchased"] =
       appliancePurchasedOn === null ? "" : appliancePurchasedOn;
     newApplianceState[newAppliance]["purchased_from"] =
@@ -295,6 +749,13 @@ function PropertyAppliances(props) {
     newApplianceState[newAppliance]["url"] =
       applianceURL === null ? "" : applianceURL;
     setApplianceState(newApplianceState);
+    if (imageState[0].length === 0) {
+      newApplianceState[newAppliance]["images"] = imageState[0];
+    }
+    if (docFiles.length === 0) {
+      newApplianceState[newAppliance]["documents"] = docFiles[0];
+    }
+
     if (property) {
       let newProperty = {
         property_uid: property.property_uid,
@@ -304,7 +765,7 @@ function PropertyAppliances(props) {
       };
       let allFiles = [];
       const imageFiles = imageState[0];
-      allFiles = imageFiles[0];
+      allFiles = imageFiles;
       let i = 0;
       for (const file of imageState[0]) {
         let key = file.coverPhoto
@@ -316,9 +777,7 @@ function PropertyAppliances(props) {
           newProperty[key] = file.image;
         }
       }
-      console.log(allFiles);
       const docuFiles = [...docFiles];
-      console.log(docuFiles);
       for (let i = 0; i < docuFiles.length; i++) {
         let key = `doc_${newAppliance}_${i}`;
         if (docuFiles[i].file !== undefined) {
@@ -330,20 +789,23 @@ function PropertyAppliances(props) {
         delete docuFiles[i].file;
       }
       newProperty.documents = JSON.stringify(docuFiles);
-      console.log(allFiles);
-      console.log(docuFiles);
       if (docuFiles.length > 0) {
         allFiles.push(docuFiles);
       }
-
       setShowSpinner(true);
-
       const response = await put("/appliances", newProperty, null, allFiles);
     }
+
+    const getNewApplianceInfo = await get(
+      `/appliances?property_uid=${property.property_uid}`
+    );
+    let newinfo = JSON.parse(getNewApplianceInfo.result[0].appliances);
+    setApplianceState(newinfo);
     imageState[0] = [];
+    setAddNewModalShow(!addNewModalShow);
     setDocFiles([]);
     setNewAppliance(null);
-    setApplianceName("");
+    setApplianceManufacturer("");
     setAppliancePurchasedOn("");
     setAppliancePurchasedFrom("");
     setAppliancePurchasesOrderNumber("");
@@ -352,10 +814,8 @@ function PropertyAppliances(props) {
     setApplianceWarrantyTill("");
     setApplianceWarrantyInfo("");
     setApplianceURL("");
-    setApplianceType("");
+    setShowSpinner(false);
   };
-  // console.log(property);
-
   return (
     <div style={({ padding: "0px" }, mediumBold)} className="my-4">
       <ConfirmDialog
@@ -391,7 +851,7 @@ function PropertyAppliances(props) {
             <img
               src={AddIcon}
               alt="Add Icon"
-              onClick={() => setNewAppliance("")}
+              onClick={() => setAddNewModalShow(!addNewModalShow)}
               style={{
                 width: "15px",
                 height: "15px",
@@ -417,18 +877,18 @@ function PropertyAppliances(props) {
             <TableRow>
               <TableCell></TableCell>
               <TableCell>Appliance</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Purchased From</TableCell>
-              <TableCell>Purchased On</TableCell>
-              <TableCell>Purchase Order Number</TableCell>
-              <TableCell>Installed On</TableCell>
-              <TableCell>Serial Number</TableCell>
-              <TableCell>Model Number</TableCell>
-              <TableCell>Warranty Till</TableCell>
-              <TableCell>Warranty Info</TableCell>
-              <TableCell>URL</TableCell>
-              <TableCell>Images</TableCell>
-              <TableCell>Documents</TableCell>
+              <TableCell align="center">Manufacturer</TableCell>
+              <TableCell align="center">Purchased From</TableCell>
+              <TableCell align="center">Purchased On</TableCell>
+              <TableCell align="center">Purchase Order Number</TableCell>
+              <TableCell align="center">Installed On</TableCell>
+              <TableCell align="center">Serial Number</TableCell>
+              <TableCell align="center">Model Number</TableCell>
+              <TableCell align="center">Warranty Till</TableCell>
+              <TableCell align="center">Warranty Info</TableCell>
+              <TableCell align="center">URL</TableCell>
+              <TableCell align="center">Images</TableCell>
+              <TableCell align="center">Documents</TableCell>
               <TableCell></TableCell>
               {addApplianceInfo === true && showDetails === true ? (
                 <TableCell></TableCell>
@@ -462,387 +922,73 @@ function PropertyAppliances(props) {
                   >
                     {appliance}
                   </TableCell>
-                  <TableCell>
-                    {addApplianceInfo === true &&
-                    showDetails === true &&
-                    (applianceState[appliance]["available"] === true ||
-                      applianceState[appliance]["available"] === "True") &&
-                    applianceType === appliance ? (
-                      <div>
-                        {" "}
-                        <Form.Control
-                          style={squareForm}
-                          type="text"
-                          value={
-                            applianceName || applianceState[appliance]["name"]
-                          }
-                          placeholder="Appliance Name"
-                          onChange={(e) => setApplianceName(e.target.value)}
-                        />
-                      </div>
+                  <TableCell align="center">
+                    {applianceState[appliance]["manufacturer"]}
+                  </TableCell>
+                  <TableCell align="center">
+                    {applianceState[appliance]["purchased_from"]}
+                  </TableCell>
+                  <TableCell align="center">
+                    {applianceState[appliance]["purchased"]}
+                  </TableCell>
+                  <TableCell align="center">
+                    {applianceState[appliance]["purchased_order"]}
+                  </TableCell>
+                  <TableCell align="center">
+                    {applianceState[appliance]["installed"]}
+                  </TableCell>
+                  <TableCell align="center">
+                    {applianceState[appliance]["serial_num"]}
+                  </TableCell>
+                  <TableCell align="center">
+                    {applianceState[appliance]["model_num"]}
+                  </TableCell>
+                  <TableCell align="center">
+                    {applianceState[appliance]["warranty_till"]}
+                  </TableCell>
+                  <TableCell align="center">
+                    {applianceState[appliance]["warranty_info"]}
+                  </TableCell>
+                  <TableCell align="center">
+                    {applianceState[appliance]["url"] !== undefined &&
+                    applianceState[appliance]["url"].length > 0 ? (
+                      <img
+                        src={LinkIcon}
+                        style={{
+                          width: "15px",
+                          height: "15px",
+                        }}
+                      />
                     ) : (
-                      <div>{applianceState[appliance]["name"]}</div>
+                      "None"
                     )}
                   </TableCell>
-                  <TableCell>
-                    {addApplianceInfo === true &&
-                    showDetails === true &&
-                    (applianceState[appliance]["available"] === true ||
-                      applianceState[appliance]["available"] === "True") &&
-                    applianceType === appliance ? (
-                      <div>
-                        {" "}
-                        <Form.Control
-                          style={squareForm}
-                          value={
-                            appliancePurchasedFrom ||
-                            applianceState[appliance]["purchased_from"]
-                          }
-                          placeholder="Purchased From"
-                          onChange={(e) =>
-                            setAppliancePurchasedFrom(e.target.value)
-                          }
-                        />
-                      </div>
+                  <TableCell align="center">
+                    {applianceState[appliance]["images"] !== undefined &&
+                    applianceState[appliance]["images"].length > 0 ? (
+                      <img
+                        src={ImgIcon}
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                        }}
+                      />
                     ) : (
-                      <div>{applianceState[appliance]["purchased_from"]}</div>
+                      "None"
                     )}
                   </TableCell>
-                  <TableCell>
-                    {addApplianceInfo === true &&
-                    showDetails === true &&
-                    (applianceState[appliance]["available"] === true ||
-                      applianceState[appliance]["available"] === "True") &&
-                    applianceType === appliance ? (
-                      <div>
-                        {" "}
-                        <Form.Control
-                          style={squareForm}
-                          type="date"
-                          value={
-                            appliancePurchasedOn ||
-                            applianceState[appliance]["purchased"]
-                          }
-                          onChange={(e) =>
-                            setAppliancePurchasedOn(e.target.value)
-                          }
-                        />
-                      </div>
+                  <TableCell align="center">
+                    {applianceState[appliance]["documents"] !== undefined &&
+                    applianceState[appliance]["documents"].length > 0 ? (
+                      <img
+                        src={DocIcon}
+                        style={{
+                          width: "15px",
+                          height: "15px",
+                        }}
+                      />
                     ) : (
-                      <div>{applianceState[appliance]["purchased"]}</div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {addApplianceInfo === true &&
-                    showDetails === true &&
-                    (applianceState[appliance]["available"] === true ||
-                      applianceState[appliance]["available"] === "True") &&
-                    applianceType === appliance ? (
-                      <div>
-                        {" "}
-                        <Form.Control
-                          style={squareForm}
-                          value={
-                            appliancePurchasesOrderNumber ||
-                            applianceState[appliance]["purchased_order"]
-                          }
-                          placeholder="Purchase Order Number"
-                          onChange={(e) =>
-                            setAppliancePurchasesOrderNumber(e.target.value)
-                          }
-                        />
-                      </div>
-                    ) : (
-                      <div>{applianceState[appliance]["purchased_order"]}</div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {addApplianceInfo === true &&
-                    showDetails === true &&
-                    (applianceState[appliance]["available"] === true ||
-                      applianceState[appliance]["available"] === "True") &&
-                    applianceType === appliance ? (
-                      <div>
-                        <Form.Control
-                          style={squareForm}
-                          type="date"
-                          value={
-                            applianceInstalledOn ||
-                            applianceState[appliance]["installed"]
-                          }
-                          onChange={(e) =>
-                            setApplianceInstalledOn(e.target.value)
-                          }
-                        />
-                      </div>
-                    ) : (
-                      <div>{applianceState[appliance]["installed"]}</div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {addApplianceInfo === true &&
-                    showDetails === true &&
-                    (applianceState[appliance]["available"] === true ||
-                      applianceState[appliance]["available"] === "True") &&
-                    applianceType === appliance ? (
-                      <div>
-                        <Form.Control
-                          style={squareForm}
-                          value={
-                            applianceSerialNum ||
-                            applianceState[appliance]["serial_num"]
-                          }
-                          placeholder="Serial Number"
-                          onChange={(e) =>
-                            setApplianceSerialNum(e.target.value)
-                          }
-                        />
-                      </div>
-                    ) : (
-                      <div>{applianceState[appliance]["serial_num"]}</div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {addApplianceInfo === true &&
-                    showDetails === true &&
-                    (applianceState[appliance]["available"] === true ||
-                      applianceState[appliance]["available"] === "True") &&
-                    applianceType === appliance ? (
-                      <div>
-                        <Form.Control
-                          style={squareForm}
-                          value={
-                            applianceModelNum ||
-                            applianceState[appliance]["model_num"]
-                          }
-                          placeholder="Model Number"
-                          onChange={(e) => setApplianceModelNum(e.target.value)}
-                        />
-                      </div>
-                    ) : (
-                      <div>{applianceState[appliance]["model_num"]}</div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {addApplianceInfo === true &&
-                    showDetails === true &&
-                    (applianceState[appliance]["available"] === true ||
-                      applianceState[appliance]["available"] === "True") &&
-                    applianceType === appliance ? (
-                      <div>
-                        <Form.Control
-                          style={squareForm}
-                          type="date"
-                          value={
-                            applianceWarrantyTill ||
-                            applianceState[appliance]["warranty_till"]
-                          }
-                          onChange={(e) =>
-                            setApplianceWarrantyTill(e.target.value)
-                          }
-                        />
-                      </div>
-                    ) : (
-                      <div>{applianceState[appliance]["warranty_till"]}</div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {addApplianceInfo === true &&
-                    showDetails === true &&
-                    (applianceState[appliance]["available"] === true ||
-                      applianceState[appliance]["available"] === "True") &&
-                    applianceType === appliance ? (
-                      <div>
-                        <Form.Control
-                          style={squareForm}
-                          value={
-                            applianceWarrantyInfo ||
-                            applianceState[appliance]["warranty_info"]
-                          }
-                          placeholder="Warranty Info"
-                          onChange={(e) =>
-                            setApplianceWarrantyInfo(e.target.value)
-                          }
-                        />
-                      </div>
-                    ) : (
-                      <div>{applianceState[appliance]["warranty_info"]}</div>
-                    )}
-                  </TableCell>{" "}
-                  <TableCell>
-                    {addApplianceInfo === true &&
-                    showDetails === true &&
-                    (applianceState[appliance]["available"] === true ||
-                      applianceState[appliance]["available"] === "True") &&
-                    applianceType === appliance ? (
-                      <div>
-                        <Form.Control
-                          style={squareForm}
-                          value={
-                            applianceURL || applianceState[appliance]["url"]
-                          }
-                          placeholder="Warranty Info"
-                          onChange={(e) => setApplianceURL(e.target.value)}
-                        />
-                      </div>
-                    ) : (
-                      <div>{applianceState[appliance]["url"]}</div>
-                    )}
-                  </TableCell>
-                  {addApplianceInfo === true &&
-                  showDetails === true &&
-                  (applianceState[appliance]["available"] === true ||
-                    applianceState[appliance]["available"] === "True") &&
-                  applianceType === appliance ? (
-                    <TableCell>
-                      {property ? <ApplianceImages state={imageState} /> : ""}
-                    </TableCell>
-                  ) : (
-                    <TableCell>
-                      {applianceState[appliance]["images"] !== undefined &&
-                      applianceState[appliance]["images"].length > 0 ? (
-                        <div>
-                          <Row className="d-flex justify-content-center align-items-center ">
-                            <Col className="d-flex justify-content-center align-items-center">
-                              <img
-                                // key={Date.now()}
-                                src={`${
-                                  applianceState[appliance]["images"][0]
-                                }?${Date.now()}`}
-                                style={{
-                                  borderRadius: "4px",
-                                  objectFit: "contain",
-                                  width: "50px",
-                                  height: "50px",
-                                }}
-                                onClick={() =>
-                                  showImage(
-                                    `${
-                                      applianceState[appliance]["images"][0]
-                                    }?${Date.now()}`
-                                  )
-                                }
-                                alt="Property"
-                              />
-                            </Col>
-                          </Row>
-                        </div>
-                      ) : (
-                        <div>None</div>
-                      )}
-                    </TableCell>
-                  )}
-                  <TableCell>
-                    {addApplianceInfo === true &&
-                    showDetails === true &&
-                    (applianceState[appliance]["available"] === true ||
-                      applianceState[appliance]["available"] === "True") &&
-                    applianceType === appliance ? (
-                      <div>
-                        {property ? (
-                          <DocumentsUploadPost
-                            files={docFiles}
-                            setFiles={setDocFiles}
-                            addDoc={addDoc}
-                            setAddDoc={setAddDoc}
-                            editingDoc={editingDoc}
-                            setEditingDoc={setEditingDoc}
-                          />
-                        ) : applianceState[appliance]["documents"].length >
-                          0 ? (
-                          <Table
-                            responsive="md"
-                            classes={{ root: classes.customTable }}
-                            size="small"
-                          >
-                            <TableHead>
-                              <TableRow>
-                                <TableCell>Description</TableCell>
-                                <TableCell>View</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {applianceState[appliance]["documents"].map(
-                                (file, i) => {
-                                  return (
-                                    <TableRow>
-                                      <TableCell>{file.description}</TableCell>
-
-                                      <TableCell>
-                                        <a
-                                          href={file.link}
-                                          target="_blank"
-                                          rel="noreferrer"
-                                        >
-                                          <img
-                                            src={File}
-                                            alt="open document"
-                                            style={{
-                                              width: "15px",
-                                              height: "15px",
-                                            }}
-                                          />
-                                        </a>
-                                      </TableCell>
-                                    </TableRow>
-                                  );
-                                }
-                              )}
-                            </TableBody>
-                          </Table>
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                    ) : (
-                      <div>
-                        {" "}
-                        {applianceState[appliance]["documents"] !== undefined &&
-                        applianceState[appliance]["documents"].length > 0 ? (
-                          <Table
-                            responsive="md"
-                            classes={{ root: classes.customTable }}
-                            size="small"
-                          >
-                            <TableHead>
-                              <TableRow>
-                                <TableCell>Description</TableCell>
-                                <TableCell>View</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {applianceState[appliance]["documents"].map(
-                                (file, i) => {
-                                  return (
-                                    <TableRow>
-                                      <TableCell>{file.description}</TableCell>
-
-                                      <TableCell>
-                                        <a
-                                          href={file.link}
-                                          target="_blank"
-                                          rel="noreferrer"
-                                        >
-                                          <img
-                                            src={File}
-                                            alt="open document"
-                                            style={{
-                                              width: "15px",
-                                              height: "15px",
-                                            }}
-                                          />
-                                        </a>
-                                      </TableCell>
-                                    </TableRow>
-                                  );
-                                }
-                              )}
-                            </TableBody>
-                          </Table>
-                        ) : (
-                          ""
-                        )}
-                      </div>
+                      "None"
                     )}
                   </TableCell>
                   {!og_appliances.includes(appliance) ? (
@@ -863,210 +1009,14 @@ function PropertyAppliances(props) {
                   ) : (
                     <TableCell></TableCell>
                   )}
-                  {addApplianceInfo === true &&
-                  showDetails === true &&
-                  (applianceState[appliance]["available"] === true ||
-                    applianceState[appliance]["available"] === "True") &&
-                  applianceType === appliance ? (
-                    <TableCell>
-                      {showSpinner ? (
-                        <div className="w-100 d-flex flex-column justify-content-center align-items-center">
-                          <ReactBootStrap.Spinner
-                            animation="border"
-                            role="status"
-                          />
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                      <div className="text-center my-3">
-                        <Button
-                          variant="outline-primary"
-                          style={pillButton}
-                          className="mx-2"
-                          onClick={
-                            edit ? () => updateAppliance(appliance) : () => {}
-                          }
-                        >
-                          Save
-                        </Button>
-                        <Button
-                          variant="outline-primary"
-                          style={pillButton}
-                          className="mx-2"
-                          onClick={() => cancelAppliance(appliance)}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    </TableCell>
-                  ) : addApplianceInfo === true && showDetails === true ? (
-                    <TableCell></TableCell>
-                  ) : (
-                    ""
-                  )}
                 </TableRow>
               );
             })}
-            {!edit ? (
-              ""
-            ) : newAppliance === null ? (
-              ""
-            ) : (
-              <TableRow>
-                <TableCell>
-                  <Checkbox type="BOX" checked={true} />
-                </TableCell>
-                <TableCell>
-                  {" "}
-                  <Form.Control
-                    style={squareForm}
-                    value={newAppliance}
-                    placeholder="Appliance"
-                    onChange={(e) => setNewAppliance(e.target.value)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <Form.Control
-                    style={squareForm}
-                    type="text"
-                    value={applianceName}
-                    placeholder="Appliance Name"
-                    onChange={(e) => setApplianceName(e.target.value)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <Form.Control
-                    style={squareForm}
-                    value={appliancePurchasedFrom}
-                    placeholder="Purchased From"
-                    onChange={(e) => setAppliancePurchasedFrom(e.target.value)}
-                  />
-                </TableCell>
-
-                <TableCell>
-                  <Form.Control
-                    style={squareForm}
-                    type="date"
-                    value={appliancePurchasedOn}
-                    onChange={(e) => setAppliancePurchasedOn(e.target.value)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <Form.Control
-                    style={squareForm}
-                    value={appliancePurchasesOrderNumber}
-                    placeholder="Purchase Order Number"
-                    onChange={(e) =>
-                      setAppliancePurchasesOrderNumber(e.target.value)
-                    }
-                  />
-                </TableCell>
-
-                <TableCell>
-                  <Form.Control
-                    style={squareForm}
-                    type="date"
-                    value={applianceInstalledOn}
-                    onChange={(e) => setApplianceInstalledOn(e.target.value)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <Form.Control
-                    style={squareForm}
-                    value={applianceSerialNum}
-                    placeholder="Serial Number"
-                    onChange={(e) => setApplianceSerialNum(e.target.value)}
-                  />
-                </TableCell>
-
-                <TableCell>
-                  <Form.Control
-                    style={squareForm}
-                    value={applianceModelNum}
-                    placeholder="Model Number"
-                    onChange={(e) => setApplianceModelNum(e.target.value)}
-                  />
-                </TableCell>
-
-                <TableCell>
-                  <Form.Control
-                    style={squareForm}
-                    type="date"
-                    value={applianceWarrantyTill}
-                    onChange={(e) => setApplianceWarrantyTill(e.target.value)}
-                  />
-                </TableCell>
-
-                <TableCell>
-                  <Form.Control
-                    style={squareForm}
-                    value={applianceWarrantyInfo}
-                    placeholder="Warranty Info"
-                    onChange={(e) => setApplianceWarrantyInfo(e.target.value)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <Form.Control
-                    style={squareForm}
-                    value={applianceURL}
-                    placeholder="URL"
-                    onChange={(e) => setApplianceURL(e.target.value)}
-                  />
-                </TableCell>
-                <TableCell>
-                  {property ? <ApplianceImages state={imageState} /> : ""}
-                </TableCell>
-                <TableCell>
-                  {property ? (
-                    <DocumentsUploadPost
-                      files={docFiles}
-                      setFiles={setDocFiles}
-                      addDoc={addDoc}
-                      setAddDoc={setAddDoc}
-                      editingDoc={editingDoc}
-                      setEditingDoc={setEditingDoc}
-                    />
-                  ) : (
-                    ""
-                  )}
-                </TableCell>
-                <TableCell>
-                  {showSpinner ? (
-                    <div className="w-100 d-flex flex-column justify-content-center align-items-center">
-                      <ReactBootStrap.Spinner
-                        animation="border"
-                        role="status"
-                      />
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                  <div className="text-center my-3">
-                    <Button
-                      variant="outline-primary"
-                      style={pillButton}
-                      className="mx-2"
-                      onClick={addAppliance}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      variant="outline-primary"
-                      style={pillButton}
-                      className="mx-2"
-                      onClick={() => setNewAppliance(null)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            )}
           </TableBody>
         </Table>
       </Row>
-
+      {addDetailsModal()}
+      {addNewModal()}
       <Row className="d-flex flex-column justify-content-left overflow-scroll"></Row>
     </div>
   );

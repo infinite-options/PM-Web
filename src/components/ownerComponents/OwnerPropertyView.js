@@ -155,7 +155,7 @@ function OwnerPropertyView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Dishwasher: {
       available: false,
@@ -170,7 +170,7 @@ function OwnerPropertyView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Refrigerator: {
       available: false,
@@ -185,7 +185,7 @@ function OwnerPropertyView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Washer: {
       available: false,
@@ -200,7 +200,7 @@ function OwnerPropertyView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Dryer: {
       available: false,
@@ -215,7 +215,7 @@ function OwnerPropertyView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Range: {
       available: false,
@@ -230,7 +230,7 @@ function OwnerPropertyView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
   });
   const [feeState, setFeeState] = useState([]);

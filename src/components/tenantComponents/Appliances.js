@@ -10,6 +10,9 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import ImageModal from "../ImageModal";
 import File from "../../icons/File.svg";
+import ImgIcon from "../../icons/ImgIcon.png";
+import LinkIcon from "../../icons/LinkIcon.svg";
+import DocIcon from "../../icons/DocIcon.png";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -47,18 +50,18 @@ export default function Appliances(props) {
         <TableHead>
           <TableRow>
             <TableCell>Appliance</TableCell>
-            <TableCell>Manufacturer</TableCell>
-            <TableCell>Purchased From</TableCell>
-            <TableCell>Purchased On</TableCell>
-            <TableCell>Purchase Order Number</TableCell>
-            <TableCell>Installed On</TableCell>
-            <TableCell>Serial Number</TableCell>
-            <TableCell>Model Number</TableCell>
-            <TableCell>Warranty Till</TableCell>
-            <TableCell>Warranty Info</TableCell>
-            <TableCell>URLs</TableCell>
-            <TableCell>Images</TableCell>
-            <TableCell>Documents</TableCell>
+            <TableCell align="center">Manufacturer</TableCell>
+            <TableCell align="center">Purchased From</TableCell>
+            <TableCell align="center">Purchased On</TableCell>
+            <TableCell align="center">Purchase Order Number</TableCell>
+            <TableCell align="center">Installed On</TableCell>
+            <TableCell align="center">Serial Number</TableCell>
+            <TableCell align="center">Model Number</TableCell>
+            <TableCell align="center">Warranty Till</TableCell>
+            <TableCell align="center">Warranty Info</TableCell>
+            <TableCell align="center">URLs</TableCell>
+            <TableCell align="center">Images</TableCell>
+            <TableCell align="center">Documents</TableCell>
           </TableRow>
         </TableHead>
         {/* {console.log("appliances", appliances, applianceState)} */}
@@ -68,34 +71,76 @@ export default function Appliances(props) {
               applianceState[0][appliance]["available"] == "True" ? (
               <TableRow>
                 <TableCell>{appliance}</TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {applianceState[0][appliance]["manufacturer"]}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {applianceState[0][appliance]["purchased_from"]}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {applianceState[0][appliance]["purchased"]}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {applianceState[0][appliance]["purchased_order"]}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {applianceState[0][appliance]["installed"]}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {applianceState[0][appliance]["serial_num"]}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {applianceState[0][appliance]["model_num"]}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {applianceState[0][appliance]["warranty_till"]}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {applianceState[0][appliance]["warranty_info"]}
                 </TableCell>
-                <TableCell>{applianceState[0][appliance]["url"]}</TableCell>
+                <TableCell align="center">
+                  {applianceState[0][appliance]["url"] !== undefined &&
+                  applianceState[0][appliance]["url"].length > 0 ? (
+                    <img
+                      src={LinkIcon}
+                      style={{
+                        width: "15px",
+                        height: "15px",
+                      }}
+                    />
+                  ) : (
+                    "None"
+                  )}
+                </TableCell>
+                <TableCell align="center">
+                  {applianceState[0][appliance]["images"] !== undefined &&
+                  applianceState[0][appliance]["images"].length > 0 ? (
+                    <img
+                      src={ImgIcon}
+                      style={{
+                        width: "25px",
+                        height: "25px",
+                      }}
+                    />
+                  ) : (
+                    "None"
+                  )}
+                </TableCell>
+                <TableCell align="center">
+                  {applianceState[0][appliance]["documents"] !== undefined &&
+                  applianceState[0][appliance]["documents"].length > 0 ? (
+                    <img
+                      src={DocIcon}
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                      }}
+                    />
+                  ) : (
+                    "None"
+                  )}
+                </TableCell>
+                {/* <TableCell>{applianceState[0][appliance]["url"]}</TableCell>
 
                 {applianceState[0][appliance]["images"] !== undefined &&
                 applianceState[0][appliance]["images"].length > 0 ? (
@@ -174,7 +219,7 @@ export default function Appliances(props) {
                   </TableCell>
                 ) : (
                   <TableCell>None</TableCell>
-                )}
+                )} */}
               </TableRow>
             ) : (
               ""

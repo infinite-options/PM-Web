@@ -57,7 +57,7 @@ function ManagerPropertyForm(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Dishwasher: {
       available: false,
@@ -72,7 +72,7 @@ function ManagerPropertyForm(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Refrigerator: {
       available: false,
@@ -87,7 +87,7 @@ function ManagerPropertyForm(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Washer: {
       available: false,
@@ -102,7 +102,7 @@ function ManagerPropertyForm(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Dryer: {
       available: false,
@@ -117,7 +117,7 @@ function ManagerPropertyForm(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Range: {
       available: false,
@@ -132,7 +132,7 @@ function ManagerPropertyForm(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
   });
   const utilityState = useState({
