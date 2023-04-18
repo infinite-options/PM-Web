@@ -316,8 +316,9 @@ function PropertyAppliances(props) {
           newProperty[key] = file.image;
         }
       }
-
+      console.log(allFiles);
       const docuFiles = [...docFiles];
+      console.log(docuFiles);
       for (let i = 0; i < docuFiles.length; i++) {
         let key = `doc_${newAppliance}_${i}`;
         if (docuFiles[i].file !== undefined) {
@@ -329,7 +330,11 @@ function PropertyAppliances(props) {
         delete docuFiles[i].file;
       }
       newProperty.documents = JSON.stringify(docuFiles);
-      allFiles.push(docuFiles);
+      console.log(allFiles);
+      console.log(docuFiles);
+      if (docuFiles.length > 0) {
+        allFiles.push(docuFiles);
+      }
 
       setShowSpinner(true);
 
@@ -1001,7 +1006,14 @@ function PropertyAppliances(props) {
                     onChange={(e) => setApplianceWarrantyInfo(e.target.value)}
                   />
                 </TableCell>
-
+                <TableCell>
+                  <Form.Control
+                    style={squareForm}
+                    value={applianceURL}
+                    placeholder="URL"
+                    onChange={(e) => setApplianceURL(e.target.value)}
+                  />
+                </TableCell>
                 <TableCell>
                   {property ? <ApplianceImages state={imageState} /> : ""}
                 </TableCell>
