@@ -796,14 +796,13 @@ function PropertyAppliances(props) {
       const response = await put("/appliances", newProperty, null, allFiles);
     }
 
+    imageState[0] = [];
+    setDocFiles([]);
     const getNewApplianceInfo = await get(
       `/appliances?property_uid=${property.property_uid}`
     );
     let newinfo = JSON.parse(getNewApplianceInfo.result[0].appliances);
     setApplianceState(newinfo);
-    imageState[0] = [];
-    setAddNewModalShow(!addNewModalShow);
-    setDocFiles([]);
     setNewAppliance(null);
     setApplianceManufacturer("");
     setAppliancePurchasedOn("");
@@ -815,6 +814,7 @@ function PropertyAppliances(props) {
     setApplianceWarrantyInfo("");
     setApplianceURL("");
     setShowSpinner(false);
+    setAddNewModalShow(!addNewModalShow);
   };
   return (
     <div style={({ padding: "0px" }, mediumBold)} className="my-4">
