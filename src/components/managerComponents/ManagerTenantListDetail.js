@@ -290,7 +290,7 @@ function ManagerTenantListDetail(props) {
         receiverPhone={selectedTenant.tenant_phone_number}
         onCancel={onCancelMessage}
       />
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         {" "}
         <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />

@@ -154,6 +154,7 @@ function OwnerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Dishwasher: {
@@ -168,6 +169,7 @@ function OwnerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Refrigerator: {
@@ -182,6 +184,7 @@ function OwnerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Washer: {
@@ -196,6 +199,7 @@ function OwnerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Dryer: {
@@ -210,6 +214,7 @@ function OwnerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Range: {
@@ -224,6 +229,7 @@ function OwnerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
   });
@@ -813,7 +819,7 @@ function OwnerPropertyView(props) {
           onConfirm={cancelAgreement}
           onCancel={onCancel2}
         />
-        <Row className="mb-5">
+        <Row className="w-100 mb-5 overflow-hidden">
           {location.state === null ? (
             ""
           ) : (

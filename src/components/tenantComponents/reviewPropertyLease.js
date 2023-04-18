@@ -164,7 +164,7 @@ function ReviewPropertyLease(props) {
   // console.log(properties);
 
   const approveLease = async () => {
-    // console.log("in approvelease", rentals);
+    console.log("in approvelease", rentals);
 
     if (rentals.length > 0) {
       // console.log("in approvelease", rentals);
@@ -182,22 +182,21 @@ function ReviewPropertyLease(props) {
         channel_application.publish({ data: { te: updatedApplication } });
         const newMessage = {
           sender_name:
-            rentals[i].rentalInfo[0].tenant_first_name +
+            application.applicant_info[0].tenant_first_name +
             " " +
-            rentals[i].rentalInfo[0].tenant_last_name,
-          sender_email: rentals[i].rentalInfo[0].tenant_email,
-          sender_phone: rentals[i].rentalInfo[0].tenant_phone_number,
+            application.applicant_info[0].tenant_last_name,
+          sender_email: application.applicant_info[0].tenant_email,
+          sender_phone: application.applicant_info[0].tenant_phone_number,
           message_subject: "Lease Accepted",
           message_details: "Tenant has accepted the lease agreement",
-          message_created_by: rentals[i].rentalInfo[0].tenant_id,
-          user_messaged: rentals[i].property_manager[0].manager_id,
+          message_created_by: application.applicant_info[0].tenant_id,
+          user_messaged: application.business_uid,
           message_status: "PENDING",
-          receiver_email: rentals[i].property_manager[0].manager_email,
-          receiver_phone: rentals[i].rentalInfo[0].manager_phone_number,
+          receiver_email: application.business_email,
+          receiver_phone: application.business_phone_number,
         };
         // console.log(newMessage);
         const responseMsg = await post("/messageEmail", newMessage);
-        navigate("/tenant");
       } else if (rentals.some((rental) => rental.rental_status === "PENDING")) {
         let i = rentals.findIndex(
           (rental) => rental.rental_status === "PENDING"
@@ -217,22 +216,21 @@ function ReviewPropertyLease(props) {
         channel_application.publish({ data: { te: updateLease } });
         const newMessage = {
           sender_name:
-            rentals[i].rentalInfo[0].tenant_first_name +
+            application.applicant_info[0].tenant_first_name +
             " " +
-            rentals[i].rentalInfo[0].tenant_last_name,
-          sender_email: rentals[i].rentalInfo[0].tenant_email,
-          sender_phone: rentals[i].rentalInfo[0].tenant_phone_number,
+            application.applicant_info[0].tenant_last_name,
+          sender_email: application.applicant_info[0].tenant_email,
+          sender_phone: application.applicant_info[0].tenant_phone_number,
           message_subject: "Lease Extension Accepted",
           message_details: "Tenant has accepted the lease extension agreement",
-          message_created_by: rentals[i].rentalInfo[0].tenant_id,
-          user_messaged: rentals[i].property_manager[0].manager_id,
+          message_created_by: application.applicant_info[0].tenant_id,
+          user_messaged: application.business_uid,
           message_status: "PENDING",
-          receiver_email: rentals[i].property_manager[0].manager_email,
-          receiver_phone: rentals[i].rentalInfo[0].manager_phone_number,
+          receiver_email: application.business_email,
+          receiver_phone: application.business_phone_number,
         };
         // console.log(newMessage);
         const responseMsg = await post("/messageEmail", newMessage);
-        navigate("/tenant");
       } else if (rentals.some((rental) => rental.rental_status === "ACTIVE")) {
         let i = rentals.findIndex(
           (rental) => rental.rental_status === "ACTIVE"
@@ -245,26 +243,27 @@ function ReviewPropertyLease(props) {
         // console.log("in update activr lease", updateLease);
         const response2 = await put("/UpdateActiveLease", updateLease);
         channel_application.publish({ data: { te: updateLease } });
+        console.log(rentals);
         const newMessage = {
           sender_name:
-            rentals[i].rentalInfo[0].tenant_first_name +
+            application.applicant_info[0].tenant_first_name +
             " " +
-            rentals[i].rentalInfo[0].tenant_last_name,
-          sender_email: rentals[i].rentalInfo[0].tenant_email,
-          sender_phone: rentals[i].rentalInfo[0].tenant_phone_number,
+            application.applicant_info[0].tenant_last_name,
+          sender_email: application.applicant_info[0].tenant_email,
+          sender_phone: application.applicant_info[0].tenant_phone_number,
           message_subject: "Updated Lease Accepted",
           message_details: "Tenant has accepted the updated lease agreement",
-          message_created_by: rentals[i].rentalInfo[0].tenant_id,
-          user_messaged: rentals[i].property_manager[0].manager_id,
+          message_created_by: application.applicant_info[0].tenant_id,
+          user_messaged: application.business_uid,
           message_status: "PENDING",
-          receiver_email: rentals[i].property_manager[0].manager_email,
-          receiver_phone: rentals[i].rentalInfo[0].manager_phone_number,
+          receiver_email: application.business_email,
+          receiver_phone: application.business_phone_number,
         };
         // console.log(newMessage);
         const responseMsg = await post("/messageEmail", newMessage);
-        navigate("/tenant");
       }
     }
+    navigate("../tenant");
   };
   const displayLease = (path) => {
     window.location.href = path;
@@ -282,19 +281,19 @@ function ReviewPropertyLease(props) {
     channel_application.publish({ data: { te: extendObject } });
     const newMessage = {
       sender_name:
-        rentals[0].rentalInfo[0].tenant_first_name +
+        application.applicant_info[0].tenant_first_name +
         " " +
-        rentals[0].rentalInfo[0].tenant_last_name,
-      sender_email: rentals[0].rentalInfo[0].tenant_email,
-      sender_phone: rentals[0].rentalInfo[0].tenant_phone_number,
+        application.applicant_info[0].tenant_last_name,
+      sender_email: application.applicant_info[0].tenant_email,
+      sender_phone: application.applicant_info[0].tenant_phone_number,
       message_subject: "Lease Extension Requested",
       message_details:
         "Tenant has requested an extension of  the lease agreement",
-      message_created_by: rentals[0].rentalInfo[0].tenant_id,
-      user_messaged: rentals[0].property_manager[0].manager_id,
+      message_created_by: application.applicant_info[0].tenant_id,
+      user_messaged: application.business_uid,
       message_status: "PENDING",
-      receiver_email: rentals[0].property_manager[0].manager_email,
-      receiver_phone: rentals[0].rentalInfo[0].manager_phone_number,
+      receiver_email: application.business_email,
+      receiver_phone: application.business_phone_number,
     };
     // console.log(newMessage);
     const responseMsg = await post("/messageEmail", newMessage);
@@ -320,18 +319,18 @@ function ReviewPropertyLease(props) {
     channel_application.publish({ data: { te: updatedRental } });
     const newMessage = {
       sender_name:
-        rentals[0].rentalInfo[0].tenant_first_name +
+        application.applicant_info[0].tenant_first_name +
         " " +
-        rentals[0].rentalInfo[0].tenant_last_name,
-      sender_email: rentals[0].rentalInfo[0].tenant_email,
-      sender_phone: rentals[0].rentalInfo[0].tenant_phone_number,
+        application.applicant_info[0].tenant_last_name,
+      sender_email: application.applicant_info[0].tenant_email,
+      sender_phone: application.applicant_info[0].tenant_phone_number,
       message_subject: "Lease End Early Request",
       message_details: "Tenant has requested to end the lease agreement early",
-      message_created_by: rentals[0].rentalInfo[0].tenant_id,
-      user_messaged: rentals[0].property_manager[0].manager_id,
+      message_created_by: application.applicant_info[0].tenant_id,
+      user_messaged: application.business_uid,
       message_status: "PENDING",
-      receiver_email: rentals[0].property_manager[0].manager_email,
-      receiver_phone: rentals[0].rentalInfo[0].manager_phone_number,
+      receiver_email: application.business_email,
+      receiver_phone: application.business_phone_number,
     };
     // console.log(newMessage);
     const responseMsg = await post("/messageEmail", newMessage);
@@ -349,18 +348,18 @@ function ReviewPropertyLease(props) {
     channel_application.publish({ data: { te: updatedApprove } });
     const newMessage = {
       sender_name:
-        rentals[0].rentalInfo[0].tenant_first_name +
+        application.applicant_info[0].tenant_first_name +
         " " +
-        rentals[0].rentalInfo[0].tenant_last_name,
-      sender_email: rentals[0].rentalInfo[0].tenant_email,
-      sender_phone: rentals[0].rentalInfo[0].tenant_phone_number,
+        application.applicant_info[0].tenant_last_name,
+      sender_email: application.applicant_info[0].tenant_email,
+      sender_phone: application.applicant_info[0].tenant_phone_number,
       message_subject: "Lease End Early Request Accepted",
       message_details: "Tenant has accepted to end the lease early",
-      message_created_by: rentals[0].rentalInfo[0].tenant_id,
-      user_messaged: rentals[0].property_manager[0].manager_id,
+      message_created_by: application.applicant_info[0].tenant_id,
+      user_messaged: application.business_uid,
       message_status: "PENDING",
-      receiver_email: rentals[0].property_manager[0].manager_email,
-      receiver_phone: rentals[0].rentalInfo[0].manager_phone_number,
+      receiver_email: application.business_email,
+      receiver_phone: application.business_phone_number,
     };
     // console.log(newMessage);
     const responseMsg = await post("/messageEmail", newMessage);
@@ -377,18 +376,18 @@ function ReviewPropertyLease(props) {
     channel_application.publish({ data: { te: updatedApprove } });
     const newMessage = {
       sender_name:
-        rentals[0].rentalInfo[0].tenant_first_name +
+        application.applicant_info[0].tenant_first_name +
         " " +
-        rentals[0].rentalInfo[0].tenant_last_name,
-      sender_email: rentals[0].rentalInfo[0].tenant_email,
-      sender_phone: rentals[0].rentalInfo[0].tenant_phone_number,
+        application.applicant_info[0].tenant_last_name,
+      sender_email: application.applicant_info[0].tenant_email,
+      sender_phone: application.applicant_info[0].tenant_phone_number,
       message_subject: "Lease End Early Request Rejected",
       message_details: "Tenant has refused to end the lease  early",
-      message_created_by: rentals[0].rentalInfo[0].tenant_id,
-      user_messaged: rentals[0].property_manager[0].manager_id,
+      message_created_by: application.applicant_info[0].tenant_id,
+      user_messaged: application.business_uid,
       message_status: "PENDING",
-      receiver_email: rentals[0].property_manager[0].manager_email,
-      receiver_phone: rentals[0].rentalInfo[0].manager_phone_number,
+      receiver_email: application.business_email,
+      receiver_phone: application.business_phone_number,
     };
     // console.log(newMessage);
     const responseMsg = await post("/messageEmail", newMessage);
@@ -411,18 +410,18 @@ function ReviewPropertyLease(props) {
         channel_application.publish({ data: { te: updatedApplication } });
         const newMessage = {
           sender_name:
-            rentals[i].rentalInfo[0].tenant_first_name +
+            application.applicant_info[0].tenant_first_name +
             " " +
-            rentals[i].rentalInfo[0].tenant_last_name,
-          sender_email: rentals[i].rentalInfo[0].tenant_email,
-          sender_phone: rentals[i].rentalInfo[0].tenant_phone_number,
+            application.applicant_info[0].tenant_last_name,
+          sender_email: application.applicant_info[0].tenant_email,
+          sender_phone: application.applicant_info[0].tenant_phone_number,
           message_subject: "Lease Refused",
           message_details: "Tenant has refused the lease agreement",
-          message_created_by: rentals[i].rentalInfo[0].tenant_id,
-          user_messaged: rentals[i].property_manager[0].manager_id,
+          message_created_by: application.applicant_info[0].tenant_id,
+          user_messaged: application.business_uid,
           message_status: "PENDING",
-          receiver_email: rentals[i].property_manager[0].manager_email,
-          receiver_phone: rentals[i].rentalInfo[0].manager_phone_number,
+          receiver_email: application.business_email,
+          receiver_phone: application.business_phone_number,
         };
         // console.log(newMessage);
         const responseMsg = await post("/messageEmail", newMessage);
@@ -441,19 +440,19 @@ function ReviewPropertyLease(props) {
           channel_application.publish({ data: { te: request_body } });
           const newMessage = {
             sender_name:
-              rentals[i].rentalInfo[0].tenant_first_name +
+              application.applicant_info[0].tenant_first_name +
               " " +
-              rentals[i].rentalInfo[0].tenant_last_name,
-            sender_email: rentals[i].rentalInfo[0].tenant_email,
-            sender_phone: rentals[i].rentalInfo[0].tenant_phone_number,
+              application.applicant_info[0].tenant_last_name,
+            sender_email: application.applicant_info[0].tenant_email,
+            sender_phone: application.applicant_info[0].tenant_phone_number,
             message_subject: "Lease Extension Agreement Refused",
             message_details:
               "Tenant has refused the lease extenstion agreement",
-            message_created_by: rentals[i].rentalInfo[0].tenant_id,
-            user_messaged: rentals[i].property_manager[0].manager_id,
+            message_created_by: application.applicant_info[0].tenant_id,
+            user_messaged: application.business_uid,
             message_status: "PENDING",
-            receiver_email: rentals[i].property_manager[0].manager_email,
-            receiver_phone: rentals[i].rentalInfo[0].manager_phone_number,
+            receiver_email: application.business_email,
+            receiver_phone: application.business_phone_number,
           };
           // console.log(newMessage);
           const responseMsg = await post("/messageEmail", newMessage);
@@ -481,18 +480,18 @@ function ReviewPropertyLease(props) {
 
         const newMessage = {
           sender_name:
-            rentals[0].rentalInfo[0].tenant_first_name +
+            application.applicant_info[0].tenant_first_name +
             " " +
-            rentals[0].rentalInfo[0].tenant_last_name,
-          sender_email: rentals[0].rentalInfo[0].tenant_email,
-          sender_phone: rentals[0].rentalInfo[0].tenant_phone_number,
+            application.applicant_info[0].tenant_last_name,
+          sender_email: application.applicant_info[0].tenant_email,
+          sender_phone: application.applicant_info[0].tenant_phone_number,
           message_subject: "Extend Lease Request Declined",
           message_details: "Tenant has refused to extend the lease",
-          message_created_by: rentals[0].rentalInfo[0].tenant_id,
-          user_messaged: rentals[0].property_manager[0].manager_id,
+          message_created_by: application.applicant_info[0].tenant_id,
+          user_messaged: application.business_uid,
           message_status: "PENDING",
-          receiver_email: rentals[0].property_manager[0].manager_email,
-          receiver_phone: rentals[0].rentalInfo[0].manager_phone_number,
+          receiver_email: application.business_email,
+          receiver_phone: application.business_phone_number,
         };
         // console.log(newMessage);
         const responseMsg = await post("/messageEmail", newMessage);
@@ -508,18 +507,18 @@ function ReviewPropertyLease(props) {
       channel_application.publish({ data: { te: updatedApplication } });
       const newMessage = {
         sender_name:
-          rentals[0].rentalInfo[0].tenant_first_name +
+          application.applicant_info[0].tenant_first_name +
           " " +
-          rentals[0].rentalInfo[0].tenant_last_name,
-        sender_email: rentals[0].rentalInfo[0].tenant_email,
-        sender_phone: rentals[0].rentalInfo[0].tenant_phone_number,
+          application.applicant_info[0].tenant_last_name,
+        sender_email: application.applicant_info[0].tenant_email,
+        sender_phone: application.applicant_info[0].tenant_phone_number,
         message_subject: "Lease Refused",
         message_details: "Tenant has refused the lease agreement",
-        message_created_by: rentals[0].rentalInfo[0].tenant_id,
-        user_messaged: rentals[0].property_manager[0].manager_id,
+        message_created_by: application.applicant_info[0].tenant_id,
+        user_messaged: application.business_uid,
         message_status: "PENDING",
-        receiver_email: rentals[0].property_manager[0].manager_email,
-        receiver_phone: rentals[0].rentalInfo[0].manager_phone_number,
+        receiver_email: application.business_email,
+        receiver_phone: application.business_phone_number,
       };
       // console.log(newMessage);
       const responseMsg = await post("/messageEmail", newMessage);
@@ -564,9 +563,10 @@ function ReviewPropertyLease(props) {
       state: { fromPage: fromPage },
     });
   };
+  console.log(application);
   return (
     <div className="w-100 overflow-hidden">
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
         </Col>

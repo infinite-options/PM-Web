@@ -268,7 +268,7 @@ export default function MaintenanceRequestView() {
         onCancel={onCancelOwnerMessage}
       />
       {!isLoading && quote !== null ? (
-        <Row>
+        <Row className="w-100 mb-5 overflow-hidden">
           <Col
             xs={2}
             hidden={!responsiveSidebar.showSidebar}
@@ -1017,8 +1017,12 @@ export default function MaintenanceRequestView() {
           </Col>
         </Row>
       ) : (
-        <Row xs={2}>
-          <Col hidden={!responsiveSidebar.showSidebar} style={sidebarStyle}>
+        <Row className="w-100 mb-5 overflow-hidden">
+          <Col
+            xs={2}
+            hidden={!responsiveSidebar.showSidebar}
+            style={sidebarStyle}
+          >
             <SideBar />
           </Col>
           <Col className="w-100 d-flex flex-column justify-content-center align-items-center">

@@ -119,6 +119,7 @@ function TenantPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Dishwasher: {
@@ -133,6 +134,7 @@ function TenantPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Refrigerator: {
@@ -147,6 +149,7 @@ function TenantPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Washer: {
@@ -161,6 +164,7 @@ function TenantPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Dryer: {
@@ -175,6 +179,7 @@ function TenantPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Range: {
@@ -189,6 +194,7 @@ function TenantPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
   });
@@ -769,7 +775,7 @@ function TenantPropertyView(props) {
         receiverPhone={selectedContact.phone_number}
         onCancel={onCancelContactMessage}
       />
-      <Row className="flex-1">
+      <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
           hidden={!responsiveSidebar.showSidebar}
@@ -1786,7 +1792,7 @@ function TenantPropertyView(props) {
                             (new Date(selectedAgreement.lease_end).getTime() -
                               new Date().getTime()) /
                               (1000 * 60 * 60 * 24)
-                          ) < 60 ? (
+                          ) < 90 ? (
                             <Row
                               className="pt-4 my-4"
                               hidden={

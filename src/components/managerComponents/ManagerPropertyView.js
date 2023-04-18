@@ -132,6 +132,7 @@ function ManagerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Dishwasher: {
@@ -146,6 +147,7 @@ function ManagerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Refrigerator: {
@@ -160,6 +162,7 @@ function ManagerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Washer: {
@@ -174,6 +177,7 @@ function ManagerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Dryer: {
@@ -188,6 +192,7 @@ function ManagerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Range: {
@@ -202,6 +207,7 @@ function ManagerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
   });
@@ -629,7 +635,7 @@ function ManagerPropertyView(props) {
           onCancel={onCancel}
         />
         {/* {console.log("showdialog", showDialog)} */}
-        <Row>
+        <Row className="w-100 mb-5 overflow-hidden">
           <Col
             xs={2}
             hidden={!responsiveSidebar.showSidebar}
@@ -637,7 +643,7 @@ function ManagerPropertyView(props) {
           >
             <SideBar />
           </Col>
-          <Col className="w-100 mb-5  overflow-hidden">
+          <Col className="w-100 mb-5 overflow-hidden">
             <Header
               title="Property Details"
               leftText={location.state === null ? "" : "< Back"}

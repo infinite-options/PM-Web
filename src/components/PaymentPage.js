@@ -148,7 +148,7 @@ function PaymentPage(props) {
   // console.log(purchases);
   return (
     <div className="w-100 overflow-hidden">
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         {" "}
         <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
           <SideBar />
@@ -314,7 +314,7 @@ function PaymentPage(props) {
                   <Form.Group>
                     <Form.Label>Message</Form.Label>
                     <Form.Control
-                      placeholder="PMTEST"
+                      placeholder="Enter a payment message"
                       style={squareForm}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}

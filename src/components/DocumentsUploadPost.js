@@ -45,7 +45,7 @@ function DocumentsUploadPost(props) {
   //   const [editingDoc, setEditingDoc] = useState(null);
 
   // ============================= <File addition/Updation>============================================================
-  const addFile = (e) => {
+  const addDocFile = (e) => {
     const file = e.target.files[0];
     const newFile = {
       name: file.name,
@@ -104,10 +104,10 @@ function DocumentsUploadPost(props) {
         >
           <TableHead>
             <TableRow>
-              <TableCell>Document Name</TableCell>
-              <TableCell>Document Description</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Description</TableCell>
               <TableCell>Actions</TableCell>
-              <TableCell>View Document</TableCell>
+              <TableCell>View</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -203,7 +203,7 @@ function DocumentsUploadPost(props) {
             id="file"
             type="file"
             accept="image/*,.pdf"
-            onChange={addFile}
+            onChange={addDocFile}
             className="d-none"
           />
           <label htmlFor="file">

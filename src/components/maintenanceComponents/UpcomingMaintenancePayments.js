@@ -534,26 +534,13 @@ export default function UpcomingMaintenancePayments(props) {
                     rents,
                     getComparatorIncoming(orderIncoming, orderIncomingBy)
                   ).map((row, index) => {
-                    return ((row.purchase_status === "UNPAID" ||
-                      row.purchase_status === "DELETED") &&
+                    return (row.purchase_status === "UNPAID" &&
                       row.receiver === maintenanceID &&
                       row.amount_due > 0) ||
-                      ((row.purchase_status === "UNPAID" ||
-                        row.purchase_status === "DELETED") &&
+                      (row.purchase_status === "UNPAID" &&
                         row.receiver !== maintenanceID &&
                         row.amount_due < 0) ? (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={index}
-                        style={{
-                          textDecoration:
-                            row.purchase_status === "DELETED"
-                              ? "line-through"
-                              : "none",
-                        }}
-                      >
+                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                         <TableCell align="left">{row.purchase_uid}</TableCell>
                         <TableCell align="left">
                           {row.address +

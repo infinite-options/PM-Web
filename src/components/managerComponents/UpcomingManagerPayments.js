@@ -25,6 +25,9 @@ import WF_Logo from "../../icons/WF-Logo.png";
 import BofA_Logo from "../../icons/BofA-Logo.png";
 import Chase_Logo from "../../icons/Chase-Logo.png";
 import Citi_Logo from "../../icons/Citi-Logo.png";
+import ApplePay_Logo from "../../icons/ApplePay-Logo.png";
+import Paypal_Logo from "../../icons/Paypal-Logo.png";
+import Zelle_Logo from "../../icons/Zelle-Logo.png";
 import { post, put } from "../../utils/api";
 import { headings, subHeading } from "../../utils/styles";
 
@@ -214,6 +217,54 @@ export default function UpcomingManagerPayments(props) {
                 selectPaymentType("wf");
               }}
               src={WF_Logo}
+              style={{
+                width: "160px",
+                height: "100px",
+                objectFit: "contain",
+                cursor: "pointer",
+              }}
+            />
+          </Row>
+          <Row className="text-center mt-5" id="payment">
+            <img
+              id="zelle"
+              alt="Zelle Logo"
+              onClick={() => {
+                setPaymentType("ZELLE");
+                selectPaymentType("zelle");
+              }}
+              src={Zelle_Logo}
+              style={{
+                width: "160px",
+                height: "100px",
+                objectFit: "contain",
+                cursor: "pointer",
+              }}
+            />
+            <img
+              id="paypal"
+              alt="Paypal Logo"
+              onClick={() => {
+                setPaymentType("PAYPAL");
+                selectPaymentType("paypal");
+              }}
+              src={Paypal_Logo}
+              style={{
+                width: "160px",
+                height: "100px",
+                objectFit: "contain",
+                cursor: "pointer",
+              }}
+            />
+
+            <img
+              id="ap"
+              alt="ApplePay Logo"
+              onClick={() => {
+                setPaymentType("APPLE PAY");
+                selectPaymentType("ap");
+              }}
+              src={ApplePay_Logo}
               style={{
                 width: "160px",
                 height: "100px",
@@ -781,26 +832,13 @@ export default function UpcomingManagerPayments(props) {
                     rents,
                     getComparatorIncoming(orderIncoming, orderIncomingBy)
                   ).map((row, index) => {
-                    return ((row.purchase_status === "UNPAID" ||
-                      row.purchase_status === "DELETED") &&
+                    return (row.purchase_status === "UNPAID" &&
                       row.receiver === managerID &&
                       row.amount_due > 0) ||
-                      ((row.purchase_status === "UNPAID" ||
-                        row.purchase_status === "DELETED") &&
+                      (row.purchase_status === "UNPAID" &&
                         row.receiver !== managerID &&
                         row.amount_due < 0) ? (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={index}
-                        style={{
-                          textDecoration:
-                            row.purchase_status === "DELETED"
-                              ? "line-through"
-                              : "none",
-                        }}
-                      >
+                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                         <TableCell align="left">{row.purchase_uid}</TableCell>
                         <TableCell align="left">
                           {row.address +

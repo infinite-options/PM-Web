@@ -515,11 +515,12 @@ function ManagerTenantAgreement(props) {
           ) {
             if (
               application ==
-              JSON.parse(
-                property.rentalInfo.find(
-                  (rent) => rent.rental_status === "ACTIVE"
-                ).linked_application_id
-              )[0]
+                JSON.parse(
+                  property.rentalInfo.find(
+                    (rent) => rent.rental_status === "ACTIVE"
+                  ).linked_application_id
+                )[0] &&
+              oldAgreement.lease_start !== startDate
             ) {
               const request_body = {
                 application_uid: application,
@@ -965,7 +966,7 @@ function ManagerTenantAgreement(props) {
       ""
     );
   return (
-    <Row>
+    <Row className="w-100 mb-5 overflow-hidden">
       <UpdateConfirmDialog
         title={"Review the lease"}
         updatedAgreement={updatedAgreement}

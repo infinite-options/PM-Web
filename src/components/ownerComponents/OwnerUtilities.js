@@ -1099,7 +1099,7 @@ function OwnerUtilities(props) {
   };
   return (
     <div>
-      <Row>
+      <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
           hidden={!responsiveSidebar.showSidebar}
@@ -2514,7 +2514,7 @@ function OwnerUtilities(props) {
                   <Form.Group style={mediumBold}>
                     <Form.Label>Message</Form.Label>
                     <Form.Control
-                      placeholder="PMTEST"
+                      placeholder="Enter a payment message"
                       style={squareForm}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
@@ -2819,7 +2819,7 @@ function OwnerUtilities(props) {
                     <Form.Group style={mediumBold}>
                       <Form.Label>Message</Form.Label>
                       <Form.Control
-                        placeholder="PMTEST"
+                        placeholder="Enter a payment message"
                         style={squareForm}
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
