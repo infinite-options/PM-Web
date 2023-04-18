@@ -115,15 +115,15 @@ function ApplianceImages(props) {
           </div>
         ))}
         <input
-          id="file"
+          id="image"
           type="file"
-          accept="image/*"
+          accept="image/*,.pdf"
           onChange={addFile}
           className="d-none"
         />
         <div className="mx-2" style={{ minHeight: "50px", minWidth: "50px" }}>
           <label
-            htmlFor="file"
+            htmlFor="image"
             style={tileImg}
             className="d-flex justify-content-center align-items-center"
           >

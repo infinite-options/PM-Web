@@ -13,6 +13,7 @@ import * as ReactBootStrap from "react-bootstrap";
 import Checkbox from "./Checkbox";
 import ApplianceImages from "./ApplianceImages";
 import ConfirmDialog from "../components/ConfirmDialog";
+import DocumentsUploadPost from "./DocumentsUploadPost";
 import ImageModal from "./ImageModal";
 import AddIcon from "../icons/AddIcon.svg";
 import File from "../icons/File.svg";
@@ -67,6 +68,9 @@ function PropertyAppliances(props) {
   const [applianceWarrantyInfo, setApplianceWarrantyInfo] = useState(null);
   const [applianceURL, setApplianceURL] = useState(null);
   const imageState = useState([]);
+  const [addDoc, setAddDoc] = useState(false);
+  const [editingDoc, setEditingDoc] = useState(null);
+  const [docFiles, setDocFiles] = useState([]);
   const [addApplianceInfo, setAddApplianceInfo] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
@@ -121,6 +125,9 @@ function PropertyAppliances(props) {
       }
       imageState[1](imageFiles);
     }
+    if (applianceState[appliance]["documents"] !== undefined) {
+      setDocFiles(JSON.parse(applianceState[appliance]["documents"]));
+    }
   };
 
   const onCancel = () => {
@@ -174,6 +181,9 @@ function PropertyAppliances(props) {
     if (imageState[0].length === 0) {
       newApplianceState[appliance]["images"] = imageState[0];
     }
+    if (docFiles.length === 0) {
+      newApplianceState[appliance]["documents"] = docFiles[0];
+    }
 
     if (property) {
       let newProperty = {
@@ -184,7 +194,7 @@ function PropertyAppliances(props) {
       };
       let allFiles = [];
       const imageFiles = imageState[0];
-      allFiles = imageState[0];
+      allFiles = imageFiles;
       let i = 0;
       for (const file of imageState[0]) {
         let key = file.coverPhoto
@@ -197,6 +207,19 @@ function PropertyAppliances(props) {
         }
       }
 
+      const docuFiles = [...docFiles];
+      for (let i = 0; i < docuFiles.length; i++) {
+        let key = `doc_${appliance}_${i}`;
+        if (docuFiles[i].file !== undefined) {
+          newProperty[key] = docuFiles[i].file;
+        } else {
+          newProperty[key] = docuFiles[i].link;
+        }
+
+        delete docuFiles[i].file;
+      }
+      newProperty.documents = JSON.stringify(docuFiles);
+      allFiles.push(docuFiles);
       setShowSpinner(true);
 
       const response = await put("/appliances", newProperty, null, allFiles);
@@ -210,6 +233,7 @@ function PropertyAppliances(props) {
     let newinfo = JSON.parse(getNewApplianceInfo.result[0].appliances);
     setApplianceState(newinfo);
     imageState[0] = [];
+    setDocFiles([]);
     setApplianceName("");
     setAppliancePurchasedOn("");
     setAppliancePurchasesOrderNumber("");
@@ -227,6 +251,7 @@ function PropertyAppliances(props) {
   const cancelAppliance = (appliance) => {
     const newApplianceState = { ...applianceState };
     imageState[0] = [];
+    setDocFiles([]);
     setAddApplianceInfo(false);
     setShowDetails(false);
     setApplianceState(newApplianceState);
@@ -279,7 +304,7 @@ function PropertyAppliances(props) {
       };
       let allFiles = [];
       const imageFiles = imageState[0];
-      allFiles = imageState[0];
+      allFiles = imageFiles[0];
       let i = 0;
       for (const file of imageState[0]) {
         let key = file.coverPhoto
@@ -292,11 +317,26 @@ function PropertyAppliances(props) {
         }
       }
 
+      const docuFiles = [...docFiles];
+      for (let i = 0; i < docuFiles.length; i++) {
+        let key = `doc_${newAppliance}_${i}`;
+        if (docuFiles[i].file !== undefined) {
+          newProperty[key] = docuFiles[i].file;
+        } else {
+          newProperty[key] = docuFiles[i].link;
+        }
+
+        delete docuFiles[i].file;
+      }
+      newProperty.documents = JSON.stringify(docuFiles);
+      allFiles.push(docuFiles);
+
       setShowSpinner(true);
 
       const response = await put("/appliances", newProperty, null, allFiles);
     }
     imageState[0] = [];
+    setDocFiles([]);
     setNewAppliance(null);
     setApplianceName("");
     setAppliancePurchasedOn("");
@@ -383,6 +423,7 @@ function PropertyAppliances(props) {
               <TableCell>Warranty Info</TableCell>
               <TableCell>URL</TableCell>
               <TableCell>Images</TableCell>
+              <TableCell>Documents</TableCell>
               <TableCell></TableCell>
               {addApplianceInfo === true && showDetails === true ? (
                 <TableCell></TableCell>
@@ -686,6 +727,119 @@ function PropertyAppliances(props) {
                       )}
                     </TableCell>
                   )}
+                  <TableCell>
+                    {addApplianceInfo === true &&
+                    showDetails === true &&
+                    (applianceState[appliance]["available"] === true ||
+                      applianceState[appliance]["available"] === "True") &&
+                    applianceType === appliance ? (
+                      <div>
+                        {property ? (
+                          <DocumentsUploadPost
+                            files={docFiles}
+                            setFiles={setDocFiles}
+                            addDoc={addDoc}
+                            setAddDoc={setAddDoc}
+                            editingDoc={editingDoc}
+                            setEditingDoc={setEditingDoc}
+                          />
+                        ) : applianceState[appliance]["documents"].length >
+                          0 ? (
+                          <Table
+                            responsive="md"
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Description</TableCell>
+                                <TableCell>View</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {applianceState[appliance]["documents"].map(
+                                (file, i) => {
+                                  return (
+                                    <TableRow>
+                                      <TableCell>{file.description}</TableCell>
+
+                                      <TableCell>
+                                        <a
+                                          href={file.link}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                        >
+                                          <img
+                                            src={File}
+                                            alt="open document"
+                                            style={{
+                                              width: "15px",
+                                              height: "15px",
+                                            }}
+                                          />
+                                        </a>
+                                      </TableCell>
+                                    </TableRow>
+                                  );
+                                }
+                              )}
+                            </TableBody>
+                          </Table>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    ) : (
+                      <div>
+                        {" "}
+                        {applianceState[appliance]["documents"] !== undefined &&
+                        applianceState[appliance]["documents"].length > 0 ? (
+                          <Table
+                            responsive="md"
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Description</TableCell>
+                                <TableCell>View</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {applianceState[appliance]["documents"].map(
+                                (file, i) => {
+                                  return (
+                                    <TableRow>
+                                      <TableCell>{file.description}</TableCell>
+
+                                      <TableCell>
+                                        <a
+                                          href={file.link}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                        >
+                                          <img
+                                            src={File}
+                                            alt="open document"
+                                            style={{
+                                              width: "15px",
+                                              height: "15px",
+                                            }}
+                                          />
+                                        </a>
+                                      </TableCell>
+                                    </TableRow>
+                                  );
+                                }
+                              )}
+                            </TableBody>
+                          </Table>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    )}
+                  </TableCell>
                   {!og_appliances.includes(appliance) ? (
                     <TableCell>
                       <img
@@ -847,9 +1001,23 @@ function PropertyAppliances(props) {
                     onChange={(e) => setApplianceWarrantyInfo(e.target.value)}
                   />
                 </TableCell>
-                <TableCell></TableCell>
+
                 <TableCell>
                   {property ? <ApplianceImages state={imageState} /> : ""}
+                </TableCell>
+                <TableCell>
+                  {property ? (
+                    <DocumentsUploadPost
+                      files={docFiles}
+                      setFiles={setDocFiles}
+                      addDoc={addDoc}
+                      setAddDoc={setAddDoc}
+                      editingDoc={editingDoc}
+                      setEditingDoc={setEditingDoc}
+                    />
+                  ) : (
+                    ""
+                  )}
                 </TableCell>
                 <TableCell>
                   {showSpinner ? (

@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ImageModal from "../ImageModal";
+import File from "../../icons/File.svg";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -22,7 +23,6 @@ const useStyles = makeStyles({
 });
 export default function Appliances(props) {
   const classes = useStyles();
-
   const { appliances, applianceState } = props;
 
   const showImage = (src) => {
@@ -58,6 +58,7 @@ export default function Appliances(props) {
             <TableCell>Warranty Info</TableCell>
             <TableCell>URLs</TableCell>
             <TableCell>Images</TableCell>
+            <TableCell>Documents</TableCell>
           </TableRow>
         </TableHead>
         {/* {console.log("appliances", appliances, applianceState)} */}
@@ -122,6 +123,54 @@ export default function Appliances(props) {
                         />
                       </Col>
                     </Row>
+                  </TableCell>
+                ) : (
+                  <TableCell>None</TableCell>
+                )}
+                {applianceState[0][appliance]["documents"] !== undefined &&
+                applianceState[0][appliance]["documents"].length > 0 ? (
+                  <TableCell>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Description</TableCell>
+
+                          <TableCell>View</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {applianceState[0][appliance]["documents"].map(
+                          (file, i) => {
+                            return (
+                              <TableRow>
+                                <TableCell>{file.description}</TableCell>
+
+                                <TableCell>
+                                  <a
+                                    href={file.link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    <img
+                                      src={File}
+                                      alt="open document"
+                                      style={{
+                                        width: "15px",
+                                        height: "15px",
+                                      }}
+                                    />
+                                  </a>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          }
+                        )}
+                      </TableBody>
+                    </Table>
                   </TableCell>
                 ) : (
                   <TableCell>None</TableCell>

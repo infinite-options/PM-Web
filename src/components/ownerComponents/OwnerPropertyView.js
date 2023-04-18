@@ -154,6 +154,7 @@ function OwnerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Dishwasher: {
@@ -168,6 +169,7 @@ function OwnerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Refrigerator: {
@@ -182,6 +184,7 @@ function OwnerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Washer: {
@@ -196,6 +199,7 @@ function OwnerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Dryer: {
@@ -210,6 +214,7 @@ function OwnerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Range: {
@@ -224,6 +229,7 @@ function OwnerPropertyView(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
   });

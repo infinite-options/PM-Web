@@ -56,6 +56,7 @@ function ManagerPropertyForm(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Dishwasher: {
@@ -70,6 +71,7 @@ function ManagerPropertyForm(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Refrigerator: {
@@ -84,6 +86,7 @@ function ManagerPropertyForm(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Washer: {
@@ -98,6 +101,7 @@ function ManagerPropertyForm(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Dryer: {
@@ -112,6 +116,7 @@ function ManagerPropertyForm(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
     Range: {
@@ -126,6 +131,7 @@ function ManagerPropertyForm(props) {
       warranty_till: "",
       warranty_info: "",
       images: [],
+      documents: [],
       url: "",
     },
   });
