@@ -15,16 +15,22 @@ import ApplianceImages from "./ApplianceImages";
 import ConfirmDialog from "../components/ConfirmDialog";
 import ImageModal from "./ImageModal";
 import AddIcon from "../icons/AddIcon.svg";
-import MinusIcon from "../icons/MinusIcon.svg";
+import File from "../icons/File.svg";
+import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
-import { squareForm, pillButton, mediumBold } from "../utils/styles";
+import {
+  squareForm,
+  smallPillButton,
+  pillButton,
+  mediumBold,
+} from "../utils/styles";
 import { get, put } from "../utils/api";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
       padding: "2px 2px",
       border: "0.5px solid grey ",
-      wordBreak: "break-word",
+      // wordBreak: "break-word",
     },
     // width: "100%",
     // tableLayout: "fixed",
@@ -66,6 +72,7 @@ function PropertyAppliances(props) {
   const [showSpinner, setShowSpinner] = useState(false);
   const [openImage, setOpenImage] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
+
   const toggleAppliance = (appliance) => {
     const newApplianceState = { ...applianceState };
     newApplianceState[appliance]["available"] =
@@ -101,18 +108,18 @@ function PropertyAppliances(props) {
     setApplianceWarrantyInfo(applianceState[appliance]["warranty_info"]);
     setApplianceURL(applianceState[appliance]["url"]);
     if (applianceState[appliance]["images"] !== undefined) {
-      const files = [];
+      const imageFiles = [];
 
       const images = applianceState[appliance]["images"];
       for (let i = 0; i < images.length; i++) {
-        files.push({
+        imageFiles.push({
           index: i,
           image: images[i],
           file: null,
           coverPhoto: i === 0,
         });
       }
-      imageState[1](files);
+      imageState[1](imageFiles);
     }
   };
 
@@ -175,8 +182,9 @@ function PropertyAppliances(props) {
           [appliance]: newApplianceState[appliance],
         }),
       };
-
-      const files = imageState[0];
+      let allFiles = [];
+      const imageFiles = imageState[0];
+      allFiles = imageState[0];
       let i = 0;
       for (const file of imageState[0]) {
         let key = file.coverPhoto
@@ -188,9 +196,10 @@ function PropertyAppliances(props) {
           newProperty[key] = file.image;
         }
       }
+
       setShowSpinner(true);
 
-      const response = await put("/appliances", newProperty, null, files);
+      const response = await put("/appliances", newProperty, null, allFiles);
     }
 
     setAddApplianceInfo(false);
@@ -268,13 +277,14 @@ function PropertyAppliances(props) {
           [newAppliance]: newApplianceState[newAppliance],
         }),
       };
+      let allFiles = [];
+      const imageFiles = imageState[0];
+      allFiles = imageState[0];
       let i = 0;
-      let files = imageState[0];
       for (const file of imageState[0]) {
         let key = file.coverPhoto
-          ? `img_${newAppliance}_${i++}`
+          ? `img_${newAppliance}_cover`
           : `img_${newAppliance}_${i++}`;
-
         if (file.file !== null) {
           newProperty[key] = file.file;
         } else {
@@ -282,10 +292,11 @@ function PropertyAppliances(props) {
         }
       }
 
-      const response = await put("/appliances", newProperty, null, files);
+      setShowSpinner(true);
+
+      const response = await put("/appliances", newProperty, null, allFiles);
     }
     imageState[0] = [];
-
     setNewAppliance(null);
     setApplianceName("");
     setAppliancePurchasedOn("");
@@ -371,7 +382,6 @@ function PropertyAppliances(props) {
               <TableCell>Warranty Till</TableCell>
               <TableCell>Warranty Info</TableCell>
               <TableCell>URL</TableCell>
-              <TableCell>Documents</TableCell>
               <TableCell>Images</TableCell>
               <TableCell></TableCell>
               {addApplianceInfo === true && showDetails === true ? (
@@ -837,6 +847,7 @@ function PropertyAppliances(props) {
                     onChange={(e) => setApplianceWarrantyInfo(e.target.value)}
                   />
                 </TableCell>
+                <TableCell></TableCell>
                 <TableCell>
                   {property ? <ApplianceImages state={imageState} /> : ""}
                 </TableCell>
