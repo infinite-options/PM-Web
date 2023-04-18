@@ -40,7 +40,6 @@ export default function Appliances(props) {
   );
   const [openImage, setOpenImage] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
-  console.log(Object.values(applianceState));
   const showImage = (src) => {
     setOpenImage(true);
     setImageSrc(src);
@@ -228,7 +227,6 @@ export default function Appliances(props) {
             <TableCell align="center">Documents</TableCell>
           </TableRow>
         </TableHead>
-        {/* {console.log("appliances", appliances, applianceState)} */}
         <TableBody>
           {appliances.map((appliance, i) => {
             return applianceState[0][appliance]["available"] == true ||
