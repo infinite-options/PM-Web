@@ -315,7 +315,7 @@ function PropertyAppliances(props) {
               <div>
                 {applianceURL.map((item, idx) => {
                   return (
-                    <Col>
+                    <Col className="my-2">
                       <TextField
                         fullWidth
                         variant="outlined"
@@ -520,31 +520,34 @@ function PropertyAppliances(props) {
             </Col>
           </Row>{" "}
           <Row className="my-2">
-            <img
-              src={AddIcon}
-              alt="Add Icon"
-              onClick={handleAddUrl}
-              style={{
-                width: "15px",
-                height: "15px",
-                float: "left",
-                marginRight: "5rem",
-              }}
-            />
+            <Col>
+              {" "}
+              URLs:
+              <img
+                src={AddIcon}
+                alt="Add Icon"
+                onClick={handleAddUrl}
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  marginLeft: "5rem",
+                }}
+              />
+            </Col>
+
             {applianceURL && Object.values(applianceURL).length > 0 ? (
               <div>
-                {applianceURL.map((item, i) => {
+                {applianceURL.map((item, idx) => {
                   return (
-                    <Col>
+                    <Col className="my-1">
                       <TextField
                         fullWidth
                         variant="outlined"
                         label="URL"
                         size="small"
-                        value={
-                          applianceURL || applianceState[applianceType]["url"]
-                        }
-                        onChange={(e) => handleChangeUrl(i, e)}
+                        value={item}
+                        name="url"
+                        onChange={(e) => handleChangeUrl(idx, e)}
                       />
                     </Col>
                   );
