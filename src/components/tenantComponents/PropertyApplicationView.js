@@ -13,6 +13,10 @@ import {
   Grid,
 } from "@material-ui/core";
 import Carousel from "react-multi-carousel";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import Header from "../Header";
@@ -26,8 +30,14 @@ import PropertyIcon from "../../icons/PropertyIcon.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import Mail from "../../icons/Mail.svg";
+import ImgIcon from "../../icons/ImgIcon.png";
 import { get } from "../../utils/api";
-import { bluePillButton, sidebarStyle, smallImg } from "../../utils/styles";
+import {
+  bluePillButton,
+  sidebarStyle,
+  smallImg,
+  pillButton,
+} from "../../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {
@@ -51,6 +61,7 @@ function PropertyApplicationView(props) {
   const [property, setProperty] = React.useState(null);
   const [openImage, setOpenImage] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
+  const [applianceImgModalShow, setApplianceImgModalShow] = useState(false);
   const applianceState = useState({
     Microwave: {
       available: false,
@@ -65,7 +76,7 @@ function PropertyApplicationView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Dishwasher: {
       available: false,
@@ -80,7 +91,7 @@ function PropertyApplicationView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Refrigerator: {
       available: false,
@@ -95,7 +106,7 @@ function PropertyApplicationView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Washer: {
       available: false,
@@ -110,7 +121,7 @@ function PropertyApplicationView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Dryer: {
       available: false,
@@ -125,7 +136,7 @@ function PropertyApplicationView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
     Range: {
       available: false,
@@ -140,9 +151,12 @@ function PropertyApplicationView(props) {
       warranty_info: "",
       images: [],
       documents: [],
-      url: "",
+      url: [],
     },
   });
+  const [selectedAppliance, setSelectedAppliance] = useState(
+    Object.values(applianceState[0])[0]
+  );
   const [selectedManager, setSelectedManager] = useState("");
   const [showMailFormManager, setShowMailFormManager] = useState(false);
   const [showMessageFormManager, setShowMessageFormManager] = useState(false);
@@ -196,6 +210,59 @@ function PropertyApplicationView(props) {
     setOpenImage(false);
     setImageSrc(null);
   };
+  const hideModal = () => {
+    setApplianceImgModalShow(false);
+  };
+  const ApplianceImgModal = () => {
+    return (
+      <Dialog
+        open={applianceImgModalShow}
+        onClose={hideModal}
+        fullWidth
+        maxWidth="md"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle closeButton>Images</DialogTitle>
+        <DialogContent>
+          {selectedAppliance["images"].length > 0 ? (
+            <div
+              className="row row-cols-3 flex-column"
+              style={{ height: "26rem" }}
+            >
+              {selectedAppliance["images"].map((img, i) => (
+                <div className="col d-flex justify-content-center py-2" key={i}>
+                  <div
+                    className="card"
+                    style={{ width: "14rem", height: "14rem" }}
+                  >
+                    <div className="card-body">
+                      <img
+                        src={img}
+                        style={{
+                          width: "12rem",
+                          height: "12rem",
+                          objectFit: "contain",
+                        }}
+                        onClick={() => showImage(img)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            ""
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button style={pillButton} onClick={hideModal} color="primary">
+            Okay
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
   useEffect(() => {
     const fetchProperty = async () => {
       const response = await get(`/propertyInfo?property_uid=${property_uid}`);
@@ -208,6 +275,7 @@ function PropertyApplicationView(props) {
   // console.log(forPropertyLease, property, width);
   return (
     <div className="w-100 overflow-hidden p-0 m-0">
+      {ApplianceImgModal()}
       <MailDialogManager
         title={"Email"}
         isOpen={showMailFormManager}
@@ -474,7 +542,6 @@ function PropertyApplicationView(props) {
                     <TableRow>
                       <TableCell>Appliance</TableCell>
                       <TableCell>Manufacturer</TableCell>
-
                       <TableCell>Images</TableCell>
                     </TableRow>
                   </TableHead>
@@ -490,40 +557,30 @@ function PropertyApplicationView(props) {
                             {applianceState[0][appliance]["anufacturer"]}
                           </TableCell>
 
-                          {applianceState[0][appliance]["images"] !==
-                            undefined &&
-                          applianceState[0][appliance]["images"].length > 0 ? (
-                            <TableCell>
-                              <Row className="d-flex justify-content-center align-items-center p-1">
-                                <Col className="d-flex justify-content-center align-items-center p-0 m-0">
-                                  <img
-                                    key={Date.now()}
-                                    src={`${
-                                      applianceState[0][appliance]["images"][0]
-                                    }?${Date.now()}`}
-                                    style={{
-                                      borderRadius: "4px",
-                                      objectFit: "contain",
-                                      width: "50px",
-                                      height: "50px",
-                                    }}
-                                    onClick={() =>
-                                      showImage(
-                                        `${
-                                          applianceState[0][appliance][
-                                            "images"
-                                          ][0]
-                                        }?${Date.now()}`
-                                      )
-                                    }
-                                    alt="Property"
-                                  />
-                                </Col>
-                              </Row>
-                            </TableCell>
-                          ) : (
-                            <TableCell>None</TableCell>
-                          )}
+                          <TableCell align="center">
+                            {applianceState[0][appliance]["images"] !==
+                              undefined &&
+                            applianceState[0][appliance]["images"].length >
+                              0 ? (
+                              <img
+                                src={ImgIcon}
+                                onClick={() => {
+                                  setApplianceImgModalShow(
+                                    !applianceImgModalShow
+                                  );
+                                  setSelectedAppliance(
+                                    applianceState[0][appliance]
+                                  );
+                                }}
+                                style={{
+                                  width: "25px",
+                                  height: "25px",
+                                }}
+                              />
+                            ) : (
+                              "None"
+                            )}
+                          </TableCell>
                         </TableRow>
                       ) : (
                         ""
