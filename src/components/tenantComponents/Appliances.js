@@ -65,7 +65,8 @@ export default function Appliances(props) {
       >
         <DialogTitle closeButton>Images</DialogTitle>
         <DialogContent>
-          {selectedAppliance["images"].length > 0 ? (
+          {selectedAppliance["images"] !== undefined &&
+          selectedAppliance["images"].length > 0 ? (
             <div
               className="row row-cols-3 flex-column"
               style={{ height: "26rem" }}
@@ -116,7 +117,8 @@ export default function Appliances(props) {
         <DialogTitle closeButton>Documents</DialogTitle>
         <DialogContent>
           {" "}
-          {selectedAppliance["documents"].length > 0 ? (
+          {selectedAppliance["documents"] !== undefined &&
+          selectedAppliance["documents"].length > 0 ? (
             <Table
               responsive="md"
               classes={{ root: classes.customTable }}
@@ -176,7 +178,8 @@ export default function Appliances(props) {
       >
         <DialogTitle closeButton></DialogTitle>
         <DialogContent>
-          {selectedAppliance["url"].length > 0 ? (
+          {selectedAppliance["url"] !== undefined &&
+          selectedAppliance["url"].length > 0 ? (
             <div>
               {selectedAppliance["url"].map((url, i) => (
                 <li key={i}>
