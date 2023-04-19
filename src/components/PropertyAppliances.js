@@ -60,7 +60,12 @@ function PropertyAppliances(props) {
     "Dishwasher",
     "Refrigerator",
   ];
-
+  const [applianceImgModalShow, setApplianceImgModalShow] = useState(false);
+  const [applianceDocModalShow, setApplianceDocModalShow] = useState(false);
+  const [applianceUrlModalShow, setApplianceUrlModalShow] = useState(false);
+  const [selectedAppliance, setSelectedAppliance] = useState(
+    Object.values(applianceState)[0]
+  );
   const [addDetailsModalShow, setAddDetailsModalShow] = useState(false);
   const [addNewModalShow, setAddNewModalShow] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
@@ -105,6 +110,9 @@ function PropertyAppliances(props) {
   const hideModal = () => {
     setAddDetailsModalShow(false);
     cancelAppliance(applianceType);
+    setApplianceImgModalShow(false);
+    setApplianceDocModalShow(false);
+    setApplianceUrlModalShow(false);
   };
   const hideNewModal = () => {
     setAddNewModalShow(false);
@@ -119,6 +127,156 @@ function PropertyAppliances(props) {
     const fields = [...applianceURL];
     fields[i] = event.target.value;
     setApplianceURL(fields);
+  };
+
+  const ApplianceImgModal = () => {
+    return (
+      <Dialog
+        open={applianceImgModalShow}
+        onClose={hideModal}
+        fullWidth
+        maxWidth="md"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle closeButton>Images</DialogTitle>
+        <DialogContent>
+          {selectedAppliance["images"] !== undefined &&
+          selectedAppliance["images"].length > 0 ? (
+            <div
+              className="row row-cols-3 flex-column"
+              style={{ height: "26rem" }}
+            >
+              {selectedAppliance["images"].map((img, i) => (
+                <div className="col d-flex justify-content-center py-2" key={i}>
+                  <div
+                    className="card"
+                    style={{ width: "14rem", height: "14rem" }}
+                  >
+                    <div className="card-body">
+                      <img
+                        src={img}
+                        style={{
+                          width: "12rem",
+                          height: "12rem",
+                          objectFit: "contain",
+                        }}
+                        onClick={() => showImage(img)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            ""
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button style={pillButton} onClick={hideModal} color="primary">
+            Okay
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+  const ApplianceDocModal = () => {
+    return (
+      <Dialog
+        open={applianceDocModalShow}
+        onClose={hideModal}
+        fullWidth
+        maxWidth="md"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle closeButton>Documents</DialogTitle>
+        <DialogContent>
+          {" "}
+          {selectedAppliance["documents"] !== undefined &&
+          selectedAppliance["documents"].length > 0 ? (
+            <Table
+              responsive="md"
+              classes={{ root: classes.customTable }}
+              size="small"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell>View</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {selectedAppliance["documents"].map((file, i) => {
+                  return (
+                    <TableRow>
+                      <TableCell>{file.name}</TableCell>
+                      <TableCell>{file.description}</TableCell>
+                      <TableCell>
+                        <a href={file.link} target="_blank" rel="noreferrer">
+                          <img
+                            src={File}
+                            alt="open document"
+                            style={{
+                              width: "15px",
+                              height: "15px",
+                            }}
+                          />
+                        </a>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          ) : (
+            ""
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button style={pillButton} onClick={hideModal} color="primary">
+            Okay
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+  const ApplianceUrlModal = () => {
+    return (
+      <Dialog
+        open={applianceUrlModalShow}
+        onClose={hideModal}
+        fullWidth
+        maxWidth="md"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle closeButton></DialogTitle>
+        <DialogContent>
+          {selectedAppliance["url"] !== undefined &&
+          selectedAppliance["url"].length > 0 ? (
+            <div>
+              {selectedAppliance["url"].map((url, i) => (
+                <li key={i}>
+                  <a href={url} target="_blank" rel="noreferrer">
+                    {" "}
+                    {url}
+                  </a>
+                </li>
+              ))}
+            </div>
+          ) : (
+            ""
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button style={pillButton} onClick={hideModal} color="primary">
+            Okay
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
   };
 
   const addDetailsModal = () => {
@@ -1012,6 +1170,10 @@ function PropertyAppliances(props) {
                     applianceState[appliance]["url"].length > 0 ? (
                       <img
                         src={LinkIcon}
+                        onClick={() => {
+                          setApplianceUrlModalShow(!applianceUrlModalShow);
+                          setSelectedAppliance(applianceState[appliance]);
+                        }}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -1026,6 +1188,10 @@ function PropertyAppliances(props) {
                     applianceState[appliance]["images"].length > 0 ? (
                       <img
                         src={ImgIcon}
+                        onClick={() => {
+                          setApplianceImgModalShow(!applianceImgModalShow);
+                          setSelectedAppliance(applianceState[appliance]);
+                        }}
                         style={{
                           width: "20px",
                           height: "20px",
@@ -1040,6 +1206,10 @@ function PropertyAppliances(props) {
                     applianceState[appliance]["documents"].length > 0 ? (
                       <img
                         src={DocIcon}
+                        onClick={() => {
+                          setApplianceDocModalShow(!applianceDocModalShow);
+                          setSelectedAppliance(applianceState[appliance]);
+                        }}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -1075,6 +1245,9 @@ function PropertyAppliances(props) {
       </Row>
       {addDetailsModal()}
       {addNewModal()}
+      {ApplianceImgModal()}
+      {ApplianceDocModal()}
+      {ApplianceUrlModal()}
       <Row className="d-flex flex-column justify-content-left overflow-scroll"></Row>
     </div>
   );
