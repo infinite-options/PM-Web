@@ -83,7 +83,7 @@ function MaintenanceProfile(props) {
   const [files, setFiles] = useState([]);
   const [editingDoc, setEditingDoc] = useState(null);
   const [addDoc, setAddDoc] = useState(false);
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 

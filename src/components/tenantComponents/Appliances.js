@@ -79,7 +79,7 @@ export default function Appliances(props) {
                   >
                     <div className="card-body">
                       <img
-                        src={img}
+                        src={`${img}?${Date.now()}`}
                         style={{
                           width: "12rem",
                           height: "12rem",

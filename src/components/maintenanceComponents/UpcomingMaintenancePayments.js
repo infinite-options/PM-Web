@@ -48,9 +48,10 @@ export default function UpcomingMaintenancePayments(props) {
     //pid is the purchase uid
     let tempPurchaseUID = purchaseUIDs;
     let tempPurchase = purchases;
-    if (event.target.checked) {
+
+    if (!purchaseUIDs.includes(pid)) {
       setTotalSum((prevState) => amt + prevState);
-      // setPurchaseUIDs(prev=>.)
+
       tempPurchaseUID.push(pid);
       tempPurchase.push(pur);
     } else {
@@ -66,6 +67,7 @@ export default function UpcomingMaintenancePayments(props) {
         }
       }
     }
+
     setPurchaseUIDs(tempPurchaseUID);
     setPurchases(tempPurchase);
   }
@@ -172,11 +174,11 @@ export default function UpcomingMaintenancePayments(props) {
       label: "Date Due",
     },
 
-    {
-      id: "",
-      numeric: false,
-      label: "Pay",
-    },
+    // {
+    //   id: "",
+    //   numeric: false,
+    //   label: "Pay",
+    // },
     {
       id: "amount_due",
       numeric: true,
@@ -407,7 +409,20 @@ export default function UpcomingMaintenancePayments(props) {
                           hover
                           role="checkbox"
                           tabIndex={-1}
-                          key={index}
+                          key={row.purchase_uid}
+                          selected={
+                            purchaseUIDs.includes(row.purchase_uid)
+                              ? true
+                              : false
+                          }
+                          onClick={(event) =>
+                            handleCheck(
+                              event,
+                              row,
+                              row.amount_due,
+                              row.purchase_uid
+                            )
+                          }
                         >
                           <TableCell align="left">{row.purchase_uid}</TableCell>
                           <TableCell align="left">
@@ -440,7 +455,7 @@ export default function UpcomingMaintenancePayments(props) {
                           >
                             {row.next_payment.substring(0, 10)}
                           </TableCell>
-                          <TableCell align="right" style={{ width: "83px" }}>
+                          {/* <TableCell align="right" style={{ width: "83px" }}>
                             {props.type ? (
                               <button
                                 style={{
@@ -471,7 +486,7 @@ export default function UpcomingMaintenancePayments(props) {
                                 />
                               </label>
                             )}
-                          </TableCell>
+                          </TableCell> */}
                           <TableCell align="right">
                             {Math.abs(row.amount_due).toFixed(2)}
                           </TableCell>

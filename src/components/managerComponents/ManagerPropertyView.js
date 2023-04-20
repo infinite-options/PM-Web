@@ -100,7 +100,7 @@ function ManagerPropertyView(props) {
     },
   };
 
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 

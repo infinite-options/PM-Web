@@ -91,7 +91,7 @@ function ManagerTenantAgreement(props) {
   const [referred, setReferences] = useState([]);
 
   const [showSpinner, setShowSpinner] = useState(false);
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
 
   const channel_application = ably.channels.get("application_status");
   useEffect(() => {

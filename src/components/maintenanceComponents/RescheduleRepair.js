@@ -98,7 +98,7 @@ function RescheduleRepair(props) {
     setShowMessageFormOwner(false);
   };
 
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 
@@ -109,7 +109,7 @@ function RescheduleRepair(props) {
     const width = window.innerWidth;
     setWindowWidth(width);
   };
-  const responsive = {
+  const responsiveSidebar = {
     showSidebar: width > 1023,
   };
   function convert(value) {

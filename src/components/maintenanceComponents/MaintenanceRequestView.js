@@ -78,7 +78,7 @@ export default function MaintenanceRequestView() {
   const [quotePaid, setQuotePaid] = useState(false);
   const [openImage, setOpenImage] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 

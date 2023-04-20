@@ -297,9 +297,10 @@ export default function UpcomingManagerPayments(props) {
     //pid is the purchase uid
     let tempPurchaseUID = purchaseUIDs;
     let tempPurchase = purchases;
-    if (event.target.checked) {
+
+    if (!purchaseUIDs.includes(pid)) {
       setTotalSum((prevState) => amt + prevState);
-      // setPurchaseUIDs(prev=>.)
+
       tempPurchaseUID.push(pid);
       tempPurchase.push(pur);
     } else {
@@ -315,6 +316,7 @@ export default function UpcomingManagerPayments(props) {
         }
       }
     }
+
     setPurchaseUIDs(tempPurchaseUID);
     setPurchases(tempPurchase);
   }
@@ -322,30 +324,29 @@ export default function UpcomingManagerPayments(props) {
     //pid is the purchase uid
     let tempPurchaseUID = [];
     let tempPurchase = [];
-
-    rents.forEach((row) => {
-      if (
-        row.purchase_status === "UNPAID" &&
-        row.receiver !== managerID &&
-        row.amount_due > 0
-      ) {
-        tempPurchaseUID.push(row.purchase_uid);
-        tempPurchase.push(row);
-      }
-    });
-
-    setTotalSum(
-      tempPurchase.reduce(function (prev, current) {
-        return prev + +current.amount_due;
-      }, 0)
-    );
-    var checkboxes = document.querySelectorAll('input[name="check"]');
-
-    for (var i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i] != source.target) {
-        checkboxes[i].checked = source.target.checked;
-      }
+    if (source.target.checked) {
+      rents.forEach((row) => {
+        if (row.purchase_status === "UNPAID") {
+          tempPurchaseUID.push(row.purchase_uid);
+          tempPurchase.push(row);
+        }
+      });
+      setTotalSum(
+        tempPurchase.reduce(function (prev, current) {
+          return prev + +current.amount_due;
+        }, 0)
+      );
+    } else {
+      tempPurchaseUID = [];
+      tempPurchase = [];
     }
+    // var checkboxes = document.querySelectorAll('input[name="check"]');
+
+    // for (var i = 0; i < checkboxes.length; i++) {
+    //   if (checkboxes[i] != source.target) {
+    //     checkboxes[i].checked = source.target.checked;
+    //   }
+    // }
 
     setPurchaseUIDs(tempPurchaseUID);
     setPurchases(tempPurchase);
@@ -454,11 +455,11 @@ export default function UpcomingManagerPayments(props) {
       label: "Date Due",
     },
 
-    {
-      id: "",
-      numeric: false,
-      label: "Pay",
-    },
+    // {
+    //   id: "",
+    //   numeric: false,
+    //   label: "Pay",
+    // },
     {
       id: "amount_due",
       numeric: true,
@@ -703,8 +704,21 @@ export default function UpcomingManagerPayments(props) {
                         <TableRow
                           hover
                           role="checkbox"
+                          selected={
+                            purchaseUIDs.includes(row.purchase_uid)
+                              ? true
+                              : false
+                          }
                           tabIndex={-1}
-                          key={index}
+                          key={row.purchase_uid}
+                          onClick={(event) =>
+                            handleCheck(
+                              event,
+                              row,
+                              row.amount_due,
+                              row.purchase_uid
+                            )
+                          }
                         >
                           <TableCell align="left">{row.purchase_uid}</TableCell>
                           <TableCell align="left">
@@ -737,7 +751,7 @@ export default function UpcomingManagerPayments(props) {
                           >
                             {row.next_payment.substring(0, 10)}
                           </TableCell>
-                          <TableCell align="center" style={{ width: "83px" }}>
+                          {/* <TableCell align="center" style={{ width: "83px" }}>
                             {props.type ? (
                               <button
                                 style={{
@@ -769,7 +783,7 @@ export default function UpcomingManagerPayments(props) {
                                 />
                               </label>
                             )}
-                          </TableCell>
+                          </TableCell> */}
                           <TableCell align="right">
                             {Math.abs(row.amount_due).toFixed(2)}
                           </TableCell>

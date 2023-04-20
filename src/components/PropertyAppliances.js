@@ -128,6 +128,11 @@ function PropertyAppliances(props) {
     fields[i] = event.target.value;
     setApplianceURL(fields);
   };
+  function handleRemoveUrl(i) {
+    const fields = [...applianceURL];
+    fields.splice(i, 1);
+    setApplianceURL(fields);
+  }
 
   const ApplianceImgModal = () => {
     return (
@@ -155,7 +160,7 @@ function PropertyAppliances(props) {
                   >
                     <div className="card-body">
                       <img
-                        src={img}
+                        src={`${img}?${Date.now()}`}
                         style={{
                           width: "12rem",
                           height: "12rem",
@@ -473,17 +478,32 @@ function PropertyAppliances(props) {
               <div>
                 {applianceURL.map((item, idx) => {
                   return (
-                    <Col className="my-2">
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="URL"
-                        size="small"
-                        value={item}
-                        name="url"
-                        onChange={(e) => handleChangeUrl(idx, e)}
-                      />
-                    </Col>
+                    <Row className="my-2">
+                      <Col>
+                        {" "}
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          label="URL"
+                          size="small"
+                          value={item}
+                          name="url"
+                          onChange={(e) => handleChangeUrl(idx, e)}
+                        />
+                      </Col>{" "}
+                      <Col>
+                        {" "}
+                        <img
+                          src={DeleteIcon}
+                          alt="Delete Icon"
+                          onClick={() => handleRemoveUrl(idx)}
+                          style={{
+                            width: "15px",
+                            height: "15px",
+                          }}
+                        />
+                      </Col>
+                    </Row>
                   );
                 })}
               </div>

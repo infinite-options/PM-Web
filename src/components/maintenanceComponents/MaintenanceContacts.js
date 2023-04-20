@@ -74,7 +74,7 @@ function MaintenanceContacts() {
   const onCancelManagerMessage = () => {
     setShowMessageFormManager(false);
   };
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 

@@ -42,9 +42,10 @@ export default function TenantUpcomingPayments(props) {
     //pid is the purchase uid
     let tempPurchaseUID = purchaseUIDs;
     let tempPurchase = purchases;
-    if (event.target.checked) {
+
+    if (!purchaseUIDs.includes(pid)) {
       setTotalSum((prevState) => amt + prevState);
-      // setPurchaseUIDs(prev=>.)
+
       tempPurchaseUID.push(pid);
       tempPurchase.push(pur);
     } else {
@@ -60,6 +61,7 @@ export default function TenantUpcomingPayments(props) {
         }
       }
     }
+
     setPurchaseUIDs(tempPurchaseUID);
     setPurchases(tempPurchase);
   }
@@ -67,49 +69,42 @@ export default function TenantUpcomingPayments(props) {
     //pid is the purchase uid
     let tempPurchaseUID = [];
     let tempPurchase = [];
-
-    rents.forEach((row) => {
-      if (row.purchase_status === "UNPAID") {
-        tempPurchaseUID.push(row.purchase_uid);
-        tempPurchase.push(row);
-      }
-    });
-    setTotalSum(
-      tempPurchase.reduce(function (prev, current) {
-        return prev + +current.amount_due;
-      }, 0)
-    );
-    var checkboxes = document.querySelectorAll('input[name="check"]');
-    for (var i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i] != source.target) {
-        checkboxes[i].checked = source.target.checked;
-      }
+    if (source.target.checked) {
+      rents.forEach((row) => {
+        if (row.purchase_status === "UNPAID") {
+          tempPurchaseUID.push(row.purchase_uid);
+          tempPurchase.push(row);
+        }
+      });
+      setTotalSum(
+        tempPurchase.reduce(function (prev, current) {
+          return prev + +current.amount_due;
+        }, 0)
+      );
+    } else {
+      tempPurchaseUID = [];
+      tempPurchase = [];
     }
+    // var checkboxes = document.querySelectorAll('input[name="check"]');
+    // for (var i = 0; i < checkboxes.length; i++) {
+    //   if (checkboxes[i] != source.target) {
+    //     checkboxes[i].checked = source.target.checked;
+    //   }
+    // }
 
     setPurchaseUIDs(tempPurchaseUID);
     setPurchases(tempPurchase);
   }
   // console.log(purchases);
   function navigateToPaymentPage() {
-    if (props.paymentSelection[1].isActive === true) {
-      // console.log("zelle selected");
-      navigate("/zelle", {
-        state: {
-          amount: totalSum.toFixed(2),
-          selectedProperty: props.selectedProperty,
-          purchaseUIDs: purchaseUIDs,
-        },
-      });
-    } else {
-      navigate(`/paymentPage/${purchaseUIDs[0]}`, {
-        state: {
-          amount: totalSum.toFixed(2),
-          selectedProperty: props.selectedProperty,
-          purchaseUIDs: purchaseUIDs,
-          purchases: purchases,
-        },
-      });
-    }
+    navigate(`/paymentPage/${purchaseUIDs[0]}`, {
+      state: {
+        amount: totalSum.toFixed(2),
+        selectedProperty: props.selectedProperty,
+        purchaseUIDs: purchaseUIDs,
+        purchases: purchases,
+      },
+    });
   }
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -181,11 +176,11 @@ export default function TenantUpcomingPayments(props) {
       label: "Date Due",
     },
 
-    {
-      id: "",
-      numeric: false,
-      label: "Pay",
-    },
+    // {
+    //   id: "",
+    //   numeric: false,
+    //   label: "Pay",
+    // },
     {
       id: "amount_due",
       numeric: true,
@@ -247,7 +242,7 @@ export default function TenantUpcomingPayments(props) {
           <h4>Upcoming Payments</h4>
         </Col>
       </Row>{" "}
-      {pageURL[3] !== "tenant" ? (
+      {props.type === false && (
         <Row className="m-3" style={subHeading}>
           <Col xs={1}>
             <h5> Pay All</h5>
@@ -261,8 +256,6 @@ export default function TenantUpcomingPayments(props) {
             />
           </Col>
         </Row>
-      ) : (
-        ""
       )}
       <div
         className="mx-3 my-3 p-2"
@@ -294,6 +287,19 @@ export default function TenantUpcomingPayments(props) {
                           role="checkbox"
                           tabIndex={-1}
                           key={row.purchase_uid}
+                          selected={
+                            purchaseUIDs.includes(row.purchase_uid)
+                              ? true
+                              : false
+                          }
+                          onClick={(event) =>
+                            handleCheck(
+                              event,
+                              row,
+                              row.amount_due,
+                              row.purchase_uid
+                            )
+                          }
                         >
                           <TableCell align="left">{row.purchase_uid}</TableCell>
                           <TableCell align="left">
@@ -325,7 +331,7 @@ export default function TenantUpcomingPayments(props) {
                           >
                             {row.next_payment.substring(0, 10)}
                           </TableCell>
-                          <TableCell align="right">
+                          {/* <TableCell align="right">
                             {props.type ? (
                               <button
                                 style={{
@@ -357,7 +363,7 @@ export default function TenantUpcomingPayments(props) {
                                 />
                               </label>
                             )}
-                          </TableCell>
+                          </TableCell> */}
                           <TableCell align="right">
                             {row.amount_due.toFixed(2)}
                           </TableCell>
@@ -371,23 +377,22 @@ export default function TenantUpcomingPayments(props) {
             </TableBody>
           </Table>
         </Row>
-        {props.type === false && (
-          <div className="amount-pay">
-            <h4 className="amount">Amount: ${totalSum.toFixed(2)}</h4>
-            {totalSum === 0 ? (
-              <button className="pay-button2">Pay Now</button>
-            ) : (
-              <button
-                className="pay-button2"
-                onClick={() => {
-                  navigateToPaymentPage();
-                }}
-              >
-                Pay Now
-              </button>
-            )}
-          </div>
-        )}
+
+        <div className="amount-pay">
+          <h4 className="amount">Amount: ${totalSum.toFixed(2)}</h4>
+          {totalSum === 0 ? (
+            <button className="pay-button2">Pay Now</button>
+          ) : (
+            <button
+              className="pay-button2"
+              onClick={() => {
+                navigateToPaymentPage();
+              }}
+            >
+              Pay Now
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

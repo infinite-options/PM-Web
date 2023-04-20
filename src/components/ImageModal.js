@@ -35,7 +35,7 @@ function ImageModal(props) {
         </DialogTitle>
         <DialogContent>
           <img
-            src={src}
+            src={`${src}?${Date.now()}`}
             style={{ objectFit: "cover", width: "500px", height: "500px" }}
           />
         </DialogContent>

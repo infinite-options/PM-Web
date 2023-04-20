@@ -45,7 +45,7 @@ function ManagerRepairsOverview(props) {
   // sorting variables
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("request_status");
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 
