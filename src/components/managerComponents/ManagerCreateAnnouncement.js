@@ -31,6 +31,7 @@ import {
   mediumBold,
   sidebarStyle,
 } from "../../utils/styles";
+import IncomingMessages from "./IncomingMessages";
 
 const useStyles = makeStyles({
   customTable: {
@@ -1166,6 +1167,7 @@ function ManagerCreateAnnouncement(props) {
             ) : (
               ""
             )}
+            <IncomingMessages />
           </div>
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <ManagerFooter />

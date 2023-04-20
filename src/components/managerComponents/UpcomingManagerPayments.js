@@ -326,7 +326,8 @@ export default function UpcomingManagerPayments(props) {
     let tempPurchase = [];
     if (source.target.checked) {
       rents.forEach((row) => {
-        if (row.purchase_status === "UNPAID") {
+        if (row.purchase_status === "UNPAID" && row.receiver !== managerID) {
+          console.log(row);
           tempPurchaseUID.push(row.purchase_uid);
           tempPurchase.push(row);
         }
@@ -337,6 +338,7 @@ export default function UpcomingManagerPayments(props) {
         }, 0)
       );
     } else {
+      setTotalSum(0);
       tempPurchaseUID = [];
       tempPurchase = [];
     }
