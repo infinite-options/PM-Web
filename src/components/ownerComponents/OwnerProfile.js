@@ -71,7 +71,7 @@ function OwnerProfile(props) {
     accountNumber: "",
     routingNumber: "",
   });
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 

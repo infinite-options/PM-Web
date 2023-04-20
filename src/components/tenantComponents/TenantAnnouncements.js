@@ -56,7 +56,7 @@ function TenantAnnouncements(props) {
   const [showMailFormManager, setShowMailFormManager] = useState(false);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   const onCancelManagerMail = () => {
     setShowMailFormManager(false);
   };

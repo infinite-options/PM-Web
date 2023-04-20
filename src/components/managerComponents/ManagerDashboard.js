@@ -62,7 +62,7 @@ export default function ManagerDashboard() {
   const [maintenanceStatus, setMaintenanceStatus] = useState("");
   const [applicationStatus, setApplicationStatus] = useState("");
 
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 
@@ -73,7 +73,7 @@ export default function ManagerDashboard() {
     const width = window.innerWidth;
     setWindowWidth(width);
   };
-  const responsive = {
+  const responsiveSidebar = {
     showSidebar: width > 1023,
   };
 
@@ -634,7 +634,11 @@ export default function ManagerDashboard() {
       {!isLoading &&
       (managerData.length > 0 || processingManagerData.length > 0) ? (
         <Row className="w-100 mb-5 overflow-hidden">
-          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+          <Col
+            xs={2}
+            hidden={!responsiveSidebar.showSidebar}
+            style={sidebarStyle}
+          >
             <SideBar />
           </Col>
           <Col className="w-100 mb-5 overflow-scroll">
@@ -2104,14 +2108,18 @@ export default function ManagerDashboard() {
                 </Row>
               )}
             </div>
-            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
               <ManagerFooter />
             </div>
           </Col>
         </Row>
       ) : !isLoading && processingManagerData.length === 0 ? (
         <Row className="w-100 mb-5 overflow-hidden">
-          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+          <Col
+            xs={2}
+            hidden={!responsiveSidebar.showSidebar}
+            style={sidebarStyle}
+          >
             <SideBar />
           </Col>
           <Col className="w-100 mb-5 overflow-scroll">
@@ -2127,14 +2135,18 @@ export default function ManagerDashboard() {
               <br />
             </div>
 
-            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
               <ManagerFooter />
             </div>
           </Col>
         </Row>
       ) : !isLoading && processingManagerData.length === 0 ? (
         <Row className="w-100 mb-5 overflow-hidden">
-          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+          <Col
+            xs={2}
+            hidden={!responsiveSidebar.showSidebar}
+            style={sidebarStyle}
+          >
             <SideBar />
           </Col>
           <Col className="w-100 mb-5 overflow-scroll">
@@ -2150,20 +2162,24 @@ export default function ManagerDashboard() {
               <br />
             </div>
 
-            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
               <ManagerFooter />
             </div>
           </Col>
         </Row>
       ) : (
         <Row className="w-100 mb-5 overflow-hidden">
-          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+          <Col
+            xs={2}
+            hidden={!responsiveSidebar.showSidebar}
+            style={sidebarStyle}
+          >
             <SideBar />
           </Col>
           <Col className="w-100 d-flex flex-column justify-content-center align-items-center">
             <ReactBootStrap.Spinner animation="border" role="status" />
           </Col>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <ManagerFooter />
           </div>
         </Row>
@@ -2174,7 +2190,7 @@ export default function ManagerDashboard() {
       <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
-          hidden={!responsive.showSidebar}
+          hidden={!responsiveSidebar.showSidebar}
           style={{
             backgroundColor: "#229ebc",
             // width: "12rem",
@@ -2195,7 +2211,7 @@ export default function ManagerDashboard() {
             onSubmit={addProperty}
           />
         </Col>
-        <div hidden={responsive.showSidebar}>
+        <div hidden={responsiveSidebar.showSidebar}>
           <ManagerFooter />
         </div>
       </Row>
@@ -2205,7 +2221,7 @@ export default function ManagerDashboard() {
       <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
-          hidden={!responsive.showSidebar}
+          hidden={!responsiveSidebar.showSidebar}
           style={{
             backgroundColor: "#229ebc",
             // width: "12rem",
@@ -2226,7 +2242,7 @@ export default function ManagerDashboard() {
             onSubmit={addProperty}
           />
         </Col>
-        <div hidden={responsive.showSidebar}>
+        <div hidden={responsiveSidebar.showSidebar}>
           <ManagerFooter />
         </div>
       </Row>

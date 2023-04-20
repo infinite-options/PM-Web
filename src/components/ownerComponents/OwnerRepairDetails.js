@@ -89,7 +89,7 @@ function OwnerRepairDetails(props) {
       items: 3,
     },
   };
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 

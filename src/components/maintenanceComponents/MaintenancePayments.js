@@ -16,7 +16,7 @@ export default function MaintenancePayments(props) {
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   const [maintenanceID, setMaintenanceID] = useState("");
   const [verified, setVerified] = useState(false);
 
@@ -31,7 +31,7 @@ export default function MaintenancePayments(props) {
     const width = window.innerWidth;
     setWindowWidth(width);
   };
-  const responsive = {
+  const responsiveSidebar = {
     showSidebar: width > 1023,
   };
   const [paymentOptions, setPaymentOptions] = React.useState([
@@ -102,7 +102,11 @@ export default function MaintenancePayments(props) {
     <div className="w-100 overflow-hidden">
       <Row className="w-100 mb-5 overflow-hidden">
         {" "}
-        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+        <Col
+          xs={2}
+          hidden={!responsiveSidebar.showSidebar}
+          style={sidebarStyle}
+        >
           <SideBar />
         </Col>
         <Col className="w-100 mb-5">
@@ -128,7 +132,7 @@ export default function MaintenancePayments(props) {
               />
             )}
           </Row>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <MaintenanceFooter />
           </div>
         </Col>

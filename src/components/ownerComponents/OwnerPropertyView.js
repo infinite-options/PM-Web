@@ -125,7 +125,7 @@ function OwnerPropertyView(props) {
   const onCancelTenantMessage = () => {
     setShowMessageFormTenant(false);
   };
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 

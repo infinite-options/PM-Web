@@ -36,7 +36,7 @@ function OwnerDocuments(props) {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 

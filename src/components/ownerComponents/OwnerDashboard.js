@@ -60,7 +60,7 @@ export default function OwnerDashboard2() {
   const [managementStatus, setManagementStatus] = useState("");
   const [maintenanceStatus, setMaintenanceStatus] = useState("");
 
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 
@@ -71,7 +71,7 @@ export default function OwnerDashboard2() {
     const width = window.innerWidth;
     setWindowWidth(width);
   };
-  const responsive = {
+  const responsiveSidebar = {
     showSidebar: width > 1023,
   };
 
@@ -469,7 +469,11 @@ export default function OwnerDashboard2() {
     <div className="w-100 overflow-hidden">
       {!isLoading && ownerData.length > 0 ? (
         <Row className="w-100 mb-5 overflow-hidden">
-          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+          <Col
+            xs={2}
+            hidden={!responsiveSidebar.showSidebar}
+            style={sidebarStyle}
+          >
             <SideBar />
           </Col>
           <Col className="w-100 mb-5 overflow-scroll">
@@ -1061,14 +1065,18 @@ export default function OwnerDashboard2() {
                 </Row>
               )}
             </div>
-            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
               <OwnerFooter />
             </div>
           </Col>
         </Row>
       ) : !isLoading && ownerData.length === 0 ? (
         <Row className="w-100 mb-5 overflow-hidden">
-          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+          <Col
+            xs={2}
+            hidden={!responsiveSidebar.showSidebar}
+            style={sidebarStyle}
+          >
             <SideBar />
           </Col>
           <Col className="w-100 mb-5 overflow-scroll">
@@ -1109,19 +1117,23 @@ export default function OwnerDashboard2() {
                 </Col>
               </Row>
             </div>
-            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
               <OwnerFooter />
             </div>
           </Col>
         </Row>
       ) : (
         <Row className="w-100 mb-5 overflow-hidden">
-          <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+          <Col
+            xs={2}
+            hidden={!responsiveSidebar.showSidebar}
+            style={sidebarStyle}
+          >
             <SideBar />
           </Col>
           <Col className="w-100 d-flex flex-column justify-content-center align-items-center">
             <ReactBootStrap.Spinner animation="border" role="status" />
-            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
               <OwnerFooter />
             </div>
           </Col>
@@ -1131,7 +1143,11 @@ export default function OwnerDashboard2() {
   ) : stage === "NEW" ? (
     <div className="OwnerDashboard2">
       <Row className="w-100 mb-5 overflow-hidden">
-        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+        <Col
+          xs={2}
+          hidden={!responsiveSidebar.showSidebar}
+          style={sidebarStyle}
+        >
           <SideBar />
         </Col>
         <Col className="w-100 mb-5 overflow-scroll">
@@ -1151,7 +1167,7 @@ export default function OwnerDashboard2() {
             setEditAppliances={setEditAppliances}
             onSubmit={addProperty}
           />
-          <div hidden={responsive.showSidebar}>
+          <div hidden={responsiveSidebar.showSidebar}>
             <OwnerFooter />
           </div>
         </Col>
@@ -1160,7 +1176,11 @@ export default function OwnerDashboard2() {
   ) : stage === "ADDEXPENSE" ? (
     <div className="OwnerDashboard2">
       <Row className="w-100 mb-5 overflow-hidden">
-        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+        <Col
+          xs={2}
+          hidden={!responsiveSidebar.showSidebar}
+          style={sidebarStyle}
+        >
           <SideBar />
         </Col>
         <Col className="w-100 mb-5 overflow-scroll">
@@ -1174,7 +1194,7 @@ export default function OwnerDashboard2() {
             cancel={() => setStage("LIST")}
             onSubmit={addProperty}
           />
-          <div hidden={responsive.showSidebar}>
+          <div hidden={responsiveSidebar.showSidebar}>
             <OwnerFooter />
           </div>{" "}
         </Col>
@@ -1183,7 +1203,11 @@ export default function OwnerDashboard2() {
   ) : stage === "ADDREQUEST" ? (
     <div className="OwnerDashboard2">
       <Row className="w-100 mb-5 overflow-hidden">
-        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+        <Col
+          xs={2}
+          hidden={!responsiveSidebar.showSidebar}
+          style={sidebarStyle}
+        >
           <SideBar />
         </Col>
         <Col className="w-100 mb-5 overflow-scroll">
@@ -1197,7 +1221,7 @@ export default function OwnerDashboard2() {
             cancel={() => setStage("LIST")}
             onSubmit={addProperty}
           />{" "}
-          <div hidden={responsive.showSidebar}>
+          <div hidden={responsiveSidebar.showSidebar}>
             <OwnerFooter />
           </div>
         </Col>

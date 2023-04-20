@@ -77,7 +77,7 @@ function ManagerTenantList(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
 
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 
@@ -88,7 +88,7 @@ function ManagerTenantList(props) {
     const width = window.innerWidth;
     setWindowWidth(width);
   };
-  const responsive = {
+  const responsiveSidebar = {
     showSidebar: width > 1023,
   };
 
@@ -415,7 +415,11 @@ function ManagerTenantList(props) {
           receiverPhone={selectedTenant.tenant_phone_number}
           onCancel={onCancelMessage}
         />
-        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+        <Col
+          xs={2}
+          hidden={!responsiveSidebar.showSidebar}
+          style={sidebarStyle}
+        >
           <SideBar />
         </Col>
 
@@ -614,7 +618,7 @@ function ManagerTenantList(props) {
               <div className="m-3"> No tenants</div>
             </Row>
           )}
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <ManagerFooter />
           </div>
         </Col>

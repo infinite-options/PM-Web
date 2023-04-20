@@ -94,7 +94,7 @@ function TenantProfile(props) {
   const [selectedDlState, setSelectedDlState] = useState(defaultState);
   const [selectedPrevState, setSelectedPrevState] = useState(defaultState);
   const { autofillState, setAutofillState } = props;
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 
@@ -105,7 +105,7 @@ function TenantProfile(props) {
     const width = window.innerWidth;
     setWindowWidth(width);
   };
-  const responsive = {
+  const responsiveSidebar = {
     showSidebar: width > 1023,
   };
   const currentAddressState = useState({
@@ -988,7 +988,11 @@ function TenantProfile(props) {
   return (
     <div className="w-100 overflow-hidden">
       <Row className="w-100 mb-5 overflow-hidden">
-        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+        <Col
+          xs={2}
+          hidden={!responsiveSidebar.showSidebar}
+          style={sidebarStyle}
+        >
           <SideBar />
         </Col>
         <Col className="w-100 mb-5">
@@ -2013,7 +2017,7 @@ function TenantProfile(props) {
               )}
             </div>
           )}
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <TenantFooter />
           </div>
         </Col>

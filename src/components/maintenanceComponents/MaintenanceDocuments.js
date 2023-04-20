@@ -23,7 +23,7 @@ export default function MaintenanceDocuments() {
   const [editingDoc, setEditingDoc] = useState(null);
   const [files, setFiles] = useState([]);
   const [addDoc, setAddDoc] = useState(false);
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 

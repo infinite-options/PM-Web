@@ -84,7 +84,7 @@ function ManagerProfile(props) {
   // const locationState = useState([]);
   const [feeState, setFeeState] = useState([]);
   const [locationState, setLocationState] = useState([]);
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 

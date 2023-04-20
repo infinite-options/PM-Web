@@ -119,7 +119,7 @@ function OwnerUtilities(props) {
   const [orderBy, setOrderBy] = React.useState("calories");
   const [expenseUnique, setExpenseUnique] = useState("");
 
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 

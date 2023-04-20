@@ -63,7 +63,7 @@ function ReviewPropertyLease(props) {
   const pmMessage = location.state.message;
   const [disableEndLease, setDisable] = useState(false);
   const [within60, setWithin60] = useState(false);
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   const [tenantExtendLease, setTenantExtendLease] = useState(false);
   const [leaseExtended, setLeaseExtended] = useState(false);
   const [pmExtendLease, setPmExtendLease] = useState(false);
@@ -77,7 +77,7 @@ function ReviewPropertyLease(props) {
     const width = window.innerWidth;
     setWindowWidth(width);
   };
-  const responsive = {
+  const responsiveSidebar = {
     showSidebar: width > 1023,
   };
   useEffect(() => {
@@ -567,7 +567,11 @@ function ReviewPropertyLease(props) {
   return (
     <div className="w-100 overflow-hidden">
       <Row className="w-100 mb-5 overflow-hidden">
-        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+        <Col
+          xs={2}
+          hidden={!responsiveSidebar.showSidebar}
+          style={sidebarStyle}
+        >
           <SideBar />
         </Col>
         <Col className="w-100 mb-5 overflow-hidden">
@@ -2340,7 +2344,7 @@ function ReviewPropertyLease(props) {
               ""
             )}
           </Row>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <TenantFooter />
           </div>
         </Col>

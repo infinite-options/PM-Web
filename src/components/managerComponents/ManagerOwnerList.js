@@ -49,7 +49,7 @@ function ManagerOwnerList(props) {
   // sorting variables
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   const [showMailForm, setShowMailForm] = useState(false);
   const onCancel = () => {
     setShowMailForm(false);
@@ -68,7 +68,7 @@ function ManagerOwnerList(props) {
     const width = window.innerWidth;
     setWindowWidth(width);
   };
-  const responsive = {
+  const responsiveSidebar = {
     showSidebar: width > 1023,
   };
   const fetchProperties = async () => {
@@ -261,7 +261,11 @@ function ManagerOwnerList(props) {
           receiverPhone={selectedOwner.owner_phone_number}
           onCancel={onCancelMessage}
         />
-        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+        <Col
+          xs={2}
+          hidden={!responsiveSidebar.showSidebar}
+          style={sidebarStyle}
+        >
           <SideBar />
         </Col>
         <Col className="w-100  mb-5">
@@ -436,7 +440,7 @@ function ManagerOwnerList(props) {
               <div className="m-3">No active owners</div>
             </Row>
           )}
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <ManagerFooter />
           </div>
         </Col>

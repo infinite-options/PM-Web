@@ -74,7 +74,7 @@ function ManagerTenantListDetail(props) {
   const onCancelMessage = () => {
     setShowMessageForm(false);
   };
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
 
@@ -85,7 +85,7 @@ function ManagerTenantListDetail(props) {
     const width = window.innerWidth;
     setWindowWidth(width);
   };
-  const responsive = {
+  const responsiveSidebar = {
     showSidebar: width > 1023,
   };
   useEffect(() => {
@@ -292,7 +292,11 @@ function ManagerTenantListDetail(props) {
       />
       <Row className="w-100 mb-5 overflow-hidden">
         {" "}
-        <Col xs={2} hidden={!responsive.showSidebar} style={sidebarStyle}>
+        <Col
+          xs={2}
+          hidden={!responsiveSidebar.showSidebar}
+          style={sidebarStyle}
+        >
           <SideBar />
         </Col>
         <Col className="w-100 mb-5 overflow-scroll">
@@ -896,7 +900,7 @@ function ManagerTenantListDetail(props) {
               </div>
             )}
           </div>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <ManagerFooter />
           </div>
         </Col>

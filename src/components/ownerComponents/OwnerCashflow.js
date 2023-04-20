@@ -487,7 +487,7 @@ export default function OwnerCashflow(props) {
     <div className="w-100 overflow-hidden">
       <div className="w-100 mb-5 overflow-hidden">
         {/* <div
-          hidden={!responsive.showSidebar}
+          hidden={!responsiveSidebar.showSidebar}
           style={{
             backgroundColor: "#229ebc",
             width: "11rem",
