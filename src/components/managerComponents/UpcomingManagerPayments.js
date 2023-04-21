@@ -736,22 +736,21 @@ export default function UpcomingManagerPayments(props) {
                               row.zip}
                           </TableCell>
                           <TableCell align="left"> {row.receiver}</TableCell>
+
                           <TableCell align="left">
                             {row.description}{" "}
-                            <TableCell align="left">
-                              {row.description}{" "}
-                              <div className="d-flex">
-                                <div className="d-flex align-items-end">
-                                  <p
-                                    style={{ ...blue, ...xSmall }}
-                                    className="mb-0"
-                                  >
-                                    {row.purchase_notes}
-                                  </p>
-                                </div>
+                            <div className="d-flex">
+                              <div className="d-flex align-items-end">
+                                <p
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
+                                >
+                                  {row.purchase_notes}
+                                </p>
                               </div>
-                            </TableCell>
+                            </div>
                           </TableCell>
+
                           <TableCell align="right">
                             {row.purchase_type}
                           </TableCell>
@@ -884,22 +883,21 @@ export default function UpcomingManagerPayments(props) {
                             row.zip}
                         </TableCell>
                         <TableCell align="left"> {row.payer}</TableCell>
+
                         <TableCell align="left">
                           {row.description}{" "}
-                          <TableCell align="left">
-                            {row.description}{" "}
-                            <div className="d-flex">
-                              <div className="d-flex align-items-end">
-                                <p
-                                  style={{ ...blue, ...xSmall }}
-                                  className="mb-0"
-                                >
-                                  {row.purchase_notes}
-                                </p>
-                              </div>
+                          <div className="d-flex">
+                            <div className="d-flex align-items-end">
+                              <p
+                                style={{ ...blue, ...xSmall }}
+                                className="mb-0"
+                              >
+                                {row.purchase_notes}
+                              </p>
                             </div>
-                          </TableCell>
+                          </div>
                         </TableCell>
+
                         <TableCell align="right">{row.purchase_type}</TableCell>
                         <TableCell align="center">
                           {row.linked_bill_id === null ? "No" : "Yes"}
