@@ -13,7 +13,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import { makeStyles } from "@material-ui/core/styles";
-import { headings, subHeading } from "../../utils/styles";
+import { headings, subHeading, blue, xSmall } from "../../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {
@@ -306,6 +306,7 @@ export default function UpcomingOwnerPayments(props) {
                               ? true
                               : false
                           }
+                          style={{ cursor: "pointer" }}
                           onClick={(event) =>
                             handleCheck(
                               event,
@@ -328,7 +329,19 @@ export default function UpcomingOwnerPayments(props) {
                               row.zip}
                           </TableCell>
                           <TableCell align="left"> {row.receiver}</TableCell>
-                          <TableCell align="left">{row.description}</TableCell>
+                          <TableCell align="left">
+                            {row.description}{" "}
+                            <div className="d-flex">
+                              <div className="d-flex align-items-end">
+                                <p
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
+                                >
+                                  {row.purchase_notes}
+                                </p>
+                              </div>
+                            </div>
+                          </TableCell>
                           <TableCell align="right">
                             {row.purchase_type}
                           </TableCell>

@@ -29,7 +29,7 @@ import ApplePay_Logo from "../../icons/ApplePay-Logo.png";
 import Paypal_Logo from "../../icons/Paypal-Logo.png";
 import Zelle_Logo from "../../icons/Zelle-Logo.png";
 import { post, put } from "../../utils/api";
-import { headings, subHeading } from "../../utils/styles";
+import { headings, subHeading, blue, xSmall } from "../../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {
@@ -712,6 +712,7 @@ export default function UpcomingManagerPayments(props) {
                               : false
                           }
                           tabIndex={-1}
+                          style={{ cursor: "pointer" }}
                           key={row.purchase_uid}
                           onClick={(event) =>
                             handleCheck(
@@ -735,7 +736,22 @@ export default function UpcomingManagerPayments(props) {
                               row.zip}
                           </TableCell>
                           <TableCell align="left"> {row.receiver}</TableCell>
-                          <TableCell align="left">{row.description}</TableCell>
+                          <TableCell align="left">
+                            {row.description}{" "}
+                            <TableCell align="left">
+                              {row.description}{" "}
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {row.purchase_notes}
+                                  </p>
+                                </div>
+                              </div>
+                            </TableCell>
+                          </TableCell>
                           <TableCell align="right">
                             {row.purchase_type}
                           </TableCell>
@@ -868,7 +884,22 @@ export default function UpcomingManagerPayments(props) {
                             row.zip}
                         </TableCell>
                         <TableCell align="left"> {row.payer}</TableCell>
-                        <TableCell align="left">{row.description}</TableCell>
+                        <TableCell align="left">
+                          {row.description}{" "}
+                          <TableCell align="left">
+                            {row.description}{" "}
+                            <div className="d-flex">
+                              <div className="d-flex align-items-end">
+                                <p
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
+                                >
+                                  {row.purchase_notes}
+                                </p>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableCell>
                         <TableCell align="right">{row.purchase_type}</TableCell>
                         <TableCell align="center">
                           {row.linked_bill_id === null ? "No" : "Yes"}

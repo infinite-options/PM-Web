@@ -15,7 +15,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import { makeStyles } from "@material-ui/core/styles";
-import { subHeading } from "../../utils/styles";
+import { subHeading, blue, xSmall } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -292,6 +292,7 @@ export default function TenantUpcomingPayments(props) {
                               ? true
                               : false
                           }
+                          style={{ cursor: "pointer" }}
                           onClick={(event) =>
                             handleCheck(
                               event,
@@ -313,7 +314,19 @@ export default function TenantUpcomingPayments(props) {
                               " " +
                               row.zip}
                           </TableCell>
-                          <TableCell align="left">{row.description}</TableCell>
+                          <TableCell align="left">
+                            {row.description}{" "}
+                            <div className="d-flex">
+                              <div className="d-flex align-items-end">
+                                <p
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
+                                >
+                                  {row.purchase_notes}
+                                </p>
+                              </div>
+                            </div>
+                          </TableCell>
                           <TableCell align="left">
                             {row.purchase_type}
                           </TableCell>
