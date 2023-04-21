@@ -89,6 +89,7 @@ function ManagerUtilities(props) {
   const [payment, setPayment] = useState(false);
   const emptyUtility = {
     provider: "",
+    notes: "",
     service_name: "",
     charge: "",
     properties: [],
@@ -463,7 +464,7 @@ function ManagerUtilities(props) {
         purchase_type: "UTILITY",
         description: newUtility.service_name,
         amount_due: property.charge,
-        purchase_notes: moment().format("MMMM"),
+        purchase_notes: newUtility.notes,
         purchase_date: moment().format("YYYY-MM-DD") + " 00:00:00",
         purchase_frequency: "One-time",
         next_payment:
@@ -528,7 +529,8 @@ function ManagerUtilities(props) {
     if (
       newUtility.service_name === "" ||
       newUtility.charge === "" ||
-      newUtility.provider === ""
+      newUtility.provider === "" ||
+      newUtility.notes === ""
     ) {
       setErrorMessage("Please fill out all fields");
       return;
@@ -610,7 +612,7 @@ function ManagerUtilities(props) {
         purchase_type: "UTILITY",
         description: newUtility.service_name,
         amount_due: property.charge,
-        purchase_notes: moment().format("MMMM"),
+        purchase_notes: newUtility.notes,
         purchase_date: moment().format("YYYY-MM-DD") + " 00:00:00",
         purchase_frequency: "One-time",
         next_payment:
@@ -673,7 +675,8 @@ function ManagerUtilities(props) {
     if (
       newUtility.service_name === "" ||
       newUtility.charge === "" ||
-      newUtility.provider === ""
+      newUtility.provider === "" ||
+      newUtility.notes === ""
     ) {
       setErrorMessage("Please fill out all fields");
       return;
@@ -1263,6 +1266,19 @@ function ManagerUtilities(props) {
                           placeholder="Utility Provider"
                           value={newUtility.provider}
                           onChange={(e) => changeNewUtility(e, "provider")}
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col>
+                      <Form.Group className="mx-2">
+                        <Form.Label style={mediumBold} className="mb-0 ms-2">
+                          Notes {newUtility.notes === "" ? required : ""}
+                        </Form.Label>
+                        <Form.Control
+                          style={squareForm}
+                          placeholder="Utility Notes"
+                          value={newUtility.notes}
+                          onChange={(e) => changeNewUtility(e, "notes")}
                         />
                       </Form.Group>
                     </Col>
