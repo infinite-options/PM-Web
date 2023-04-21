@@ -918,6 +918,7 @@ export default function UpcomingManagerPayments(props) {
                             src={DeleteIcon}
                             alt="Delete Icon"
                             className="px-1 mx-2"
+                            style={{ cursor: "pointer" }}
                             onClick={() => deletePurchase(row.purchase_uid)}
                           />
                         </TableCell>
@@ -928,7 +929,7 @@ export default function UpcomingManagerPayments(props) {
                           <img
                             src={confirmCheck}
                             alt="Mark as Paid"
-                            style={{ width: "30px" }}
+                            style={{ width: "30px", cursor: "pointer" }}
                             className="px-1 mx-2"
                             onClick={() => {
                               setPaidModalShow(true);

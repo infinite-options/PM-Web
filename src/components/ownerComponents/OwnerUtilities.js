@@ -529,12 +529,14 @@ function OwnerUtilities(props) {
 
     setErrorMessage("");
 
+    setShowSpinner(true);
     newUtility.properties = [...propertyState.filter((p) => p.checked)];
 
     await postCharges(newUtility);
     const newUtilityState = [...utilityState];
     newUtilityState.push({ ...newUtility });
     setUtilityState(newUtilityState);
+    setShowSpinner(false);
     setNewUtility(null);
   };
 
@@ -1368,7 +1370,16 @@ function OwnerUtilities(props) {
                       </Col>
                     </Row>
                   </Row>
-
+                  {showSpinner ? (
+                    <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                      <ReactBootStrap.Spinner
+                        animation="border"
+                        role="status"
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
                   <div
                     className="text-center my-2"
                     style={errorMessage === "" ? hidden : {}}
