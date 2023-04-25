@@ -32,7 +32,8 @@ import Citi_Logo from "../../icons/Citi-Logo.png";
 import { post, get } from "../../utils/api";
 import {
   pillButton,
-  smallPillButton,
+  blue,
+  xSmall,
   squareForm,
   redPill,
   small,
@@ -763,11 +764,6 @@ function OwnerUtilities(props) {
       label: "Bill Type",
     },
     {
-      id: "description",
-      numeric: false,
-      label: "Description",
-    },
-    {
       id: "address",
       numeric: false,
       label: "Address",
@@ -887,11 +883,6 @@ function OwnerUtilities(props) {
       id: "bill_utility_type",
       numeric: false,
       label: "Bill Type",
-    },
-    {
-      id: "description",
-      numeric: false,
-      label: "Description",
     },
     {
       id: "address",
@@ -1015,11 +1006,6 @@ function OwnerUtilities(props) {
       id: "bill_utility_type",
       numeric: false,
       label: "Bill Type",
-    },
-    {
-      id: "description",
-      numeric: false,
-      label: "Description",
     },
     {
       id: "address",
@@ -1508,13 +1494,16 @@ function OwnerUtilities(props) {
                                   align="center"
                                 >
                                   {expense.bill_utility_type}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.description}
+                                  <div className="d-flex">
+                                    <div className="d-flex align-items-end">
+                                      <p
+                                        style={{ ...blue, ...xSmall }}
+                                        className="mb-0"
+                                      >
+                                        {expense.purchase_notes}
+                                      </p>
+                                    </div>
+                                  </div>
                                 </TableCell>
                                 <TableCell
                                   padding="none"
@@ -1564,7 +1553,7 @@ function OwnerUtilities(props) {
                                   align="center"
                                 >
                                   {" "}
-                                  {expense.purchase_date}
+                                  {expense.purchase_date.split(" ")[0]}
                                 </TableCell>
                                 <TableCell
                                   padding="none"
@@ -1727,13 +1716,16 @@ function OwnerUtilities(props) {
                                   align="center"
                                 >
                                   {expense.bill_utility_type}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.description}
+                                  <div className="d-flex">
+                                    <div className="d-flex align-items-end">
+                                      <p
+                                        style={{ ...blue, ...xSmall }}
+                                        className="mb-0"
+                                      >
+                                        {expense.purchase_notes}
+                                      </p>
+                                    </div>
+                                  </div>
                                 </TableCell>
                                 <TableCell
                                   padding="none"
@@ -1779,7 +1771,7 @@ function OwnerUtilities(props) {
                                   align="center"
                                 >
                                   {" "}
-                                  {expense.purchase_date}
+                                  {expense.purchase_date.split(" ")[0]}
                                 </TableCell>
                                 <TableCell
                                   padding="none"
@@ -1969,7 +1961,7 @@ function OwnerUtilities(props) {
                                   align="center"
                                 >
                                   {" "}
-                                  {expense.purchase_date}
+                                  {expense.purchase_date.split(" ")[0]}
                                 </TableCell>
                                 <TableCell
                                   padding="none"

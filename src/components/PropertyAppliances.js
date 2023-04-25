@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
 import {
   Table,
@@ -22,7 +23,7 @@ import DocumentsUploadPost from "./DocumentsUploadPost";
 import ImageModal from "./ImageModal";
 import AddIcon from "../icons/AddIcon.svg";
 import File from "../icons/File.svg";
-import EditIcon from "../icons/EditIcon.svg";
+import UploadIcon from "../icons/UploadIcon.png";
 import ImgIcon from "../icons/ImgIcon.png";
 import LinkIcon from "../icons/LinkIcon.svg";
 import DocIcon from "../icons/DocIcon.png";
@@ -89,6 +90,7 @@ function PropertyAppliances(props) {
   const [addApplianceInfo, setAddApplianceInfo] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
+  const [showSpinnerParts, setShowSpinnerParts] = useState(false);
   const [openImage, setOpenImage] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
 
@@ -113,6 +115,19 @@ function PropertyAppliances(props) {
     setApplianceImgModalShow(false);
     setApplianceDocModalShow(false);
     setApplianceUrlModalShow(false);
+  };
+  const getPartsList = () => {
+    axios
+      .post(
+        "https://tn5e0l3yok.execute-api.us-west-1.amazonaws.com/dev/api/v2/Insertparts",
+        {
+          model: [applianceModelNum],
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        setShowSpinnerParts(false);
+      });
   };
   const hideNewModal = () => {
     setAddNewModalShow(false);
@@ -411,7 +426,7 @@ function PropertyAppliances(props) {
             </Col>
           </Row>{" "}
           <Row className="my-2">
-            <Col>
+            <Col xs={10}>
               {" "}
               <TextField
                 fullWidth
@@ -424,6 +439,30 @@ function PropertyAppliances(props) {
                 }
                 onChange={(e) => setApplianceModelNum(e.target.value)}
               />
+            </Col>
+            <Col>
+              <img
+                title="Upload Model Number to get parts list"
+                onClick={() => {
+                  setShowSpinnerParts(true);
+                  getPartsList();
+                }}
+                src={UploadIcon}
+                style={{
+                  width: "15px",
+                  height: "15px",
+                }}
+              />
+            </Col>
+            {console.log(showSpinnerParts)}
+            <Col>
+              {showSpinnerParts ? (
+                <div className="w-100 d-flex flex-column justify-content-center align-items-center h-100">
+                  <ReactBootStrap.Spinner animation="border" role="status" />
+                </div>
+              ) : (
+                ""
+              )}
             </Col>
           </Row>{" "}
           <Row className="my-2">

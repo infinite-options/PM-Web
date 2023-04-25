@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col } from "react-bootstrap";
+import * as ReactBootStrap from "react-bootstrap";
 import AppContext from "../../AppContext";
 import Header from "../../components/Header";
 import SideBar from "./SideBar";
@@ -111,27 +112,33 @@ export default function MaintenancePayments(props) {
         </Col>
         <Col className="w-100 mb-5">
           <Header title="Payment Portal" />
-          <Row>
-            {propertyData.length !== 0 && (
-              <UpcomingMaintenancePayments
-                data={upcomingPaymentsData}
-                type={false}
-                deleted={deleted}
-                setDeleted={setDeleted}
-                maintenanceID={maintenanceID}
-                selectedProperty={propertyData.result[0]}
-                paymentSelection={paymentOptions}
-              />
-            )}
-            {propertyData.length !== 0 && (
-              <MaintenancePaymentHistory
-                data={upcomingPaymentsData}
-                maintenanceID={maintenanceID}
-                verified={verified}
-                setVerified={setVerified}
-              />
-            )}
-          </Row>
+          {!isLoading ? (
+            <Row>
+              {propertyData.length !== 0 && (
+                <UpcomingMaintenancePayments
+                  data={upcomingPaymentsData}
+                  type={false}
+                  deleted={deleted}
+                  setDeleted={setDeleted}
+                  maintenanceID={maintenanceID}
+                  selectedProperty={propertyData.result[0]}
+                  paymentSelection={paymentOptions}
+                />
+              )}
+              {propertyData.length !== 0 && (
+                <MaintenancePaymentHistory
+                  data={upcomingPaymentsData}
+                  maintenanceID={maintenanceID}
+                  verified={verified}
+                  setVerified={setVerified}
+                />
+              )}
+            </Row>
+          ) : (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
+            </div>
+          )}
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <MaintenanceFooter />
           </div>

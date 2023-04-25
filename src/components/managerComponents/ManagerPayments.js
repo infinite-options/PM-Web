@@ -1,14 +1,16 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col } from "react-bootstrap";
+import * as ReactBootStrap from "react-bootstrap";
 import AppContext from "../../AppContext";
 import Header from "../../components/Header";
 import SideBar from "./SideBar";
 import ManagerFooter from "./ManagerFooter";
 import UpcomingManagerPayments from "./UpcomingManagerPayments";
-import { get } from "../../utils/api";
 import ManagerPaymentHistory from "./ManagerPaymentHistory";
+import { get } from "../../utils/api";
 import { sidebarStyle } from "../../utils/styles";
+
 export default function ManagerPayments(props) {
   const [propertyData, setPropertyData] = React.useState([]);
 
@@ -112,29 +114,35 @@ export default function ManagerPayments(props) {
         </Col>
         <Col className="w-100 mb-5">
           <Header title="Payment Portal" />
-          <Row>
-            {propertyData.length !== 0 && (
-              <UpcomingManagerPayments
-                data={upcomingPaymentsData}
-                type={false}
-                deleted={deleted}
-                setDeleted={setDeleted}
-                paid={paid}
-                setPaid={setPaid}
-                managerID={managerID}
-                selectedProperty={propertyData.result[0]}
-                paymentSelection={paymentOptions}
-              />
-            )}
-            {propertyData.length !== 0 && (
-              <ManagerPaymentHistory
-                data={upcomingPaymentsData}
-                managerID={managerID}
-                verified={verified}
-                setVerified={setVerified}
-              />
-            )}
-          </Row>
+          {!isLoading ? (
+            <Row>
+              {propertyData.length !== 0 && (
+                <UpcomingManagerPayments
+                  data={upcomingPaymentsData}
+                  type={false}
+                  deleted={deleted}
+                  setDeleted={setDeleted}
+                  paid={paid}
+                  setPaid={setPaid}
+                  managerID={managerID}
+                  selectedProperty={propertyData.result[0]}
+                  paymentSelection={paymentOptions}
+                />
+              )}
+              {propertyData.length !== 0 && (
+                <ManagerPaymentHistory
+                  data={upcomingPaymentsData}
+                  managerID={managerID}
+                  verified={verified}
+                  setVerified={setVerified}
+                />
+              )}
+            </Row>
+          ) : (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
+            </div>
+          )}
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <ManagerFooter />
           </div>

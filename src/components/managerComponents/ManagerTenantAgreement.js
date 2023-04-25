@@ -1520,105 +1520,19 @@ function ManagerTenantAgreement(props) {
                 <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
               </div>
               <Col className="d-flex justify-content-evenly">
-                <Button
-                  style={bluePillButton}
-                  // onClick={save}
-                  onClick={filterAgreement}
-                  on
-                  // hidden={
-                  //   acceptedTenantApplications[0].application_status !==
-                  //     "RENTED" &&
-                  //   acceptedTenantApplications[0].application_status !==
-                  //     "FORWARDED" &&
-                  //   acceptedTenantApplications[0].application_status !==
-                  //     "LEASE EXTENSION" &&
-                  //   acceptedTenantApplications[0].application_status !==
-                  //     "TENANT LEASE EXTENSION" &&
-                  //   acceptedTenantApplications[0].application_status !==
-                  //     "REFUSED"
-                  // }
-                >
+                <Button style={bluePillButton} onClick={filterAgreement} on>
                   Review Changes to the Lease
+                </Button>
+              </Col>{" "}
+              <Col className="d-flex justify-content-evenly">
+                <Button style={bluePillButton} onClick={back} on>
+                  Cancel
                 </Button>
               </Col>
             </Row>
           ) : (
             ""
           )}
-          {/* {acceptedTenantApplications !== [] &&
-          acceptedTenantApplications[0] !== undefined &&
-          agreement !== null ? (
-            <Row className="pt-1 mt-3 mb-2">
-              <div
-                className="text-center"
-                style={errorMessage === "" ? hidden : {}}
-              >
-                <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
-              </div>
-              <Col className="d-flex justify-content-evenly">
-                <Button
-                  style={bluePillButton}
-                  // onClick={save}
-                  onClick={filterAgreement}
-                  on
-                  hidden={
-                    (acceptedTenantApplications[0].application_status !==
-                      "RENTED" &&
-                      Math.floor(
-                        (new Date(agreement.lease_end).getTime() -
-                          new Date().getTime()) /
-                          (1000 * 60 * 60 * 24)
-                      ) > 60) ||
-                    (acceptedTenantApplications[0].application_status !==
-                      "FORWARDED" &&
-                      Math.floor(
-                        (new Date(agreement.lease_end).getTime() -
-                          new Date().getTime()) /
-                          (1000 * 60 * 60 * 24)
-                      ) > 60) ||
-                    acceptedTenantApplications[0].application_status ===
-                      "LEASE EXTENSION"
-                  }
-                >
-                  Review Changes to the Lease
-                </Button>
-              </Col>
-            </Row>
-          ) : (
-            ""
-          )} */}
-
-          {/* {agreement !== null ? (
-            (acceptedTenantApplications[0].application_status !== "RENTED" &&
-              Math.floor(
-                (new Date(agreement.lease_end).getTime() -
-                  new Date().getTime()) /
-                  (1000 * 60 * 60 * 24)
-              ) < 60) ||
-            (acceptedTenantApplications[0].application_status !== "FORWARDED" &&
-              Math.floor(
-                (new Date(agreement.lease_end).getTime() -
-                  new Date().getTime()) /
-                  (1000 * 60 * 60 * 24)
-              ) < 60) ||
-            agreement.lease_start !== startDate ? (
-              <Row className="pt-1 mt-3 mb-2">
-                <Col className="d-flex flex-row justify-content-evenly">
-                  <Button
-                    style={bluePillButton}
-                    variant="outline-primary"
-                    onClick={() => renewLease()}
-                  >
-                    Forward New Lease Agreement
-                  </Button>
-                </Col>
-              </Row>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )} */}
         </div>
 
         <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
