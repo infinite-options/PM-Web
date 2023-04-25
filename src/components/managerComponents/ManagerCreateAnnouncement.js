@@ -375,6 +375,7 @@ function ManagerCreateAnnouncement(props) {
       sender_phone: management_businesses[0]["business_phone_number"],
     };
     const res = await post("/SendAnnouncement", send_announcement);
+    console.log(res);
   };
 
   // onclick save button

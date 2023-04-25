@@ -99,7 +99,7 @@ function IncomingMessages(props) {
     {
       id: "body",
       numeric: false,
-      label: "body",
+      label: "Message",
     },
 
     {
