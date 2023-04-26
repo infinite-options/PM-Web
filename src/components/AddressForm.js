@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -54,7 +54,7 @@ function AddressForm(props) {
   const classes = useStyles();
 
   // const extraDet = !!(addressState && (addressState.pm_name || addressState.pm_number));
-  const [useDetailsIfRenting, setUseDetailsIfRenting] = React.useState(false);
+  const [useDetailsIfRenting, setUseDetailsIfRenting] = useState(false);
   const {
     street,
     unit,
@@ -91,7 +91,7 @@ function AddressForm(props) {
     ) : (
       ""
     );
-  const [type, setType] = React.useState("Apartment");
+  const [type, setType] = useState("Apartment");
 
   const usStates = [
     {

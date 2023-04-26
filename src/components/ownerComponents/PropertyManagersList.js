@@ -58,7 +58,7 @@ function PropertyManagersList(props) {
   };
   const [selectedPropertyManagers, setSelectedPropertyManagers] =
     useState(null);
-  const [stage, setStage] = React.useState("LIST");
+  const [stage, setStage] = useState("LIST");
 
   const [width, setWindowWidth] = useState(1024);
   useEffect(() => {

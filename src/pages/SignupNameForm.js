@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button } from "react-bootstrap";
 import Header from "../components/Header";
@@ -7,10 +7,10 @@ import { formatPhoneNumber, formatEIN } from "../utils/helper";
 
 function SignupNameForm(props) {
   const navigate = useNavigate();
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [phoneNumber, setPhoneNumber] = React.useState("");
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const submitForm = () => {
     if (firstName === "" || lastName === "" || phoneNumber === "") {
       setErrorMessage("Please fill out all fields");

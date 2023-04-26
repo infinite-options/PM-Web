@@ -102,8 +102,8 @@ function TenantPropertyView(props) {
   const [disableEndLease, setDisable] = useState(false);
 
   // sorting variables
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [order, setOrder] = useState("desc");
+  const [orderBy, setOrderBy] = useState("days_open");
   const [openImage, setOpenImage] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
   const applianceState = useState({

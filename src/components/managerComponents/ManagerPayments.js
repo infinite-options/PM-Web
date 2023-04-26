@@ -12,7 +12,7 @@ import { get } from "../../utils/api";
 import { sidebarStyle } from "../../utils/styles";
 
 export default function ManagerPayments(props) {
-  const [propertyData, setPropertyData] = React.useState([]);
+  const [propertyData, setPropertyData] = useState([]);
 
   const [upcomingPaymentsData, setUpcomingPaymentsData] = useState([]);
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ export default function ManagerPayments(props) {
   const responsiveSidebar = {
     showSidebar: width > 1023,
   };
-  const [paymentOptions, setPaymentOptions] = React.useState([
+  const [paymentOptions, setPaymentOptions] = useState([
     { name: "paypal", isActive: false },
     { name: "zelle", isActive: false },
     { name: "ahc", isActive: false },

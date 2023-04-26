@@ -15,8 +15,8 @@ function LandingNavbar() {
   const { user } = userData;
   // console.log(user);
   const availableRoles = user !== null ? user.role.split(",") : [];
-  const [selectedRole, setSelectedRole] = React.useState(null);
-  const [currentRole, setCurrentRole] = React.useState(
+  const [selectedRole, setSelectedRole] = useState(null);
+  const [currentRole, setCurrentRole] = useState(
     window.location.href.split("/")[3]
   );
   const navigateToRole = (role) => {

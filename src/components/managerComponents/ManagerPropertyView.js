@@ -231,8 +231,8 @@ function ManagerPropertyView(props) {
   const [showCreateExpense, setShowCreateExpense] = useState(false);
   const [showCreateRevenue, setShowCreateRevenue] = useState(false);
   // sorting variables
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("calories");
 
   const showImage = (src) => {
     setOpenImage(true);

@@ -14,7 +14,7 @@ import {
 function ManagerRentalHistory(props) {
   const { property } = props;
 
-  const [expandRentalHistory, setExpandRentalHistory] = React.useState(false);
+  const [expandRentalHistory, setExpandRentalHistory] = useState(false);
 
   const rentalHistory = [
     {

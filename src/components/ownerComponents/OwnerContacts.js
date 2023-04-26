@@ -62,8 +62,8 @@ function OwnerContacts() {
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("calories");
   const [selectedManager, setSelectedManager] = useState("");
   const [showMailFormManager, setShowMailFormManager] = useState(false);
   const [showMessageFormManager, setShowMessageFormManager] = useState(false);

@@ -9,6 +9,11 @@ import {
   TableSortLabel,
   Box,
 } from "@material-ui/core";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
@@ -21,6 +26,7 @@ import SideBar from "./SideBar";
 import ManagerFooter from "./ManagerFooter";
 import { post, get, put } from "../../utils/api";
 import DeleteIcon from "../../icons/DeleteIcon.svg";
+import ThreeDots from "../../icons/Threedots.gif";
 import {
   pillButton,
   squareForm,
@@ -64,10 +70,11 @@ function ManagerCreateAnnouncement(props) {
   const [byNewTenants, setByNewTenants] = useState(false);
   const [byOwners, setByOwners] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
+  const [showDialogSending, setShowDialogSending] = useState(false);
   const [announcementDetail, setAnnouncementDetail] = useState(false);
   const [deleted, setDeleted] = useState(false);
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("calories");
   const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
@@ -356,6 +363,28 @@ function ManagerCreateAnnouncement(props) {
     setTenantState(tenantState);
     ownerState.forEach((prop) => (prop.checked = false));
     setOwnerState(ownerState);
+    setShowDialogSending(true);
+    const newText = {
+      announcement_msg: new_announcement.announcement_msg,
+      announcement_title: new_announcement.announcement_title,
+      name: response["name"],
+      pno: response["pno"],
+      sender_name: management_businesses[0]["business_name"],
+      sender_phone: management_businesses[0]["business_phone_number"],
+    };
+    // console.log(newText);
+    const responseText = await post("/messageGroupText", newText);
+    const newMail = {
+      announcement_msg: new_announcement.announcement_msg,
+      announcement_title: new_announcement.announcement_title,
+      name: response["name"],
+      email: response["email"],
+      sender_name: management_businesses[0]["business_name"],
+      sender_email: management_businesses[0]["business_email"],
+    };
+    // console.log(newMail);
+    const responseEmail = await post("/messageGroupEmail", newMail);
+    setShowDialogSending(false);
     setShowSpinner(false);
     setEditingAnnouncement(null);
     const newAnnouncementState = [...announcementState];
@@ -364,18 +393,18 @@ function ManagerCreateAnnouncement(props) {
     setNewAnnouncement(null);
 
     fetchProperties();
-    const send_announcement = {
-      announcement_msg: new_announcement.announcement_msg,
-      announcement_title: new_announcement.announcement_title,
-      name: response["name"],
-      pno: response["pno"],
-      email: response["email"],
-      sender_name: management_businesses[0]["business_name"],
-      sender_email: management_businesses[0]["business_email"],
-      sender_phone: management_businesses[0]["business_phone_number"],
-    };
-    const res = await post("/SendAnnouncement", send_announcement);
-    console.log(res);
+    // const send_announcement = {
+    // announcement_msg: new_announcement.announcement_msg,
+    // announcement_title: new_announcement.announcement_title,
+    // name: response["name"],
+    // pno: response["pno"],
+    // email: response["email"],
+    // sender_name: management_businesses[0]["business_name"],
+    // sender_email: management_businesses[0]["business_email"],
+    // sender_phone: management_businesses[0]["business_phone_number"],
+    // };
+    // const res = await post("/SendAnnouncement", send_announcement);
+    // console.log(res);
   };
 
   // onclick save button
@@ -461,6 +490,26 @@ function ManagerCreateAnnouncement(props) {
     const newOwnerState = [...ownerState];
     newOwnerState[i].checked = !newOwnerState[i].checked;
     setOwnerState(newOwnerState);
+  };
+
+  const DialogSending = () => {
+    return (
+      <Dialog
+        open={showDialogSending}
+        // onClose={onCancel}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title"></DialogTitle>
+        <DialogContent>
+          <div className="d-flex justify-content-center align-items-center m-5">
+            <h5> Sending</h5>
+
+            <img src={ThreeDots} style={{ width: "20%" }} alt="loading..." />
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
   };
 
   const required =
@@ -581,8 +630,8 @@ function ManagerCreateAnnouncement(props) {
   };
   return (
     <div className="w-100 overflow-hidden">
+      {DialogSending()}
       <Row className="w-100 mb-5 overflow-hidden">
-        {" "}
         <Col
           xs={2}
           hidden={!responsiveSidebar.showSidebar}
@@ -1168,7 +1217,13 @@ function ManagerCreateAnnouncement(props) {
             ) : (
               ""
             )}
-            <IncomingMessages />
+            {newAnnouncement === null &&
+            !editingAnnouncement &&
+            !announcementDetail ? (
+              <IncomingMessages />
+            ) : (
+              ""
+            )}
           </div>
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <ManagerFooter />

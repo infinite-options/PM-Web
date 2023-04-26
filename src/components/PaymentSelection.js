@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import Checkbox from "./Checkbox";
 import { squareForm, hidden } from "../utils/styles";
 
 function PaymentSelection(props) {
-  const [showPayPal, setShowPayPal] = React.useState(false);
-  const [showApplePay, setShowApplePay] = React.useState(false);
-  const [showZelle, setShowZelle] = React.useState(false);
-  const [showVenmo, setShowVenmo] = React.useState(false);
-  const [showChecking, setShowChecking] = React.useState(false);
+  const [showPayPal, setShowPayPal] = useState(false);
+  const [showApplePay, setShowApplePay] = useState(false);
+  const [showZelle, setShowZelle] = useState(false);
+  const [showVenmo, setShowVenmo] = useState(false);
+  const [showChecking, setShowChecking] = useState(false);
   const [paymentState, setPaymentState] = props.state;
   const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
     paymentState;

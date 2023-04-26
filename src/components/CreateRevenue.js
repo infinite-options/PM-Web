@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { squareForm, pillButton, small, hidden, red } from "../utils/styles";
 import ArrowDown from "../icons/ArrowDown.svg";
@@ -6,13 +6,13 @@ import { post } from "../utils/api";
 
 function CreateRevenue(props) {
   const { property, reload } = props;
-  const [category, setCategory] = React.useState("Rent");
-  const [title, setTitle] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [amount, setAmount] = React.useState("");
-  const [frequency, setFrequency] = React.useState("Monthly");
-  const [frequencyOfPayment, setFrequencyOfPayment] = React.useState("");
-  const [date, setDate] = React.useState("");
+  const [category, setCategory] = useState("Rent");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [amount, setAmount] = useState("");
+  const [frequency, setFrequency] = useState("Monthly");
+  const [frequencyOfPayment, setFrequencyOfPayment] = useState("");
+  const [date, setDate] = useState("");
   // React.useEffect(() => {
   //   if (frequency === "Monthly") {
   //     const newFrequencyOfPayment = frequencyOfPayment.replace("year", "month");
@@ -48,7 +48,7 @@ function CreateRevenue(props) {
     reload();
     props.back();
   };
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">

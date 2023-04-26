@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { squareForm, pillButton, small, hidden, red } from "../utils/styles";
 import ArrowDown from "../icons/ArrowDown.svg";
@@ -6,14 +6,13 @@ import { post, put } from "../utils/api";
 
 function CreateExpense(props) {
   const { property, reload } = props;
-  const [category, setCategory] = React.useState("Management");
-  const [title, setTitle] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [amount, setAmount] = React.useState("");
-  const [frequency, setFrequency] = React.useState("Monthly");
-  const [frequencyOfPayment, setFrequencyOfPayment] =
-    React.useState("Once a month");
-  const [date, setDate] = React.useState("");
+  const [category, setCategory] = useState("Management");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [amount, setAmount] = useState("");
+  const [frequency, setFrequency] = useState("Monthly");
+  const [frequencyOfPayment, setFrequencyOfPayment] = useState("Once a month");
+  const [date, setDate] = useState("");
 
   const submitForm = async () => {
     if (amount === "") {
@@ -132,7 +131,7 @@ function CreateExpense(props) {
       props.back();
     }
   };
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">

@@ -47,8 +47,8 @@ function TenantRepairList(props) {
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [order, setOrder] = useState("desc");
+  const [orderBy, setOrderBy] = useState("days_open");
   const [isLoading, setIsLoading] = useState(true);
   const [width, setWindowWidth] = useState(1024);
   useEffect(() => {

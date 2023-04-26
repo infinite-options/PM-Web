@@ -28,8 +28,8 @@ const authToken = process.env.REACT_APP_TWILIO_AUTH_TOKEN;
 function IncomingMessages(props) {
   const classes = useStyles();
   const [listIncoming, setListIncoming] = useState([]);
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("calories");
   const getMessages = () => {
     const headers = {
       "Content-Type": "application/json",

@@ -55,8 +55,8 @@ export default function OwnerDashboard2() {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
 
-  const [orderMaintenance, setOrderMaintenance] = useState("asc");
-  const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
+  const [orderMaintenance, setOrderMaintenance] = useState("desc");
+  const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("days_open");
   const [managementStatus, setManagementStatus] = useState("");
   const [maintenanceStatus, setMaintenanceStatus] = useState("");
 

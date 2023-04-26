@@ -88,8 +88,8 @@ export default function TenantDashboard() {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
 
-  const [orderMaintenance, setOrderMaintenance] = useState("asc");
-  const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
+  const [orderMaintenance, setOrderMaintenance] = useState("desc");
+  const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("days_open");
 
   const [orderApplications, setOrderApplications] = useState("asc");
   const [orderApplicationsBy, setOrderApplicationsBy] = useState("calories");

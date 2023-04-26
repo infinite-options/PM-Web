@@ -54,10 +54,10 @@ export default function ManagerDashboard() {
   const [search, setSearch] = useState("");
   // sorting variables
   const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("calories");
+  const [orderBy, setOrderBy] = useState("address");
 
-  const [orderMaintenance, setOrderMaintenance] = useState("asc");
-  const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
+  const [orderMaintenance, setOrderMaintenance] = useState("desc");
+  const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("days_open");
   const [managementStatus, setManagementStatus] = useState("");
   const [maintenanceStatus, setMaintenanceStatus] = useState("");
   const [applicationStatus, setApplicationStatus] = useState("");

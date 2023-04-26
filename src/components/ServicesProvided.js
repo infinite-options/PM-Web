@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import {
   TableBody,
@@ -48,9 +48,9 @@ function ServicesProvided(props) {
     businessType,
   } = props;
   // console.log(serviceState);
-  const [newService, setNewService] = React.useState(null);
-  const [editingService, setEditingService] = React.useState(null);
-  // const [totalEstimate, setTotalEstimate] = React.useState(0)
+  const [newService, setNewService] = useState(null);
+  const [editingService, setEditingService] = useState(null);
+  // const [totalEstimate, setTotalEstimate] = useState(0)
   const emptyService = {
     service_name: "",
     charge: "",
@@ -58,7 +58,7 @@ function ServicesProvided(props) {
     event_type: "1 Hour Job",
     total_estimate: "",
   };
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   // const calculateEstimate = () => {
   //   console.log("in calculate estimate");

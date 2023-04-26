@@ -18,6 +18,8 @@ import Checkbox from "../Checkbox";
 import AppContext from "../../AppContext";
 import Header from "../Header";
 import ManagerFooter from "./ManagerFooter";
+import MessageDialogOwner from "../MessageDialog";
+import MessageDialogTenant from "../MessageDialog";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import HighPriority from "../../icons/highPriority.svg";
@@ -61,11 +63,27 @@ const useStyles = makeStyles({
 
 function ManagerRepairDetail(props) {
   const { userData, refresh, ably } = React.useContext(AppContext);
-  const { access_token } = userData;
+  const { access_token, user } = userData;
   const channel_maintenance = ably.channels.get("maintenance_status");
   const location = useLocation();
   const navigate = useNavigate();
   const classes = useStyles();
+
+  const [selectedOwner, setSelectedOwner] = useState("");
+
+  const [showMessageFormOwner, setShowMessageFormOwner] = useState(false);
+
+  const onCancelOwnerMessage = () => {
+    setShowMessageFormOwner(false);
+  };
+
+  const [selectedTenant, setSelectedTenant] = useState("");
+
+  const [showMessageFormTenant, setShowMessageFormTenant] = useState(false);
+  const onCancelTenantMessage = () => {
+    setShowMessageFormTenant(false);
+  };
+
   const [morePictures, setMorePictures] = useState(false);
   const [morePicturesNotes, setMorePicturesNotes] = useState(
     "Can you please share more pictures regarding the request?"
@@ -486,6 +504,30 @@ function ManagerRepairDetail(props) {
 
   return (
     <div className="w-100 overflow-hidden">
+      <MessageDialogOwner
+        title={"Text Message"}
+        isOpen={showMessageFormOwner}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedOwner.owner_id}
+        receiverEmail={selectedOwner.owner_email}
+        receiverPhone={selectedOwner.owner_phone_number}
+        onCancel={onCancelOwnerMessage}
+      />{" "}
+      <MessageDialogTenant
+        title={"Text Message"}
+        isOpen={showMessageFormTenant}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedTenant.tenantId}
+        receiverEmail={selectedTenant.tenantEmail}
+        receiverPhone={selectedTenant.TenantPhoneNumber}
+        onCancel={onCancelTenantMessage}
+      />
       <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
@@ -968,9 +1010,17 @@ function ManagerRepairDetail(props) {
                           <a href={`tel:${repair.owner[0].owner_phone_number}`}>
                             <img src={Phone} alt="Phone" style={smallImg} />
                           </a>
-                          <a href={`mailto:${repair.owner[0].owner_email}`}>
-                            <img src={Message} alt="Message" style={smallImg} />
-                          </a>
+                          {/* <a href={`mailto:${repair.owner[0].owner_email}`}> */}
+                          <img
+                            onClick={() => {
+                              setShowMessageFormOwner(true);
+                              setSelectedOwner(repair.owner[0]);
+                            }}
+                            src={Message}
+                            alt="Message"
+                            style={smallImg}
+                          />
+                          {/* </a> */}
                         </TableCell>
                       </TableRow>
                     </TableBody>
@@ -1092,13 +1142,17 @@ function ManagerRepairDetail(props) {
                                             style={smallImg}
                                           />
                                         </a>
-                                        <a href={`mailto:${tf.tenantEmail}`}>
-                                          <img
-                                            src={Message}
-                                            alt="Message"
-                                            style={smallImg}
-                                          />
-                                        </a>
+                                        {/* <a href={`mailto:${tf.tenantEmail}`}> */}
+                                        <img
+                                          onClick={() => {
+                                            setShowMessageFormTenant(true);
+                                            setSelectedTenant(tf);
+                                          }}
+                                          src={Message}
+                                          alt="Message"
+                                          style={smallImg}
+                                        />
+                                        {/* </a> */}
                                       </Col>
                                     </Row>
                                   );

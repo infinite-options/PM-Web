@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Container, Button, Tab } from "react-bootstrap";
 import {
   TableBody,
@@ -40,8 +40,8 @@ function BusinessContact(props) {
   const classes = useStyles();
   const [contactState, setContactState] = props.state;
   let pageURL = window.location.href.split("/");
-  const [newContact, setNewContact] = React.useState(null);
-  const [editingContact, setEditingContact] = React.useState(null);
+  const [newContact, setNewContact] = useState(null);
+  const [editingContact, setEditingContact] = useState(null);
   const emptyContact = {
     first_name: "",
     last_name: "",
@@ -93,7 +93,7 @@ function BusinessContact(props) {
     changedContact[field] = event.target.value;
     setNewContact(changedContact);
   };
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
