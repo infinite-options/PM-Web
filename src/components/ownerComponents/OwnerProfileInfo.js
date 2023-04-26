@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -24,15 +24,13 @@ function OwnerProfileInfo(props) {
     }
     setAutofillState(newAutofillState);
   };
-  const [firstName, setFirstName] = React.useState(autofillState.first_name);
-  const [lastName, setLastName] = React.useState(autofillState.last_name);
-  const [phoneNumber, setPhoneNumber] = React.useState(
-    autofillState.phone_number
-  );
-  const [email, setEmail] = React.useState(autofillState.email);
-  const [einNumber, setEinNumber] = React.useState(autofillState.ein_number);
-  const [ssn, setSsn] = React.useState(autofillState.ssn);
-  const paymentState = React.useState({
+  const [firstName, setFirstName] = useState(autofillState.first_name);
+  const [lastName, setLastName] = useState(autofillState.last_name);
+  const [phoneNumber, setPhoneNumber] = useState(autofillState.phone_number);
+  const [email, setEmail] = useState(autofillState.email);
+  const [einNumber, setEinNumber] = useState(autofillState.ein_number);
+  const [ssn, setSsn] = useState(autofillState.ssn);
+  const paymentState = useState({
     paypal: autofillState.paypal,
     applePay: autofillState.apple_pay,
     zelle: autofillState.zelle,
@@ -40,7 +38,7 @@ function OwnerProfileInfo(props) {
     accountNumber: autofillState.account_number,
     routingNumber: autofillState.routing_number,
   });
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   React.useEffect(() => {
     if (context.userData.access_token === null) {
       navigate("/");
@@ -108,8 +106,8 @@ function OwnerProfileInfo(props) {
     updateAutofillState(ownerProfile);
     props.onConfirm();
   };
-  const [showSsn, setShowSsn] = React.useState(false);
-  const [showEin, setShowEin] = React.useState(false);
+  const [showSsn, setShowSsn] = useState(false);
+  const [showEin, setShowEin] = useState(false);
 
   const required =
     errorMessage === "Please fill out all fields" ? (

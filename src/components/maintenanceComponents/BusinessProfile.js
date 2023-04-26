@@ -14,10 +14,10 @@ function BusinessProfile(props) {
   const context = React.useContext(AppContext);
   const { access_token, user } = context.userData;
   const navigate = useNavigate();
-  const [businessName, setBusinessName] = React.useState("");
-  const [einNumber, setEinNumber] = React.useState("");
-  const serviceState = React.useState([]);
-  const paymentState = React.useState({
+  const [businessName, setBusinessName] = useState("");
+  const [einNumber, setEinNumber] = useState("");
+  const serviceState = useState([]);
+  const paymentState = useState({
     paypal: "",
     applePay: "",
     zelle: "",
@@ -25,8 +25,8 @@ function BusinessProfile(props) {
     accountNumber: "",
     routingNumber: "",
   });
-  const [errorMessage, setErrorMessage] = React.useState("");
-  const contactState = React.useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const contactState = useState([]);
   React.useEffect(() => {
     if (access_token === null) {
       navigate("/");

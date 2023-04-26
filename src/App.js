@@ -83,7 +83,7 @@ import { get } from "./utils/api";
 
 import Ably from "ably/callbacks";
 function App() {
-  const [userData, setUserData] = React.useState({
+  const [userData, setUserData] = useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
     refresh_token: JSON.parse(localStorage.getItem("refresh_token")),
     user: JSON.parse(localStorage.getItem("user")),

@@ -111,13 +111,12 @@ function ManagerUtilities(props) {
   const requestDescriptionRef = React.createRef();
   const tagPriorityRef = React.createRef();
   // sorting variables
-  const [orderManager, setOrderManager] = React.useState("asc");
-  const [orderManagerBy, setOrderManagerBy] =
-    React.useState("bill_utility_type");
-  const [orderTenant, setOrderTenant] = React.useState("asc");
-  const [orderTenantBy, setOrderTenantBy] = React.useState("bill_utility_type");
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderManager, setOrderManager] = useState("asc");
+  const [orderManagerBy, setOrderManagerBy] = useState("bill_utility_type");
+  const [orderTenant, setOrderTenant] = useState("asc");
+  const [orderTenantBy, setOrderTenantBy] = useState("bill_utility_type");
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("calories");
 
   const [expenseUnique, setExpenseUnique] = useState("");
 

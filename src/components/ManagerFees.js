@@ -35,8 +35,8 @@ const useStyles = makeStyles({
 function ManagerFees(props) {
   const classes = useStyles();
   const { feeState, setFeeState, editProfile } = props;
-  const [newFee, setNewFee] = React.useState(null);
-  const [editingFee, setEditingFee] = React.useState(null);
+  const [newFee, setNewFee] = useState(null);
+  const [editingFee, setEditingFee] = useState(null);
   let pageURL = window.location.href.split("/");
   const emptyFee = {
     fee_name: "",
@@ -83,7 +83,7 @@ function ManagerFees(props) {
     changedFee[field] = event.target.value;
     setNewFee(changedFee);
   };
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">

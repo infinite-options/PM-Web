@@ -47,8 +47,8 @@ function ManagerOwnerList(props) {
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("calories");
   const [width, setWindowWidth] = useState(1024);
   const [showMailForm, setShowMailForm] = useState(false);
   const onCancel = () => {

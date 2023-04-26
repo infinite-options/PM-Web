@@ -47,8 +47,8 @@ function MaintenanceDashboard(props) {
   const [quotesPaid, setQuotesPaid] = useState([]);
   const [quotesRejected, setQuotesRejected] = useState([]);
   const [quotesRefused, setQuotesRefused] = useState([]);
-  const [orderMaintenance, setOrderMaintenance] = useState("asc");
-  const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
+  const [orderMaintenance, setOrderMaintenance] = useState("desc");
+  const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("days_open");
   const [maintenanceStatus, setMaintenanceStatus] = useState("");
   const [width, setWindowWidth] = useState(1024);
   useEffect(() => {

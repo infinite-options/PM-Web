@@ -58,7 +58,7 @@ function PropertyApplicationView(props) {
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
-  const [property, setProperty] = React.useState(null);
+  const [property, setProperty] = useState(null);
   const [openImage, setOpenImage] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
   const [applianceImgModalShow, setApplianceImgModalShow] = useState(false);

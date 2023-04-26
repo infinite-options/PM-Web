@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import AppContext from "../AppContext";
@@ -10,7 +10,7 @@ function SelectRole() {
   const { userData } = React.useContext(AppContext);
   const { user } = userData;
   const availableRoles = user.role.split(",");
-  const [selectedRole, setSelectedRole] = React.useState(null);
+  const [selectedRole, setSelectedRole] = useState(null);
   const navigateToRole = (role) => {
     // add navigation to correct role pages
     // console.log(`load ${role}`);
@@ -44,7 +44,7 @@ function SelectRole() {
     MAINTENANCE: "Property Maintenance",
     MAINT_EMPLOYEE: "Property Maintenance (Employee)",
   };
-  React.useState(() => {}, []);
+  useState(() => {}, []);
   return (
     <div className="flex-grow-1 d-flex flex-column pb-5 mb-5">
       <div className="flex-grow-1 mx-3">

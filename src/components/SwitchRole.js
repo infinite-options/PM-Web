@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import AppContext from "../AppContext";
@@ -10,10 +10,10 @@ function SwitchRole(props) {
   const navigate = useNavigate();
   const { userData } = React.useContext(AppContext);
   const { user } = userData;
-  const [footerTab, setFooterTab] = React.useState("ROLES");
+  const [footerTab, setFooterTab] = useState("ROLES");
   const availableRoles = user.role.split(",");
-  const [selectedRole, setSelectedRole] = React.useState(null);
-  const [currentRole, setCurrentRole] = React.useState(
+  const [selectedRole, setSelectedRole] = useState(null);
+  const [currentRole, setCurrentRole] = useState(
     window.location.href.split("/")[3]
   );
   const navigateToRole = (role) => {
@@ -50,7 +50,7 @@ function SwitchRole(props) {
     MAINT_EMPLOYEE: "Property Maintenance (Employee)",
   };
 
-  React.useState(() => {}, []);
+  useState(() => {}, []);
   return (
     <div className="flex-grow-1 d-flex flex-column pb-5 mb-5">
       <Header title="Switch Roles" />

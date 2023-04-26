@@ -59,8 +59,8 @@ function ManagerTenantListDetail(props) {
   const { userData, ably } = useContext(AppContext);
   const { access_token, user } = userData;
   // sorting variables
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("calories");
+  const [order, setOrder] = useState("desc");
+  const [orderBy, setOrderBy] = useState("days_open");
   const [showDL, setShowDL] = useState(true);
   const [showSSN, setShowSSN] = useState(true);
   const selectedTenant = location.state.selectedTenant;

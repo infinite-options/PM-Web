@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
@@ -16,8 +16,8 @@ import {
 function ManagerLocations(props) {
   // const [locationState, setLocationState] = props.state;
   const { locationState, setLocationState, editProfile } = props;
-  const [newLocation, setNewLocation] = React.useState(null);
-  const [editingLocation, setEditingLocation] = React.useState(null);
+  const [newLocation, setNewLocation] = useState(null);
+  const [editingLocation, setEditingLocation] = useState(null);
   const emptyLocation = {
     location: "",
     distance: "",
@@ -60,7 +60,7 @@ function ManagerLocations(props) {
     changedLocation[field] = event.target.value;
     setNewLocation(changedLocation);
   };
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">

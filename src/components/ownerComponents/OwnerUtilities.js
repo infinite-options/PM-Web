@@ -113,12 +113,12 @@ function OwnerUtilities(props) {
 
   // sorting variables
   // sorting variables
-  const [orderOwner, setOrderOwner] = React.useState("asc");
-  const [orderOwnerBy, setOrderOwnerBy] = React.useState("bill_utility_type");
-  const [orderTenant, setOrderTenant] = React.useState("asc");
-  const [orderTenantBy, setOrderTenantBy] = React.useState("bill_utility_type");
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderOwner, setOrderOwner] = useState("asc");
+  const [orderOwnerBy, setOrderOwnerBy] = useState("bill_utility_type");
+  const [orderTenant, setOrderTenant] = useState("asc");
+  const [orderTenantBy, setOrderTenantBy] = useState("bill_utility_type");
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("calories");
   const [expenseUnique, setExpenseUnique] = useState("");
 
   const [width, setWindowWidth] = useState(1024);

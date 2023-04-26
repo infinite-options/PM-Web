@@ -4,7 +4,7 @@ export default function Maintenence(props) {
   const main = props?.data; //array of objects
   const noRows = "No data available";
   var counter = 0;
-  const [currentImg, setCurrentImg] = React.useState(0);
+  const [currentImg, setCurrentImg] = useState(0);
   var exists = false;
   //implement date.now and calculate amount of days
   const rows = main?.map((row, index) => {

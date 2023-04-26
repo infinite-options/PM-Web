@@ -74,8 +74,8 @@ function ManagerTenantList(props) {
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [order, setOrder] = useState("desc");
+  const [orderBy, setOrderBy] = useState("days_open");
 
   const [width, setWindowWidth] = useState(1024);
   useEffect(() => {

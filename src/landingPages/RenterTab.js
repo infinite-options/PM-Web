@@ -33,8 +33,8 @@ export default function RenterLanding() {
   const [data, setData] = useState([]);
   const [showTable, setShowTable] = useState(false);
   // sorting variables
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("calories");
   const getDataFromApi = async () => {
     //process to get data from aateButtons(pi using axios
     // axios
