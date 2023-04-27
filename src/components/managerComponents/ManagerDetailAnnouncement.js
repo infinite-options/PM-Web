@@ -27,7 +27,7 @@ function DetailAnnouncements(props) {
   const [showMessageForm, setShowMessageForm] = useState(false);
   const [showMailForm, setShowMailForm] = useState(false);
   const [selectedReceiver, setSelectedReceiver] = useState([]);
-  console.log(announcement, managerInfo);
+
   const onCancelMail = () => {
     setShowMailForm(false);
   };
@@ -50,7 +50,6 @@ function DetailAnnouncements(props) {
   const responsiveSidebar = {
     showSidebar: width > 1023,
   };
-  console.log(selectedReceiver);
 
   return (
     <div className="w-100 overflow-hidden">

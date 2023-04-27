@@ -164,7 +164,7 @@ function ReviewPropertyLease(props) {
   // console.log(properties);
 
   const approveLease = async () => {
-    console.log("in approvelease", rentals);
+    // console.log("in approvelease", rentals);
 
     if (rentals.length > 0) {
       // console.log("in approvelease", rentals);
@@ -243,7 +243,7 @@ function ReviewPropertyLease(props) {
         // console.log("in update activr lease", updateLease);
         const response2 = await put("/UpdateActiveLease", updateLease);
         channel_application.publish({ data: { te: updateLease } });
-        console.log(rentals);
+        // console.log(rentals);
         const newMessage = {
           sender_name:
             application.applicant_info[0].tenant_first_name +
@@ -563,7 +563,7 @@ function ReviewPropertyLease(props) {
       state: { fromPage: fromPage },
     });
   };
-  console.log(application);
+  // console.log(application);
   return (
     <div className="w-100 overflow-hidden">
       <Row className="w-100 mb-5 overflow-hidden">
