@@ -21,8 +21,10 @@ import ManagerFooter from "./ManagerFooter";
 import ManagerRepairRequest from "./ManagerRepairRequest";
 import RepairImg from "../../icons/RepairImg.svg";
 import AddIcon from "../../icons/AddIcon.svg";
-import { get } from "../../utils/api";
+import CopyIcon from "../../icons/CopyIcon.png";
+import { get, post } from "../../utils/api";
 import { sidebarStyle } from "../../utils/styles";
+import { days } from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -40,9 +42,7 @@ function ManagerRepairsOverview(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [properties, setProperties] = useState([]);
   const [stage, setStage] = useState("LIST");
-  // search variables
-  const [search, setSearch] = useState("");
-  // sorting variables
+  const [managerID, setManagerID] = useState("");
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("request_status");
   const [width, setWindowWidth] = useState(1024);
@@ -58,6 +58,41 @@ function ManagerRepairsOverview(props) {
   };
   const responsiveSidebar = {
     showSidebar: width > 1023,
+  };
+  const duplicate_request = async (request) => {
+    let selectedRequest = request;
+    // console.log(selectedRequest);
+    const newRequest = {
+      property_uid: selectedRequest.property_uid,
+      title: "Copy " + selectedRequest.title,
+      request_type: selectedRequest.request_type,
+      description: selectedRequest.description,
+      priority: selectedRequest.priority,
+      request_created_by: selectedRequest.request_created_by,
+    };
+
+    const files = JSON.parse(selectedRequest.images);
+    let i = 0;
+    for (const file of files) {
+      let key = "";
+      // console.log(file, file.file, file.image);
+      if (file.file !== null && file.file !== undefined) {
+        key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+        // console.log("in if", file.file);
+        newRequest[key] = file.file;
+      } else if (file.image !== null && file.image !== undefined) {
+        key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+        // console.log("in if else", file.image);
+        newRequest[key] = file.image;
+      } else {
+        // console.log("in else");
+        key = file.includes("img_cover") ? "img_cover" : `img_${i++}`;
+        newRequest[key] = file;
+      }
+    }
+    // console.log(newRequest);
+    await post("/maintenanceRequests", newRequest, null, files);
+    fetchRepairs();
   };
   const sort_repairs = (repairs) => {
     const repairs_with_quotes = repairs.filter(
@@ -94,6 +129,7 @@ function ManagerRepairsOverview(props) {
     } else {
       management_buid = management_businesses[0].business_uid;
     }
+    setManagerID(management_buid);
     const responseProperties = await get("/managerDashboard", access_token);
 
     if (responseProperties.msg === "Token has expired") {
@@ -176,11 +212,7 @@ function ManagerRepairsOverview(props) {
 
   useEffect(fetchRepairs, [access_token]);
   // console.log(repairIter);
-  const days = (date_1, date_2) => {
-    let difference = date_2.getTime() - date_1.getTime();
-    let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
-    return TotalDays;
-  };
+
   const addRequest = () => {
     fetchRepairs();
 
@@ -485,8 +517,8 @@ function ManagerRepairsOverview(props) {
                           >
                             {repair.address}
                             {repair.unit !== "" ? " " + repair.unit : ""},{" "}
-                            {repair.city}, {repair.state} <br />
-                            {repair.zip}
+                            <br />
+                            {repair.city}, {repair.state} {repair.zip}
                           </TableCell>
                           <TableCell
                             onClick={() => {
@@ -562,6 +594,20 @@ function ManagerRepairsOverview(props) {
                             ) : (
                               "No new quotes"
                             )}
+                          </TableCell>
+                          <TableCell>
+                            <img
+                              src={CopyIcon}
+                              title="Duplicate"
+                              style={{
+                                width: "15px",
+                                height: "15px",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => {
+                                duplicate_request(repair);
+                              }}
+                            />
                           </TableCell>
                         </TableRow>
                       )

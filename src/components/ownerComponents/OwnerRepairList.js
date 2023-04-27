@@ -21,7 +21,8 @@ import OwnerRepairRequest from "./OwnerRepairRequest";
 import AppContext from "../../AppContext";
 import AddIcon from "../../icons/AddIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
-import { get } from "../../utils/api";
+import CopyIcon from "../../icons/CopyIcon.png";
+import { get, post } from "../../utils/api";
 import { sidebarStyle } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
@@ -60,6 +61,41 @@ function OwnerRepairList(props) {
   };
   const responsiveSidebar = {
     showSidebar: width > 1023,
+  };
+  const duplicate_request = async (request) => {
+    let selectedRequest = request;
+    // console.log(selectedRequest);
+    const newRequest = {
+      property_uid: selectedRequest.property_uid,
+      title: "Copy " + selectedRequest.title,
+      request_type: selectedRequest.request_type,
+      description: selectedRequest.description,
+      priority: selectedRequest.priority,
+      request_created_by: selectedRequest.request_created_by,
+    };
+
+    const files = JSON.parse(selectedRequest.images);
+    let i = 0;
+    for (const file of files) {
+      let key = "";
+      // console.log(file, file.file, file.image);
+      if (file.file !== null && file.file !== undefined) {
+        key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+        // console.log("in if", file.file);
+        newRequest[key] = file.file;
+      } else if (file.image !== null && file.image !== undefined) {
+        key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+        // console.log("in if else", file.image);
+        newRequest[key] = file.image;
+      } else {
+        // console.log("in else");
+        key = file.includes("img_cover") ? "img_cover" : `img_${i++}`;
+        newRequest[key] = file;
+      }
+    }
+    // console.log(newRequest);
+    await post("/maintenanceRequests", newRequest, null, files);
+    fetchProperties();
   };
   const fetchProperties = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {
@@ -311,22 +347,22 @@ function OwnerRepairList(props) {
       label: "Quote Status",
     },
 
-    {
-      id: "assigned_business",
-      numeric: false,
-      label: "Assigned",
-    },
+    // {
+    //   id: "assigned_business",
+    //   numeric: false,
+    //   label: "Assigned",
+    // },
 
-    {
-      id: "scheduled_date",
-      numeric: true,
-      label: "Scheduled Date",
-    },
-    {
-      id: "scheduled_time",
-      numeric: true,
-      label: "Scheduled Time",
-    },
+    // {
+    //   id: "scheduled_date",
+    //   numeric: true,
+    //   label: "Scheduled Date",
+    // },
+    // {
+    //   id: "scheduled_time",
+    //   numeric: true,
+    //   label: "Scheduled Time",
+    // },
     {
       id: "total_estimate",
       numeric: true,
@@ -451,23 +487,24 @@ function OwnerRepairList(props) {
                               role="checkbox"
                               tabIndex={-1}
                               key={j}
-                              onClick={() => {
-                                navigate(
-                                  `/owner-repairs/${repair.maintenance_request_uid}`,
-                                  {
-                                    state: {
-                                      repair: repair,
-                                      property: repair.address,
-                                      propert_manager: repair.property_manager,
-                                    },
-                                  }
-                                );
-                              }}
                             >
                               <TableCell
                                 padding="none"
                                 size="small"
                                 align="center"
+                                onClick={() => {
+                                  navigate(
+                                    `/owner-repairs/${repair.maintenance_request_uid}`,
+                                    {
+                                      state: {
+                                        repair: repair,
+                                        property: repair.address,
+                                        propert_manager:
+                                          repair.property_manager,
+                                      },
+                                    }
+                                  );
+                                }}
                               >
                                 {JSON.parse(repair.images).length > 0 ? (
                                   <img
@@ -499,6 +536,19 @@ function OwnerRepairList(props) {
                                 padding="none"
                                 size="small"
                                 align="center"
+                                onClick={() => {
+                                  navigate(
+                                    `/owner-repairs/${repair.maintenance_request_uid}`,
+                                    {
+                                      state: {
+                                        repair: repair,
+                                        property: repair.address,
+                                        propert_manager:
+                                          repair.property_manager,
+                                      },
+                                    }
+                                  );
+                                }}
                                 style={{
                                   color:
                                     row.title === "New" ? "green" : "black",
@@ -510,6 +560,19 @@ function OwnerRepairList(props) {
                                 padding="none"
                                 size="small"
                                 align="center"
+                                onClick={() => {
+                                  navigate(
+                                    `/owner-repairs/${repair.maintenance_request_uid}`,
+                                    {
+                                      state: {
+                                        repair: repair,
+                                        property: repair.address,
+                                        propert_manager:
+                                          repair.property_manager,
+                                      },
+                                    }
+                                  );
+                                }}
                               >
                                 {repair.title}
                               </TableCell>
@@ -517,6 +580,19 @@ function OwnerRepairList(props) {
                                 padding="none"
                                 size="small"
                                 align="center"
+                                onClick={() => {
+                                  navigate(
+                                    `/owner-repairs/${repair.maintenance_request_uid}`,
+                                    {
+                                      state: {
+                                        repair: repair,
+                                        property: repair.address,
+                                        propert_manager:
+                                          repair.property_manager,
+                                      },
+                                    }
+                                  );
+                                }}
                               >
                                 {repair.description}
                               </TableCell>
@@ -525,6 +601,19 @@ function OwnerRepairList(props) {
                                 padding="none"
                                 size="small"
                                 align="center"
+                                onClick={() => {
+                                  navigate(
+                                    `/owner-repairs/${repair.maintenance_request_uid}`,
+                                    {
+                                      state: {
+                                        repair: repair,
+                                        property: repair.address,
+                                        propert_manager:
+                                          repair.property_manager,
+                                      },
+                                    }
+                                  );
+                                }}
                               >
                                 {repair.address}
                               </TableCell>
@@ -532,6 +621,19 @@ function OwnerRepairList(props) {
                                 padding="none"
                                 size="small"
                                 align="center"
+                                onClick={() => {
+                                  navigate(
+                                    `/owner-repairs/${repair.maintenance_request_uid}`,
+                                    {
+                                      state: {
+                                        repair: repair,
+                                        property: repair.address,
+                                        propert_manager:
+                                          repair.property_manager,
+                                      },
+                                    }
+                                  );
+                                }}
                               >
                                 {repair.priority}
                               </TableCell>
@@ -540,6 +642,19 @@ function OwnerRepairList(props) {
                                 padding="none"
                                 size="small"
                                 align="center"
+                                onClick={() => {
+                                  navigate(
+                                    `/owner-repairs/${repair.maintenance_request_uid}`,
+                                    {
+                                      state: {
+                                        repair: repair,
+                                        property: repair.address,
+                                        propert_manager:
+                                          repair.property_manager,
+                                      },
+                                    }
+                                  );
+                                }}
                               >
                                 {repair.request_created_date.split(" ")[0]}
                               </TableCell>
@@ -547,6 +662,19 @@ function OwnerRepairList(props) {
                                 padding="none"
                                 size="small"
                                 align="center"
+                                onClick={() => {
+                                  navigate(
+                                    `/owner-repairs/${repair.maintenance_request_uid}`,
+                                    {
+                                      state: {
+                                        repair: repair,
+                                        property: repair.address,
+                                        propert_manager:
+                                          repair.property_manager,
+                                      },
+                                    }
+                                  );
+                                }}
                               >
                                 {repair.days_open} days
                               </TableCell>
@@ -554,15 +682,41 @@ function OwnerRepairList(props) {
                                 padding="none"
                                 size="small"
                                 align="center"
+                                onClick={() => {
+                                  navigate(
+                                    `/owner-repairs/${repair.maintenance_request_uid}`,
+                                    {
+                                      state: {
+                                        repair: repair,
+                                        property: repair.address,
+                                        propert_manager:
+                                          repair.property_manager,
+                                      },
+                                    }
+                                  );
+                                }}
                               >
                                 {repair.quotes_to_review > 0
                                   ? `${repair.quotes_to_review} new quote(s) to review`
                                   : "No new quotes"}
                               </TableCell>
-                              <TableCell
+                              {/* <TableCell
                                 padding="none"
                                 size="small"
                                 align="center"
+                                onClick={() => {
+                                  navigate(
+                                    `/owner-repairs/${repair.maintenance_request_uid}`,
+                                    {
+                                      state: {
+                                        repair: repair,
+                                        property: repair.address,
+                                        propert_manager:
+                                          repair.property_manager,
+                                      },
+                                    }
+                                  );
+                                }}
                               >
                                 {repair.assigned_business !== null
                                   ? repair.assigned_business
@@ -572,6 +726,19 @@ function OwnerRepairList(props) {
                                 padding="none"
                                 size="small"
                                 align="center"
+                                onClick={() => {
+                                  navigate(
+                                    `/owner-repairs/${repair.maintenance_request_uid}`,
+                                    {
+                                      state: {
+                                        repair: repair,
+                                        property: repair.address,
+                                        propert_manager:
+                                          repair.property_manager,
+                                      },
+                                    }
+                                  );
+                                }}
                               >
                                 {repair.scheduled_date !== null &&
                                 repair.scheduled_date !== "null"
@@ -582,14 +749,41 @@ function OwnerRepairList(props) {
                                 padding="none"
                                 size="small"
                                 align="center"
+                                onClick={() => {
+                                  navigate(
+                                    `/owner-repairs/${repair.maintenance_request_uid}`,
+                                    {
+                                      state: {
+                                        repair: repair,
+                                        property: repair.address,
+                                        propert_manager:
+                                          repair.property_manager,
+                                      },
+                                    }
+                                  );
+                                }}
                               >
                                 {repair.scheduled_time !== null &&
                                 repair.scheduled_time !== "null"
                                   ? repair.scheduled_time.split(" ")[0]
                                   : "Not Scheduled"}
-                              </TableCell>
+                              </TableCell> */}
 
                               <TableCell>${repair.total_estimate}</TableCell>
+                              <TableCell>
+                                <img
+                                  src={CopyIcon}
+                                  title="Duplicate"
+                                  style={{
+                                    width: "15px",
+                                    height: "15px",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => {
+                                    duplicate_request(repair);
+                                  }}
+                                />
+                              </TableCell>
                             </TableRow>
                           ));
                         })}
