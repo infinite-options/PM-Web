@@ -88,12 +88,17 @@ function ManagerRepairDetail(props) {
   const [morePicturesNotes, setMorePicturesNotes] = useState(
     "Can you please share more pictures regarding the request?"
   );
+
+  const [managerInfo, setManagerInfo] = useState("");
+  const [message, setMessage] = useState("");
+  const [cost, setCost] = useState("");
   const [canReschedule, setCanReschedule] = useState(false);
   const [rejectQuote, setRejectQuote] = useState(false);
   const [requestQuote, setRequestQuote] = useState(false);
   const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
   const [finishMaintenance, setFinishMaintenance] = useState(false);
   const [cancelMaintenance, setCancelMaintenance] = useState(false);
+  const [completeMaintenance, setCompleteMaintenance] = useState(false);
   const [withdrawQuote, setWithdrawQuote] = useState(false);
   const [businesses, setBusinesses] = useState([]);
   const [quotes, setQuotes] = useState([]);
@@ -150,6 +155,22 @@ function ManagerRepairDetail(props) {
   // console.log(mp_id, rr_id)
 
   const fetchBusinesses = async () => {
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length < 1) {
+      // console.log("No associated PM Businesses");
+      return;
+    } else if (management_businesses.length > 1) {
+      // console.log("Multiple associated PM Businesses");
+      management_buid = management_businesses[0].business_uid;
+      setManagerInfo(management_businesses[0]);
+    } else {
+      management_buid = management_businesses[0].business_uid;
+      setManagerInfo(management_businesses[0]);
+    }
+
     if (access_token === null) {
       navigate("/");
       return;
@@ -255,7 +276,7 @@ function ManagerRepairDetail(props) {
       notes: "Request to reschedule",
       scheduled_date: reDate,
       scheduled_time: reTime,
-      request_adjustment_date: new Date(),
+      request_adjustment_date: new Date().toISOString().split("T"),
     };
     const files = imageState[0];
     let i = 0;
@@ -281,7 +302,7 @@ function ManagerRepairDetail(props) {
       notes: "Maintenance Scheduled",
       scheduled_date: reDate,
       scheduled_time: reTime,
-      request_adjustment_date: new Date(),
+      request_adjustment_date: new Date().toISOString().split("T"),
     };
     const files = imageState[0];
     let i = 0;
@@ -298,7 +319,7 @@ function ManagerRepairDetail(props) {
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "AGREED",
-      quote_adjustment_date: new Date(),
+      quote_adjustment_date: new Date().toISOString().split("T"),
     };
     const responseMQ = await put("/maintenanceQuotes", updatedQuote);
     channel_maintenance.publish({ data: { te: updatedQuote } });
@@ -321,7 +342,7 @@ function ManagerRepairDetail(props) {
       linked_request_uid: repair.maintenance_request_uid,
       quote_business_uid: business_ids,
 
-      quote_adjustment_date: new Date(),
+      quote_adjustment_date: new Date().toISOString().split("T"),
     };
     const response = await post("/maintenanceQuotes", quote_details);
     channel_maintenance.publish({ data: { te: quote_details } });
@@ -346,7 +367,7 @@ function ManagerRepairDetail(props) {
       priority: priority,
       can_reschedule: canReschedule ? 1 : 0,
       request_status: repair.request_status,
-      request_adjustment_date: new Date(),
+      request_adjustment_date: new Date().toISOString().split("T"),
     };
     const files = imageState[0];
     let i = 0;
@@ -377,7 +398,7 @@ function ManagerRepairDetail(props) {
     const body = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "ACCEPTED",
-      quote_adjustment_date: new Date(),
+      quote_adjustment_date: new Date().toISOString().split("T"),
     };
     const response = await put("/maintenanceQuotes", body);
     channel_maintenance.publish({ data: { te: body } });
@@ -387,7 +408,7 @@ function ManagerRepairDetail(props) {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
       request_status: "COMPLETED",
-      request_adjustment_date: new Date(),
+      request_adjustment_date: new Date().toISOString().split("T"),
     };
     const files = imageState[0];
     let i = 0;
@@ -414,7 +435,7 @@ function ManagerRepairDetail(props) {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
       request_status: "CANCELLED",
-      request_adjustment_date: new Date(),
+      request_adjustment_date: new Date().toISOString().split("T"),
       notes: messagetoM,
     };
     const files = imageState[0];
@@ -436,7 +457,7 @@ function ManagerRepairDetail(props) {
         const body = {
           maintenance_quote_uid: quote.maintenance_quote_uid,
           quote_status: "WITHDRAWN",
-          quote_adjustment_date: new Date(),
+          quote_adjustment_date: new Date().toISOString().split("T"),
           notes: messagetoM,
         };
         const response = await put("/maintenanceQuotes", body);
@@ -445,6 +466,52 @@ function ManagerRepairDetail(props) {
     channel_maintenance.publish({ data: { te: newRepair } });
     setShowSpinner(false);
     navigate(-1);
+  };
+  const FinishMaintenanceFunc = async () => {
+    if (message === "") {
+      setErrorMessage("Please fill out the notes");
+      return;
+    }
+    if (cost === "") {
+      setErrorMessage("Please enter an amount");
+      return;
+    }
+    if (imageState[0].length === 0) {
+      setErrorMessage("Please upload images");
+      return;
+    }
+    const newRepair = {
+      maintenance_request_uid: repair.maintenance_request_uid,
+      request_status: "COMPLETED",
+      request_adjustment_date: new Date().toISOString().split("T"),
+      notes: message,
+      cost: cost,
+    };
+    const files = imageState[0];
+    let i = 0;
+    for (const file of imageState[0]) {
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      if (file.file !== null) {
+        newRepair[key] = file.file;
+      } else {
+        newRepair[key] = file.image;
+      }
+    }
+
+    // console.log("Repair Object to be updated", newRepair);
+
+    const response = await put(
+      "/FinishMaintenanceNoQuote",
+      newRepair,
+      null,
+      files
+    );
+    channel_maintenance.publish({ data: { te: newRepair } });
+    setMessage("");
+    setCost("");
+    setErrorMessage("");
+    setCompleteMaintenance(!completeMaintenance);
+    fetchBusinesses();
   };
   const required =
     errorMessage === "Please fill out all fields" ? (
@@ -463,7 +530,7 @@ function ManagerRepairDetail(props) {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       notes: messagetoM,
       quote_status: "REJECTED",
-      quote_adjustment_date: new Date(),
+      quote_adjustment_date: new Date().toISOString().split("T"),
     };
     const response = await put("/maintenanceQuotes", body);
     channel_maintenance.publish({ data: { te: body } });
@@ -478,13 +545,12 @@ function ManagerRepairDetail(props) {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       quote_status: "WITHDRAWN",
       notes: messagetoM,
-      quote_adjustment_date: new Date(),
+      quote_adjustment_date: new Date().toISOString().split("T"),
     };
     const response = await put("/maintenanceQuotes", body);
     channel_maintenance.publish({ data: { te: body } });
     fetchBusinesses();
   };
-
   const requestMorePictures = async (quote) => {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
@@ -497,6 +563,20 @@ function ManagerRepairDetail(props) {
     setShowSpinner(true);
     const response = await put("/RequestMorePictures", newRepair);
     channel_maintenance.publish({ data: { te: newRepair } });
+    const newMessage = {
+      sender_name: managerInfo.business_name,
+      sender_email: managerInfo.business_email,
+      sender_phone: managerInfo.business_phone_number,
+      message_subject: "More info requested for " + repair.title,
+      message_details: morePicturesNotes,
+      message_created_by: managerInfo.business_uid,
+      user_messaged: repair.rentalInfo[0].tenant_id,
+      message_status: "PENDING",
+      receiver_email: repair.rentalInfo[0].tenant_email,
+      receiver_phone: repair.rentalInfo[0].tenant_phone_number,
+    };
+    // console.log(newMessage);
+    const responseText = await post("/messageText", newMessage);
     setShowSpinner(false);
     setMorePictures(false);
     fetchBusinesses();
@@ -536,7 +616,7 @@ function ManagerRepairDetail(props) {
         >
           <SideBar />
         </Col>
-        <Col className="w-100 mb-5 ">
+        <Col className="w-100 mb-5 overflow-hidden">
           <Header
             title="Repairs"
             leftText={
@@ -566,30 +646,23 @@ function ManagerRepairDetail(props) {
                       objectFit: "cover",
                     }}
                   />
-                ) : JSON.parse(repair.images).length > 4 ? (
+                ) : JSON.parse(repair.images).length >= 4 ? (
                   <Carousel
                     responsive={responsive}
                     infinite={true}
                     arrows={true}
                     partialVisible={false}
-                    // className=" d-flex align-items-center justify-content-center"
                   >
                     {JSON.parse(repair.images).map((image) => {
                       return (
-                        // <div className="d-flex align-items-center justify-content-center">
                         <img
-                          // key={Date.now()}
                           src={`${image}?${Date.now()}`}
-                          // onClick={() =>
-                          //   showImage(`${image}?${Date.now()}`)
-                          // }
                           style={{
                             width: "200px",
                             height: "200px",
                             objectFit: "cover",
                           }}
                         />
-                        // </div>
                       );
                     })}
                   </Carousel>
@@ -605,11 +678,7 @@ function ManagerRepairDetail(props) {
                       return (
                         <div className="d-flex align-items-center justify-content-center">
                           <img
-                            // key={Date.now()}
                             src={`${image}?${Date.now()}`}
-                            // onClick={() =>
-                            //   showImage(`${image}?${Date.now()}`)
-                            // }
                             style={{
                               width: "200px",
                               height: "200px",
@@ -1844,7 +1913,7 @@ function ManagerRepairDetail(props) {
                 ))}
             </div>
           )}
-          {!edit && !cancelMaintenance ? (
+          {!edit && !completeMaintenance && !cancelMaintenance ? (
             <Row className="pt-1 mt-3 mb-2">
               <Col className="d-flex flex-row justify-content-evenly">
                 <Button
@@ -1895,6 +1964,92 @@ function ManagerRepairDetail(props) {
                     onClick={() => CancelMaintenanceFunc()}
                   >
                     Cancel Maintenance
+                  </Button>
+                </Col>
+                <Col className="d-flex flex-row justify-content-evenly">
+                  <Button
+                    style={pillButton}
+                    variant="outline-primary"
+                    onClick={() => setCancelMaintenance(false)}
+                  >
+                    Cancel
+                  </Button>
+                </Col>
+              </Row>
+            </Row>
+          ) : (
+            ""
+          )}
+          {!edit &&
+          !completeMaintenance &&
+          repair.request_status !== "COMPLETED" ? (
+            <Row className="pt-1 mt-3 mb-2">
+              <Col className="d-flex flex-row justify-content-evenly">
+                <Button
+                  style={pillButton}
+                  variant="outline-primary"
+                  onClick={() => setCompleteMaintenance(true)}
+                >
+                  Complete Maintenance
+                </Button>
+              </Col>
+            </Row>
+          ) : (
+            ""
+          )}
+          {completeMaintenance ? (
+            <Row className="m-3">
+              <RepairImages state={imageState} />
+              <Form.Group
+                className="mt-3 mb-4 p-2"
+                style={{
+                  background: "#F3F3F3 0% 0% no-repeat padding-box",
+                  borderRadius: "5px",
+                }}
+              >
+                <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                  Notes {required}
+                </Form.Label>
+                <Form.Control
+                  style={{ borderRadius: 0 }}
+                  as="textarea"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Enter Notes"
+                />
+                <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                  Cost {required}
+                </Form.Label>
+                <Form.Control
+                  style={{ borderRadius: 0 }}
+                  value={cost}
+                  onChange={(e) => setCost(e.target.value)}
+                  placeholder="Amount($)"
+                />
+              </Form.Group>
+              <div
+                className="text-center"
+                style={errorMessage === "" ? hidden : {}}
+              >
+                <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
+              </div>
+              <Row>
+                <Col className="d-flex flex-row justify-content-evenly">
+                  {" "}
+                  <Button
+                    style={bluePillButton}
+                    onClick={() => FinishMaintenanceFunc()}
+                  >
+                    Complete Maintenance
+                  </Button>
+                </Col>
+                <Col className="d-flex flex-row justify-content-evenly">
+                  <Button
+                    style={pillButton}
+                    variant="outline-primary"
+                    onClick={() => setCompleteMaintenance(false)}
+                  >
+                    Cancel
                   </Button>
                 </Col>
               </Row>

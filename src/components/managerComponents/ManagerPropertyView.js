@@ -720,7 +720,7 @@ function ManagerPropertyView(props) {
                         objectFit: "cover",
                       }}
                     />
-                  ) : imagesProperty.length > 4 ? (
+                  ) : imagesProperty.length >= 4 ? (
                     <Carousel
                       responsive={responsive}
                       infinite={true}
@@ -730,9 +730,8 @@ function ManagerPropertyView(props) {
                     >
                       {imagesProperty.map((image) => {
                         return (
-                          // <div className="d-flex align-items-center justify-content-center">
                           <img
-                            // key={Date.now()}
+                            key={Date.now()}
                             src={`${image}?${Date.now()}`}
                             // src={image}
                             style={{
@@ -742,7 +741,6 @@ function ManagerPropertyView(props) {
                             }}
                             onClick={() => showImage(`${image}?${Date.now()}`)}
                           />
-                          // </div>
                         );
                       })}
                     </Carousel>

@@ -558,7 +558,7 @@ function TenantRepairDetails(props) {
                           objectFit: "cover",
                         }}
                       />
-                    ) : JSON.parse(repairsDetail.images).length > 4 ? (
+                    ) : JSON.parse(repairsDetail.images).length >= 4 ? (
                       <Carousel
                         responsive={responsive}
                         infinite={true}

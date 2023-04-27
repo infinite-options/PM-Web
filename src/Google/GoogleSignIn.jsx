@@ -16,7 +16,7 @@ const GOOGLE_LOGIN = process.env.REACT_APP_GOOGLE_LOGIN;
 const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
 
 function GoogleSignIn(props) {
-  console.log("in googlesignin");
+  // console.log("in googlesignin");
   // const history = useHistory();
   const navigate = useNavigate();
   const [loginStage, setLoginStage] = useState("LOGIN");
@@ -30,7 +30,7 @@ function GoogleSignIn(props) {
   function handleCallBackResponse(response) {
     // console.log("Encoded JWT ID token:" + response.credential);
     var userObject = jwt_decode(response.credential);
-    console.log("User object", userObject);
+    // console.log("User object", userObject);
     if (userObject) {
       let email = userObject.email;
       setNewEmail(email);
@@ -125,14 +125,14 @@ function GoogleSignIn(props) {
   }
   const socialGoogle = async (e) => {
     setShowSpinner(true);
-    console.log("in socialgoogle");
+    // console.log("in socialgoogle");
     if (signupStage === "NAME") {
-      console.log("in if");
+      // console.log("in if");
       const user = {
         email: e,
         password: GOOGLE_LOGIN,
       };
-      console.log(user);
+      // console.log(user);
       const response = await post("/login", user);
       // console.log(response);
       if (response.code !== 200) {
@@ -146,12 +146,12 @@ function GoogleSignIn(props) {
         props.onConfirm(response.result.user.role, e);
       }
     } else {
-      console.log("in else");
+      // console.log("in else");
       const user = {
         email: e,
         password: GOOGLE_LOGIN,
       };
-      console.log(user);
+      // console.log(user);
       const response = await post("/login", user);
       if (response.code !== 200) {
         setNewEmail(e);
