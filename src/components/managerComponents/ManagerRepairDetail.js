@@ -89,6 +89,7 @@ function ManagerRepairDetail(props) {
     "Can you please share more pictures regarding the request?"
   );
 
+  const [managerInfo, setManagerInfo] = useState("");
   const [message, setMessage] = useState("");
   const [cost, setCost] = useState("");
   const [canReschedule, setCanReschedule] = useState(false);
@@ -154,6 +155,22 @@ function ManagerRepairDetail(props) {
   // console.log(mp_id, rr_id)
 
   const fetchBusinesses = async () => {
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length < 1) {
+      // console.log("No associated PM Businesses");
+      return;
+    } else if (management_businesses.length > 1) {
+      // console.log("Multiple associated PM Businesses");
+      management_buid = management_businesses[0].business_uid;
+      setManagerInfo(management_businesses[0]);
+    } else {
+      management_buid = management_businesses[0].business_uid;
+      setManagerInfo(management_businesses[0]);
+    }
+
     if (access_token === null) {
       navigate("/");
       return;
@@ -534,7 +551,6 @@ function ManagerRepairDetail(props) {
     channel_maintenance.publish({ data: { te: body } });
     fetchBusinesses();
   };
-
   const requestMorePictures = async (quote) => {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
@@ -547,6 +563,20 @@ function ManagerRepairDetail(props) {
     setShowSpinner(true);
     const response = await put("/RequestMorePictures", newRepair);
     channel_maintenance.publish({ data: { te: newRepair } });
+    const newMessage = {
+      sender_name: managerInfo.business_name,
+      sender_email: managerInfo.business_email,
+      sender_phone: managerInfo.business_phone_number,
+      message_subject: "More info requested for " + repair.title,
+      message_details: morePicturesNotes,
+      message_created_by: managerInfo.business_uid,
+      user_messaged: repair.rentalInfo[0].tenant_id,
+      message_status: "PENDING",
+      receiver_email: repair.rentalInfo[0].tenant_email,
+      receiver_phone: repair.rentalInfo[0].tenant_phone_number,
+    };
+    // console.log(newMessage);
+    const responseText = await post("/messageText", newMessage);
     setShowSpinner(false);
     setMorePictures(false);
     fetchBusinesses();
