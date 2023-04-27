@@ -298,7 +298,7 @@ export default function MaintenanceRequestView() {
                     objectFit: "cover",
                   }}
                 />
-              ) : JSON.parse(quote.images).length > 4 ? (
+              ) : JSON.parse(quote.images).length >= 4 ? (
                 <Carousel
                   responsive={responsive}
                   infinite={true}

@@ -813,7 +813,7 @@ function TenantPropertyView(props) {
                       objectFit: "cover",
                     }}
                   />
-                ) : imagesProperty.length > 4 ? (
+                ) : imagesProperty.length >= 4 ? (
                   <Carousel
                     responsive={responsive}
                     infinite={true}

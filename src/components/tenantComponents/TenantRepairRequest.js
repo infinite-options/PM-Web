@@ -46,6 +46,7 @@ function TenantRepairRequest(props) {
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [showSpinner, setShowSpinner] = useState(false);
+
   const submitForm = async (sp) => {
     if (title === "" || description === "" || priority === "") {
       setErrorMessage("Please fill out all fields");
@@ -85,6 +86,42 @@ function TenantRepairRequest(props) {
     setShowSpinner(true);
     await post("/maintenanceRequests", newRequest, null, files);
 
+    const newMessage = {
+      sender_name:
+        properties.length > 1
+          ? selectedProperty.tenantInfo[0].tenant_first_name +
+            " " +
+            selectedProperty.tenantInfo[0].tenant_last_name
+          : properties[0].tenantInfo[0].tenant_first_name +
+            " " +
+            properties[0].tenantInfo[0].tenant_last_name,
+      sender_email:
+        properties.length > 1
+          ? selectedProperty.tenantInfo[0].tenant_email
+          : properties[0].tenantInfo[0].tenant_email,
+      sender_phone:
+        properties.length > 1
+          ? selectedProperty.tenantInfo[0].tenant_phone_number
+          : properties[0].tenantInfo[0].tenant_phone_number,
+      message_subject: "New Maintenance Request",
+      message_details: "New maintenance request was submitted by the tenant. ",
+      message_created_by: user.tenant_id[0].tenant_id,
+      user_messaged:
+        properties.length > 1
+          ? selectedProperty.property_manager[0].manager_id
+          : properties[0].property_manager[0].manager_id,
+      message_status: "PENDING",
+      receiver_email:
+        properties.length > 1
+          ? selectedProperty.property_manager[0].manager_email
+          : properties[0].property_manager[0].manager_email,
+      receiver_phone:
+        properties.length > 1
+          ? selectedProperty.property_manager[0].manager_phone_number
+          : properties[0].property_manager[0].manager_phone_number,
+    };
+    // console.log(newMessage);
+    const response = await post("/messageText", newMessage);
     setShowSpinner(false);
     props.onSubmit();
   };
