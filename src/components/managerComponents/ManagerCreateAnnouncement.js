@@ -58,6 +58,8 @@ function ManagerCreateAnnouncement(props) {
   const [announcements, setAnnouncements] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [managerID, setManagerID] = useState("");
+
+  const [managerInfo, setManagerInfo] = useState("");
   const [announcementState, setAnnouncementState] = useState([]);
   const [newAnnouncement, setNewAnnouncement] = useState(null);
   const [editingAnnouncement, setEditingAnnouncement] = useState(false);
@@ -118,8 +120,10 @@ function ManagerCreateAnnouncement(props) {
     } else if (management_businesses.length > 1) {
       // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
+      setManagerInfo(management_businesses[0]);
     } else {
       management_buid = management_businesses[0].business_uid;
+      setManagerInfo(management_businesses[0]);
     }
     setManagerID(management_buid);
     const response = await get("/managerDashboard", access_token);
@@ -306,8 +310,10 @@ function ManagerCreateAnnouncement(props) {
     } else if (management_businesses.length > 1) {
       // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
+      setManagerInfo(management_businesses[0]);
     } else {
       management_buid = management_businesses[0].business_uid;
+      setManagerInfo(management_businesses[0]);
     }
     setManagerID(management_buid);
 
@@ -1167,6 +1173,7 @@ function ManagerCreateAnnouncement(props) {
                                   navigate("/detailAnnouncements", {
                                     state: {
                                       announcement: announce,
+                                      managerInfo: managerInfo,
                                     },
                                   })
                                 }

@@ -3,14 +3,18 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Header from "../Header";
 import SideBar from "./SideBar";
+import MailDialogTenant from "../MailDialog";
+import MessageDialogTenant from "../MessageDialog";
 import ManagerFooter from "./ManagerFooter";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
+import { put, post, get } from "../../utils/api";
 import {
   headings,
   subHeading,
   subText,
-  pillButton,
+  smallImg,
   sidebarStyle,
 } from "../../utils/styles";
 
@@ -18,13 +22,27 @@ function DetailAnnouncements(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const announcement = location.state.announcement;
+  const managerInfo = location.state.managerInfo;
   const [width, setWindowWidth] = useState(1024);
+  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [showMailForm, setShowMailForm] = useState(false);
+  const [selectedReceiver, setSelectedReceiver] = useState([]);
+  console.log(announcement, managerInfo);
+  const onCancelMail = () => {
+    setShowMailForm(false);
+  };
+
+  const onCancelMessage = () => {
+    setShowMessageForm(false);
+  };
+
   useEffect(() => {
     updateDimensions();
 
     window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
+
   const updateDimensions = () => {
     const width = window.innerWidth;
     setWindowWidth(width);
@@ -32,8 +50,34 @@ function DetailAnnouncements(props) {
   const responsiveSidebar = {
     showSidebar: width > 1023,
   };
+  console.log(selectedReceiver);
+
   return (
     <div className="w-100 overflow-hidden">
+      <MailDialogTenant
+        title={"Email"}
+        isOpen={showMailForm}
+        senderPhone={managerInfo.business_phone_number}
+        senderEmail={managerInfo.business_email}
+        senderName={managerInfo.business_name}
+        requestCreatedBy={managerInfo.business_uid}
+        userMessaged={selectedReceiver.id}
+        receiverEmail={selectedReceiver.email}
+        receiverPhone={selectedReceiver.phone_number}
+        onCancel={onCancelMail}
+      />
+      <MessageDialogTenant
+        title={"Text Message"}
+        isOpen={showMessageForm}
+        senderPhone={managerInfo.business_phone_number}
+        senderEmail={managerInfo.business_email}
+        senderName={managerInfo.business_name}
+        requestCreatedBy={managerInfo.business_uid}
+        userMessaged={selectedReceiver.id}
+        receiverEmail={selectedReceiver.email}
+        receiverPhone={selectedReceiver.phone_number}
+        onCancel={onCancelMessage}
+      />
       <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
@@ -109,13 +153,43 @@ function DetailAnnouncements(props) {
                           {receiver.zip}
                         </div>
                       </Col>
-                      <Col xs={2} className="mt-1 mb-1">
-                        <a href={`tel:${receiver.phone_number}`}>
-                          <img src={Phone} alt="Phone" />
-                        </a>
-                      </Col>
-                      <Col xs={2} className="mt-1 mb-1">
-                        <img src={Message} alt="Message" />
+
+                      <Col xs={3}>
+                        <Row>
+                          <Col className="d-flex justify-content-center">
+                            {" "}
+                            <a href={`tel:${receiver.phone_number}`}>
+                              <img src={Phone} alt="Phone" style={smallImg} />
+                            </a>
+                          </Col>
+
+                          <Col className="d-flex justify-content-center">
+                            <a
+                              // href={`mailto:${receiver.tenantEmail}`}
+                              onClick={() => {
+                                setShowMessageForm(true);
+                                setSelectedReceiver(receiver);
+                              }}
+                            >
+                              <img
+                                src={Message}
+                                alt="Message"
+                                style={smallImg}
+                              />
+                            </a>
+                          </Col>
+                          <Col className="d-flex justify-content-center">
+                            <a
+                              // href={`mailto:${receiver.tenantEmail}`}
+                              onClick={() => {
+                                setShowMailForm(true);
+                                setSelectedReceiver(receiver);
+                              }}
+                            >
+                              <img src={Mail} alt="Mail" style={smallImg} />
+                            </a>
+                          </Col>
+                        </Row>
                       </Col>
                       <hr />
                     </Row>
@@ -146,14 +220,44 @@ function DetailAnnouncements(props) {
                           {receiver.first_name} {receiver.last_name}
                         </div>
                       </Col>
-                      <Col xs={2} className="mt-1 mb-1">
-                        <a href={`tel:${receiver.phone_number}`}>
-                          <img src={Phone} alt="Phone" />
-                        </a>
+                      <Col xs={3}>
+                        <Row>
+                          <Col className="d-flex justify-content-center">
+                            {" "}
+                            <a href={`tel:${receiver.phone_number}`}>
+                              <img src={Phone} alt="Phone" style={smallImg} />
+                            </a>
+                          </Col>
+
+                          <Col className="d-flex justify-content-center">
+                            <a
+                              // href={`mailto:${receiver.tenantEmail}`}
+                              onClick={() => {
+                                setShowMessageForm(true);
+                                setSelectedReceiver(receiver);
+                              }}
+                            >
+                              <img
+                                src={Message}
+                                alt="Message"
+                                style={smallImg}
+                              />
+                            </a>
+                          </Col>
+                          <Col className="d-flex justify-content-center">
+                            <a
+                              // href={`mailto:${receiver.tenantEmail}`}
+                              onClick={() => {
+                                setShowMailForm(true);
+                                setSelectedReceiver(receiver);
+                              }}
+                            >
+                              <img src={Mail} alt="Mail" style={smallImg} />
+                            </a>
+                          </Col>
+                        </Row>
                       </Col>
-                      <Col xs={2} className="mt-1 mb-1">
-                        <img src={Message} alt="Message" />
-                      </Col>
+
                       <hr />
                     </Row>
                   );
