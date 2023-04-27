@@ -65,12 +65,15 @@ function ManagerCreateAnnouncement(props) {
   const [newTenantsState, setNewTenantsState] = useState([]);
   const [tenantState, setTenantState] = useState([]);
   const [ownerState, setOwnerState] = useState([]);
+  const [failed, setFailed] = useState([]);
   const [byProperty, setByProperty] = useState(false);
   const [byTenants, setByTenants] = useState(false);
   const [byNewTenants, setByNewTenants] = useState(false);
   const [byOwners, setByOwners] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
-  const [showDialogSending, setShowDialogSending] = useState(false);
+  const [showDialogSendingText, setShowDialogSendingText] = useState(false);
+  const [showDialogSendingEmail, setShowDialogSendingEmail] = useState(false);
+  const [showSendingFailed, setShowSendingFailed] = useState(false);
   const [announcementDetail, setAnnouncementDetail] = useState(false);
   const [deleted, setDeleted] = useState(false);
   const [order, setOrder] = useState("asc");
@@ -243,7 +246,11 @@ function ManagerCreateAnnouncement(props) {
           tenant_info.push(tenant_details);
         });
       }
-      if (property.rentalInfo === "Not Rented" || property.rentalInfo === "") {
+      if (
+        property.rentalInfo === "Not Rented" ||
+        property.rentalInfo === "" ||
+        property.rentalInfo[0].rental_status !== "ACTIVE"
+      ) {
         property.applications.forEach((tenant) => {
           new_tenant_details = {
             tenant_id: tenant.tenant_id,
@@ -363,7 +370,7 @@ function ManagerCreateAnnouncement(props) {
     setTenantState(tenantState);
     ownerState.forEach((prop) => (prop.checked = false));
     setOwnerState(ownerState);
-    setShowDialogSending(true);
+    setShowDialogSendingText(true);
     const newText = {
       announcement_msg: new_announcement.announcement_msg,
       announcement_title: new_announcement.announcement_title,
@@ -374,6 +381,8 @@ function ManagerCreateAnnouncement(props) {
     };
     // console.log(newText);
     const responseText = await post("/messageGroupText", newText);
+    setShowDialogSendingText(false);
+    setShowDialogSendingEmail(true);
     const newMail = {
       announcement_msg: new_announcement.announcement_msg,
       announcement_title: new_announcement.announcement_title,
@@ -384,8 +393,21 @@ function ManagerCreateAnnouncement(props) {
     };
     // console.log(newMail);
     const responseEmail = await post("/messageGroupEmail", newMail);
-    setShowDialogSending(false);
+    setShowDialogSendingEmail(false);
     setShowSpinner(false);
+    let failedMessages = [];
+    for (let i = 0; i < responseText.message.length; i++) {
+      if (responseText["message"][i].includes("failed")) {
+        failedMessages.push(responseText["message"][i]);
+      }
+    }
+    for (let i = 0; i < responseEmail.message.length; i++) {
+      if (responseEmail["message"][i].includes("failed")) {
+        failedMessages.push(responseEmail["message"][i]);
+      }
+    }
+    setFailed(failedMessages);
+    setShowSendingFailed(true);
     setEditingAnnouncement(null);
     const newAnnouncementState = [...announcementState];
     newAnnouncementState.push({ ...newAnnouncement });
@@ -393,18 +415,6 @@ function ManagerCreateAnnouncement(props) {
     setNewAnnouncement(null);
 
     fetchProperties();
-    // const send_announcement = {
-    // announcement_msg: new_announcement.announcement_msg,
-    // announcement_title: new_announcement.announcement_title,
-    // name: response["name"],
-    // pno: response["pno"],
-    // email: response["email"],
-    // sender_name: management_businesses[0]["business_name"],
-    // sender_email: management_businesses[0]["business_email"],
-    // sender_phone: management_businesses[0]["business_phone_number"],
-    // };
-    // const res = await post("/SendAnnouncement", send_announcement);
-    // console.log(res);
   };
 
   // onclick save button
@@ -492,10 +502,10 @@ function ManagerCreateAnnouncement(props) {
     setOwnerState(newOwnerState);
   };
 
-  const DialogSending = () => {
+  const DialogSendingText = () => {
     return (
       <Dialog
-        open={showDialogSending}
+        open={showDialogSendingText}
         // onClose={onCancel}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -503,7 +513,7 @@ function ManagerCreateAnnouncement(props) {
         <DialogTitle id="alert-dialog-title"></DialogTitle>
         <DialogContent>
           <div className="d-flex justify-content-center align-items-center m-5">
-            <h5> Sending</h5>
+            <h5> Sending Texts</h5>
 
             <img src={ThreeDots} style={{ width: "20%" }} alt="loading..." />
           </div>
@@ -511,7 +521,51 @@ function ManagerCreateAnnouncement(props) {
       </Dialog>
     );
   };
+  const DialogSendingEmail = () => {
+    return (
+      <Dialog
+        open={showDialogSendingEmail}
+        // onClose={onCancel}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title"></DialogTitle>
+        <DialogContent>
+          <div className="d-flex justify-content-center align-items-center m-5">
+            <h5> Sending Emails</h5>
 
+            <img src={ThreeDots} style={{ width: "20%" }} alt="loading..." />
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  };
+  const DialogSendingFailed = () => {
+    return (
+      <Dialog
+        open={showSendingFailed}
+        // onClose={onCancel}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Failed Messages</DialogTitle>
+        <DialogContent>
+          <div className=" m-5">
+            {failed.map((fail) => {
+              return (
+                <div>
+                  <h5> {fail}</h5> <br />
+                </div>
+              );
+            })}
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowSendingFailed(false)}>Okay</Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -630,7 +684,9 @@ function ManagerCreateAnnouncement(props) {
   };
   return (
     <div className="w-100 overflow-hidden">
-      {DialogSending()}
+      {DialogSendingText()}
+      {DialogSendingEmail()}
+      {DialogSendingFailed()}
       <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
