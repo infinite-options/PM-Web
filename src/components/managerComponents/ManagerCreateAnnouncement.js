@@ -58,8 +58,7 @@ function ManagerCreateAnnouncement(props) {
   const [announcements, setAnnouncements] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [managerID, setManagerID] = useState("");
-
-  const [managerInfo, setManagerInfo] = useState("");
+  const [managerInfo, setManagerInfo] = useState([]);
   const [announcementState, setAnnouncementState] = useState([]);
   const [newAnnouncement, setNewAnnouncement] = useState(null);
   const [editingAnnouncement, setEditingAnnouncement] = useState(false);

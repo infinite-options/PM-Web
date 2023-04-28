@@ -9,8 +9,6 @@ import {
   TableHead,
   TableSortLabel,
   Box,
-  Grid,
-  ImageListItem,
 } from "@material-ui/core";
 import Carousel from "react-multi-carousel";
 import { makeStyles } from "@material-ui/core/styles";
@@ -39,13 +37,15 @@ import ManagerCashflow from "./ManagerCashflow";
 import SideBar from "./SideBar";
 import EditIconNew from "../../icons/EditIconNew.svg";
 import AddIcon from "../../icons/AddIcon.svg";
+import CopyIcon from "../../icons/CopyIcon.png";
 import PropertyIcon from "../../icons/PropertyIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
-import { get, put } from "../../utils/api";
+import { get, put, post } from "../../utils/api";
 import { days } from "../../utils/helper";
 import "react-multi-carousel/lib/styles.css";
 import { sidebarStyle } from "../../utils/styles";
 import Appliances from "../tenantComponents/Appliances";
+import CopyDialog from "../CopyDialog";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -71,6 +71,7 @@ function ManagerPropertyView(props) {
     location.state === null ? props.property_uid : location.state.property_uid;
   const [isLoading, setIsLoading] = useState(true);
   const [addDoc, setAddDoc] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [managerID, setManagerID] = useState("");
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [property, setProperty] = useState({ images: "[]" });
@@ -216,6 +217,43 @@ function ManagerPropertyView(props) {
   const [editProperty, setEditProperty] = useState(false);
   const [showManagementContract, setShowManagementContract] = useState(false);
   const [showTenantAgreement, setShowTenantAgreement] = useState(false);
+  const duplicate_request = async (request) => {
+    let selectedRequest = request;
+    // console.log(selectedRequest);
+    const newRequest = {
+      property_uid: selectedRequest.property_uid,
+      title: "Copy " + selectedRequest.title,
+      request_type: selectedRequest.request_type,
+      description: selectedRequest.description,
+      priority: selectedRequest.priority,
+      request_created_by: selectedRequest.request_created_by,
+    };
+
+    const files = JSON.parse(selectedRequest.images);
+    let i = 0;
+    for (const file of files) {
+      let key = "";
+      // console.log(file, file.file, file.image);
+      if (file.file !== null && file.file !== undefined) {
+        key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+        // console.log("in if", file.file);
+        newRequest[key] = file.file;
+      } else if (file.image !== null && file.image !== undefined) {
+        key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+        // console.log("in if else", file.image);
+        newRequest[key] = file.image;
+      } else {
+        // console.log("in else");
+        key = file.includes("img_cover") ? "img_cover" : `img_${i++}`;
+        newRequest[key] = file;
+      }
+    }
+    // console.log(newRequest);
+    setCopied(true);
+    await post("/maintenanceRequests", newRequest, null, files);
+    setCopied(false);
+    fetchProperty();
+  };
 
   const [showTenantAgreementEdit, setShowTenantAgreementEdit] = useState(false);
   const [selectedContract, setSelectedContract] = useState(null);
@@ -514,9 +552,19 @@ function ManagerPropertyView(props) {
       label: "Request Images",
     },
     {
+      id: "request_status",
+      numeric: false,
+      label: "Status",
+    },
+    {
       id: "title",
       numeric: false,
       label: "Issue",
+    },
+    {
+      id: "description",
+      numeric: false,
+      label: "Description",
     },
     {
       id: "request_created_date",
@@ -550,9 +598,9 @@ function ManagerPropertyView(props) {
       label: "Scheduled Date",
     },
     {
-      id: "scheduled_time",
+      id: "",
       numeric: true,
-      label: "Scheduled Time",
+      label: "",
     },
   ];
   function EnhancedTableHeadMaintenance(props) {
@@ -634,6 +682,7 @@ function ManagerPropertyView(props) {
           onConfirm={cancelAgreement}
           onCancel={onCancel}
         />
+        <CopyDialog copied={copied} />
         {/* {console.log("showdialog", showDialog)} */}
         <Row className="w-100 mb-5 overflow-hidden">
           <Col
@@ -1135,21 +1184,21 @@ function ManagerPropertyView(props) {
                                   role="checkbox"
                                   tabIndex={-1}
                                   key={request.maintenance_request_uid}
-                                  onClick={() => {
-                                    navigate(
-                                      `../manager-repairs/${request.maintenance_request_uid}`,
-                                      {
-                                        state: {
-                                          repair: request,
-                                        },
-                                      }
-                                    );
-                                  }}
                                 >
                                   <TableCell
                                     padding="none"
                                     size="small"
                                     align="center"
+                                    onClick={() => {
+                                      navigate(
+                                        `../manager-repairs/${request.maintenance_request_uid}`,
+                                        {
+                                          state: {
+                                            repair: request,
+                                          },
+                                        }
+                                      );
+                                    }}
                                   >
                                     {JSON.parse(request.images).length > 0 ? (
                                       <img
@@ -1158,8 +1207,8 @@ function ManagerPropertyView(props) {
                                         style={{
                                           borderRadius: "4px",
                                           objectFit: "cover",
-                                          width: "100px",
-                                          height: "100px",
+                                          width: "50px",
+                                          height: "50px",
                                         }}
                                       />
                                     ) : (
@@ -1169,17 +1218,61 @@ function ManagerPropertyView(props) {
                                         style={{
                                           borderRadius: "4px",
                                           objectFit: "cover",
-                                          width: "100px",
-                                          height: "100px",
+                                          width: "50px",
+                                          height: "50px",
                                         }}
                                       />
                                     )}
                                   </TableCell>
-
                                   <TableCell
                                     padding="none"
                                     size="small"
                                     align="center"
+                                    onClick={() => {
+                                      navigate(
+                                        `../manager-repairs/${request.maintenance_request_uid}`,
+                                        {
+                                          state: {
+                                            repair: request,
+                                          },
+                                        }
+                                      );
+                                    }}
+                                    style={{
+                                      color:
+                                        request.request_status === "NEW"
+                                          ? "red"
+                                          : request.request_status ===
+                                            "PROCESSING"
+                                          ? "orange"
+                                          : request.request_status ===
+                                            "SCHEDULE"
+                                          ? "blue"
+                                          : request.request_status ===
+                                            "RESCHEDULE"
+                                          ? "yellow"
+                                          : request.request_status ===
+                                            "SCHEDULED"
+                                          ? "green"
+                                          : "black",
+                                    }}
+                                  >
+                                    {request.request_status}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                    onClick={() => {
+                                      navigate(
+                                        `../manager-repairs/${request.maintenance_request_uid}`,
+                                        {
+                                          state: {
+                                            repair: request,
+                                          },
+                                        }
+                                      );
+                                    }}
                                   >
                                     {" "}
                                     {request.title}
@@ -1188,14 +1281,51 @@ function ManagerPropertyView(props) {
                                     padding="none"
                                     size="small"
                                     align="center"
+                                    onClick={() => {
+                                      navigate(
+                                        `../manager-repairs/${request.maintenance_request_uid}`,
+                                        {
+                                          state: {
+                                            repair: request,
+                                          },
+                                        }
+                                      );
+                                    }}
                                   >
-                                    {" "}
-                                    {request.request_created_date}
+                                    {request.description}
                                   </TableCell>
                                   <TableCell
                                     padding="none"
                                     size="small"
                                     align="center"
+                                    onClick={() => {
+                                      navigate(
+                                        `../manager-repairs/${request.maintenance_request_uid}`,
+                                        {
+                                          state: {
+                                            repair: request,
+                                          },
+                                        }
+                                      );
+                                    }}
+                                  >
+                                    {" "}
+                                    {request.request_created_date.split(" ")[0]}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                    onClick={() => {
+                                      navigate(
+                                        `../manager-repairs/${request.maintenance_request_uid}`,
+                                        {
+                                          state: {
+                                            repair: request,
+                                          },
+                                        }
+                                      );
+                                    }}
                                   >
                                     {request.days_open} days
                                   </TableCell>
@@ -1203,6 +1333,16 @@ function ManagerPropertyView(props) {
                                     padding="none"
                                     size="small"
                                     align="center"
+                                    onClick={() => {
+                                      navigate(
+                                        `../manager-repairs/${request.maintenance_request_uid}`,
+                                        {
+                                          state: {
+                                            repair: request,
+                                          },
+                                        }
+                                      );
+                                    }}
                                   >
                                     {request.request_type !== null
                                       ? request.request_type
@@ -1212,6 +1352,16 @@ function ManagerPropertyView(props) {
                                     padding="none"
                                     size="small"
                                     align="center"
+                                    onClick={() => {
+                                      navigate(
+                                        `../manager-repairs/${request.maintenance_request_uid}`,
+                                        {
+                                          state: {
+                                            repair: request,
+                                          },
+                                        }
+                                      );
+                                    }}
                                   >
                                     {request.priority}
                                   </TableCell>
@@ -1219,6 +1369,16 @@ function ManagerPropertyView(props) {
                                     padding="none"
                                     size="small"
                                     align="center"
+                                    onClick={() => {
+                                      navigate(
+                                        `../manager-repairs/${request.maintenance_request_uid}`,
+                                        {
+                                          state: {
+                                            repair: request,
+                                          },
+                                        }
+                                      );
+                                    }}
                                   >
                                     {request.assigned_business !== null &&
                                     request.assigned_business !== "null"
@@ -1230,6 +1390,16 @@ function ManagerPropertyView(props) {
                                     padding="none"
                                     size="small"
                                     align="center"
+                                    onClick={() => {
+                                      navigate(
+                                        `../manager-repairs/${request.maintenance_request_uid}`,
+                                        {
+                                          state: {
+                                            repair: request,
+                                          },
+                                        }
+                                      );
+                                    }}
                                   >
                                     {request.scheduled_date !== null &&
                                     request.scheduled_date !== "null"
@@ -1241,10 +1411,18 @@ function ManagerPropertyView(props) {
                                     size="small"
                                     align="center"
                                   >
-                                    {request.scheduled_time !== null &&
-                                    request.scheduled_time !== "null"
-                                      ? request.scheduled_time.split(" ")[0]
-                                      : "Not Scheduled"}
+                                    <img
+                                      src={CopyIcon}
+                                      title="Duplicate"
+                                      style={{
+                                        width: "15px",
+                                        height: "15px",
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={() => {
+                                        duplicate_request(request);
+                                      }}
+                                    />
                                   </TableCell>
                                 </TableRow>
                               );

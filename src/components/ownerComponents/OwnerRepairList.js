@@ -24,6 +24,7 @@ import RepairImg from "../../icons/RepairImg.svg";
 import CopyIcon from "../../icons/CopyIcon.png";
 import { get, post } from "../../utils/api";
 import { sidebarStyle } from "../../utils/styles";
+import CopyDialog from "../CopyDialog";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -42,6 +43,7 @@ function OwnerRepairList(props) {
   const { access_token, user } = userData;
   const [repairIter, setRepairIter] = useState([]);
   const [stage, setStage] = useState("LIST");
+  const [copied, setCopied] = useState(false);
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
@@ -93,10 +95,12 @@ function OwnerRepairList(props) {
         newRequest[key] = file;
       }
     }
-    // console.log(newRequest);
+    setCopied(true);
     await post("/maintenanceRequests", newRequest, null, files);
+    setCopied(false);
     fetchProperties();
   };
+
   const fetchProperties = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {
       navigate("/");
@@ -255,13 +259,6 @@ function OwnerRepairList(props) {
     });
   };
 
-  // console.log(repairIter);
-  const days = (date_1, date_2) => {
-    let difference = date_2.getTime() - date_1.getTime();
-    let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
-    return TotalDays;
-  };
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -347,22 +344,6 @@ function OwnerRepairList(props) {
       label: "Quote Status",
     },
 
-    // {
-    //   id: "assigned_business",
-    //   numeric: false,
-    //   label: "Assigned",
-    // },
-
-    // {
-    //   id: "scheduled_date",
-    //   numeric: true,
-    //   label: "Scheduled Date",
-    // },
-    // {
-    //   id: "scheduled_time",
-    //   numeric: true,
-    //   label: "Scheduled Time",
-    // },
     {
       id: "total_estimate",
       numeric: true,
@@ -417,6 +398,7 @@ function OwnerRepairList(props) {
   // console.log(repairIter);
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
+      <CopyDialog copied={copied} />
       <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
