@@ -20,6 +20,8 @@ import Header from "../Header";
 import ManagerFooter from "./ManagerFooter";
 import MessageDialogOwner from "../MessageDialog";
 import MessageDialogTenant from "../MessageDialog";
+import MessageDialogBusiness from "../MessageDialog";
+import MailDialogBusiness from "../MailDialog";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import HighPriority from "../../icons/highPriority.svg";
@@ -27,6 +29,7 @@ import MediumPriority from "../../icons/mediumPriority.svg";
 import LowPriority from "../../icons/lowPriority.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import File from "../../icons/File.svg";
+import Mail from "../../icons/Mail.svg";
 import {
   headings,
   pillButton,
@@ -84,6 +87,16 @@ function ManagerRepairDetail(props) {
   const [showMessageFormTenant, setShowMessageFormTenant] = useState(false);
   const onCancelTenantMessage = () => {
     setShowMessageFormTenant(false);
+  };
+  const [selectedBusiness, setSelectedBusiness] = useState("");
+
+  const [showMessageFormBusiness, setShowMessageFormBusiness] = useState(false);
+  const onCancelBusinessMessage = () => {
+    setShowMessageFormBusiness(false);
+  };
+  const [showMailFormBusiness, setShowMailFormBusiness] = useState(false);
+  const onCancelBusinessMail = () => {
+    setShowMailFormBusiness(false);
   };
 
   const [morePictures, setMorePictures] = useState(false);
@@ -610,6 +623,30 @@ function ManagerRepairDetail(props) {
         receiverEmail={selectedTenant.tenantEmail}
         receiverPhone={selectedTenant.TenantPhoneNumber}
         onCancel={onCancelTenantMessage}
+      />
+      <MessageDialogBusiness
+        title={"Text Message"}
+        isOpen={showMessageFormBusiness}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedBusiness.business_uid}
+        receiverEmail={selectedBusiness.business_email}
+        receiverPhone={selectedBusiness.business_phone_number}
+        onCancel={onCancelBusinessMessage}
+      />
+      <MailDialogBusiness
+        title={"Email"}
+        isOpen={showMailFormBusiness}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedBusiness.business_uid}
+        receiverEmail={selectedBusiness.business_email}
+        receiverPhone={selectedBusiness.business_phone_number}
+        onCancel={onCancelBusinessMail}
       />
       <Row className="w-100 mb-5 overflow-hidden">
         <Col
@@ -1380,22 +1417,32 @@ function ManagerRepairDetail(props) {
                           </Row>
                           <Row className="d-flex flex-row align-items-center justify-content-evenly">
                             <Col className="d-flex flex-row align-items-center justify-content-end">
-                              <a
-                                href={`tel:${businesses.business_phone_number}`}
-                              >
+                              <a href={`tel:${business.business_phone_number}`}>
                                 <img
                                   src={Phone}
                                   className="mx-1"
                                   style={{ width: "30px", height: "30px" }}
                                 />
                               </a>
-                              <a href={`mailto:${businesses.business_email}`}>
-                                <img
-                                  src={Message}
-                                  alt="Message"
-                                  style={{ width: "30px", height: "30px" }}
-                                />
-                              </a>
+                              <img
+                                onClick={() => {
+                                  setShowMessageFormBusiness(true);
+                                  setSelectedBusiness(business);
+                                }}
+                                src={Message}
+                                alt="Message"
+                                style={{ width: "30px", height: "30px" }}
+                              />
+
+                              <img
+                                src={Mail}
+                                alt="Mail"
+                                onClick={() => {
+                                  setShowMailFormBusiness(true);
+                                  setSelectedBusiness(business);
+                                }}
+                                style={{ width: "30px", height: "30px" }}
+                              />
                             </Col>
                           </Row>
                         </Col>

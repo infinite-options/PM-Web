@@ -12,7 +12,7 @@ import {
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import { makeStyles } from "@material-ui/core/styles";
-import { Container, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import moment from "moment";
 import SideBar from "./SideBar";
@@ -20,20 +20,19 @@ import Header from "../Header";
 import AppContext from "../../AppContext";
 import MailDialogTenant from "../MailDialog";
 import MessageDialogTenant from "../MessageDialog";
+import MailDialogContact from "../MailDialog";
+import MessageDialogContact from "../MessageDialog";
 import ManagerFooter from "./ManagerFooter";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import Mail from "../../icons/Mail.svg";
 import RepairImg from "../../icons/RepairImg.svg";
-import { put } from "../../utils/api";
 import {
   mediumBold,
-  subText,
   smallImg,
   hidden,
   redPill,
   greenPill,
-  headings,
   sidebarStyle,
 } from "../../utils/styles";
 import { ordinal_suffix_of, MaskCharacter } from "../../utils/helper";
@@ -73,6 +72,15 @@ function ManagerTenantListDetail(props) {
   };
   const onCancelMessage = () => {
     setShowMessageForm(false);
+  };
+  const [selectedContact, setSelectedContact] = useState("");
+  const [showMessageFormContact, setShowMessageFormContact] = useState(false);
+  const [showMailFormContact, setShowMailFormContact] = useState(false);
+  const onCancelContactMail = () => {
+    setShowMailFormContact(false);
+  };
+  const onCancelContactMessage = () => {
+    setShowMessageFormContact(false);
   };
   const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
@@ -289,6 +297,30 @@ function ManagerTenantListDetail(props) {
         receiverEmail={selectedTenant.tenant_email}
         receiverPhone={selectedTenant.tenant_phone_number}
         onCancel={onCancelMessage}
+      />
+      <MailDialogContact
+        title={"Email"}
+        isOpen={showMailFormContact}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedContact.first_name}
+        receiverEmail={selectedContact.email}
+        receiverPhone={selectedContact.phone_number}
+        onCancel={onCancelContactMail}
+      />
+      <MessageDialogContact
+        title={"Text Message"}
+        isOpen={showMessageFormContact}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedContact.first_name}
+        receiverEmail={selectedContact.email}
+        receiverPhone={selectedContact.phone_number}
+        onCancel={onCancelContactMessage}
       />
       <Row className="w-100 mb-5 overflow-hidden">
         {" "}
@@ -679,12 +711,25 @@ function ManagerTenantListDetail(props) {
                               <a href={`tel:${contact.phone_number}`}>
                                 <img src={Phone} alt="Phone" style={smallImg} />
                               </a>
-                              <a href={`mailto:${contact.email}`}>
+                              <a
+                                onClick={() => {
+                                  setShowMessageFormContact(true);
+                                  setSelectedContact(contact);
+                                }}
+                              >
                                 <img
                                   src={Message}
                                   alt="Message"
                                   style={smallImg}
                                 />
+                              </a>
+                              <a
+                                onClick={() => {
+                                  setShowMailFormContact(true);
+                                  setSelectedContact(contact);
+                                }}
+                              >
+                                <img src={Mail} alt="Mail" style={smallImg} />
                               </a>
                             </TableCell>
                           </TableRow>
