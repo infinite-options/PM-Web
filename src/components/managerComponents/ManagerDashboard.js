@@ -19,15 +19,16 @@ import SideBar from "./SideBar";
 import Header from "../Header";
 import ManagerCashflow from "./ManagerCashflow";
 import AppContext from "../../AppContext";
+import CopyDialog from "../CopyDialog";
 import ManagerCreateExpense from "./ManagerCreateExpense";
 import ManagerRepairRequest from "./ManagerRepairRequest";
 import ManagerFooter from "./ManagerFooter";
 import AddIcon from "../../icons/AddIcon.svg";
 import PropertyIcon from "../../icons/PropertyIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
-import { get } from "../../utils/api";
+import CopyIcon from "../../icons/CopyIcon.png";
+import { get, post } from "../../utils/api";
 import { green, red, blue, xSmall, sidebarStyle } from "../../utils/styles";
-import { configureAbly, useChannel } from "@ably-labs/react-hooks";
 
 const useStyles = makeStyles({
   customTable: {
@@ -55,6 +56,7 @@ export default function ManagerDashboard() {
   // sorting variables
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("address");
+  const [copied, setCopied] = useState(false);
 
   const [orderMaintenance, setOrderMaintenance] = useState("desc");
   const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("days_open");
@@ -227,6 +229,42 @@ export default function ManagerDashboard() {
     });
     setMaintenanceRequests(requests);
   };
+  const duplicate_request = async (request) => {
+    let selectedRequest = request;
+    // console.log(selectedRequest);
+    const newRequest = {
+      property_uid: selectedRequest.property_uid,
+      title: "Copy " + selectedRequest.title,
+      request_type: selectedRequest.request_type,
+      description: selectedRequest.description,
+      priority: selectedRequest.priority,
+      request_created_by: selectedRequest.request_created_by,
+    };
+
+    const files = JSON.parse(selectedRequest.images);
+    let i = 0;
+    for (const file of files) {
+      let key = "";
+      // console.log(file, file.file, file.image);
+      if (file.file !== null && file.file !== undefined) {
+        key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+        // console.log("in if", file.file);
+        newRequest[key] = file.file;
+      } else if (file.image !== null && file.image !== undefined) {
+        key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+        // console.log("in if else", file.image);
+        newRequest[key] = file.image;
+      } else {
+        // console.log("in else");
+        key = file.includes("img_cover") ? "img_cover" : `img_${i++}`;
+        newRequest[key] = file;
+      }
+    }
+    setCopied(true);
+    await post("/maintenanceRequests", newRequest, null, files);
+    setCopied(false);
+    fetchManagerDashboard();
+  };
 
   const channel = ably.channels.get("management_status");
   const channel_application = ably.channels.get("application_status");
@@ -335,11 +373,7 @@ export default function ManagerDashboard() {
       numeric: false,
       label: "Street Address",
     },
-    // {
-    //   id: "city",
-    //   numeric: false,
-    //   label: "City,State",
-    // },
+
     {
       id: "zip",
       numeric: true,
@@ -398,21 +432,13 @@ export default function ManagerDashboard() {
       numeric: true,
       label: "IP",
     },
-    // {
-    //   id: "oldestOpenMR",
-    //   numeric: true,
-    //   label: "Longest duration",
-    // },
+
     {
       id: "listed_rent",
       numeric: true,
       label: "Rent",
     },
-    // {
-    //   id: "per_sqft",
-    //   numeric: true,
-    //   label: " $/Sq Ft",
-    // },
+
     {
       id: "property_type",
       numeric: false,
@@ -631,6 +657,7 @@ export default function ManagerDashboard() {
 
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
+      <CopyDialog copied={copied} />
       {!isLoading &&
       (managerData.length > 0 || processingManagerData.length > 0) ? (
         <Row className="w-100 mb-5 overflow-hidden">
@@ -1909,23 +1936,23 @@ export default function ManagerDashboard() {
                             role="checkbox"
                             tabIndex={-1}
                             key={request.maintenance_request_uid}
-                            onClick={() =>
-                              navigate(
-                                `/manager-repairs/${request.maintenance_request_uid}`,
-                                {
-                                  state: {
-                                    repair: request,
-                                    property: request.address,
-                                  },
-                                }
-                              )
-                            }
                           >
                             {/* {console.log(request)} */}
                             <TableCell
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() =>
+                                navigate(
+                                  `/manager-repairs/${request.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: request,
+                                      property: request.address,
+                                    },
+                                  }
+                                )
+                              }
                             >
                               {JSON.parse(request.images).length > 0 ? (
                                 <img
@@ -1957,6 +1984,17 @@ export default function ManagerDashboard() {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() =>
+                                navigate(
+                                  `/manager-repairs/${request.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: request,
+                                      property: request.address,
+                                    },
+                                  }
+                                )
+                              }
                             >
                               {request.address}{" "}
                               {request.unit !== "" ? " " + request.unit : ""}{" "}
@@ -1966,6 +2004,17 @@ export default function ManagerDashboard() {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() =>
+                                navigate(
+                                  `/manager-repairs/${request.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: request,
+                                      property: request.address,
+                                    },
+                                  }
+                                )
+                              }
                               style={{
                                 color:
                                   request.request_status === "NEW"
@@ -1999,6 +2048,17 @@ export default function ManagerDashboard() {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() =>
+                                navigate(
+                                  `/manager-repairs/${request.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: request,
+                                      property: request.address,
+                                    },
+                                  }
+                                )
+                              }
                             >
                               {" "}
                               {request.title}
@@ -2007,6 +2067,17 @@ export default function ManagerDashboard() {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() =>
+                                navigate(
+                                  `/manager-repairs/${request.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: request,
+                                      property: request.address,
+                                    },
+                                  }
+                                )
+                              }
                             >
                               {" "}
                               {request.request_created_date.split(" ")[0]}
@@ -2015,6 +2086,17 @@ export default function ManagerDashboard() {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() =>
+                                navigate(
+                                  `/manager-repairs/${request.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: request,
+                                      property: request.address,
+                                    },
+                                  }
+                                )
+                              }
                             >
                               {request.days_open} days
                             </TableCell>
@@ -2022,6 +2104,17 @@ export default function ManagerDashboard() {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() =>
+                                navigate(
+                                  `/manager-repairs/${request.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: request,
+                                      property: request.address,
+                                    },
+                                  }
+                                )
+                              }
                             >
                               {request.request_type !== null
                                 ? request.request_type
@@ -2031,6 +2124,17 @@ export default function ManagerDashboard() {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() =>
+                                navigate(
+                                  `/manager-repairs/${request.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: request,
+                                      property: request.address,
+                                    },
+                                  }
+                                )
+                              }
                             >
                               {request.priority}
                             </TableCell>
@@ -2038,6 +2142,17 @@ export default function ManagerDashboard() {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() =>
+                                navigate(
+                                  `/manager-repairs/${request.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: request,
+                                      property: request.address,
+                                    },
+                                  }
+                                )
+                              }
                             >
                               {request.assigned_business !== null &&
                               request.assigned_business !== "null" ? (
@@ -2053,6 +2168,17 @@ export default function ManagerDashboard() {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() =>
+                                navigate(
+                                  `/manager-repairs/${request.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: request,
+                                      property: request.address,
+                                    },
+                                  }
+                                )
+                              }
                             >
                               {request.new_quotes.length > 0
                                 ? `Quotes REQUESTED : ${request.quotes.length}`
@@ -2077,6 +2203,17 @@ export default function ManagerDashboard() {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() =>
+                                navigate(
+                                  `/manager-repairs/${request.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: request,
+                                      property: request.address,
+                                    },
+                                  }
+                                )
+                              }
                             >
                               {request.scheduled_date !== null &&
                               request.scheduled_date !== "null"
@@ -2087,6 +2224,17 @@ export default function ManagerDashboard() {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() =>
+                                navigate(
+                                  `/manager-repairs/${request.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: request,
+                                      property: request.address,
+                                    },
+                                  }
+                                )
+                              }
                             >
                               {request.scheduled_time !== null &&
                               request.scheduled_time !== "null"
@@ -2094,6 +2242,20 @@ export default function ManagerDashboard() {
                                 : "Not Scheduled"}
                             </TableCell>
                             <TableCell>$ {request.total_estimate}</TableCell>
+                            <TableCell>
+                              <img
+                                src={CopyIcon}
+                                title="Duplicate"
+                                style={{
+                                  width: "15px",
+                                  height: "15px",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => {
+                                  duplicate_request(request);
+                                }}
+                              />
+                            </TableCell>
                           </TableRow>
                         );
                       })}

@@ -25,6 +25,7 @@ import CopyIcon from "../../icons/CopyIcon.png";
 import { get, post } from "../../utils/api";
 import { sidebarStyle } from "../../utils/styles";
 import { days } from "../../utils/helper";
+import CopyDialog from "../CopyDialog";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -40,11 +41,12 @@ function ManagerRepairsOverview(props) {
   const { access_token, user } = userData;
   const [repairIter, setRepairIter] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
   const [properties, setProperties] = useState([]);
   const [stage, setStage] = useState("LIST");
   const [managerID, setManagerID] = useState("");
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("request_status");
+  const [order, setOrder] = useState("desc");
+  const [orderBy, setOrderBy] = useState("days_open");
   const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
@@ -91,9 +93,12 @@ function ManagerRepairsOverview(props) {
       }
     }
     // console.log(newRequest);
+    setCopied(true);
     await post("/maintenanceRequests", newRequest, null, files);
+    setCopied(false);
     fetchRepairs();
   };
+
   const sort_repairs = (repairs) => {
     const repairs_with_quotes = repairs.filter(
       (repair) => repair.quotes_to_review > 0
@@ -347,6 +352,7 @@ function ManagerRepairsOverview(props) {
 
   return stage === "LIST" ? (
     <div>
+      <CopyDialog copied={copied} />
       <Row className="w-100 mb-5 overflow-hidden">
         {" "}
         <Col

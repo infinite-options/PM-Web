@@ -36,15 +36,17 @@ import MailDialogTenant from "../MailDialog";
 import MessageDialogTenant from "../MessageDialog";
 import SideBar from "./SideBar";
 import AppContext from "../../AppContext";
+import CopyDialog from "../CopyDialog";
 import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import Mail from "../../icons/Mail.svg";
 import EditIconNew from "../../icons/EditIconNew.svg";
 import AddIcon from "../../icons/AddIcon.svg";
+import CopyIcon from "../../icons/CopyIcon.png";
 import PropertyIcon from "../../icons/PropertyIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
-import { get, put } from "../../utils/api";
+import { get, put, post } from "../../utils/api";
 import {
   squareForm,
   mediumBold,
@@ -82,6 +84,7 @@ function OwnerPropertyView(props) {
   const [property, setProperty] = useState({
     images: "[]",
   });
+  const [copied, setCopied] = useState(false);
   const [imagesProperty, setImagesProperty] = useState([]);
   const [showAddRequest, setShowAddRequest] = useState(false);
   const [showControls, setShowControls] = useState(true);
@@ -256,6 +259,43 @@ function OwnerPropertyView(props) {
   const unShowImage = () => {
     setOpenImage(false);
     setImageSrc(null);
+  };
+  const duplicate_request = async (request) => {
+    let selectedRequest = request;
+    // console.log(selectedRequest);
+    const newRequest = {
+      property_uid: selectedRequest.property_uid,
+      title: "Copy " + selectedRequest.title,
+      request_type: selectedRequest.request_type,
+      description: selectedRequest.description,
+      priority: selectedRequest.priority,
+      request_created_by: selectedRequest.request_created_by,
+    };
+
+    const files = JSON.parse(selectedRequest.images);
+    let i = 0;
+    for (const file of files) {
+      let key = "";
+      // console.log(file, file.file, file.image);
+      if (file.file !== null && file.file !== undefined) {
+        key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+        // console.log("in if", file.file);
+        newRequest[key] = file.file;
+      } else if (file.image !== null && file.image !== undefined) {
+        key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+        // console.log("in if else", file.image);
+        newRequest[key] = file.image;
+      } else {
+        // console.log("in else");
+        key = file.includes("img_cover") ? "img_cover" : `img_${i++}`;
+        newRequest[key] = file;
+      }
+    }
+    // console.log(newRequest);
+    setCopied(true);
+    await post("/maintenanceRequests", newRequest, null, files);
+    setCopied(false);
+    fetchProperty();
   };
   const fetchProperty = async () => {
     const response = await get(
@@ -656,9 +696,19 @@ function OwnerPropertyView(props) {
       label: "Request Images",
     },
     {
+      id: "request_status",
+      numeric: false,
+      label: "Status",
+    },
+    {
       id: "title",
       numeric: false,
       label: "Issue",
+    },
+    {
+      id: "description",
+      numeric: false,
+      label: "Description",
     },
     {
       id: "request_created_date",
@@ -692,9 +742,9 @@ function OwnerPropertyView(props) {
       label: "Scheduled Date",
     },
     {
-      id: "scheduled_time",
+      id: "",
       numeric: true,
-      label: "Scheduled Time",
+      label: "",
     },
   ];
   function EnhancedTableHeadMaintenance(props) {
@@ -811,6 +861,7 @@ function OwnerPropertyView(props) {
           onConfirm={rejectPropertyManager}
           onCancel={onCancel}
         />
+        <CopyDialog copied={copied} />
         <ConfirmDialog
           title={
             "Are you sure you want to cancel the Agreement with this Property Management?"
@@ -1320,22 +1371,22 @@ function OwnerPropertyView(props) {
                                     role="checkbox"
                                     tabIndex={-1}
                                     key={request.maintenance_request_uid}
-                                    onClick={() =>
-                                      navigate(
-                                        `/owner-repairs/${request.maintenance_request_uid}`,
-                                        {
-                                          state: {
-                                            repair: request,
-                                            property: request.address,
-                                          },
-                                        }
-                                      )
-                                    }
                                   >
                                     <TableCell
                                       padding="none"
                                       size="small"
                                       align="center"
+                                      onClick={() =>
+                                        navigate(
+                                          `/owner-repairs/${request.maintenance_request_uid}`,
+                                          {
+                                            state: {
+                                              repair: request,
+                                              property: request.address,
+                                            },
+                                          }
+                                        )
+                                      }
                                     >
                                       {JSON.parse(request.images).length > 0 ? (
                                         <img
@@ -1344,8 +1395,8 @@ function OwnerPropertyView(props) {
                                           style={{
                                             borderRadius: "4px",
                                             objectFit: "cover",
-                                            width: "100px",
-                                            height: "100px",
+                                            width: "50px",
+                                            height: "50px",
                                           }}
                                         />
                                       ) : (
@@ -1355,17 +1406,63 @@ function OwnerPropertyView(props) {
                                           style={{
                                             borderRadius: "4px",
                                             objectFit: "cover",
-                                            width: "100px",
-                                            height: "100px",
+                                            width: "50px",
+                                            height: "50px",
                                           }}
                                         />
                                       )}
                                     </TableCell>
-
                                     <TableCell
                                       padding="none"
                                       size="small"
                                       align="center"
+                                      onClick={() => {
+                                        navigate(
+                                          `/owner-repairs/${request.maintenance_request_uid}`,
+                                          {
+                                            state: {
+                                              repair: request,
+                                              property: request.address,
+                                            },
+                                          }
+                                        );
+                                      }}
+                                      style={{
+                                        color:
+                                          request.request_status === "NEW"
+                                            ? "red"
+                                            : request.request_status ===
+                                              "PROCESSING"
+                                            ? "orange"
+                                            : request.request_status ===
+                                              "SCHEDULE"
+                                            ? "blue"
+                                            : request.request_status ===
+                                              "RESCHEDULE"
+                                            ? "yellow"
+                                            : request.request_status ===
+                                              "SCHEDULED"
+                                            ? "green"
+                                            : "black",
+                                      }}
+                                    >
+                                      {request.request_status}
+                                    </TableCell>
+                                    <TableCell
+                                      padding="none"
+                                      size="small"
+                                      align="center"
+                                      onClick={() =>
+                                        navigate(
+                                          `/owner-repairs/${request.maintenance_request_uid}`,
+                                          {
+                                            state: {
+                                              repair: request,
+                                              property: request.address,
+                                            },
+                                          }
+                                        )
+                                      }
                                       style={{
                                         color:
                                           request.title === "New"
@@ -1380,14 +1477,58 @@ function OwnerPropertyView(props) {
                                       padding="none"
                                       size="small"
                                       align="center"
+                                      onClick={() => {
+                                        navigate(
+                                          `/owner-repairs/${request.maintenance_request_uid}`,
+                                          {
+                                            state: {
+                                              repair: request,
+                                              property: request.address,
+                                            },
+                                          }
+                                        );
+                                      }}
                                     >
-                                      {" "}
-                                      {request.request_created_date}
+                                      {request.description}
                                     </TableCell>
                                     <TableCell
                                       padding="none"
                                       size="small"
                                       align="center"
+                                      onClick={() =>
+                                        navigate(
+                                          `/owner-repairs/${request.maintenance_request_uid}`,
+                                          {
+                                            state: {
+                                              repair: request,
+                                              property: request.address,
+                                            },
+                                          }
+                                        )
+                                      }
+                                    >
+                                      {" "}
+                                      {
+                                        request.request_created_date.split(
+                                          " "
+                                        )[0]
+                                      }
+                                    </TableCell>
+                                    <TableCell
+                                      padding="none"
+                                      size="small"
+                                      align="center"
+                                      onClick={() =>
+                                        navigate(
+                                          `/owner-repairs/${request.maintenance_request_uid}`,
+                                          {
+                                            state: {
+                                              repair: request,
+                                              property: request.address,
+                                            },
+                                          }
+                                        )
+                                      }
                                     >
                                       {request.days_open} days
                                     </TableCell>
@@ -1395,6 +1536,17 @@ function OwnerPropertyView(props) {
                                       padding="none"
                                       size="small"
                                       align="center"
+                                      onClick={() =>
+                                        navigate(
+                                          `/owner-repairs/${request.maintenance_request_uid}`,
+                                          {
+                                            state: {
+                                              repair: request,
+                                              property: request.address,
+                                            },
+                                          }
+                                        )
+                                      }
                                     >
                                       {request.request_type !== null
                                         ? request.request_type
@@ -1404,6 +1556,17 @@ function OwnerPropertyView(props) {
                                       padding="none"
                                       size="small"
                                       align="center"
+                                      onClick={() =>
+                                        navigate(
+                                          `/owner-repairs/${request.maintenance_request_uid}`,
+                                          {
+                                            state: {
+                                              repair: request,
+                                              property: request.address,
+                                            },
+                                          }
+                                        )
+                                      }
                                     >
                                       {request.priority}
                                     </TableCell>
@@ -1411,6 +1574,17 @@ function OwnerPropertyView(props) {
                                       padding="none"
                                       size="small"
                                       align="center"
+                                      onClick={() =>
+                                        navigate(
+                                          `/owner-repairs/${request.maintenance_request_uid}`,
+                                          {
+                                            state: {
+                                              repair: request,
+                                              property: request.address,
+                                            },
+                                          }
+                                        )
+                                      }
                                     >
                                       {request.assigned_business !== null &&
                                       request.assigned_business !== "null"
@@ -1422,6 +1596,17 @@ function OwnerPropertyView(props) {
                                       padding="none"
                                       size="small"
                                       align="center"
+                                      onClick={() =>
+                                        navigate(
+                                          `/owner-repairs/${request.maintenance_request_uid}`,
+                                          {
+                                            state: {
+                                              repair: request,
+                                              property: request.address,
+                                            },
+                                          }
+                                        )
+                                      }
                                     >
                                       {request.scheduled_date !== null &&
                                       request.scheduled_date !== "null"
@@ -1433,10 +1618,19 @@ function OwnerPropertyView(props) {
                                       size="small"
                                       align="center"
                                     >
-                                      {request.scheduled_time !== null &&
-                                      request.scheduled_time !== "null"
-                                        ? request.scheduled_time.split(" ")[0]
-                                        : "Not Scheduled"}
+                                      {" "}
+                                      <img
+                                        src={CopyIcon}
+                                        title="Duplicate"
+                                        style={{
+                                          width: "15px",
+                                          height: "15px",
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => {
+                                          duplicate_request(request);
+                                        }}
+                                      />
                                     </TableCell>
                                   </TableRow>
                                 );

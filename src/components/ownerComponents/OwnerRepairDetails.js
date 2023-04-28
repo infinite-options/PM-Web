@@ -109,6 +109,9 @@ function OwnerRepairDetails(props) {
   const channel_maintenance = ably.channels.get("maintenance_status");
   const location = useLocation();
   const navigate = useNavigate();
+  const repairState = location.state.repair;
+  const [isLoading, setIsLoading] = useState(true);
+  const [repair, setRepair] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [issueType, setIssueType] = useState("Plumbing");
   const [rejectQuote, setRejectQuote] = useState(false);
@@ -127,10 +130,8 @@ function OwnerRepairDetails(props) {
   const [reTime, setReTime] = useState("");
   const [notes, setNotes] = useState("");
   const [messagetoM, setMessagetoM] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const [showSpinner, setShowSpinner] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const repair = location.state.repair;
   const [selectedBusiness, setSelectedBusiness] = useState("");
   const [showMailFormBusiness, setShowMailFormBusiness] = useState(false);
   const [showMessageFormBusiness, setShowMessageFormBusiness] = useState(false);
@@ -153,17 +154,18 @@ function OwnerRepairDetails(props) {
       "/businesses?business_type=MAINTENANCE"
     );
     const request_response = await get(
-      `/maintenanceRequests?maintenance_request_uid=${repair.maintenance_request_uid}`
+      `/maintenanceRequests?maintenance_request_uid=${repairState.maintenance_request_uid}`
     );
     if (businesses_request.msg === "Token has expired") {
       refresh();
       return;
     }
-
+    console.log(request_response.result);
     const businesses = businesses_request.result.map((business) => ({
       ...business,
       quote_requested: false,
     }));
+    setRepair(request_response.result[0]);
     // console.log("repair", repair, request_response.result[0]);
     // console.log(businesses)
     setBusinesses(businesses);
@@ -191,7 +193,7 @@ function OwnerRepairDetails(props) {
       });
     }
     imageState[1](files);
-    if (repair.request_status === "FINISHED") {
+    if (request_response.result[0].request_status === "FINISHED") {
       setFinishMaintenance(true);
     }
     const response = await get(
@@ -263,10 +265,10 @@ function OwnerRepairDetails(props) {
       setErrorMessage("Please enter an amount");
       return;
     }
-    if (imageState[0].length === 0) {
-      setErrorMessage("Please upload images");
-      return;
-    }
+    // if (imageState[0].length === 0) {
+    //   setErrorMessage("Please upload images");
+    //   return;
+    // }
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
       request_status: "COMPLETED",
@@ -533,7 +535,7 @@ function OwnerRepairDetails(props) {
         >
           <SideBar />
         </Col>
-        <Col className="w-100 mb-5">
+        <Col className="w-100 mb-5 overflow-hidden">
           <Header
             title="Repairs"
             // leftText={"< Back"}
@@ -575,7 +577,19 @@ function OwnerRepairDetails(props) {
                     </Form.Label>
 
                     <Row style={formLabel} as="h5" className="ms-1 mb-0">
-                      {repair.address}
+                      <Col>{repair.address}</Col>
+
+                      <Col>{title}</Col>
+                      <Col xs={2}>
+                        {priority === "High" ? (
+                          <img alt="low priority" src={HighPriority} />
+                        ) : priority === "Medium" ? (
+                          <img alt="medium priority" src={MediumPriority} />
+                        ) : (
+                          <img alt="high priority" src={LowPriority} />
+                        )}
+                      </Col>
+                      <Col xs={2}>{repair.request_status}</Col>
                     </Row>
                   </Form.Group>
                   <Form.Group className="mx-2 my-3">
@@ -750,7 +764,7 @@ function OwnerRepairDetails(props) {
                   </div>
                 </div>
               ) : (
-                <div>
+                <div className="mx-2 my-4 p-3">
                   <Row className=" d-flex align-items-center justify-content-center m-3">
                     {JSON.parse(repairsDetail.images).length === 0 ? (
                       <img
@@ -768,24 +782,17 @@ function OwnerRepairDetails(props) {
                         infinite={true}
                         arrows={true}
                         partialVisible={false}
-                        // className=" d-flex align-items-center justify-content-center"
                       >
                         {JSON.parse(repairsDetail.images).map((image) => {
                           return (
-                            // <div className="d-flex align-items-center justify-content-center">
                             <img
-                              // key={Date.now()}
                               src={`${image}?${Date.now()}`}
-                              // onClick={() =>
-                              //   showImage(`${image}?${Date.now()}`)
-                              // }
                               style={{
                                 width: "200px",
                                 height: "200px",
                                 objectFit: "cover",
                               }}
                             />
-                            // </div>
                           );
                         })}
                       </Carousel>
@@ -801,11 +808,7 @@ function OwnerRepairDetails(props) {
                           return (
                             <div className="d-flex align-items-center justify-content-center">
                               <img
-                                // key={Date.now()}
                                 src={`${image}?${Date.now()}`}
-                                // onClick={() =>
-                                //   showImage(`${image}?${Date.now()}`)
-                                // }
                                 style={{
                                   width: "200px",
                                   height: "200px",
@@ -914,764 +917,815 @@ function OwnerRepairDetails(props) {
               )}
             </div>
           )}
-          <div
-            className="mx-2 mt-2 mb-5 p-3"
-            style={{
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              borderRadius: "10px",
-              opacity: 1,
-            }}
-            hidden={!requestQuote}
-          >
-            <Row style={headings}>
-              <Col>{repair.title}</Col>
-              <Col xs={4}>
-                {repair.priority === "High" ? (
-                  <img alt="low priority" src={HighPriority} />
-                ) : repair.priority === "Medium" ? (
-                  <img alt="medium priority" src={MediumPriority} />
-                ) : (
-                  <img alt="high priority" src={LowPriority} />
-                )}
-              </Col>
-            </Row>
-            <Row style={subHeading}>
-              <div>Select businesses to request a quote:</div>
-            </Row>
-
+          {!isLoading ? (
             <div>
-              {businesses.length > 0 &&
-                businesses.map((business, i) => (
-                  <Row
-                    className="my-3 p-2"
-                    key={i}
-                    style={{
-                      background: "#F3F3F3 0% 0% no-repeat padding-box",
-                      boxShadow: business.quote_requested
-                        ? "0px 3px 6px #00000029"
-                        : "none",
-                      borderRadius: "10px",
-                      opacity: 1,
-                    }}
-                  >
-                    <Col xs={2} className="mt-2">
-                      <Row>
-                        <Checkbox
-                          type="BOX"
-                          checked={businesses[i].quote_requested}
-                          onClick={() => toggleBusiness(i)}
-                        />
-                      </Row>
-                    </Col>
-                    <Col>
-                      <Row style={mediumBold}>{business.business_name}</Row>
-                      <Row className="m-3" style={subText}>
-                        {JSON.parse(business.business_services_fees).length >
-                        0 ? (
-                          <Table
-                            classes={{ root: classes.customTable }}
-                            size="small"
-                          >
-                            <TableHead>
-                              <TableRow>
-                                <TableCell>Fee Name</TableCell>
-                                <TableCell>Amount</TableCell>
-                                <TableCell>Per</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {JSON.parse(business.business_services_fees).map(
-                                (service, i) => (
-                                  <TableRow key={i}>
-                                    <TableCell>
-                                      {service.service_name}
-                                    </TableCell>
-                                    <TableCell>${service.charge}</TableCell>
-
-                                    <TableCell>{service.per}</TableCell>
-                                  </TableRow>
-                                )
-                              )}
-                            </TableBody>
-                          </Table>
-                        ) : (
-                          ""
-                        )}
-                      </Row>
-                      <Row className="d-flex flex-row align-items-center justify-content-evenly">
-                        <Col className="d-flex flex-row align-items-center justify-content-end">
-                          <a href={`tel:${business.business_phone_number}`}>
-                            <img
-                              src={Phone}
-                              alt="Phone"
-                              className="mx-1"
-                              style={{ width: "30px", height: "30px" }}
-                            />
-                          </a>
-
-                          <a
-                            onClick={() => {
-                              setShowMessageFormBusiness(true);
-                              setSelectedBusiness(business);
-                            }}
-                          >
-                            <img
-                              src={Message}
-                              alt="Message"
-                              className="mx-1"
-                              style={{ width: "30px", height: "30px" }}
-                            />
-                          </a>
-                          <a
-                            // href={`mailto:${tf.tenantEmail}`}
-                            onClick={() => {
-                              setShowMailFormBusiness(true);
-                              setSelectedBusiness(business);
-                            }}
-                          >
-                            <img
-                              src={Mail}
-                              alt="Mail"
-                              className="mx-1"
-                              style={{ width: "30px", height: "30px" }}
-                            />
-                          </a>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                ))}
-            </div>
-            <Row className="mt-4 mb-4">
-              <Col className="d-flex justify-content-evenly">
-                <Button style={bluePillButton} onClick={sendQuotesRequest}>
-                  Send Quote Request to Maintenace
-                </Button>
-              </Col>
-            </Row>
-            <Row className="mt-3">
-              <Col className="d-flex justify-content-evenly">
-                <Button
-                  style={redPillButton}
-                  onClick={() => setRequestQuote(false)}
-                >
-                  Cancel
-                </Button>
-              </Col>
-            </Row>
-          </div>
-
-          {!isEditing && !requestQuote && quotes && quotes.length > 0 && (
-            <div className="pb-4 mb-4">
-              {quotes &&
-                quotes.length > 0 &&
-                quotes.map((quote, i) => (
-                  <div key={i}>
-                    <hr
-                      style={{
-                        border: "1px dashed #000000",
-                        borderStyle: "none none dashed",
-                        backgroundColor: "white",
-                      }}
-                    />
-                    <Row className="mx-2 my-2" style={headings}>
-                      <div>{quote.business_name}</div>
-                    </Row>
-                    {quote.quote_status === "AGREED" ||
-                    quote.quote_status === "ACCEPTED" ||
-                    quote.quote_status === "SENT" ||
-                    quote.quote_status === "REJECTED" ? (
-                      <div className="mx-2 my-2 p-3">
-                        <Row>
-                          <Table
-                            responsive="md"
-                            classes={{ root: classes.customTable }}
-                            size="small"
-                          >
-                            <TableHead>
-                              <TableRow>
-                                <TableCell align="center">
-                                  Service Charges
-                                </TableCell>{" "}
-                                <TableCell align="center">Notes</TableCell>
-                                <TableCell align="center">Event Type</TableCell>
-                                <TableCell align="center">
-                                  Total Estimate
-                                </TableCell>
-                                <TableCell align="center">
-                                  Earliest Availability
-                                </TableCell>
-                                <TableCell align="center">
-                                  Scheduled Date
-                                </TableCell>
-                                <TableCell align="center">
-                                  Scheduled Time
-                                </TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              <TableRow>
-                                <TableCell align="center">
-                                  {" "}
-                                  {quote.services_expenses &&
-                                    quote.services_expenses.length > 0 &&
-                                    JSON.parse(quote.services_expenses).map(
-                                      (service, j) => (
-                                        <div className="pt-1 mb-2 align-items-center">
-                                          <div
-                                            style={
-                                              (subHeading,
-                                              { textAlign: "center" })
-                                            }
-                                          >
-                                            {service.service_name}: $
-                                            {service.charge}{" "}
-                                            {service.per === "Hour"
-                                              ? `/${service.per}`
-                                              : "One-Time Fee"}
-                                          </div>
-                                        </div>
-                                      )
-                                    )}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {quote.notes}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  {quote.event_type} hour job
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  $ {quote.total_estimate}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  {
-                                    String(quote.earliest_availability).split(
-                                      " "
-                                    )[0]
-                                  }
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  {repair.scheduled_date !== null &&
-                                  repair.scheduled_date !== "null"
-                                    ? repair.scheduled_date.split(" ")[0]
-                                    : "Not Scheduled"}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  {repair.scheduled_time !== null &&
-                                  repair.scheduled_time !== "null"
-                                    ? repair.scheduled_time
-                                    : "Not Scheduled"}
-                                </TableCell>
-                              </TableRow>
-                            </TableBody>
-                          </Table>
-                        </Row>
-                      </div>
-                    ) : quote.quote_status === "REQUESTED" ||
-                      quote.quote_status === "REFUSED" ||
-                      quote.quote_status === "WITHDRAW" ? (
-                      <div className="mx-2 my-2 p-3">No quote info</div>
+              {" "}
+              <div
+                className="mx-2 mt-2 mb-5 p-3"
+                style={{
+                  background: "#FFFFFF 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+                hidden={!requestQuote}
+              >
+                <Row style={headings}>
+                  <Col>{repair.title}</Col>
+                  <Col xs={4}>
+                    {repair.priority === "High" ? (
+                      <img alt="low priority" src={HighPriority} />
+                    ) : repair.priority === "Medium" ? (
+                      <img alt="medium priority" src={MediumPriority} />
                     ) : (
-                      ""
+                      <img alt="high priority" src={LowPriority} />
                     )}
+                  </Col>
+                </Row>
+                <Row style={subHeading}>
+                  <div>Select businesses to request a quote:</div>
+                </Row>
 
-                    <Row
-                      hidden={
-                        quote.quote_status !== "SENT" &&
-                        repair.property_manager.length === 0
-                      }
-                      className="pt-1 mb-4"
-                    >
-                      <Col className="d-flex flex-row justify-content-evenly">
-                        <Button
-                          style={bluePillButton}
-                          onClick={() => acceptQuote(quote)}
-                        >
-                          Accept Quote
-                        </Button>
-                      </Col>
-                      <Col className="d-flex flex-row justify-content-evenly">
-                        <Button
-                          style={redPillButton}
-                          onClick={() => setRejectQuote(true)}
-                        >
-                          Reject Quote
-                        </Button>
-                      </Col>
-                    </Row>
-
-                    <Row
-                      hidden={quote.quote_status === "SENT"}
-                      className="pt-1 mb-4"
-                    >
-                      <Col className="d-flex flex-row justify-content-evenly">
-                        <Button
-                          style={
-                            (quote.quote_status === "ACCEPTED" ||
-                              quote.quote_status === "AGREED" ||
-                              quote.quote_status === "PAID") &&
-                            (quote.request_status === "PROCESSING" ||
-                              quote.request_status === "SCHEDULED" ||
-                              quote.request_status === "SCHEDULE" ||
-                              quote.request_status === "RESCHEDULE" ||
-                              quote.request_status === "FINISHED" ||
-                              quote.request_status === "COMPLETED")
-                              ? greenPill
-                              : quote.quote_status === "REJECTED" ||
-                                quote.quote_status === "REFUSED"
-                              ? redPill
-                              : orangePill
-                          }
-                        >
-                          {quote.quote_status === "REQUESTED"
-                            ? "Waiting for quote from business"
-                            : quote.quote_status === "REJECTED"
-                            ? "You've Rejected the Quote"
-                            : quote.quote_status === "ACCEPTED" &&
-                              quote.request_status === "PROCESSING"
-                            ? "You've Accepted the Quote"
-                            : quote.quote_status === "SENT"
-                            ? "Waiting for quote from business"
-                            : quote.quote_status === "REFUSED"
-                            ? "Business refused to send a quote"
-                            : quote.quote_status === "ACCEPTED" &&
-                              quote.request_status === "SCHEDULE"
-                            ? "Maintenance Sent Schedule"
-                            : quote.quote_status === "ACCEPTED" &&
-                              quote.request_status === "RESCHEDULE"
-                            ? "Reschedule Requested"
-                            : quote.quote_status === "AGREED" &&
-                              quote.request_status === "SCHEDULED"
-                            ? "Maintenance Scheduled"
-                            : quote.quote_status === "AGREED" &&
-                              quote.request_status === "FINISHED"
-                            ? "Maintenance Finished"
-                            : quote.request_status === "COMPLETED" &&
-                              quote.quote_status === "AGREED"
-                            ? "Maintenance Completed"
-                            : quote.quote_status === "PAID" &&
-                              quote.request_status === "COMPLETED"
-                            ? "Maintenance Paid"
-                            : quote.quote_status === "WITHDRAWN" &&
-                              quote.request_status === "PROCESSING"
-                            ? "Quote Request Withdrawn"
-                            : quote.request_status === "CANCELLED"
-                            ? "Maintenance Request Cancelled"
-                            : "Another quote accepted"}
-                        </Button>
-                      </Col>
-                    </Row>
-                    <Row className="pt-1 mb-4">
-                      <Col className="d-flex flex-row justify-content-evenly">
-                        {" "}
-                        {!withdrawQuote &&
-                        repair.property_manager.length === 0 &&
-                        quote.quote_status === "REQUESTED" ? (
-                          <Button
-                            style={bluePillButton}
-                            // onClick={() => withdrawQuoteFunc(quote)}
-                            onClick={() => setWithdrawQuote(true)}
-                          >
-                            Withdraw Quote
-                          </Button>
-                        ) : (
-                          ""
-                        )}
-                      </Col>
-                    </Row>
-                    {!scheduleMaintenance &&
-                    repair.property_manager.length === 0 &&
-                    withdrawQuote &&
-                    quote.quote_status === "REQUESTED" ? (
-                      <Row className="pt-1">
-                        <Form.Group className="mx-2 my-3">
-                          <Form.Label style={subHeading} className="mb-0 ms-2">
-                            Reason for Withdraw{" "}
-                            {messagetoM === "" ? required : ""}
-                          </Form.Label>
-                          <Form.Control
-                            style={squareForm}
-                            placeholder=" Reason for Withdraw"
-                            value={messagetoM}
-                            onChange={(e) => setMessagetoM(e.target.value)}
-                          />
-                        </Form.Group>
-                        <div
-                          className="text-center"
-                          style={errorMessage === "" ? hidden : {}}
-                        >
-                          <p style={{ ...red, ...small }}>
-                            {errorMessage || "error"}
-                          </p>
-                        </div>
-                        <Row>
-                          {" "}
-                          <Col className="d-flex flex-row justify-content-evenly">
-                            <Button
-                              style={bluePillButton}
-                              onClick={() => withdrawQuoteFunc(quote)}
-                              // onClick={() => setWithdrawQuote(true)}
-                            >
-                              Withdraw Quote
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Row>
-                    ) : (
-                      <Row></Row>
-                    )}
-                    {!scheduleMaintenance &&
-                    repair.property_manager.length === 0 &&
-                    quote.request_status === "SCHEDULE" &&
-                    quote.quote_status === "ACCEPTED" ? (
-                      <Row className="pt-1">
-                        <Col className="d-flex flex-row justify-content-evenly">
-                          <Button
-                            style={bluePillButton}
-                            onClick={() => acceptSchedule(quote)}
-                          >
-                            Accept
-                          </Button>
-                        </Col>
-                        <Col className="d-flex flex-row justify-content-evenly">
-                          <Button
-                            style={bluePillButton}
-                            onClick={() => setScheduleMaintenance(true)}
-                          >
-                            Reschedule
-                          </Button>
-                        </Col>
-                      </Row>
-                    ) : (
-                      <Row></Row>
-                    )}
-                    {scheduleMaintenance ? (
-                      <Row className="mx-2 my-2 p-3">
-                        <RescheduleRepair quotes={quote} />
-                      </Row>
-                    ) : (
-                      <Row></Row>
-                    )}
-                    {rejectQuote &&
-                    !requestQuote &&
-                    repair.property_manager.length === 0 &&
-                    !scheduleMaintenance &&
-                    quote.request_status === "PROCESSING" &&
-                    quote.quote_status === "SENT" ? (
+                <div>
+                  {businesses.length > 0 &&
+                    businesses.map((business, i) => (
                       <Row
+                        className="my-3 p-2"
+                        key={i}
                         style={{
                           background: "#F3F3F3 0% 0% no-repeat padding-box",
+                          boxShadow: business.quote_requested
+                            ? "0px 3px 6px #00000029"
+                            : "none",
                           borderRadius: "10px",
                           opacity: 1,
                         }}
-                        className="my-4 p-2"
                       >
-                        <Form.Group className="mx-2 my-3">
-                          <Form.Label style={subHeading} className="mb-0 ms-2">
-                            Reason for Reject{" "}
-                            {messagetoM === "" ? required : ""}
-                          </Form.Label>
-                          <Form.Control
-                            style={squareForm}
-                            placeholder=" Reason for Reject"
-                            value={messagetoM}
-                            onChange={(e) => setMessagetoM(e.target.value)}
-                          />
-                        </Form.Group>
-                        <div
-                          className="text-center"
-                          style={errorMessage === "" ? hidden : {}}
+                        <Col xs={2} className="mt-2">
+                          <Row>
+                            <Checkbox
+                              type="BOX"
+                              checked={businesses[i].quote_requested}
+                              onClick={() => toggleBusiness(i)}
+                            />
+                          </Row>
+                        </Col>
+                        <Col>
+                          <Row style={mediumBold}>{business.business_name}</Row>
+                          <Row className="m-3" style={subText}>
+                            {JSON.parse(business.business_services_fees)
+                              .length > 0 ? (
+                              <Table
+                                classes={{ root: classes.customTable }}
+                                size="small"
+                              >
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>Fee Name</TableCell>
+                                    <TableCell>Amount</TableCell>
+                                    <TableCell>Per</TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {JSON.parse(
+                                    business.business_services_fees
+                                  ).map((service, i) => (
+                                    <TableRow key={i}>
+                                      <TableCell>
+                                        {service.service_name}
+                                      </TableCell>
+                                      <TableCell>${service.charge}</TableCell>
+
+                                      <TableCell>{service.per}</TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            ) : (
+                              ""
+                            )}
+                          </Row>
+                          <Row className="d-flex flex-row align-items-center justify-content-evenly">
+                            <Col className="d-flex flex-row align-items-center justify-content-end">
+                              <a href={`tel:${business.business_phone_number}`}>
+                                <img
+                                  src={Phone}
+                                  alt="Phone"
+                                  className="mx-1"
+                                  style={{ width: "30px", height: "30px" }}
+                                />
+                              </a>
+
+                              <a
+                                onClick={() => {
+                                  setShowMessageFormBusiness(true);
+                                  setSelectedBusiness(business);
+                                }}
+                              >
+                                <img
+                                  src={Message}
+                                  alt="Message"
+                                  className="mx-1"
+                                  style={{ width: "30px", height: "30px" }}
+                                />
+                              </a>
+                              <a
+                                // href={`mailto:${tf.tenantEmail}`}
+                                onClick={() => {
+                                  setShowMailFormBusiness(true);
+                                  setSelectedBusiness(business);
+                                }}
+                              >
+                                <img
+                                  src={Mail}
+                                  alt="Mail"
+                                  className="mx-1"
+                                  style={{ width: "30px", height: "30px" }}
+                                />
+                              </a>
+                            </Col>
+                          </Row>
+                        </Col>
+                      </Row>
+                    ))}
+                </div>
+                <Row className="mt-4 mb-4">
+                  <Col className="d-flex justify-content-evenly">
+                    <Button style={bluePillButton} onClick={sendQuotesRequest}>
+                      Send Quote Request to Maintenace
+                    </Button>
+                  </Col>
+                </Row>
+                <Row className="mt-3">
+                  <Col className="d-flex justify-content-evenly">
+                    <Button
+                      style={redPillButton}
+                      onClick={() => setRequestQuote(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </Col>
+                </Row>
+              </div>
+              {!isEditing && !requestQuote && quotes && quotes.length > 0 && (
+                <div className="pb-4 mb-4">
+                  {quotes &&
+                    quotes.length > 0 &&
+                    quotes.map((quote, i) => (
+                      <div key={i}>
+                        <hr
+                          style={{
+                            border: "1px dashed #000000",
+                            borderStyle: "none none dashed",
+                            backgroundColor: "white",
+                          }}
+                        />
+                        <Row className="mx-2 my-2" style={headings}>
+                          <div>{quote.business_name}</div>
+                        </Row>
+                        {quote.quote_status === "AGREED" ||
+                        quote.quote_status === "ACCEPTED" ||
+                        quote.quote_status === "SENT" ||
+                        quote.quote_status === "REJECTED" ? (
+                          <div className="mx-2 my-2 p-3">
+                            <Row>
+                              <Table
+                                responsive="md"
+                                classes={{ root: classes.customTable }}
+                                size="small"
+                              >
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell align="center">
+                                      Service Charges
+                                    </TableCell>{" "}
+                                    <TableCell align="center">Notes</TableCell>
+                                    <TableCell align="center">
+                                      Event Type
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      Total Estimate
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      Earliest Availability
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      Scheduled Date
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      Scheduled Time
+                                    </TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell align="center">
+                                      {" "}
+                                      {quote.services_expenses &&
+                                        quote.services_expenses.length > 0 &&
+                                        JSON.parse(quote.services_expenses).map(
+                                          (service, j) => (
+                                            <div className="pt-1 mb-2 align-items-center">
+                                              <div
+                                                style={
+                                                  (subHeading,
+                                                  { textAlign: "center" })
+                                                }
+                                              >
+                                                {service.service_name}: $
+                                                {service.charge}{" "}
+                                                {service.per === "Hour"
+                                                  ? `/${service.per}`
+                                                  : "One-Time Fee"}
+                                              </div>
+                                            </div>
+                                          )
+                                        )}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      {quote.notes}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      {" "}
+                                      {quote.event_type} hour job
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      {" "}
+                                      $ {quote.total_estimate}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      {" "}
+                                      {
+                                        String(
+                                          quote.earliest_availability
+                                        ).split(" ")[0]
+                                      }
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      {" "}
+                                      {repair.scheduled_date !== null &&
+                                      repair.scheduled_date !== "null"
+                                        ? repair.scheduled_date.split(" ")[0]
+                                        : "Not Scheduled"}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      {" "}
+                                      {repair.scheduled_time !== null &&
+                                      repair.scheduled_time !== "null"
+                                        ? repair.scheduled_time
+                                        : "Not Scheduled"}
+                                    </TableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
+                            </Row>
+                          </div>
+                        ) : quote.quote_status === "REQUESTED" ||
+                          quote.quote_status === "REFUSED" ||
+                          quote.quote_status === "WITHDRAW" ? (
+                          <div className="mx-2 my-2 p-3">No quote info</div>
+                        ) : (
+                          ""
+                        )}
+
+                        <Row
+                          hidden={
+                            quote.quote_status !== "SENT" &&
+                            repair.property_manager.length === 0
+                          }
+                          className="pt-1 mb-4"
                         >
-                          <p style={{ ...red, ...small }}>
-                            {errorMessage || "error"}
-                          </p>
-                        </div>
-                        <Row>
+                          <Col className="d-flex flex-row justify-content-evenly">
+                            <Button
+                              style={bluePillButton}
+                              onClick={() => acceptQuote(quote)}
+                            >
+                              Accept Quote
+                            </Button>
+                          </Col>
                           <Col className="d-flex flex-row justify-content-evenly">
                             <Button
                               style={redPillButton}
-                              onClick={() => rejectQuoteFunc(quote)}
+                              onClick={() => setRejectQuote(true)}
                             >
                               Reject Quote
                             </Button>
                           </Col>
                         </Row>
-                      </Row>
-                    ) : (
-                      <Row></Row>
-                    )}
-                    {finishMaintenance &&
-                    repair.request_created_by === user.user_uid &&
-                    JSON.parse(quote.maintenance_images) !== null &&
-                    quote.request_status === "FINISHED" ? (
-                      <Row className="mx-2 my-2 p-3">
-                        <Row>
-                          <div style={headings}>
-                            Images Uploaded by Maintenance
-                          </div>
-                        </Row>
-                        <Row className=" d-flex align-items-center justify-content-center m-3">
-                          {JSON.parse(quote.maintenance_images).length === 0 ? (
-                            <img
-                              src={RepairImg}
-                              alt="Property"
-                              style={{
-                                width: "200px",
-                                height: "200px",
-                                objectFit: "cover",
-                              }}
-                            />
-                          ) : JSON.parse(quote.maintenance_images).length >
-                            4 ? (
-                            <Carousel
-                              responsive={responsive}
-                              infinite={true}
-                              arrows={true}
-                              partialVisible={false}
-                              // className=" d-flex align-items-center justify-content-center"
-                            >
-                              {JSON.parse(quote.maintenance_images).map(
-                                (image) => {
-                                  return (
-                                    // <div className="d-flex align-items-center justify-content-center">
-                                    <img
-                                      // key={Date.now()}
-                                      src={`${image}?${Date.now()}`}
-                                      // onClick={() =>
-                                      //   showImage(`${image}?${Date.now()}`)
-                                      // }
-                                      style={{
-                                        width: "200px",
-                                        height: "200px",
-                                        objectFit: "cover",
-                                      }}
-                                    />
-                                    // </div>
-                                  );
-                                }
-                              )}
-                            </Carousel>
-                          ) : JSON.parse(quote.maintenance_images).length <
-                            4 ? (
-                            <Carousel
-                              responsive={responsive}
-                              infinite={true}
-                              arrows={true}
-                              partialVisible={false}
-                              className=" d-flex align-items-center justify-content-center"
-                            >
-                              {JSON.parse(quote.maintenance_images).map(
-                                (image) => {
-                                  return (
-                                    <div className="d-flex align-items-center justify-content-center">
-                                      <img
-                                        // key={Date.now()}
-                                        src={`${image}?${Date.now()}`}
-                                        // onClick={() =>
-                                        //   showImage(`${image}?${Date.now()}`)
-                                        // }
-                                        style={{
-                                          width: "200px",
-                                          height: "200px",
-                                          objectFit: "cover",
-                                        }}
-                                      />
-                                    </div>
-                                  );
-                                }
-                              )}
-                            </Carousel>
-                          ) : (
-                            ""
-                          )}
-                        </Row>
+
                         <Row
+                          hidden={quote.quote_status === "SENT"}
                           className="pt-1 mb-4"
-                          style={{
-                            background: "#F3F3F3 0% 0% no-repeat padding-box",
-                            borderRadius: "10px",
-                            opacity: 1,
-                          }}
                         >
-                          <div style={subHeading}>Notes</div>
-                          <div style={subText}>{quote.notes}</div>
-                        </Row>
-                        <Row>
                           <Col className="d-flex flex-row justify-content-evenly">
-                            {" "}
                             <Button
-                              style={bluePillButton}
-                              onClick={() => CompleteMaintenance()}
+                              style={
+                                (quote.quote_status === "ACCEPTED" ||
+                                  quote.quote_status === "AGREED" ||
+                                  quote.quote_status === "PAID") &&
+                                (quote.request_status === "PROCESSING" ||
+                                  quote.request_status === "SCHEDULED" ||
+                                  quote.request_status === "SCHEDULE" ||
+                                  quote.request_status === "RESCHEDULE" ||
+                                  quote.request_status === "FINISHED" ||
+                                  quote.request_status === "COMPLETED")
+                                  ? greenPill
+                                  : quote.quote_status === "REJECTED" ||
+                                    quote.quote_status === "REFUSED"
+                                  ? redPill
+                                  : orangePill
+                              }
                             >
-                              Completed
+                              {quote.quote_status === "REQUESTED"
+                                ? "Waiting for quote from business"
+                                : quote.quote_status === "REJECTED"
+                                ? "You've Rejected the Quote"
+                                : quote.quote_status === "ACCEPTED" &&
+                                  quote.request_status === "PROCESSING"
+                                ? "You've Accepted the Quote"
+                                : quote.quote_status === "SENT"
+                                ? "Waiting for quote from business"
+                                : quote.quote_status === "REFUSED"
+                                ? "Business refused to send a quote"
+                                : quote.quote_status === "ACCEPTED" &&
+                                  quote.request_status === "SCHEDULE"
+                                ? "Maintenance Sent Schedule"
+                                : quote.quote_status === "ACCEPTED" &&
+                                  quote.request_status === "RESCHEDULE"
+                                ? "Reschedule Requested"
+                                : quote.quote_status === "AGREED" &&
+                                  quote.request_status === "SCHEDULED"
+                                ? "Maintenance Scheduled"
+                                : quote.quote_status === "AGREED" &&
+                                  quote.request_status === "FINISHED"
+                                ? "Maintenance Finished"
+                                : quote.request_status === "COMPLETED" &&
+                                  quote.quote_status === "AGREED"
+                                ? "Maintenance Completed"
+                                : quote.quote_status === "PAID" &&
+                                  quote.request_status === "COMPLETED"
+                                ? "Maintenance Paid"
+                                : quote.quote_status === "WITHDRAWN" &&
+                                  quote.request_status === "PROCESSING"
+                                ? "Quote Request Withdrawn"
+                                : quote.request_status === "CANCELLED"
+                                ? "Maintenance Request Cancelled"
+                                : "Another quote accepted"}
                             </Button>
                           </Col>
                         </Row>
-                      </Row>
-                    ) : (
-                      <Row></Row>
-                    )}
-                    <hr />
-                  </div>
-                ))}
-              {!isEditing &&
-              !completeMaintenance &&
-              repair.request_status !== "COMPLETED" ? (
-                <Row className="pt-1 mt-3 mb-2">
-                  <Col className="d-flex flex-row justify-content-evenly">
-                    <Button
-                      style={pillButton}
-                      variant="outline-primary"
-                      onClick={() => setCompleteMaintenance(true)}
-                    >
-                      Complete Maintenance
-                    </Button>
-                  </Col>
-                </Row>
-              ) : (
-                ""
-              )}
-              {completeMaintenance ? (
-                <Row className="m-3">
-                  <RepairImages state={imageState} />
-                  <Form.Group
-                    className="mt-3 mb-4 p-2"
-                    style={{
-                      background: "#F3F3F3 0% 0% no-repeat padding-box",
-                      borderRadius: "5px",
-                    }}
-                  >
-                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                      Notes {required}
-                    </Form.Label>
-                    <Form.Control
-                      style={{ borderRadius: 0 }}
-                      as="textarea"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Enter Notes"
-                    />
-                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                      Cost {required}
-                    </Form.Label>
-                    <Form.Control
-                      style={{ borderRadius: 0 }}
-                      value={cost}
-                      onChange={(e) => setCost(e.target.value)}
-                      placeholder="Amount($)"
-                    />
-                  </Form.Group>
-                  <div
-                    className="text-center"
-                    style={errorMessage === "" ? hidden : {}}
-                  >
-                    <p style={{ ...red, ...small }}>
-                      {errorMessage || "error"}
-                    </p>
-                  </div>
-                  <Row>
-                    <Col className="d-flex flex-row justify-content-evenly">
-                      {" "}
-                      <Button
-                        style={bluePillButton}
-                        onClick={() => FinishMaintenanceFunc()}
-                      >
-                        Complete Maintenance
-                      </Button>
-                    </Col>
-                    <Col className="d-flex flex-row justify-content-evenly">
-                      <Button
-                        style={pillButton}
-                        variant="outline-primary"
-                        onClick={() => setCompleteMaintenance(false)}
-                      >
-                        Cancel
-                      </Button>
-                    </Col>
-                  </Row>
-                </Row>
-              ) : (
-                ""
-              )}
-              {!isEditing &&
-              repair.property_manager.length === 0 &&
-              !cancelMaintenance ? (
-                <Row className="pt-1 mt-3 mb-2">
-                  <Col className="d-flex flex-row justify-content-evenly">
-                    <Button
-                      style={pillButton}
-                      variant="outline-primary"
-                      onClick={() => setCancelMaintenance(true)}
-                    >
-                      Cancel Maintenance
-                    </Button>
-                  </Col>
-                </Row>
-              ) : (
-                ""
-              )}
-              {cancelMaintenance && repair.property_manager.length === 0 ? (
-                <Row>
-                  <Form.Group className="mx-2 my-3">
-                    <Form.Label style={subHeading} className="mb-0 ms-2">
-                      Reason for Cancelling Maintenance{" "}
-                      {messagetoM === "" ? required : ""}
-                    </Form.Label>
-                    <Form.Control
-                      style={squareForm}
-                      placeholder=" Reason for Cancelling Maintenance"
-                      value={messagetoM}
-                      onChange={(e) => setMessagetoM(e.target.value)}
-                    />
-                  </Form.Group>
-                  <div
-                    className="text-center"
-                    style={errorMessage === "" ? hidden : {}}
-                  >
-                    <p style={{ ...red, ...small }}>
-                      {errorMessage || "error"}
-                    </p>
-                  </div>
-                  <Row className="pt-1 mt-3 mb-2">
-                    {showSpinner ? (
-                      <div className="w-100 d-flex flex-column justify-content-center align-items-center">
-                        <ReactBootStrap.Spinner
-                          animation="border"
-                          role="status"
-                        />
+                        <Row className="pt-1 mb-4">
+                          <Col className="d-flex flex-row justify-content-evenly">
+                            {" "}
+                            {!withdrawQuote &&
+                            repair.property_manager.length === 0 &&
+                            quote.quote_status === "REQUESTED" ? (
+                              <Button
+                                style={bluePillButton}
+                                // onClick={() => withdrawQuoteFunc(quote)}
+                                onClick={() => setWithdrawQuote(true)}
+                              >
+                                Withdraw Quote
+                              </Button>
+                            ) : (
+                              ""
+                            )}
+                          </Col>
+                        </Row>
+                        {!scheduleMaintenance &&
+                        repair.property_manager.length === 0 &&
+                        withdrawQuote &&
+                        quote.quote_status === "REQUESTED" ? (
+                          <Row className="pt-1">
+                            <Form.Group className="mx-2 my-3">
+                              <Form.Label
+                                style={subHeading}
+                                className="mb-0 ms-2"
+                              >
+                                Reason for Withdraw{" "}
+                                {messagetoM === "" ? required : ""}
+                              </Form.Label>
+                              <Form.Control
+                                style={squareForm}
+                                placeholder=" Reason for Withdraw"
+                                value={messagetoM}
+                                onChange={(e) => setMessagetoM(e.target.value)}
+                              />
+                            </Form.Group>
+                            <div
+                              className="text-center"
+                              style={errorMessage === "" ? hidden : {}}
+                            >
+                              <p style={{ ...red, ...small }}>
+                                {errorMessage || "error"}
+                              </p>
+                            </div>
+                            <Row>
+                              {" "}
+                              <Col className="d-flex flex-row justify-content-evenly">
+                                <Button
+                                  style={bluePillButton}
+                                  onClick={() => withdrawQuoteFunc(quote)}
+                                  // onClick={() => setWithdrawQuote(true)}
+                                >
+                                  Withdraw Quote
+                                </Button>
+                              </Col>
+                            </Row>
+                          </Row>
+                        ) : (
+                          <Row></Row>
+                        )}
+                        {!scheduleMaintenance &&
+                        repair.property_manager.length === 0 &&
+                        quote.request_status === "SCHEDULE" &&
+                        quote.quote_status === "ACCEPTED" ? (
+                          <Row className="pt-1">
+                            <Col className="d-flex flex-row justify-content-evenly">
+                              <Button
+                                style={bluePillButton}
+                                onClick={() => acceptSchedule(quote)}
+                              >
+                                Accept
+                              </Button>
+                            </Col>
+                            <Col className="d-flex flex-row justify-content-evenly">
+                              <Button
+                                style={bluePillButton}
+                                onClick={() => setScheduleMaintenance(true)}
+                              >
+                                Reschedule
+                              </Button>
+                            </Col>
+                          </Row>
+                        ) : (
+                          <Row></Row>
+                        )}
+                        {scheduleMaintenance ? (
+                          <Row className="mx-2 my-2 p-3">
+                            <RescheduleRepair quotes={quote} />
+                          </Row>
+                        ) : (
+                          <Row></Row>
+                        )}
+                        {rejectQuote &&
+                        !requestQuote &&
+                        repair.property_manager.length === 0 &&
+                        !scheduleMaintenance &&
+                        quote.request_status === "PROCESSING" &&
+                        quote.quote_status === "SENT" ? (
+                          <Row
+                            style={{
+                              background: "#F3F3F3 0% 0% no-repeat padding-box",
+                              borderRadius: "10px",
+                              opacity: 1,
+                            }}
+                            className="my-4 p-2"
+                          >
+                            <Form.Group className="mx-2 my-3">
+                              <Form.Label
+                                style={subHeading}
+                                className="mb-0 ms-2"
+                              >
+                                Reason for Reject{" "}
+                                {messagetoM === "" ? required : ""}
+                              </Form.Label>
+                              <Form.Control
+                                style={squareForm}
+                                placeholder=" Reason for Reject"
+                                value={messagetoM}
+                                onChange={(e) => setMessagetoM(e.target.value)}
+                              />
+                            </Form.Group>
+                            <div
+                              className="text-center"
+                              style={errorMessage === "" ? hidden : {}}
+                            >
+                              <p style={{ ...red, ...small }}>
+                                {errorMessage || "error"}
+                              </p>
+                            </div>
+                            <Row>
+                              <Col className="d-flex flex-row justify-content-evenly">
+                                <Button
+                                  style={redPillButton}
+                                  onClick={() => rejectQuoteFunc(quote)}
+                                >
+                                  Reject Quote
+                                </Button>
+                              </Col>
+                            </Row>
+                          </Row>
+                        ) : (
+                          <Row></Row>
+                        )}
+                        {finishMaintenance &&
+                        repair.request_created_by === user.user_uid &&
+                        JSON.parse(quote.maintenance_images) !== null &&
+                        quote.request_status === "FINISHED" ? (
+                          <Row className="mx-2 my-2 p-3">
+                            <Row>
+                              <div style={headings}>
+                                Images Uploaded by Maintenance
+                              </div>
+                            </Row>
+                            <Row className=" d-flex align-items-center justify-content-center m-3">
+                              {JSON.parse(quote.maintenance_images).length ===
+                              0 ? (
+                                <img
+                                  src={RepairImg}
+                                  alt="Property"
+                                  style={{
+                                    width: "200px",
+                                    height: "200px",
+                                    objectFit: "cover",
+                                  }}
+                                />
+                              ) : JSON.parse(quote.maintenance_images).length >
+                                4 ? (
+                                <Carousel
+                                  responsive={responsive}
+                                  infinite={true}
+                                  arrows={true}
+                                  partialVisible={false}
+                                  // className=" d-flex align-items-center justify-content-center"
+                                >
+                                  {JSON.parse(quote.maintenance_images).map(
+                                    (image) => {
+                                      return (
+                                        // <div className="d-flex align-items-center justify-content-center">
+                                        <img
+                                          // key={Date.now()}
+                                          src={`${image}?${Date.now()}`}
+                                          // onClick={() =>
+                                          //   showImage(`${image}?${Date.now()}`)
+                                          // }
+                                          style={{
+                                            width: "200px",
+                                            height: "200px",
+                                            objectFit: "cover",
+                                          }}
+                                        />
+                                        // </div>
+                                      );
+                                    }
+                                  )}
+                                </Carousel>
+                              ) : JSON.parse(quote.maintenance_images).length <
+                                4 ? (
+                                <Carousel
+                                  responsive={responsive}
+                                  infinite={true}
+                                  arrows={true}
+                                  partialVisible={false}
+                                  className=" d-flex align-items-center justify-content-center"
+                                >
+                                  {JSON.parse(quote.maintenance_images).map(
+                                    (image) => {
+                                      return (
+                                        <div className="d-flex align-items-center justify-content-center">
+                                          <img
+                                            // key={Date.now()}
+                                            src={`${image}?${Date.now()}`}
+                                            // onClick={() =>
+                                            //   showImage(`${image}?${Date.now()}`)
+                                            // }
+                                            style={{
+                                              width: "200px",
+                                              height: "200px",
+                                              objectFit: "cover",
+                                            }}
+                                          />
+                                        </div>
+                                      );
+                                    }
+                                  )}
+                                </Carousel>
+                              ) : (
+                                ""
+                              )}
+                            </Row>
+                            <Row
+                              className="pt-1 mb-4"
+                              style={{
+                                background:
+                                  "#F3F3F3 0% 0% no-repeat padding-box",
+                                borderRadius: "10px",
+                                opacity: 1,
+                              }}
+                            >
+                              <div style={subHeading}>Notes</div>
+                              <div style={subText}>{quote.notes}</div>
+                            </Row>
+                            <Row>
+                              <Col className="d-flex flex-row justify-content-evenly">
+                                {" "}
+                                <Button
+                                  style={bluePillButton}
+                                  onClick={() => CompleteMaintenance()}
+                                >
+                                  Completed
+                                </Button>
+                              </Col>
+                            </Row>
+                          </Row>
+                        ) : (
+                          <Row></Row>
+                        )}
+                        <hr />
                       </div>
-                    ) : (
-                      ""
-                    )}
+                    ))}
+                  {!isEditing &&
+                  !completeMaintenance &&
+                  repair.request_status !== "COMPLETED" ? (
+                    <Row className="pt-1 mt-3 mb-2">
+                      <Col className="d-flex flex-row justify-content-evenly">
+                        <Button
+                          style={pillButton}
+                          variant="outline-primary"
+                          onClick={() => setCompleteMaintenance(true)}
+                        >
+                          Complete Maintenance
+                        </Button>
+                      </Col>
+                    </Row>
+                  ) : (
+                    ""
+                  )}
+                  {completeMaintenance ? (
+                    <Row className="m-3">
+                      <RepairImages state={imageState} />
+                      <Form.Group
+                        className="mt-3 mb-4 p-2"
+                        style={{
+                          background: "#F3F3F3 0% 0% no-repeat padding-box",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        <Form.Label
+                          style={formLabel}
+                          as="h5"
+                          className="ms-1 mb-0"
+                        >
+                          Notes {required}
+                        </Form.Label>
+                        <Form.Control
+                          style={{ borderRadius: 0 }}
+                          as="textarea"
+                          value={message}
+                          onChange={(e) => setMessage(e.target.value)}
+                          placeholder="Enter Notes"
+                        />
+                        <Form.Label
+                          style={formLabel}
+                          as="h5"
+                          className="ms-1 mb-0"
+                        >
+                          Cost($){required}
+                        </Form.Label>
+                        <span
+                          style={{
+                            marginRight: "-10px",
+                            position: "absolute",
+                            fontSize: "18px",
+                            padding: 0,
+                          }}
+                        >
+                          $
+                        </span>
+                        <Form.Control
+                          style={{
+                            borderRadius: 0,
+                            paddingLeft: "10px",
+                            paddingTop: 0,
+                            paddingBottom: 0,
+                          }}
+                          value={cost}
+                          onChange={(e) => setCost(e.target.value)}
+                          // placeholder="Amount($)"
+                        />
+                      </Form.Group>
+                      {showSpinner ? (
+                        <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                          <ReactBootStrap.Spinner
+                            animation="border"
+                            role="status"
+                          />
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <div
+                        className="text-center"
+                        style={errorMessage === "" ? hidden : {}}
+                      >
+                        <p style={{ ...red, ...small }}>
+                          {errorMessage || "error"}
+                        </p>
+                      </div>
+                      <Row>
+                        <Col className="d-flex flex-row justify-content-evenly">
+                          {" "}
+                          <Button
+                            style={bluePillButton}
+                            onClick={() => FinishMaintenanceFunc()}
+                          >
+                            Complete Maintenance
+                          </Button>
+                        </Col>
+                        <Col className="d-flex flex-row justify-content-evenly">
+                          <Button
+                            style={pillButton}
+                            variant="outline-primary"
+                            onClick={() => setCompleteMaintenance(false)}
+                          >
+                            Cancel
+                          </Button>
+                        </Col>
+                      </Row>
+                    </Row>
+                  ) : (
+                    ""
+                  )}
+                  {!isEditing &&
+                  repair.property_manager.length === 0 &&
+                  !cancelMaintenance ? (
+                    <Row className="pt-1 mt-3 mb-2">
+                      <Col className="d-flex flex-row justify-content-evenly">
+                        <Button
+                          style={pillButton}
+                          variant="outline-primary"
+                          onClick={() => setCancelMaintenance(true)}
+                        >
+                          Cancel Maintenance
+                        </Button>
+                      </Col>
+                    </Row>
+                  ) : (
+                    ""
+                  )}
+                  {cancelMaintenance && repair.property_manager.length === 0 ? (
+                    <Row>
+                      <Form.Group className="mx-2 my-3">
+                        <Form.Label style={subHeading} className="mb-0 ms-2">
+                          Reason for Cancelling Maintenance{" "}
+                          {messagetoM === "" ? required : ""}
+                        </Form.Label>
+                        <Form.Control
+                          style={squareForm}
+                          placeholder=" Reason for Cancelling Maintenance"
+                          value={messagetoM}
+                          onChange={(e) => setMessagetoM(e.target.value)}
+                        />
+                      </Form.Group>
+                      <div
+                        className="text-center"
+                        style={errorMessage === "" ? hidden : {}}
+                      >
+                        <p style={{ ...red, ...small }}>
+                          {errorMessage || "error"}
+                        </p>
+                      </div>
+                      <Row className="pt-1 mt-3 mb-2">
+                        {showSpinner ? (
+                          <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                            <ReactBootStrap.Spinner
+                              animation="border"
+                              role="status"
+                            />
+                          </div>
+                        ) : (
+                          ""
+                        )}
 
-                    <Col className="d-flex flex-row justify-content-evenly">
-                      <Button
-                        style={pillButton}
-                        variant="outline-primary"
-                        onClick={() => CancelMaintenanceFunc()}
-                      >
-                        Cancel Maintenance
-                      </Button>
-                    </Col>
-                    <Col className="d-flex flex-row justify-content-evenly">
-                      <Button
-                        style={pillButton}
-                        variant="outline-primary"
-                        onClick={() => setCancelMaintenance(false)}
-                      >
-                        Cancel
-                      </Button>
-                    </Col>
-                  </Row>
-                </Row>
-              ) : (
-                ""
+                        <Col className="d-flex flex-row justify-content-evenly">
+                          <Button
+                            style={pillButton}
+                            variant="outline-primary"
+                            onClick={() => CancelMaintenanceFunc()}
+                          >
+                            Cancel Maintenance
+                          </Button>
+                        </Col>
+                        <Col className="d-flex flex-row justify-content-evenly">
+                          <Button
+                            style={pillButton}
+                            variant="outline-primary"
+                            onClick={() => setCancelMaintenance(false)}
+                          >
+                            Cancel
+                          </Button>
+                        </Col>
+                      </Row>
+                    </Row>
+                  ) : (
+                    ""
+                  )}
+                </div>
               )}
+            </div>
+          ) : (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
             </div>
           )}
 

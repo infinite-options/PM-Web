@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Row, Col, Form, Button } from "react-bootstrap";
 import {
   Table,
   TableRow,
@@ -12,24 +12,24 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import Header from "../Header";
 import BusinessContact from "../BusinessContact";
+import MailDialogTenant from "../MailDialog";
+import MessageDialogTenant from "../MessageDialog";
 import ManagerTenantRentPayments from "./ManagerTenantRentPayments";
 import ManagerFooter from "./ManagerFooter";
 import SideBar from "./SideBar";
 import UpdateConfirmDialog from "./UpdateConfirmDialog";
 import DocumentsUploadPost from "../DocumentsUploadPost";
-import ArrowDown from "../../icons/ArrowDown.svg";
-import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
+
 import { put, post } from "../../utils/api";
-import { days } from "../../utils/helper";
 import {
   small,
   hidden,
   red,
   squareForm,
   mediumBold,
-  smallPillButton,
   bluePillButton,
   smallImg,
   subHeading,
@@ -53,18 +53,14 @@ function ManagerTenantAgreement(props) {
   const classes = useStyles();
 
   const navigate = useNavigate();
-  const {
-    back,
-    property,
-    agreement,
-    acceptedTenantApplications,
-    setAcceptedTenantApplications,
-  } = props;
+  const { back, property, agreement, acceptedTenantApplications } = props;
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
   console.log(property, agreement, acceptedTenantApplications);
-  const { ably } = useContext(AppContext);
+
+  const { userData, ably } = useContext(AppContext);
+  const { user } = userData;
   const [tenantID, setTenantID] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -109,6 +105,17 @@ function ManagerTenantAgreement(props) {
   };
   const onCancel = () => {
     setShowDialog(false);
+  };
+
+  const [selectedTenant, setSelectedTenant] = useState("");
+  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [showMailForm, setShowMailForm] = useState(false);
+  const onCancelMail = () => {
+    setShowMailForm(false);
+  };
+
+  const onCancelMessage = () => {
+    setShowMessageForm(false);
   };
 
   const loadAgreement = () => {
@@ -967,6 +974,30 @@ function ManagerTenantAgreement(props) {
     );
   return (
     <Row className="w-100 mb-5 overflow-hidden">
+      <MailDialogTenant
+        title={"Email"}
+        isOpen={showMailForm}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedTenant.tenantID}
+        receiverEmail={selectedTenant.tenantEmail}
+        receiverPhone={selectedTenant.tenantPhoneNumber}
+        onCancel={onCancelMail}
+      />
+      <MessageDialogTenant
+        title={"Text Message"}
+        isOpen={showMessageForm}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={selectedTenant.tenantID}
+        receiverEmail={selectedTenant.tenantEmail}
+        receiverPhone={selectedTenant.tenantPhoneNumber}
+        onCancel={onCancelMessage}
+      />
       <UpdateConfirmDialog
         title={"Review the lease"}
         updatedAgreement={updatedAgreement}
@@ -1014,7 +1045,38 @@ function ManagerTenantAgreement(props) {
                     </Col>
 
                     <Col>
-                      <div className="d-flex  justify-content-end ">
+                      <Row className="mb-2">
+                        <Col className="d-flex justify-content-center">
+                          {" "}
+                          <a href={`tel:${application.tenant_phone_number}`}>
+                            <img src={Phone} alt="Phone" style={smallImg} />
+                          </a>
+                        </Col>
+
+                        <Col className="d-flex justify-content-center">
+                          <a
+                            // href={`mailto:${tf.tenantEmail}`}
+                            onClick={() => {
+                              setShowMessageForm(true);
+                              setSelectedTenant(application);
+                            }}
+                          >
+                            <img src={Message} alt="Message" style={smallImg} />
+                          </a>
+                        </Col>
+                        <Col className="d-flex justify-content-center">
+                          <a
+                            // href={`mailto:${application.tenantEmail}`}
+                            onClick={() => {
+                              setShowMailForm(true);
+                              setSelectedTenant(application);
+                            }}
+                          >
+                            <img src={Mail} alt="Mail" style={smallImg} />
+                          </a>
+                        </Col>
+                      </Row>
+                      {/* <div className="d-flex  justify-content-end ">
                         <div
                           style={application.tenant_id ? {} : hidden}
                           onClick={stopPropagation}
@@ -1026,7 +1088,7 @@ function ManagerTenantAgreement(props) {
                             <img src={Message} alt="Message" style={smallImg} />
                           </a>
                         </div>
-                      </div>
+                      </div> */}
                     </Col>
                   </Row>
                   <Row>

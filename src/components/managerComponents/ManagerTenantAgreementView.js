@@ -12,7 +12,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import MailDialogTenant from "../MailDialog";
 import MailDialogContact from "../MailDialog";
-
 import MessageDialogTenant from "../MessageDialog";
 import MessageDialogContact from "../MessageDialog";
 import DocumentsUploadPut from "../DocumentsUploadPut";
@@ -21,11 +20,9 @@ import EditIconNew from "../../icons/EditIconNew.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import Mail from "../../icons/Mail.svg";
-import File from "../../icons/File.svg";
-import { put, post, get } from "../../utils/api";
+import { put, post } from "../../utils/api";
 import {
   small,
-  smallPillButton,
   smallImg,
   red,
   squareForm,
