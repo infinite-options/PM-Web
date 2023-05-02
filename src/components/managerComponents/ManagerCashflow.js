@@ -7,7 +7,11 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TableSortLabel,
+  Box,
 } from "@material-ui/core";
+import PropTypes from "prop-types";
+import { visuallyHidden } from "@mui/utils";
 import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import { Switch } from "@material-ui/core";
@@ -34,6 +38,7 @@ export default function ManagerCashflow(props) {
     props;
 
   const [isLoading, setIsLoading] = useState(true);
+  const [managerID, setManagerID] = useState("");
   // monthly toggles
   const [toggleMonthlyCashFlow, setToggleMonthlyCashFlow] = useState(false);
   const [toggleMonthlyCashFlowProperty, setToggleMonthlyCashFlowProperty] =
@@ -77,6 +82,7 @@ export default function ManagerCashflow(props) {
 
   const [expenseSummary, setExpenseSummary] = useState(null);
   const [filter, setFilter] = useState(false);
+
   const [month, setMonth] = useState(
     new Date().toLocaleString("default", {
       month: "long",
@@ -88,6 +94,11 @@ export default function ManagerCashflow(props) {
     })
   );
   const [propertyID, setPropertyID] = useState([]);
+  const [all, setAll] = useState(false);
+  const [transactions, setTransactions] = useState([]);
+
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("next_payment");
   const fetchCashflow = async () => {
     if (access_token === null || user.role.indexOf("MANAGER") === -1) {
       navigate("/");
@@ -103,6 +114,7 @@ export default function ManagerCashflow(props) {
     const cashflowResponse = await get(
       `/CashflowManager?manager_id=${management_buid}&year=${year}`
     );
+    setManagerID(management_buid);
     let currentRev = [];
     let currentRevSummary = [];
     let currentExp = [];
@@ -233,26 +245,25 @@ export default function ManagerCashflow(props) {
 
     setIsLoading(false);
   };
-  // console.log(revenue);
-  // console.log(expense);
-  // console.log(revenueSummary);
-  // console.log(expenseSummary);
+  const fetchAllCashflow = async () => {
+    if (access_token === null || user.role.indexOf("MANAGER") === -1) {
+      navigate("/");
+      return;
+    }
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length >= 1) {
+      management_buid = management_businesses[0].business_uid;
+    }
 
-  useEffect(() => {
-    fetchCashflow();
-  }, [year, month, filter]);
-
-  const options = [];
-  const minOffset = 0;
-  const maxOffset = 60;
-  for (let i = minOffset; i <= maxOffset; i++) {
-    const year =
-      new Date().toLocaleString("default", {
-        year: "numeric",
-      }) - i;
-    options.push(<option value={year}>{year}</option>);
-  }
-
+    const cashflowResponse = await get(
+      `/AllCashflowManager?property_id=${managerData[0].property_uid}`
+    );
+    console.log(cashflowResponse.result);
+    setTransactions(cashflowResponse.result);
+  };
   const toggleProperty = (property) => {
     const shownState = propertyID.slice();
 
@@ -267,6 +278,136 @@ export default function ManagerCashflow(props) {
       setPropertyID(shownState);
     }
   };
+  const options = [];
+  const minOffset = 0;
+  const maxOffset = 60;
+  for (let i = minOffset; i <= maxOffset; i++) {
+    const year =
+      new Date().toLocaleString("default", {
+        year: "numeric",
+      }) - i;
+    options.push(<option value={year}>{year}</option>);
+  }
+  useEffect(() => {
+    fetchCashflow();
+  }, [year, month, filter]);
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparator(order, orderBy) {
+    return order === "desc"
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) {
+        return order;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  const paymentsOutgoingHeadCell = [
+    {
+      id: "purchase_uid",
+      numeric: false,
+      label: "ID",
+    },
+
+    {
+      id: "purchase_type",
+      numeric: false,
+      label: "Transaction Type",
+    },
+
+    {
+      id: "description",
+      numeric: true,
+      label: "Transaction Description",
+    },
+    {
+      id: "amount_due",
+      numeric: true,
+      label: "Amount Due",
+    },
+    {
+      id: "amount_paid",
+      numeric: true,
+      label: "Amount Paid",
+    },
+
+    {
+      id: "next_payment",
+      numeric: true,
+      label: "Date Due",
+    },
+  ];
+  function EnhancedTableHeadAllTransactions(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {paymentsOutgoingHeadCell.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                align="center"
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadAllTransactions.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
+  };
+
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
@@ -304,11 +445,8 @@ export default function ManagerCashflow(props) {
               </Col>
             </Row>
             <Row className="m-3">
-              <Col xs={1} className="d-flex align-items-center">
-                Filters
-              </Col>
               <Col xs={3} className="d-flex align-items-center">
-                Month:&nbsp;&nbsp;&nbsp;&nbsp;
+                {/* Month:&nbsp;&nbsp;&nbsp;&nbsp; */}
                 <select
                   value={month}
                   className="mt-1"
@@ -329,8 +467,8 @@ export default function ManagerCashflow(props) {
                   <option value="December">December</option>
                 </select>
               </Col>
-              <Col xs={3} className="d-flex align-items-center">
-                Year:&nbsp;&nbsp;&nbsp;&nbsp;
+              <Col xs={2} className="d-flex align-items-center">
+                {/* Year:&nbsp;&nbsp;&nbsp;&nbsp; */}
                 <select
                   className="mt-1"
                   value={year}
@@ -340,29 +478,44 @@ export default function ManagerCashflow(props) {
                 </select>
               </Col>
               {byProperty ? (
-                <Col>
-                  By Category
+                <Col className="d-flex align-items-center">
+                  Category
                   <Switch
                     checked={filter}
                     onChange={() => setFilter(!filter)}
                     inputProps={{ "aria-label": "controlled" }}
                   />
-                  By Property
+                  Property
                 </Col>
               ) : (
-                <Col>
-                  By Category
+                <Col className="d-flex align-items-center">
+                  Category
                   <Switch
                     checked={filter}
                     onChange={() => setFilter(!filter)}
                     inputProps={{ "aria-label": "controlled" }}
                   />
-                  By Property
+                  Property
                 </Col>
+              )}
+              {propertyView ? (
+                <Col xs={1}>
+                  {" "}
+                  <button
+                    onClick={() => {
+                      setAll(!all);
+                      fetchAllCashflow();
+                    }}
+                  >
+                    All
+                  </button>{" "}
+                </Col>
+              ) : (
+                ""
               )}
             </Row>
             {!isLoading ? (
-              filter === false ? (
+              filter === false && all === false ? (
                 <Row className="m-3">
                   <Table
                     responsive="md"
@@ -2382,7 +2535,7 @@ export default function ManagerCashflow(props) {
                     </TableBody>
                   </Table>
                 </Row>
-              ) : (
+              ) : all === false ? (
                 <Row className="m-3">
                   <Table
                     responsive="md"
@@ -5245,6 +5398,97 @@ export default function ManagerCashflow(props) {
                               ""
                             )}
                           </>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
+              ) : (
+                <Row
+                  className="m-3 overflow-scroll"
+                  style={{ height: "15rem" }}
+                >
+                  All Transactions
+                  <Table
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                    responsive="md"
+                  >
+                    <EnhancedTableHeadAllTransactions
+                      order={order}
+                      orderBy={orderBy}
+                      onRequestSort={handleRequestSort}
+                      rowCount={transactions.length}
+                    />{" "}
+                    <TableBody>
+                      {stableSort(
+                        transactions,
+                        getComparator(order, orderBy)
+                      ).map((transaction) => {
+                        return (
+                          <TableRow>
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {transaction.purchase_uid}
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {transaction.purchase_type}
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {transaction.description}
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {transaction.amount_due}
+                            </TableCell>
+
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {transaction.amount_paid}
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {transaction.next_payment.split(" ")[0]}
+                            </TableCell>
+                          </TableRow>
                         );
                       })}
                     </TableBody>
