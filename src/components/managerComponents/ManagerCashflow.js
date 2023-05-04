@@ -7,7 +7,11 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TableSortLabel,
+  Box,
 } from "@material-ui/core";
+import PropTypes from "prop-types";
+import { visuallyHidden } from "@mui/utils";
 import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import { Switch } from "@material-ui/core";
@@ -15,7 +19,14 @@ import AppContext from "../../AppContext";
 import AddIcon from "../../icons/AddIcon.svg";
 import SortLeft from "../../icons/Sort-left.svg";
 import { get } from "../../utils/api";
-import { headings, mediumBold, semiMediumBold, bold } from "../../utils/styles";
+import {
+  headings,
+  mediumBold,
+  semiMediumBold,
+  bold,
+  smallPillButton,
+  bluePillButton,
+} from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -34,6 +45,7 @@ export default function ManagerCashflow(props) {
     props;
 
   const [isLoading, setIsLoading] = useState(true);
+  const [managerID, setManagerID] = useState("");
   // monthly toggles
   const [toggleMonthlyCashFlow, setToggleMonthlyCashFlow] = useState(false);
   const [toggleMonthlyCashFlowProperty, setToggleMonthlyCashFlowProperty] =
@@ -77,6 +89,7 @@ export default function ManagerCashflow(props) {
 
   const [expenseSummary, setExpenseSummary] = useState(null);
   const [filter, setFilter] = useState(false);
+
   const [month, setMonth] = useState(
     new Date().toLocaleString("default", {
       month: "long",
@@ -88,6 +101,11 @@ export default function ManagerCashflow(props) {
     })
   );
   const [propertyID, setPropertyID] = useState([]);
+  const [all, setAll] = useState(false);
+  const [transactions, setTransactions] = useState([]);
+
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("next_payment");
   const fetchCashflow = async () => {
     if (access_token === null || user.role.indexOf("MANAGER") === -1) {
       navigate("/");
@@ -103,6 +121,7 @@ export default function ManagerCashflow(props) {
     const cashflowResponse = await get(
       `/CashflowManager?manager_id=${management_buid}&year=${year}`
     );
+    setManagerID(management_buid);
     let currentRev = [];
     let currentRevSummary = [];
     let currentExp = [];
@@ -233,26 +252,42 @@ export default function ManagerCashflow(props) {
 
     setIsLoading(false);
   };
-  // console.log(revenue);
-  // console.log(expense);
-  // console.log(revenueSummary);
-  // console.log(expenseSummary);
+  const fetchAllCashflow = async () => {
+    if (access_token === null || user.role.indexOf("MANAGER") === -1) {
+      navigate("/");
+      return;
+    }
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length >= 1) {
+      management_buid = management_businesses[0].business_uid;
+    }
 
-  useEffect(() => {
-    fetchCashflow();
-  }, [year, month, filter]);
+    const cashflowResponse = await get(
+      `/AllCashflowManager?property_id=${managerData[0].property_uid}`
+    );
+    // console.log(cashflowResponse.result);
+    let alltransactions = cashflowResponse.result;
+    alltransactions.forEach((all, i, self) => {
+      if (i == 0) {
+        all.sum = all.amount_due;
+      }
 
-  const options = [];
-  const minOffset = 0;
-  const maxOffset = 60;
-  for (let i = minOffset; i <= maxOffset; i++) {
-    const year =
-      new Date().toLocaleString("default", {
-        year: "numeric",
-      }) - i;
-    options.push(<option value={year}>{year}</option>);
-  }
-
+      const prev = self[i - 1];
+      if (prev !== undefined) {
+        // console.log(i, all.purchase_uid, prev.purchase_uid);
+        if (all.receiver === managerID) {
+          all.sum = prev.sum + all.amount_due;
+        } else {
+          all.sum = prev.sum - all.amount_due;
+        }
+      }
+    });
+    // console.log(alltransactions);
+    setTransactions(cashflowResponse.result);
+  };
   const toggleProperty = (property) => {
     const shownState = propertyID.slice();
 
@@ -267,6 +302,20 @@ export default function ManagerCashflow(props) {
       setPropertyID(shownState);
     }
   };
+  const options = [];
+  const minOffset = 0;
+  const maxOffset = 60;
+  for (let i = minOffset; i <= maxOffset; i++) {
+    const year =
+      new Date().toLocaleString("default", {
+        year: "numeric",
+      }) - i;
+    options.push(<option value={year}>{year}</option>);
+  }
+  useEffect(() => {
+    fetchCashflow();
+  }, [year, month, filter]);
+
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
@@ -304,11 +353,8 @@ export default function ManagerCashflow(props) {
               </Col>
             </Row>
             <Row className="m-3">
-              <Col xs={1} className="d-flex align-items-center">
-                Filters
-              </Col>
               <Col xs={3} className="d-flex align-items-center">
-                Month:&nbsp;&nbsp;&nbsp;&nbsp;
+                {/* Month:&nbsp;&nbsp;&nbsp;&nbsp; */}
                 <select
                   value={month}
                   className="mt-1"
@@ -329,8 +375,8 @@ export default function ManagerCashflow(props) {
                   <option value="December">December</option>
                 </select>
               </Col>
-              <Col xs={3} className="d-flex align-items-center">
-                Year:&nbsp;&nbsp;&nbsp;&nbsp;
+              <Col xs={2} className="d-flex align-items-center">
+                {/* Year:&nbsp;&nbsp;&nbsp;&nbsp; */}
                 <select
                   className="mt-1"
                   value={year}
@@ -340,29 +386,45 @@ export default function ManagerCashflow(props) {
                 </select>
               </Col>
               {byProperty ? (
-                <Col>
-                  By Category
+                <Col className="d-flex align-items-center">
+                  Category
                   <Switch
                     checked={filter}
                     onChange={() => setFilter(!filter)}
                     inputProps={{ "aria-label": "controlled" }}
                   />
-                  By Property
+                  Property
                 </Col>
               ) : (
-                <Col>
-                  By Category
+                <Col className="d-flex align-items-center">
+                  Category
                   <Switch
                     checked={filter}
                     onChange={() => setFilter(!filter)}
                     inputProps={{ "aria-label": "controlled" }}
                   />
-                  By Property
+                  Property
                 </Col>
+              )}
+              {propertyView ? (
+                <Col xs={1}>
+                  {" "}
+                  <button
+                    style={bluePillButton}
+                    onClick={() => {
+                      setAll(!all);
+                      fetchAllCashflow();
+                    }}
+                  >
+                    All
+                  </button>{" "}
+                </Col>
+              ) : (
+                ""
               )}
             </Row>
             {!isLoading ? (
-              filter === false ? (
+              filter === false && all === false ? (
                 <Row className="m-3">
                   <Table
                     responsive="md"
@@ -2382,7 +2444,7 @@ export default function ManagerCashflow(props) {
                     </TableBody>
                   </Table>
                 </Row>
-              ) : (
+              ) : all === false ? (
                 <Row className="m-3">
                   <Table
                     responsive="md"
@@ -5245,6 +5307,112 @@ export default function ManagerCashflow(props) {
                               ""
                             )}
                           </>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
+              ) : (
+                <Row
+                  className="m-3 overflow-scroll"
+                  style={{ height: "20rem" }}
+                >
+                  <Table
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                    responsive="md"
+                  >
+                    <TableHead>
+                      <TableCell>ID</TableCell>
+                      <TableCell>Transaction Type</TableCell>
+                      <TableCell>
+                        Transaction <br />
+                        Description
+                      </TableCell>
+                      <TableCell>Amount Due</TableCell>
+                      <TableCell>Amount Paid</TableCell>
+                      <TableCell>Date Due</TableCell>
+                      <TableCell>
+                        Cumulative <br />
+                        Amount Due
+                      </TableCell>
+                    </TableHead>
+                    <TableBody>
+                      {transactions.map((transaction) => {
+                        return (
+                          <TableRow>
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {transaction.purchase_uid}
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {transaction.purchase_type}
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {transaction.description}
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {transaction.amount_due}
+                            </TableCell>
+
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {transaction.amount_paid}
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {transaction.next_payment.split(" ")[0]}
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {transaction.sum}
+                            </TableCell>
+                          </TableRow>
                         );
                       })}
                     </TableBody>
