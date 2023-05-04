@@ -19,7 +19,14 @@ import AppContext from "../../AppContext";
 import AddIcon from "../../icons/AddIcon.svg";
 import SortLeft from "../../icons/Sort-left.svg";
 import { get } from "../../utils/api";
-import { headings, mediumBold, semiMediumBold, bold } from "../../utils/styles";
+import {
+  headings,
+  mediumBold,
+  semiMediumBold,
+  bold,
+  smallPillButton,
+  bluePillButton,
+} from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -261,7 +268,24 @@ export default function ManagerCashflow(props) {
     const cashflowResponse = await get(
       `/AllCashflowManager?property_id=${managerData[0].property_uid}`
     );
-    console.log(cashflowResponse.result);
+    // console.log(cashflowResponse.result);
+    let alltransactions = cashflowResponse.result;
+    alltransactions.forEach((all, i, self) => {
+      if (i == 0) {
+        all.sum = all.amount_due;
+      }
+
+      const prev = self[i - 1];
+      if (prev !== undefined) {
+        // console.log(i, all.purchase_uid, prev.purchase_uid);
+        if (all.receiver === managerID) {
+          all.sum = prev.sum + all.amount_due;
+        } else {
+          all.sum = prev.sum - all.amount_due;
+        }
+      }
+    });
+    // console.log(alltransactions);
     setTransactions(cashflowResponse.result);
   };
   const toggleProperty = (property) => {
@@ -291,122 +315,6 @@ export default function ManagerCashflow(props) {
   useEffect(() => {
     fetchCashflow();
   }, [year, month, filter]);
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
-  function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparator(order, orderBy) {
-    return order === "desc"
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
-  }
-
-  function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) {
-        return order;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
-
-  const paymentsOutgoingHeadCell = [
-    {
-      id: "purchase_uid",
-      numeric: false,
-      label: "ID",
-    },
-
-    {
-      id: "purchase_type",
-      numeric: false,
-      label: "Transaction Type",
-    },
-
-    {
-      id: "description",
-      numeric: true,
-      label: "Transaction Description",
-    },
-    {
-      id: "amount_due",
-      numeric: true,
-      label: "Amount Due",
-    },
-    {
-      id: "amount_paid",
-      numeric: true,
-      label: "Amount Paid",
-    },
-
-    {
-      id: "next_payment",
-      numeric: true,
-      label: "Date Due",
-    },
-  ];
-  function EnhancedTableHeadAllTransactions(props) {
-    const { order, orderBy, onRequestSort } = props;
-    const createSortHandler = (property) => (event) => {
-      onRequestSort(event, property);
-    };
-
-    return (
-      <TableHead>
-        <TableRow>
-          {paymentsOutgoingHeadCell.map((headCell) => (
-            <TableCell
-              key={headCell.id}
-              align="center"
-              size="small"
-              sortDirection={orderBy === headCell.id ? order : false}
-            >
-              <TableSortLabel
-                align="center"
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
-              >
-                {headCell.label}
-                {orderBy === headCell.id ? (
-                  <Box component="span" sx={visuallyHidden}>
-                    {order === "desc"
-                      ? "sorted descending"
-                      : "sorted ascending"}
-                  </Box>
-                ) : null}
-              </TableSortLabel>
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-    );
-  }
-
-  EnhancedTableHeadAllTransactions.propTypes = {
-    numSelected: PropTypes.number.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-    orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
-  };
 
   return (
     <div className="w-100 overflow-hidden">
@@ -502,6 +410,7 @@ export default function ManagerCashflow(props) {
                 <Col xs={1}>
                   {" "}
                   <button
+                    style={bluePillButton}
                     onClick={() => {
                       setAll(!all);
                       fetchAllCashflow();
@@ -5406,25 +5315,30 @@ export default function ManagerCashflow(props) {
               ) : (
                 <Row
                   className="m-3 overflow-scroll"
-                  style={{ height: "15rem" }}
+                  style={{ height: "20rem" }}
                 >
-                  All Transactions
                   <Table
                     classes={{ root: classes.customTable }}
                     size="small"
                     responsive="md"
                   >
-                    <EnhancedTableHeadAllTransactions
-                      order={order}
-                      orderBy={orderBy}
-                      onRequestSort={handleRequestSort}
-                      rowCount={transactions.length}
-                    />{" "}
+                    <TableHead>
+                      <TableCell>ID</TableCell>
+                      <TableCell>Transaction Type</TableCell>
+                      <TableCell>
+                        Transaction <br />
+                        Description
+                      </TableCell>
+                      <TableCell>Amount Due</TableCell>
+                      <TableCell>Amount Paid</TableCell>
+                      <TableCell>Date Due</TableCell>
+                      <TableCell>
+                        Cumulative <br />
+                        Amount Due
+                      </TableCell>
+                    </TableHead>
                     <TableBody>
-                      {stableSort(
-                        transactions,
-                        getComparator(order, orderBy)
-                      ).map((transaction) => {
+                      {transactions.map((transaction) => {
                         return (
                           <TableRow>
                             <TableCell
@@ -5487,6 +5401,16 @@ export default function ManagerCashflow(props) {
                               }}
                             >
                               {transaction.next_payment.split(" ")[0]}
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {transaction.sum}
                             </TableCell>
                           </TableRow>
                         );
