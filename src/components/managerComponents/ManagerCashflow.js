@@ -277,16 +277,19 @@ export default function ManagerCashflow(props) {
       .reverse()
       .forEach((all, i, self) => {
         if (i == 0) {
-          all.sum = all.amount_due;
+          all.sum_due = all.amount_due;
+          all.sum_paid = all.amount_paid;
         }
 
         const prev = self[i - 1];
         if (prev !== undefined) {
           // console.log(i, all.purchase_uid, prev.purchase_uid);
           if (all.receiver === managerID) {
-            all.sum = prev.sum + all.amount_due;
+            all.sum_due = prev.sum_due + all.amount_due;
+            all.sum_paid = prev.sum_paid + all.amount_paid;
           } else {
-            all.sum = prev.sum - all.amount_due;
+            all.sum_due = prev.sum_due - all.amount_due;
+            all.sum_paid = prev.sum_paid - all.amount_paid;
           }
         }
       });
@@ -319,6 +322,7 @@ export default function ManagerCashflow(props) {
   }
   useEffect(() => {
     fetchCashflow();
+    fetchAllCashflow();
   }, [year, month, filter]);
 
   return (
@@ -339,7 +343,33 @@ export default function ManagerCashflow(props) {
                   {propertyView ? "Property" : "Portfolio"} Cashflow Summary
                 </h3>
               </Col>
-              <Col>
+              {propertyView ? (
+                <Col xs={1}>
+                  {" "}
+                  {!all ? (
+                    <button
+                      style={bluePillButton}
+                      onClick={() => {
+                        setAll(!all);
+                      }}
+                    >
+                      All
+                    </button>
+                  ) : (
+                    <button
+                      style={bluePillButton}
+                      onClick={() => {
+                        setAll(!all);
+                      }}
+                    >
+                      CF
+                    </button>
+                  )}{" "}
+                </Col>
+              ) : (
+                ""
+              )}
+              <Col xs={2}>
                 <img
                   src={AddIcon}
                   alt="Add Icon"
@@ -357,77 +387,66 @@ export default function ManagerCashflow(props) {
                 />
               </Col>
             </Row>
-            <Row className="m-3">
-              <Col xs={3} className="d-flex align-items-center">
-                {/* Month:&nbsp;&nbsp;&nbsp;&nbsp; */}
-                <select
-                  value={month}
-                  className="mt-1"
-                  onChange={(e) => setMonth(e.currentTarget.value)}
-                >
-                  <option value="">---</option>
-                  <option value="January">January</option>
-                  <option value="February">February</option>
-                  <option value="March">March</option>
-                  <option value="April">April</option>
-                  <option value="May">May</option>
-                  <option value="June">June</option>
-                  <option value="July">July</option>
-                  <option value="August">August</option>
-                  <option value="September">September</option>
-                  <option value="October">October</option>
-                  <option value="November">November</option>
-                  <option value="December">December</option>
-                </select>
-              </Col>
-              <Col xs={2} className="d-flex align-items-center">
-                {/* Year:&nbsp;&nbsp;&nbsp;&nbsp; */}
-                <select
-                  className="mt-1"
-                  value={year}
-                  onChange={(e) => setYear(e.currentTarget.value)}
-                >
-                  {options}
-                </select>
-              </Col>
-              {byProperty ? (
-                <Col className="d-flex align-items-center">
-                  Category
-                  <Switch
-                    checked={filter}
-                    onChange={() => setFilter(!filter)}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                  Property
-                </Col>
-              ) : (
-                <Col className="d-flex align-items-center">
-                  Category
-                  <Switch
-                    checked={filter}
-                    onChange={() => setFilter(!filter)}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                  Property
-                </Col>
-              )}
-              {propertyView ? (
-                <Col xs={1}>
-                  {" "}
-                  <button
-                    style={bluePillButton}
-                    onClick={() => {
-                      setAll(!all);
-                      fetchAllCashflow();
-                    }}
+            {!all ? (
+              <Row className="m-3">
+                <Col xs={3} className="d-flex align-items-center">
+                  {/* Month:&nbsp;&nbsp;&nbsp;&nbsp; */}
+                  <select
+                    value={month}
+                    className="mt-1"
+                    onChange={(e) => setMonth(e.currentTarget.value)}
                   >
-                    All
-                  </button>{" "}
+                    <option value="">---</option>
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                  </select>
                 </Col>
-              ) : (
-                ""
-              )}
-            </Row>
+                <Col xs={2} className="d-flex align-items-center">
+                  {/* Year:&nbsp;&nbsp;&nbsp;&nbsp; */}
+                  <select
+                    className="mt-1"
+                    value={year}
+                    onChange={(e) => setYear(e.currentTarget.value)}
+                  >
+                    {options}
+                  </select>
+                </Col>
+                {byProperty ? (
+                  <Col className="d-flex align-items-center">
+                    Category
+                    <Switch
+                      checked={filter}
+                      onChange={() => setFilter(!filter)}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                    Property
+                  </Col>
+                ) : (
+                  <Col className="d-flex align-items-center">
+                    Category
+                    <Switch
+                      checked={filter}
+                      onChange={() => setFilter(!filter)}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                    Property
+                  </Col>
+                )}
+              </Row>
+            ) : (
+              ""
+            )}
+
             {!isLoading ? (
               filter === false && all === false ? (
                 <Row className="m-3">
@@ -620,12 +639,14 @@ export default function ManagerCashflow(props) {
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
-                            {revenueSummary
-                              .find((revS) => revS.purchase_type === "RENT")
-                              .amount_due.toFixed(2) -
-                              revenueSummary
-                                .find((revS) => revS.purchase_type === "RENT")
-                                .amount_paid.toFixed(2)}
+                            {(
+                              revenueSummary.find(
+                                (revS) => revS.purchase_type === "RENT"
+                              ).amount_due -
+                              revenueSummary.find(
+                                (revS) => revS.purchase_type === "RENT"
+                              ).amount_paid
+                            ).toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -672,8 +693,7 @@ export default function ManagerCashflow(props) {
                               {rev.amount_due.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2) -
-                                rev.amount_paid.toFixed(2)}
+                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -722,17 +742,14 @@ export default function ManagerCashflow(props) {
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
-                            {revenueSummary
-                              .find(
+                            {(
+                              revenueSummary.find(
                                 (revS) => revS.purchase_type === "EXTRA CHARGES"
-                              )
-                              .amount_due.toFixed(2) -
-                              revenueSummary
-                                .find(
-                                  (revS) =>
-                                    revS.purchase_type === "EXTRA CHARGES"
-                                )
-                                .amount_paid.toFixed(2)}
+                              ).amount_due -
+                              revenueSummary.find(
+                                (revS) => revS.purchase_type === "EXTRA CHARGES"
+                              ).amount_paid
+                            ).toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -779,8 +796,7 @@ export default function ManagerCashflow(props) {
                               {rev.amount_due.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2) -
-                                rev.amount_paid.toFixed(2)}
+                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -825,14 +841,14 @@ export default function ManagerCashflow(props) {
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
-                            {revenueSummary
-                              .find((revS) => revS.purchase_type === "DEPOSIT")
-                              .amount_due.toFixed(2) -
-                              revenueSummary
-                                .find(
-                                  (revS) => revS.purchase_type === "DEPOSIT"
-                                )
-                                .amount_paid.toFixed(2)}
+                            {(
+                              revenueSummary.find(
+                                (revS) => revS.purchase_type === "DEPOSIT"
+                              ).amount_due -
+                              revenueSummary.find(
+                                (revS) => revS.purchase_type === "DEPOSIT"
+                              ).amount_paid
+                            ).toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -879,8 +895,7 @@ export default function ManagerCashflow(props) {
                               {rev.amount_due.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2) -
-                                rev.amount_paid.toFixed(2)}
+                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -931,16 +946,14 @@ export default function ManagerCashflow(props) {
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
-                            {revenueSummary
-                              .find(
+                            {(
+                              revenueSummary.find(
                                 (revS) => revS.purchase_type === "MANAGEMENT"
-                              )
-                              .amount_due.toFixed(2) -
-                              revenueSummary
-                                .find(
-                                  (revS) => revS.purchase_type === "MANAGEMENT"
-                                )
-                                .amount_paid.toFixed(2)}
+                              ).amount_due -
+                              revenueSummary.find(
+                                (revS) => revS.purchase_type === "MANAGEMENT"
+                              ).amount_paid
+                            ).toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -986,10 +999,10 @@ export default function ManagerCashflow(props) {
                               {rev.amount_paid.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due}
+                              {rev.amount_due.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due - rev.amount_paid.toFixed(2)}
+                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -1034,14 +1047,14 @@ export default function ManagerCashflow(props) {
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
-                            {revenueSummary
-                              .find((revS) => revS.purchase_type === "UTILITY")
-                              .amount_due.toFixed(2) -
-                              revenueSummary
-                                .find(
-                                  (revS) => revS.purchase_type === "UTILITY"
-                                )
-                                .amount_paid.toFixed(2)}
+                            {(
+                              revenueSummary.find(
+                                (revS) => revS.purchase_type === "UTILITY"
+                              ).amount_due -
+                              revenueSummary.find(
+                                (revS) => revS.purchase_type === "UTILITY"
+                              ).amount_paid
+                            ).toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1088,8 +1101,7 @@ export default function ManagerCashflow(props) {
                               {rev.amount_due.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2) -
-                                rev.amount_paid.toFixed(2)}
+                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -1134,14 +1146,14 @@ export default function ManagerCashflow(props) {
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
-                            {revenueSummary
-                              .find((revS) => revS.purchase_type === "LATE FEE")
-                              .amount_due.toFixed(2) -
-                              revenueSummary
-                                .find(
-                                  (revS) => revS.purchase_type === "LATE FEE"
-                                )
-                                .amount_paid.toFixed(2)}
+                            {(
+                              revenueSummary.find(
+                                (revS) => revS.purchase_type === "LATE FEE"
+                              ).amount_due -
+                              revenueSummary.find(
+                                (revS) => revS.purchase_type === "LATE FEE"
+                              ).amount_paid
+                            ).toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1188,8 +1200,7 @@ export default function ManagerCashflow(props) {
                               {rev.amount_due.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2) -
-                                rev.amount_paid.toFixed(2)}
+                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -1224,7 +1235,7 @@ export default function ManagerCashflow(props) {
                               }}
                             />
                           </TableCell>{" "}
-                          <TableCell>
+                          <TableCell align="right">
                             {revenueSummary
                               .find(
                                 (revS) => revS.purchase_type === "MAINTENANCE"
@@ -1240,16 +1251,14 @@ export default function ManagerCashflow(props) {
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
-                            {revenueSummary
-                              .find(
+                            {(
+                              revenueSummary.find(
                                 (revS) => revS.purchase_type === "MAINTENANCE"
-                              )
-                              .amount_due.toFixed(2) -
-                              revenueSummary
-                                .find(
-                                  (revS) => revS.purchase_type === "MAINTENANCE"
-                                )
-                                .amount_paid.toFixed(2)}
+                              ).amount_due -
+                              revenueSummary.find(
+                                (revS) => revS.purchase_type === "MAINTENANCE"
+                              ).amount_paid
+                            ).toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1298,8 +1307,7 @@ export default function ManagerCashflow(props) {
                               {rev.amount_due.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2) -
-                                rev.amount_paid.toFixed(2)}
+                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -1346,14 +1354,14 @@ export default function ManagerCashflow(props) {
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
-                            {revenueSummary
-                              .find((revS) => revS.purchase_type === "REPAIRS")
-                              .amount_due.toFixed(2) -
-                              revenueSummary
-                                .find(
-                                  (revS) => revS.purchase_type === "REPAIRS"
-                                )
-                                .amount_paid.toFixed(2)}
+                            {(
+                              revenueSummary.find(
+                                (revS) => revS.purchase_type === "REPAIRS"
+                              ).amount_due -
+                              revenueSummary.find(
+                                (revS) => revS.purchase_type === "REPAIRS"
+                              ).amount_paid
+                            ).toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1402,8 +1410,7 @@ export default function ManagerCashflow(props) {
                               {rev.amount_due.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2) -
-                                rev.amount_paid.toFixed(2)}
+                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -1515,18 +1522,16 @@ export default function ManagerCashflow(props) {
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
-                            {expenseSummary
-                              .find(
+                            {(
+                              expenseSummary.find(
                                 (revS) =>
                                   revS.purchase_type === "OWNER PAYMENT RENT"
-                              )
-                              .amount_due.toFixed(2) -
-                              expenseSummary
-                                .find(
-                                  (revS) =>
-                                    revS.purchase_type === "OWNER PAYMENT RENT"
-                                )
-                                .amount_paid.toFixed(2)}
+                              ).amount_due -
+                              expenseSummary.find(
+                                (revS) =>
+                                  revS.purchase_type === "OWNER PAYMENT RENT"
+                              ).amount_paid
+                            ).toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1560,22 +1565,22 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       )}
                       {/* Management RENT map individual */}
-                      {expense.map((rev, i) => {
-                        return rev.purchase_type === "OWNER PAYMENT RENT" ? (
+                      {expense.map((exp, i) => {
+                        return exp.purchase_type === "OWNER PAYMENT RENT" ? (
                           <TableRow hidden={!toggleMonthlyOwnerPaymentRent}>
                             <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-                              {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
-                              {rev.zip}
+                              {exp.address} {exp.unit}, {exp.city}, {exp.state}{" "}
+                              {exp.zip}
                             </TableCell>
                             <TableCell align="right">
-                              {rev.amount_paid.toFixed(2)}
+                              {exp.amount_paid.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due}
+                              {exp.amount_due}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due - rev.amount_paid.toFixed(2)}
+                              {(exp.amount_due - exp.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -1584,8 +1589,8 @@ export default function ManagerCashflow(props) {
                       })}
                       {/* Management extra charges*/}
                       {expenseSummary.find(
-                        (revS) =>
-                          revS.purchase_type === "OWNER PAYMENT EXTRA CHARGES"
+                        (expS) =>
+                          expS.purchase_type === "OWNER PAYMENT EXTRA CHARGES"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
                           <TableCell width="500px" style={semiMediumBold}>
@@ -1614,8 +1619,8 @@ export default function ManagerCashflow(props) {
                           <TableCell align="right">
                             {expenseSummary
                               .find(
-                                (revS) =>
-                                  revS.purchase_type ===
+                                (expS) =>
+                                  expS.purchase_type ===
                                   "OWNER PAYMENT EXTRA CHARGES"
                               )
                               .amount_paid.toFixed(2)}
@@ -1623,28 +1628,26 @@ export default function ManagerCashflow(props) {
                           <TableCell align="right">
                             {expenseSummary
                               .find(
-                                (revS) =>
-                                  revS.purchase_type ===
+                                (expS) =>
+                                  expS.purchase_type ===
                                   "OWNER PAYMENT EXTRA CHARGES"
                               )
                               .amount_due.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
-                            {expenseSummary
-                              .find(
-                                (revS) =>
-                                  revS.purchase_type ===
+                            {(
+                              expenseSummary.find(
+                                (expS) =>
+                                  expS.purchase_type ===
                                   "OWNER PAYMENT EXTRA CHARGES"
-                              )
-                              .amount_due.toFixed(2) -
-                              expenseSummary
-                                .find(
-                                  (revS) =>
-                                    revS.purchase_type ===
-                                    "OWNER PAYMENT EXTRA CHARGES"
-                                )
-                                .amount_paid.toFixed(2)}
+                              ).amount_due -
+                              expenseSummary.find(
+                                (expS) =>
+                                  expS.purchase_type ===
+                                  "OWNER PAYMENT EXTRA CHARGES"
+                              ).amount_paid
+                            ).toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1678,23 +1681,23 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       )}
                       {/* Owner Payment Extra Charges map individual */}
-                      {expense.map((rev, i) => {
-                        return rev.purchase_type ===
+                      {expense.map((exp, i) => {
+                        return exp.purchase_type ===
                           "OWNER PAYMENT EXTRA CHARGES" ? (
                           <TableRow hidden={!toggleMonthlyOwnerPaymentExtra}>
                             <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-                              {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
-                              {rev.zip}
+                              {exp.address} {exp.unit}, {exp.city}, {exp.state}{" "}
+                              {exp.zip}
                             </TableCell>
                             <TableCell align="right">
-                              {rev.amount_paid.toFixed(2)}
+                              {exp.amount_paid.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due}
+                              {exp.amount_due}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due - rev.amount_paid.toFixed(2)}
+                              {(exp.amount_due - exp.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -1703,8 +1706,8 @@ export default function ManagerCashflow(props) {
                       })}
                       {/* Owner Payment */}
                       {expenseSummary.find(
-                        (revS) =>
-                          revS.purchase_type === "OWNER PAYMENT LATE FEE"
+                        (expS) =>
+                          expS.purchase_type === "OWNER PAYMENT LATE FEE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
                           <TableCell width="500px" style={semiMediumBold}>
@@ -1733,8 +1736,8 @@ export default function ManagerCashflow(props) {
                           <TableCell align="right">
                             {expenseSummary
                               .find(
-                                (revS) =>
-                                  revS.purchase_type ===
+                                (expS) =>
+                                  expS.purchase_type ===
                                   "OWNER PAYMENT LATE FEE"
                               )
                               .amount_paid.toFixed(2)}
@@ -1742,28 +1745,26 @@ export default function ManagerCashflow(props) {
                           <TableCell align="right">
                             {expenseSummary
                               .find(
-                                (revS) =>
-                                  revS.purchase_type ===
+                                (expS) =>
+                                  expS.purchase_type ===
                                   "OWNER PAYMENT LATE FEE"
                               )
                               .amount_due.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
-                            {expenseSummary
-                              .find(
-                                (revS) =>
-                                  revS.purchase_type ===
+                            {(
+                              expenseSummary.find(
+                                (expS) =>
+                                  expS.purchase_type ===
                                   "OWNER PAYMENT LATE FEE"
-                              )
-                              .amount_due.toFixed(2) -
-                              expenseSummary
-                                .find(
-                                  (revS) =>
-                                    revS.purchase_type ===
-                                    "OWNER PAYMENT LATE FEE"
-                                )
-                                .amount_paid.toFixed(2)}
+                              ).amount_due -
+                              expenseSummary.find(
+                                (expS) =>
+                                  expS.purchase_type ===
+                                  "OWNER PAYMENT LATE FEE"
+                              ).amount_paid
+                            ).toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1797,23 +1798,23 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       )}
                       {/* Owner Payment late fee map individual */}
-                      {expense.map((rev, i) => {
-                        return rev.purchase_type ===
+                      {expense.map((exp, i) => {
+                        return exp.purchase_type ===
                           "OWNER PAYMENT LATE FEE" ? (
                           <TableRow hidden={!toggleMonthlyOwnerPaymentLate}>
                             <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-                              {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
-                              {rev.zip}
+                              {exp.address} {exp.unit}, {exp.city}, {exp.state}{" "}
+                              {exp.zip}
                             </TableCell>
                             <TableCell align="right">
-                              {rev.amount_paid.toFixed(2)}
+                              {exp.amount_paid.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due}
+                              {exp.amount_due}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due - rev.amount_paid.toFixed(2)}
+                              {(exp.amount_due - exp.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -1822,7 +1823,7 @@ export default function ManagerCashflow(props) {
                       })}
                       {/* Maintenance */}
                       {expenseSummary.find(
-                        (revS) => revS.purchase_type === "MAINTENANCE"
+                        (expS) => expS.purchase_type === "MAINTENANCE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
                           <TableCell width="500px" style={semiMediumBold}>
@@ -1851,29 +1852,27 @@ export default function ManagerCashflow(props) {
                           <TableCell align="right">
                             {expenseSummary
                               .find(
-                                (revS) => revS.purchase_type === "MAINTENANCE"
+                                (expS) => expS.purchase_type === "MAINTENANCE"
                               )
                               .amount_paid.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {expenseSummary
                               .find(
-                                (revS) => revS.purchase_type === "MAINTENANCE"
+                                (expS) => expS.purchase_type === "MAINTENANCE"
                               )
                               .amount_due.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
-                            {expenseSummary
-                              .find(
-                                (revS) => revS.purchase_type === "MAINTENANCE"
-                              )
-                              .amount_due.toFixed(2) -
-                              expenseSummary
-                                .find(
-                                  (revS) => revS.purchase_type === "MAINTENANCE"
-                                )
-                                .amount_paid.toFixed(2)}
+                            {(
+                              expenseSummary.find(
+                                (expS) => expS.purchase_type === "MAINTENANCE"
+                              ).amount_due -
+                              expenseSummary.find(
+                                (expS) => expS.purchase_type === "MAINTENANCE"
+                              ).amount_paid
+                            ).toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1922,8 +1921,7 @@ export default function ManagerCashflow(props) {
                               {rev.amount_due.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2) -
-                                rev.amount_paid.toFixed(2)}
+                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -1932,7 +1930,7 @@ export default function ManagerCashflow(props) {
                       })}
                       {/* repairs */}
                       {expenseSummary.find(
-                        (revS) => revS.purchase_type === "REPAIRS"
+                        (expS) => expS.purchase_type === "REPAIRS"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
                           <TableCell width="500px" style={semiMediumBold}>
@@ -1958,22 +1956,22 @@ export default function ManagerCashflow(props) {
                           </TableCell>{" "}
                           <TableCell align="right">
                             {expenseSummary
-                              .find((revS) => revS.purchase_type === "REPAIRS")
+                              .find((expS) => expS.purchase_type === "REPAIRS")
                               .amount_paid.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {expenseSummary
-                              .find((revS) => revS.purchase_type === "REPAIRS")
+                              .find((expS) => expS.purchase_type === "REPAIRS")
                               .amount_due.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
                             {expenseSummary
-                              .find((revS) => revS.purchase_type === "REPAIRS")
+                              .find((expS) => expS.purchase_type === "REPAIRS")
                               .amount_due.toFixed(2) -
                               expenseSummary
                                 .find(
-                                  (revS) => revS.purchase_type === "REPAIRS"
+                                  (expS) => expS.purchase_type === "REPAIRS"
                                 )
                                 .amount_paid.toFixed(2)}
                           </TableCell>
@@ -2022,8 +2020,7 @@ export default function ManagerCashflow(props) {
                               {rev.amount_due.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2) -
-                                rev.amount_paid.toFixed(2)}
+                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -2032,7 +2029,7 @@ export default function ManagerCashflow(props) {
                       })}
                       {/* Mortgage */}
                       {expenseSummary.find(
-                        (revS) => revS.purchase_type === "MORTGAGE"
+                        (expS) => expS.purchase_type === "MORTGAGE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
                           <TableCell width="500px" style={semiMediumBold}>
@@ -2060,22 +2057,22 @@ export default function ManagerCashflow(props) {
                           </TableCell>{" "}
                           <TableCell align="right">
                             {expenseSummary
-                              .find((revS) => revS.purchase_type === "MORTGAGE")
+                              .find((expS) => expS.purchase_type === "MORTGAGE")
                               .amount_paid.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {expenseSummary
-                              .find((revS) => revS.purchase_type === "MORTGAGE")
+                              .find((expS) => expS.purchase_type === "MORTGAGE")
                               .amount_due.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
                             {expenseSummary
-                              .find((revS) => revS.purchase_type === "MORTGAGE")
+                              .find((expS) => expS.purchase_type === "MORTGAGE")
                               .amount_due.toFixed(2) -
                               expenseSummary
                                 .find(
-                                  (revS) => revS.purchase_type === "MORTGAGE"
+                                  (expS) => expS.purchase_type === "MORTGAGE"
                                 )
                                 .amount_paid.toFixed(2)}
                           </TableCell>
@@ -2126,8 +2123,7 @@ export default function ManagerCashflow(props) {
                               {rev.amount_due.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2) -
-                                rev.amount_paid.toFixed(2)}
+                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -2136,7 +2132,7 @@ export default function ManagerCashflow(props) {
                       })}
                       {/* Taxes */}
                       {expenseSummary.find(
-                        (revS) => revS.purchase_type === "TAXES"
+                        (expS) => expS.purchase_type === "TAXES"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
                           <TableCell width="500px" style={semiMediumBold}>
@@ -2162,21 +2158,21 @@ export default function ManagerCashflow(props) {
                           </TableCell>{" "}
                           <TableCell align="right">
                             {expenseSummary
-                              .find((revS) => revS.purchase_type === "TAXES")
+                              .find((expS) => expS.purchase_type === "TAXES")
                               .amount_paid.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {expenseSummary
-                              .find((revS) => revS.purchase_type === "TAXES")
+                              .find((expS) => expS.purchase_type === "TAXES")
                               .amount_due.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
                             {expenseSummary
-                              .find((revS) => revS.purchase_type === "TAXES")
+                              .find((expS) => expS.purchase_type === "TAXES")
                               .amount_due.toFixed(2) -
                               expenseSummary
-                                .find((revS) => revS.purchase_type === "TAXES")
+                                .find((expS) => expS.purchase_type === "TAXES")
                                 .amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
@@ -2224,8 +2220,7 @@ export default function ManagerCashflow(props) {
                               {rev.amount_due.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2) -
-                                rev.amount_paid.toFixed(2)}
+                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -2234,7 +2229,7 @@ export default function ManagerCashflow(props) {
                       })}
                       {/* Insurance */}
                       {expenseSummary.find(
-                        (revS) => revS.purchase_type === "INSURANCE"
+                        (expS) => expS.purchase_type === "INSURANCE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
                           <TableCell width="500px" style={semiMediumBold}>
@@ -2263,14 +2258,14 @@ export default function ManagerCashflow(props) {
                           <TableCell align="right">
                             {expenseSummary
                               .find(
-                                (revS) => revS.purchase_type === "INSURANCE"
+                                (expS) => expS.purchase_type === "INSURANCE"
                               )
                               .amount_paid.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {expenseSummary
                               .find(
-                                (revS) => revS.purchase_type === "INSURANCE"
+                                (expS) => expS.purchase_type === "INSURANCE"
                               )
                               .amount_due.toFixed(2)}
                           </TableCell>{" "}
@@ -2278,12 +2273,12 @@ export default function ManagerCashflow(props) {
                             {" "}
                             {expenseSummary
                               .find(
-                                (revS) => revS.purchase_type === "INSURANCE"
+                                (expS) => expS.purchase_type === "INSURANCE"
                               )
                               .amount_due.toFixed(2) -
                               expenseSummary
                                 .find(
-                                  (revS) => revS.purchase_type === "INSURANCE"
+                                  (expS) => expS.purchase_type === "INSURANCE"
                                 )
                                 .amount_paid.toFixed(2)}
                           </TableCell>
@@ -2334,8 +2329,7 @@ export default function ManagerCashflow(props) {
                               {rev.amount_due.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2) -
-                                rev.amount_paid.toFixed(2)}
+                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -2344,7 +2338,7 @@ export default function ManagerCashflow(props) {
                       })}
                       {/* UtilityExpense */}
                       {expenseSummary.find(
-                        (revS) => revS.purchase_type === "UTILITY"
+                        (expS) => expS.purchase_type === "UTILITY"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
                           <TableCell width="500px" style={semiMediumBold}>
@@ -2372,22 +2366,22 @@ export default function ManagerCashflow(props) {
                           </TableCell>{" "}
                           <TableCell align="right">
                             {expenseSummary
-                              .find((revS) => revS.purchase_type === "UTILITY")
+                              .find((expS) => expS.purchase_type === "UTILITY")
                               .amount_paid.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {expenseSummary
-                              .find((revS) => revS.purchase_type === "UTILITY")
+                              .find((expS) => expS.purchase_type === "UTILITY")
                               .amount_due.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
                             {expenseSummary
-                              .find((revS) => revS.purchase_type === "UTILITY")
+                              .find((expS) => expS.purchase_type === "UTILITY")
                               .amount_due.toFixed(2) -
                               expenseSummary
                                 .find(
-                                  (revS) => revS.purchase_type === "UTILITY"
+                                  (expS) => expS.purchase_type === "UTILITY"
                                 )
                                 .amount_paid.toFixed(2)}
                           </TableCell>
@@ -2438,8 +2432,7 @@ export default function ManagerCashflow(props) {
                               {rev.amount_due.toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2) -
-                                rev.amount_paid.toFixed(2)}
+                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -2764,7 +2757,7 @@ export default function ManagerCashflow(props) {
                                       rev.property_uid === property.property_uid
                                   )
                                   .find(
-                                    (revS) => revS.purchase_type === "RENT"
+                                    (expS) => expS.purchase_type === "RENT"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
                                     <TableCell width="500px" style={bold}>
@@ -2818,17 +2811,7 @@ export default function ManagerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {" "}
-                                      {revenueSummary
-                                        .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
-                                            property.property_uid
-                                        )
-                                        .find(
-                                          (revS) =>
-                                            revS.purchase_type === "RENT"
-                                        )
-                                        .amount_due.toFixed(2) -
+                                      {(
                                         revenueSummary
                                           .filter(
                                             (rev) =>
@@ -2838,8 +2821,18 @@ export default function ManagerCashflow(props) {
                                           .find(
                                             (revS) =>
                                               revS.purchase_type === "RENT"
+                                          ).amount_due -
+                                        revenueSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
                                           )
-                                          .amount_paid.toFixed(2)}
+                                          .find(
+                                            (revS) =>
+                                              revS.purchase_type === "RENT"
+                                          ).amount_paid
+                                      ).toFixed(2)}
                                     </TableCell>
                                   </TableRow>
                                 ) : (
@@ -2890,8 +2883,9 @@ export default function ManagerCashflow(props) {
                                         {rev.amount_due.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2) -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          rev.amount_due - rev.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -3039,8 +3033,9 @@ export default function ManagerCashflow(props) {
                                         {rev.amount_due.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2) -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          rev.amount_due - rev.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -3180,8 +3175,9 @@ export default function ManagerCashflow(props) {
                                         {rev.amount_due.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2) -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          rev.amount_due - rev.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -3321,8 +3317,9 @@ export default function ManagerCashflow(props) {
                                         {rev.amount_due.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2) -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          rev.amount_due - rev.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -3464,8 +3461,9 @@ export default function ManagerCashflow(props) {
                                         {rev.amount_due.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2) -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          rev.amount_due - rev.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -3753,8 +3751,9 @@ export default function ManagerCashflow(props) {
                                         {rev.amount_due.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2) -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          rev.amount_due - rev.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -3896,8 +3895,9 @@ export default function ManagerCashflow(props) {
                                         {rev.amount_due.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2) -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          rev.amount_due - rev.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -3994,12 +3994,12 @@ export default function ManagerCashflow(props) {
                                 {/* Owner Payment Rent*/}
                                 {expenseSummary
                                   .filter(
-                                    (rev) =>
-                                      rev.property_uid === property.property_uid
+                                    (exp) =>
+                                      exp.property_uid === property.property_uid
                                   )
                                   .find(
-                                    (revS) =>
-                                      revS.purchase_type ===
+                                    (expS) =>
+                                      expS.purchase_type ===
                                       "OWNER PAYMENT RENT"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
@@ -4031,13 +4031,13 @@ export default function ManagerCashflow(props) {
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type ===
+                                          (expS) =>
+                                            expS.purchase_type ===
                                             "OWNER PAYMENT RENT"
                                         )
                                         .amount_paid.toFixed(2)}
@@ -4045,43 +4045,43 @@ export default function ManagerCashflow(props) {
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type ===
+                                          (expS) =>
+                                            expS.purchase_type ===
                                             "OWNER PAYMENT RENT"
                                         )
                                         .amount_due.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {" "}
-                                      {expenseSummary
-                                        .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
-                                            property.property_uid
-                                        )
-                                        .find(
-                                          (revS) =>
-                                            revS.purchase_type ===
-                                            "OWNER PAYMENT RENT"
-                                        )
-                                        .amount_due.toFixed(2) -
+                                      {(
                                         expenseSummary
                                           .filter(
-                                            (rev) =>
-                                              rev.property_uid ===
+                                            (exp) =>
+                                              exp.property_uid ===
                                               property.property_uid
                                           )
                                           .find(
-                                            (revS) =>
-                                              revS.purchase_type ===
+                                            (expS) =>
+                                              expS.purchase_type ===
                                               "OWNER PAYMENT RENT"
+                                          ).amount_due -
+                                        expenseSummary
+                                          .filter(
+                                            (exp) =>
+                                              exp.property_uid ===
+                                              property.property_uid
                                           )
-                                          .amount_paid.toFixed(2)}
+                                          .find(
+                                            (expS) =>
+                                              expS.purchase_type ===
+                                              "OWNER PAYMENT RENT"
+                                          ).amount_paid
+                                      ).toFixed(2)}
                                     </TableCell>
                                   </TableRow>
                                 ) : (
@@ -4117,10 +4117,10 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 )}
                                 {/* Owner Payment RENT map individual */}
-                                {expense.map((rev, i) => {
-                                  return rev.purchase_type ===
+                                {expense.map((exp, i) => {
+                                  return exp.purchase_type ===
                                     "OWNER PAYMENT RENT" &&
-                                    rev.property_uid ===
+                                    exp.property_uid ===
                                       property.property_uid ? (
                                     <TableRow
                                       hidden={!toggleMonthlyOwnerPaymentRent}
@@ -4128,17 +4128,18 @@ export default function ManagerCashflow(props) {
                                       <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        {rev.description}
+                                        {exp.description}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {rev.amount_paid.toFixed(2)}
+                                        {exp.amount_paid.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due}
+                                        {exp.amount_due}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          exp.amount_due - exp.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -4148,12 +4149,12 @@ export default function ManagerCashflow(props) {
                                 {/* Owner Payment extra charges*/}
                                 {expenseSummary
                                   .filter(
-                                    (rev) =>
-                                      rev.property_uid === property.property_uid
+                                    (exp) =>
+                                      exp.property_uid === property.property_uid
                                   )
                                   .find(
-                                    (revS) =>
-                                      revS.purchase_type ===
+                                    (expS) =>
+                                      expS.purchase_type ===
                                       "OWNER PAYMENT EXTRA CHARGES"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
@@ -4185,13 +4186,13 @@ export default function ManagerCashflow(props) {
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type ===
+                                          (expS) =>
+                                            expS.purchase_type ===
                                             "OWNER PAYMENT EXTRA CHARGES"
                                         )
                                         .amount_paid.toFixed(2)}
@@ -4199,43 +4200,43 @@ export default function ManagerCashflow(props) {
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type ===
+                                          (expS) =>
+                                            expS.purchase_type ===
                                             "OWNER PAYMENT EXTRA CHARGES"
                                         )
                                         .amount_due.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {" "}
-                                      {expenseSummary
-                                        .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
-                                            property.property_uid
-                                        )
-                                        .find(
-                                          (revS) =>
-                                            revS.purchase_type ===
-                                            "OWNER PAYMENT EXTRA CHARGES"
-                                        )
-                                        .amount_due.toFixed(2) -
+                                      {(
                                         expenseSummary
                                           .filter(
-                                            (rev) =>
-                                              rev.property_uid ===
+                                            (exp) =>
+                                              exp.property_uid ===
                                               property.property_uid
                                           )
                                           .find(
-                                            (revS) =>
-                                              revS.purchase_type ===
+                                            (expS) =>
+                                              expS.purchase_type ===
                                               "OWNER PAYMENT EXTRA CHARGES"
+                                          ).amount_due -
+                                        expenseSummary
+                                          .filter(
+                                            (exp) =>
+                                              exp.property_uid ===
+                                              property.property_uid
                                           )
-                                          .amount_paid.toFixed(2)}
+                                          .find(
+                                            (expS) =>
+                                              expS.purchase_type ===
+                                              "OWNER PAYMENT EXTRA CHARGES"
+                                          ).amount_paid
+                                      ).toFixed(2)}
                                     </TableCell>
                                   </TableRow>
                                 ) : (
@@ -4271,10 +4272,10 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 )}
                                 {/* Owner Payment Extra Charges map individual */}
-                                {expense.map((rev, i) => {
-                                  return rev.purchase_type ===
+                                {expense.map((exp, i) => {
+                                  return exp.purchase_type ===
                                     "OWNER PAYMENT EXTRA CHARGES" &&
-                                    rev.property_uid ===
+                                    exp.property_uid ===
                                       property.property_uid ? (
                                     <TableRow
                                       hidden={!toggleMonthlyOwnerPaymentExtra}
@@ -4282,17 +4283,18 @@ export default function ManagerCashflow(props) {
                                       <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        {rev.description}
+                                        {exp.description}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {rev.amount_paid.toFixed(2)}
+                                        {exp.amount_paid.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due}
+                                        {exp.amount_due}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          exp.amount_due - exp.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -4302,12 +4304,12 @@ export default function ManagerCashflow(props) {
                                 {/* Owner Payment */}
                                 {expenseSummary
                                   .filter(
-                                    (rev) =>
-                                      rev.property_uid === property.property_uid
+                                    (exp) =>
+                                      exp.property_uid === property.property_uid
                                   )
                                   .find(
-                                    (revS) =>
-                                      revS.purchase_type ===
+                                    (expS) =>
+                                      expS.purchase_type ===
                                       "OWNER PAYMENT LATE FEE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
@@ -4339,13 +4341,13 @@ export default function ManagerCashflow(props) {
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type ===
+                                          (expS) =>
+                                            expS.purchase_type ===
                                             "OWNER PAYMENT LATE FEE"
                                         )
                                         .amount_paid.toFixed(2)}
@@ -4353,43 +4355,43 @@ export default function ManagerCashflow(props) {
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type ===
+                                          (expS) =>
+                                            expS.purchase_type ===
                                             "OWNER PAYMENT LATE FEE"
                                         )
                                         .amount_due.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {" "}
-                                      {expenseSummary
-                                        .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
-                                            property.property_uid
-                                        )
-                                        .find(
-                                          (revS) =>
-                                            revS.purchase_type ===
-                                            "OWNER PAYMENT LATE FEE"
-                                        )
-                                        .amount_due.toFixed(2) -
+                                      {(
                                         expenseSummary
                                           .filter(
-                                            (rev) =>
-                                              rev.property_uid ===
+                                            (exp) =>
+                                              exp.property_uid ===
                                               property.property_uid
                                           )
                                           .find(
-                                            (revS) =>
-                                              revS.purchase_type ===
+                                            (expS) =>
+                                              expS.purchase_type ===
                                               "OWNER PAYMENT LATE FEE"
+                                          ).amount_due -
+                                        expenseSummary
+                                          .filter(
+                                            (exp) =>
+                                              exp.property_uid ===
+                                              property.property_uid
                                           )
-                                          .amount_paid.toFixed(2)}
+                                          .find(
+                                            (expS) =>
+                                              expS.purchase_type ===
+                                              "OWNER PAYMENT LATE FEE"
+                                          ).amount_paid
+                                      ).toFixed(2)}
                                     </TableCell>
                                   </TableRow>
                                 ) : (
@@ -4425,10 +4427,10 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 )}
                                 {/* Owner Payment late fee map individual */}
-                                {expense.map((rev, i) => {
-                                  return rev.purchase_type ===
+                                {expense.map((exp, i) => {
+                                  return exp.purchase_type ===
                                     "OWNER PAYMENT LATE FEE" &&
-                                    rev.property_uid ===
+                                    exp.property_uid ===
                                       property.property_uid ? (
                                     <TableRow
                                       hidden={!toggleMonthlyOwnerPaymentLate}
@@ -4436,17 +4438,18 @@ export default function ManagerCashflow(props) {
                                       <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        {rev.description}
+                                        {exp.description}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {rev.amount_paid.toFixed(2)}
+                                        {exp.amount_paid.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due}
+                                        {exp.amount_due}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          exp.amount_due - exp.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -4456,12 +4459,12 @@ export default function ManagerCashflow(props) {
                                 {/* Maintenance */}
                                 {expenseSummary
                                   .filter(
-                                    (rev) =>
-                                      rev.property_uid === property.property_uid
+                                    (exp) =>
+                                      exp.property_uid === property.property_uid
                                   )
                                   .find(
-                                    (revS) =>
-                                      revS.purchase_type === "MAINTENANCE"
+                                    (expS) =>
+                                      expS.purchase_type === "MAINTENANCE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
                                     <TableCell width="500px" style={bold}>
@@ -4490,54 +4493,55 @@ export default function ManagerCashflow(props) {
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type === "MAINTENANCE"
+                                          (expS) =>
+                                            expS.purchase_type === "MAINTENANCE"
                                         )
                                         .amount_paid.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type === "MAINTENANCE"
+                                          (expS) =>
+                                            expS.purchase_type === "MAINTENANCE"
                                         )
                                         .amount_due.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {" "}
-                                      {expenseSummary
-                                        .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
-                                            property.property_uid
-                                        )
-                                        .find(
-                                          (revS) =>
-                                            revS.purchase_type === "MAINTENANCE"
-                                        )
-                                        .amount_due.toFixed(2) -
+                                      {(
                                         expenseSummary
                                           .filter(
-                                            (rev) =>
-                                              rev.property_uid ===
+                                            (exp) =>
+                                              exp.property_uid ===
                                               property.property_uid
                                           )
                                           .find(
-                                            (revS) =>
-                                              revS.purchase_type ===
+                                            (expS) =>
+                                              expS.purchase_type ===
                                               "MAINTENANCE"
+                                          ).amount_due -
+                                        expenseSummary
+                                          .filter(
+                                            (exp) =>
+                                              exp.property_uid ===
+                                              property.property_uid
                                           )
-                                          .amount_paid.toFixed(2)}
+                                          .find(
+                                            (expS) =>
+                                              expS.purchase_type ===
+                                              "MAINTENANCE"
+                                          ).amount_paid
+                                      ).toFixed(2)}
                                     </TableCell>
                                   </TableRow>
                                 ) : (
@@ -4571,9 +4575,9 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 )}
                                 {/* Maintenance map individual */}
-                                {expense.map((rev, i) => {
-                                  return rev.purchase_type === "MAINTENANCE" &&
-                                    rev.property_uid ===
+                                {expense.map((exp, i) => {
+                                  return exp.purchase_type === "MAINTENANCE" &&
+                                    exp.property_uid ===
                                       property.property_uid ? (
                                     <TableRow
                                       hidden={!toggleMonthlyMaintenance}
@@ -4581,17 +4585,18 @@ export default function ManagerCashflow(props) {
                                       <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        {rev.description}
+                                        {exp.description}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {rev.amount_paid.toFixed(2)}
+                                        {exp.amount_paid.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2)}
+                                        {exp.amount_due.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2) -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          exp.amount_due - exp.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -4601,11 +4606,11 @@ export default function ManagerCashflow(props) {
                                 {/* repairs */}
                                 {expenseSummary
                                   .filter(
-                                    (rev) =>
-                                      rev.property_uid === property.property_uid
+                                    (exp) =>
+                                      exp.property_uid === property.property_uid
                                   )
                                   .find(
-                                    (revS) => revS.purchase_type === "REPAIRS"
+                                    (expS) => expS.purchase_type === "REPAIRS"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
                                     <TableCell width="500px" style={bold}>
@@ -4634,53 +4639,53 @@ export default function ManagerCashflow(props) {
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type === "REPAIRS"
+                                          (expS) =>
+                                            expS.purchase_type === "REPAIRS"
                                         )
                                         .amount_paid.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type === "REPAIRS"
+                                          (expS) =>
+                                            expS.purchase_type === "REPAIRS"
                                         )
                                         .amount_due.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {" "}
-                                      {expenseSummary
-                                        .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
-                                            property.property_uid
-                                        )
-                                        .find(
-                                          (revS) =>
-                                            revS.purchase_type === "REPAIRS"
-                                        )
-                                        .amount_due.toFixed(2) -
+                                      {(
                                         expenseSummary
                                           .filter(
-                                            (rev) =>
-                                              rev.property_uid ===
+                                            (exp) =>
+                                              exp.property_uid ===
                                               property.property_uid
                                           )
                                           .find(
-                                            (revS) =>
-                                              revS.purchase_type === "REPAIRS"
+                                            (expS) =>
+                                              expS.purchase_type === "REPAIRS"
+                                          ).amount_due -
+                                        expenseSummary
+                                          .filter(
+                                            (exp) =>
+                                              exp.property_uid ===
+                                              property.property_uid
                                           )
-                                          .amount_paid.toFixed(2)}
+                                          .find(
+                                            (expS) =>
+                                              expS.purchase_type === "REPAIRS"
+                                          ).amount_paid
+                                      ).toFixed(2)}
                                     </TableCell>
                                   </TableRow>
                                 ) : (
@@ -4714,9 +4719,9 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 )}
                                 {/* repairs map individual */}
-                                {expense.map((rev, i) => {
-                                  return rev.purchase_type === "REPAIRS" &&
-                                    rev.property_uid ===
+                                {expense.map((exp, i) => {
+                                  return exp.purchase_type === "REPAIRS" &&
+                                    exp.property_uid ===
                                       property.property_uid ? (
                                     <TableRow
                                       hidden={!toggleMonthlyMaintenance}
@@ -4724,17 +4729,18 @@ export default function ManagerCashflow(props) {
                                       <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        {rev.description}
+                                        {exp.description}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {rev.amount_paid.toFixed(2)}
+                                        {exp.amount_paid.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2)}
+                                        {exp.amount_due.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2) -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          exp.amount_due - exp.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -4744,11 +4750,11 @@ export default function ManagerCashflow(props) {
                                 {/* Mortgage */}
                                 {expenseSummary
                                   .filter(
-                                    (rev) =>
-                                      rev.property_uid === property.property_uid
+                                    (exp) =>
+                                      exp.property_uid === property.property_uid
                                   )
                                   .find(
-                                    (revS) => revS.purchase_type === "MORTGAGE"
+                                    (expS) => expS.purchase_type === "MORTGAGE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
                                     <TableCell width="500px" style={bold}>
@@ -4777,53 +4783,53 @@ export default function ManagerCashflow(props) {
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type === "MORTGAGE"
+                                          (expS) =>
+                                            expS.purchase_type === "MORTGAGE"
                                         )
                                         .amount_paid.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type === "MORTGAGE"
+                                          (expS) =>
+                                            expS.purchase_type === "MORTGAGE"
                                         )
                                         .amount_due.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {" "}
-                                      {expenseSummary
-                                        .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
-                                            property.property_uid
-                                        )
-                                        .find(
-                                          (revS) =>
-                                            revS.purchase_type === "MORTGAGE"
-                                        )
-                                        .amount_due.toFixed(2) -
+                                      {(
                                         expenseSummary
                                           .filter(
-                                            (rev) =>
-                                              rev.property_uid ===
+                                            (exp) =>
+                                              exp.property_uid ===
                                               property.property_uid
                                           )
                                           .find(
-                                            (revS) =>
-                                              revS.purchase_type === "MORTGAGE"
+                                            (expS) =>
+                                              expS.purchase_type === "MORTGAGE"
+                                          ).amount_due -
+                                        expenseSummary
+                                          .filter(
+                                            (exp) =>
+                                              exp.property_uid ===
+                                              property.property_uid
                                           )
-                                          .amount_paid.toFixed(2)}
+                                          .find(
+                                            (expS) =>
+                                              expS.purchase_type === "MORTGAGE"
+                                          ).amount_paid
+                                      ).toFixed(2)}
                                     </TableCell>
                                   </TableRow>
                                 ) : (
@@ -4857,25 +4863,26 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 )}
                                 {/* Mortgage map individual */}
-                                {expense.map((rev, i) => {
-                                  return rev.purchase_type === "MORTGAGE" &&
-                                    rev.property_uid ===
+                                {expense.map((exp, i) => {
+                                  return exp.purchase_type === "MORTGAGE" &&
+                                    exp.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyMortgage}>
                                       <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        {rev.description}
+                                        {exp.description}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {rev.amount_paid.toFixed(2)}
+                                        {exp.amount_paid.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2)}
+                                        {exp.amount_due.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2) -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          exp.amount_due - exp.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -4885,11 +4892,11 @@ export default function ManagerCashflow(props) {
                                 {/* Taxes */}
                                 {expenseSummary
                                   .filter(
-                                    (rev) =>
-                                      rev.property_uid === property.property_uid
+                                    (exp) =>
+                                      exp.property_uid === property.property_uid
                                   )
                                   .find(
-                                    (revS) => revS.purchase_type === "TAXES"
+                                    (expS) => expS.purchase_type === "TAXES"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
                                     <TableCell width="500px" style={bold}>
@@ -4918,53 +4925,53 @@ export default function ManagerCashflow(props) {
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type === "TAXES"
+                                          (expS) =>
+                                            expS.purchase_type === "TAXES"
                                         )
                                         .amount_paid.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type === "TAXES"
+                                          (expS) =>
+                                            expS.purchase_type === "TAXES"
                                         )
                                         .amount_due.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {" "}
-                                      {expenseSummary
-                                        .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
-                                            property.property_uid
-                                        )
-                                        .find(
-                                          (revS) =>
-                                            revS.purchase_type === "TAXES"
-                                        )
-                                        .amount_due.toFixed(2) -
+                                      {(
                                         expenseSummary
                                           .filter(
-                                            (rev) =>
-                                              rev.property_uid ===
+                                            (exp) =>
+                                              exp.property_uid ===
                                               property.property_uid
                                           )
                                           .find(
-                                            (revS) =>
-                                              revS.purchase_type === "TAXES"
+                                            (expS) =>
+                                              expS.purchase_type === "TAXES"
+                                          ).amount_due -
+                                        expenseSummary
+                                          .filter(
+                                            (exp) =>
+                                              exp.property_uid ===
+                                              property.property_uid
                                           )
-                                          .amount_paid.toFixed(2)}
+                                          .find(
+                                            (expS) =>
+                                              expS.purchase_type === "TAXES"
+                                          ).amount_paid
+                                      ).toFixed(2)}
                                     </TableCell>
                                   </TableRow>
                                 ) : (
@@ -4998,25 +5005,26 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 )}
                                 {/* Taxes map individual */}
-                                {expense.map((rev, i) => {
-                                  return rev.purchase_type === "TAXES" &&
-                                    rev.property_uid ===
+                                {expense.map((exp, i) => {
+                                  return exp.purchase_type === "TAXES" &&
+                                    exp.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyTaxes}>
                                       <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        {rev.description}
+                                        {exp.description}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {rev.amount_paid.toFixed(2)}
+                                        {exp.amount_paid.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2)}
+                                        {exp.amount_due.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2) -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          exp.amount_due - exp.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -5026,11 +5034,11 @@ export default function ManagerCashflow(props) {
                                 {/* Insurance */}
                                 {expenseSummary
                                   .filter(
-                                    (rev) =>
-                                      rev.property_uid === property.property_uid
+                                    (exp) =>
+                                      exp.property_uid === property.property_uid
                                   )
                                   .find(
-                                    (revS) => revS.purchase_type === "INSURANCE"
+                                    (expS) => expS.purchase_type === "INSURANCE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
                                     <TableCell width="500px" style={bold}>
@@ -5059,53 +5067,53 @@ export default function ManagerCashflow(props) {
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type === "INSURANCE"
+                                          (expS) =>
+                                            expS.purchase_type === "INSURANCE"
                                         )
                                         .amount_paid.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type === "INSURANCE"
+                                          (expS) =>
+                                            expS.purchase_type === "INSURANCE"
                                         )
                                         .amount_due.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {" "}
-                                      {expenseSummary
-                                        .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
-                                            property.property_uid
-                                        )
-                                        .find(
-                                          (revS) =>
-                                            revS.purchase_type === "INSURANCE"
-                                        )
-                                        .amount_due.toFixed(2) -
+                                      {(
                                         expenseSummary
                                           .filter(
-                                            (rev) =>
-                                              rev.property_uid ===
+                                            (exp) =>
+                                              exp.property_uid ===
                                               property.property_uid
                                           )
                                           .find(
-                                            (revS) =>
-                                              revS.purchase_type === "INSURANCE"
+                                            (expS) =>
+                                              expS.purchase_type === "INSURANCE"
+                                          ).amount_due -
+                                        expenseSummary
+                                          .filter(
+                                            (exp) =>
+                                              exp.property_uid ===
+                                              property.property_uid
                                           )
-                                          .amount_paid.toFixed(2)}
+                                          .find(
+                                            (expS) =>
+                                              expS.purchase_type === "INSURANCE"
+                                          ).amount_paid
+                                      ).toFixed(2)}
                                     </TableCell>
                                   </TableRow>
                                 ) : (
@@ -5139,25 +5147,26 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 )}
                                 {/* Insurance map individual */}
-                                {expense.map((rev, i) => {
-                                  return rev.purchase_type === "INSURANCE" &&
-                                    rev.property_uid ===
+                                {expense.map((exp, i) => {
+                                  return exp.purchase_type === "INSURANCE" &&
+                                    exp.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyInsurance}>
                                       <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        {rev.description}
+                                        {exp.description}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {rev.amount_paid.toFixed(2)}
+                                        {exp.amount_paid.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2)}
+                                        {exp.amount_due.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2) -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          exp.amount_due - exp.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -5167,11 +5176,11 @@ export default function ManagerCashflow(props) {
                                 {/* UtilityExpense */}
                                 {expenseSummary
                                   .filter(
-                                    (rev) =>
-                                      rev.property_uid === property.property_uid
+                                    (exp) =>
+                                      exp.property_uid === property.property_uid
                                   )
                                   .find(
-                                    (revS) => revS.purchase_type === "UTILITY"
+                                    (expS) => expS.purchase_type === "UTILITY"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
                                     <TableCell width="500px" style={bold}>
@@ -5200,53 +5209,50 @@ export default function ManagerCashflow(props) {
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type === "UTILITY"
+                                          (expS) =>
+                                            expS.purchase_type === "UTILITY"
                                         )
                                         .amount_paid.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type === "UTILITY"
+                                          (expS) =>
+                                            expS.purchase_type === "UTILITY"
                                         )
                                         .amount_due.toFixed(2)}
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {" "}
-                                      {expenseSummary
+                                      {(expenseSummary
                                         .filter(
-                                          (rev) =>
-                                            rev.property_uid ===
+                                          (exp) =>
+                                            exp.property_uid ===
                                             property.property_uid
                                         )
                                         .find(
-                                          (revS) =>
-                                            revS.purchase_type === "UTILITY"
+                                          (expS) =>
+                                            expS.purchase_type === "UTILITY"
+                                        ).amount_due = -expenseSummary
+                                        .filter(
+                                          (exp) =>
+                                            exp.property_uid ===
+                                            property.property_uid
                                         )
-                                        .amount_due.toFixed(2) -
-                                        expenseSummary
-                                          .filter(
-                                            (rev) =>
-                                              rev.property_uid ===
-                                              property.property_uid
-                                          )
-                                          .find(
-                                            (revS) =>
-                                              revS.purchase_type === "UTILITY"
-                                          )
-                                          .amount_paid.toFixed(2)}
+                                        .find(
+                                          (expS) =>
+                                            expS.purchase_type === "UTILITY"
+                                        ).amount_paid).toFixed(2)}
                                     </TableCell>
                                   </TableRow>
                                 ) : (
@@ -5280,9 +5286,9 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 )}
                                 {/* UtilityExpense map individual */}
-                                {expense.map((rev, i) => {
-                                  return rev.purchase_type === "UTILITY" &&
-                                    rev.property_uid ===
+                                {expense.map((exp, i) => {
+                                  return exp.purchase_type === "UTILITY" &&
+                                    exp.property_uid ===
                                       property.property_uid ? (
                                     <TableRow
                                       hidden={!toggleMonthlyUtilityExpense}
@@ -5290,17 +5296,18 @@ export default function ManagerCashflow(props) {
                                       <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        {rev.description}
+                                        {exp.description}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {rev.amount_paid.toFixed(2)}
+                                        {exp.amount_paid.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2)}
+                                        {exp.amount_due.toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2) -
-                                          rev.amount_paid.toFixed(2)}
+                                        {(
+                                          exp.amount_due - exp.amount_paid
+                                        ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
                                   ) : (
@@ -5340,6 +5347,10 @@ export default function ManagerCashflow(props) {
                       <TableCell>
                         Cumulative <br />
                         Amount Due
+                      </TableCell>{" "}
+                      <TableCell>
+                        Cumulative <br />
+                        Amount Paid
                       </TableCell>
                     </TableHead>
                     <TableBody>
@@ -5408,11 +5419,31 @@ export default function ManagerCashflow(props) {
                               {transaction.next_payment.split(" ")[0]}
                             </TableCell>
                             <TableCell>
-                              {transaction.sum}
+                              {transaction.sum_due}
                               {transactions[index] !== undefined &&
                               transactions[index + 1] !== undefined ? (
-                                transactions[index].sum >
-                                transactions[index + 1].sum ? (
+                                transactions[index].sum_due >=
+                                transactions[index + 1].sum_due ? (
+                                  <img
+                                    src={GreenUpArrow}
+                                    style={{ width: "15px" }}
+                                  />
+                                ) : (
+                                  <img
+                                    src={RedDownArrow}
+                                    style={{ width: "15px" }}
+                                  />
+                                )
+                              ) : (
+                                ""
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {transaction.sum_paid}
+                              {transactions[index] !== undefined &&
+                              transactions[index + 1] !== undefined ? (
+                                transactions[index].sum_paid >=
+                                transactions[index + 1].sum_paid ? (
                                   <img
                                     src={GreenUpArrow}
                                     style={{ width: "15px" }}
