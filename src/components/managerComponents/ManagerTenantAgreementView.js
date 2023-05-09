@@ -20,7 +20,7 @@ import EditIconNew from "../../icons/EditIconNew.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import Mail from "../../icons/Mail.svg";
-import { put, post } from "../../utils/api";
+import { get, put, post } from "../../utils/api";
 import {
   small,
   smallImg,
@@ -356,7 +356,31 @@ function ManagerTenantAgreementView(props) {
     setShowSpinner(false);
     closeAgreement();
   };
-
+  const sendLease = async () => {
+    const resp = await get("/GetToken");
+    console.log(resp);
+    //     const obj={
+    //   "documents": [
+    //     {
+    //       "documentBase64": {{document}},
+    //       "documentId": {{documentId}},
+    //       "fileExtension": "pdf",
+    //       "name": "document"
+    //     }
+    //   ],
+    //   "emailSubject": "Simple Signing Example",
+    //   "recipients": {
+    //     "signers": [
+    //       {
+    //         "email": property.rentalInfo[0].tenant_email,
+    //         "name": property.rentalInfo[0].tenant_first_name,
+    //         "recipientId": property.rentalInfo[0].tenant_id
+    //       }
+    //     ]
+    //   },
+    //   "status": "sent"
+    // }
+  };
   return isLoading ? (
     <div>
       <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
@@ -774,6 +798,26 @@ function ManagerTenantAgreementView(props) {
             ""
           )}
 
+          {(property.management_status === "ACCEPTED" ||
+            property.management_status === "OWNER END EARLY" ||
+            property.management_status === "PM END EARLY") &&
+          agreement.rental_status === "PROCESSING" ? (
+            <Row className="pt-4 my-4" hidden={agreement === null}>
+              <Col className="d-flex flex-row justify-content-evenly">
+                <Button
+                  style={bluePillButton}
+                  variant="outline-primary"
+                  onClick={() => {
+                    sendLease();
+                  }}
+                >
+                  Send Lease Document to Sign
+                </Button>
+              </Col>
+            </Row>
+          ) : (
+            ""
+          )}
           {(property.management_status === "ACCEPTED" ||
             property.management_status === "OWNER END EARLY" ||
             property.management_status === "PM END EARLY") &&
