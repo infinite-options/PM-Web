@@ -78,9 +78,36 @@ export default function ManagerPayments(props) {
       return;
     }
     setPropertyData(response);
-    let upcoming = [];
-    // console.log(response.result);
-    setUpcomingPaymentsData(response.result);
+    let upcoming = response.result;
+
+    upcoming.forEach((res) => {
+      // console.log(res.purchase_type);
+      if (
+        res.payer.includes(res.owner_id) &&
+        res.receiver === management_buid &&
+        res.purchase_status === "UNPAID"
+      ) {
+        res.amount_due = -res.amount_due;
+        // console.log(res.amount_due);
+      } else if (
+        res.payer.includes(res.owner_id) &&
+        res.receiver === management_buid &&
+        res.purchase_status === "PAID"
+      ) {
+        res.amount_due = -res.amount_due;
+        res.amount_paid = -res.amount_paid;
+        // console.log(res.amount_due);
+        // console.log(res.amount_paid);
+      } else {
+        res.amount_due = res.amount_due;
+        res.amount_paid = res.amount_paid;
+        // console.log(res.amount_due);
+        // console.log(res.amount_paid);
+      }
+      // updatedUpcoming.push(res);
+    });
+
+    setUpcomingPaymentsData(upcoming);
   };
   useEffect(() => {
     // console.log("in use effect");

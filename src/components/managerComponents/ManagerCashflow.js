@@ -291,7 +291,7 @@ export default function ManagerCashflow(props) {
         }
       });
     // console.log(alltransactions);
-    setTransactions(cashflowResponse.result);
+    setTransactions(alltransactions);
   };
   const toggleProperty = (property) => {
     const shownState = propertyID.slice();

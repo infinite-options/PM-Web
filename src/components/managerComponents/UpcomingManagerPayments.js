@@ -700,9 +700,11 @@ export default function UpcomingManagerPayments(props) {
               {rents.length !== 0
                 ? stableSort(rents, getComparator(order, orderBy)).map(
                     (row, index) => {
-                      return row.purchase_status === "UNPAID" &&
-                        row.receiver !== managerID &&
-                        row.amount_due > 0 ? (
+                      return (row.purchase_status === "UNPAID" &&
+                        row.receiver !== managerID) ||
+                        (row.purchase_status === "UNPAID" &&
+                          row.payer.includes(row.owner_id) &&
+                          row.receiver === managerID) ? (
                         <TableRow
                           hover
                           role="checkbox"
@@ -802,7 +804,7 @@ export default function UpcomingManagerPayments(props) {
                             )}
                           </TableCell> */}
                           <TableCell align="right">
-                            {Math.abs(row.amount_due).toFixed(2)}
+                            {row.amount_due.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -865,7 +867,7 @@ export default function UpcomingManagerPayments(props) {
                   ).map((row, index) => {
                     return (row.purchase_status === "UNPAID" &&
                       row.receiver === managerID &&
-                      row.amount_due > 0) ||
+                      !row.payer.includes(row.owner_id)) ||
                       (row.purchase_status === "UNPAID" &&
                         row.receiver !== managerID &&
                         row.amount_due < 0) ? (
@@ -923,7 +925,7 @@ export default function UpcomingManagerPayments(props) {
                           />
                         </TableCell>
                         <TableCell align="right">
-                          {Math.abs(row.amount_due).toFixed(2)}
+                          {row.amount_due.toFixed(2)}
                         </TableCell>
                         <TableCell align="center" style={{ width: "83px" }}>
                           <img
