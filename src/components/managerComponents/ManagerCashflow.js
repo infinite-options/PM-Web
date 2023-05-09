@@ -277,16 +277,19 @@ export default function ManagerCashflow(props) {
       .reverse()
       .forEach((all, i, self) => {
         if (i == 0) {
-          all.sum = all.amount_due;
+          all.sum_due = all.amount_due;
+          all.sum_paid = all.amount_paid;
         }
 
         const prev = self[i - 1];
         if (prev !== undefined) {
           // console.log(i, all.purchase_uid, prev.purchase_uid);
           if (all.receiver === managerID) {
-            all.sum = prev.sum + all.amount_due;
+            all.sum_due = prev.sum_due + all.amount_due;
+            all.sum_paid = prev.sum_paid + all.amount_paid;
           } else {
-            all.sum = prev.sum - all.amount_due;
+            all.sum_due = prev.sum_due - all.amount_due;
+            all.sum_paid = prev.sum_paid - all.amount_paid;
           }
         }
       });
@@ -319,6 +322,7 @@ export default function ManagerCashflow(props) {
   }
   useEffect(() => {
     fetchCashflow();
+    fetchAllCashflow();
   }, [year, month, filter]);
 
   return (
@@ -339,7 +343,33 @@ export default function ManagerCashflow(props) {
                   {propertyView ? "Property" : "Portfolio"} Cashflow Summary
                 </h3>
               </Col>
-              <Col>
+              {propertyView ? (
+                <Col xs={1}>
+                  {" "}
+                  {!all ? (
+                    <button
+                      style={bluePillButton}
+                      onClick={() => {
+                        setAll(!all);
+                      }}
+                    >
+                      All
+                    </button>
+                  ) : (
+                    <button
+                      style={bluePillButton}
+                      onClick={() => {
+                        setAll(!all);
+                      }}
+                    >
+                      CF
+                    </button>
+                  )}{" "}
+                </Col>
+              ) : (
+                ""
+              )}
+              <Col xs={2}>
                 <img
                   src={AddIcon}
                   alt="Add Icon"
@@ -357,77 +387,66 @@ export default function ManagerCashflow(props) {
                 />
               </Col>
             </Row>
-            <Row className="m-3">
-              <Col xs={3} className="d-flex align-items-center">
-                {/* Month:&nbsp;&nbsp;&nbsp;&nbsp; */}
-                <select
-                  value={month}
-                  className="mt-1"
-                  onChange={(e) => setMonth(e.currentTarget.value)}
-                >
-                  <option value="">---</option>
-                  <option value="January">January</option>
-                  <option value="February">February</option>
-                  <option value="March">March</option>
-                  <option value="April">April</option>
-                  <option value="May">May</option>
-                  <option value="June">June</option>
-                  <option value="July">July</option>
-                  <option value="August">August</option>
-                  <option value="September">September</option>
-                  <option value="October">October</option>
-                  <option value="November">November</option>
-                  <option value="December">December</option>
-                </select>
-              </Col>
-              <Col xs={2} className="d-flex align-items-center">
-                {/* Year:&nbsp;&nbsp;&nbsp;&nbsp; */}
-                <select
-                  className="mt-1"
-                  value={year}
-                  onChange={(e) => setYear(e.currentTarget.value)}
-                >
-                  {options}
-                </select>
-              </Col>
-              {byProperty ? (
-                <Col className="d-flex align-items-center">
-                  Category
-                  <Switch
-                    checked={filter}
-                    onChange={() => setFilter(!filter)}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                  Property
-                </Col>
-              ) : (
-                <Col className="d-flex align-items-center">
-                  Category
-                  <Switch
-                    checked={filter}
-                    onChange={() => setFilter(!filter)}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                  Property
-                </Col>
-              )}
-              {propertyView ? (
-                <Col xs={1}>
-                  {" "}
-                  <button
-                    style={bluePillButton}
-                    onClick={() => {
-                      setAll(!all);
-                      fetchAllCashflow();
-                    }}
+            {!all ? (
+              <Row className="m-3">
+                <Col xs={3} className="d-flex align-items-center">
+                  {/* Month:&nbsp;&nbsp;&nbsp;&nbsp; */}
+                  <select
+                    value={month}
+                    className="mt-1"
+                    onChange={(e) => setMonth(e.currentTarget.value)}
                   >
-                    All
-                  </button>{" "}
+                    <option value="">---</option>
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                  </select>
                 </Col>
-              ) : (
-                ""
-              )}
-            </Row>
+                <Col xs={2} className="d-flex align-items-center">
+                  {/* Year:&nbsp;&nbsp;&nbsp;&nbsp; */}
+                  <select
+                    className="mt-1"
+                    value={year}
+                    onChange={(e) => setYear(e.currentTarget.value)}
+                  >
+                    {options}
+                  </select>
+                </Col>
+                {byProperty ? (
+                  <Col className="d-flex align-items-center">
+                    Category
+                    <Switch
+                      checked={filter}
+                      onChange={() => setFilter(!filter)}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                    Property
+                  </Col>
+                ) : (
+                  <Col className="d-flex align-items-center">
+                    Category
+                    <Switch
+                      checked={filter}
+                      onChange={() => setFilter(!filter)}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                    Property
+                  </Col>
+                )}
+              </Row>
+            ) : (
+              ""
+            )}
+
             {!isLoading ? (
               filter === false && all === false ? (
                 <Row className="m-3">
@@ -1224,7 +1243,7 @@ export default function ManagerCashflow(props) {
                               }}
                             />
                           </TableCell>{" "}
-                          <TableCell>
+                          <TableCell align="right">
                             {revenueSummary
                               .find(
                                 (revS) => revS.purchase_type === "MAINTENANCE"
@@ -5340,6 +5359,10 @@ export default function ManagerCashflow(props) {
                       <TableCell>
                         Cumulative <br />
                         Amount Due
+                      </TableCell>{" "}
+                      <TableCell>
+                        Cumulative <br />
+                        Amount Paid
                       </TableCell>
                     </TableHead>
                     <TableBody>
@@ -5408,11 +5431,31 @@ export default function ManagerCashflow(props) {
                               {transaction.next_payment.split(" ")[0]}
                             </TableCell>
                             <TableCell>
-                              {transaction.sum}
+                              {transaction.sum_due}
                               {transactions[index] !== undefined &&
                               transactions[index + 1] !== undefined ? (
-                                transactions[index].sum >
-                                transactions[index + 1].sum ? (
+                                transactions[index].sum_due >=
+                                transactions[index + 1].sum_due ? (
+                                  <img
+                                    src={GreenUpArrow}
+                                    style={{ width: "15px" }}
+                                  />
+                                ) : (
+                                  <img
+                                    src={RedDownArrow}
+                                    style={{ width: "15px" }}
+                                  />
+                                )
+                              ) : (
+                                ""
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {transaction.sum_paid}
+                              {transactions[index] !== undefined &&
+                              transactions[index + 1] !== undefined ? (
+                                transactions[index].sum_paid >=
+                                transactions[index + 1].sum_paid ? (
                                   <img
                                     src={GreenUpArrow}
                                     style={{ width: "15px" }}
