@@ -18,6 +18,8 @@ import { Switch } from "@material-ui/core";
 import AppContext from "../../AppContext";
 import AddIcon from "../../icons/AddIcon.svg";
 import SortLeft from "../../icons/Sort-left.svg";
+import GreenUpArrow from "../../icons/GreenUpArrow.png";
+import RedDownArrow from "../../icons/RedDownArrow.png";
 import { get } from "../../utils/api";
 import {
   headings,
@@ -270,21 +272,24 @@ export default function ManagerCashflow(props) {
     );
     // console.log(cashflowResponse.result);
     let alltransactions = cashflowResponse.result;
-    alltransactions.forEach((all, i, self) => {
-      if (i == 0) {
-        all.sum = all.amount_due;
-      }
-
-      const prev = self[i - 1];
-      if (prev !== undefined) {
-        // console.log(i, all.purchase_uid, prev.purchase_uid);
-        if (all.receiver === managerID) {
-          all.sum = prev.sum + all.amount_due;
-        } else {
-          all.sum = prev.sum - all.amount_due;
+    alltransactions
+      .slice()
+      .reverse()
+      .forEach((all, i, self) => {
+        if (i == 0) {
+          all.sum = all.amount_due;
         }
-      }
-    });
+
+        const prev = self[i - 1];
+        if (prev !== undefined) {
+          // console.log(i, all.purchase_uid, prev.purchase_uid);
+          if (all.receiver === managerID) {
+            all.sum = prev.sum + all.amount_due;
+          } else {
+            all.sum = prev.sum - all.amount_due;
+          }
+        }
+      });
     // console.log(alltransactions);
     setTransactions(cashflowResponse.result);
   };
@@ -5338,7 +5343,7 @@ export default function ManagerCashflow(props) {
                       </TableCell>
                     </TableHead>
                     <TableBody>
-                      {transactions.map((transaction) => {
+                      {transactions.map((transaction, index) => {
                         return (
                           <TableRow>
                             <TableCell
@@ -5402,15 +5407,25 @@ export default function ManagerCashflow(props) {
                             >
                               {transaction.next_payment.split(" ")[0]}
                             </TableCell>
-                            <TableCell
-                              style={{
-                                color:
-                                  transaction.receiver === managerID
-                                    ? "green"
-                                    : "red",
-                              }}
-                            >
+                            <TableCell>
                               {transaction.sum}
+                              {transactions[index] !== undefined &&
+                              transactions[index + 1] !== undefined ? (
+                                transactions[index].sum >
+                                transactions[index + 1].sum ? (
+                                  <img
+                                    src={GreenUpArrow}
+                                    style={{ width: "15px" }}
+                                  />
+                                ) : (
+                                  <img
+                                    src={RedDownArrow}
+                                    style={{ width: "15px" }}
+                                  />
+                                )
+                              ) : (
+                                ""
+                              )}
                             </TableCell>
                           </TableRow>
                         );
