@@ -162,6 +162,10 @@ export default function UpcomingManagerPayments(props) {
             </Col>
           </Row>
           <Row className="text-center mt-5" id="payment">
+            {" "}
+            <Col>Choose a Payment Method:</Col>
+          </Row>
+          <Row className="text-center mt-5" id="payment">
             <img
               id="bofa"
               alt="Bank of America Logo"
