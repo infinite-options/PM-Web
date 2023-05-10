@@ -21,6 +21,7 @@ export default function ManagerPayments(props) {
   const [width, setWindowWidth] = useState(1024);
   const [managerID, setManagerID] = useState("");
   const [verified, setVerified] = useState(false);
+  const [unpaid, setUnpaid] = useState(false);
 
   const [deleted, setDeleted] = useState(false);
   const [paid, setPaid] = useState(false);
@@ -112,7 +113,7 @@ export default function ManagerPayments(props) {
   useEffect(() => {
     // console.log("in use effect");
     fetchManagerPayments();
-  }, [paymentOptions, verified, deleted, paid]);
+  }, [paymentOptions, verified, deleted, paid, unpaid]);
   const handlePaymentOption = (index) => {
     // console.log("payment choice called");
     let temp = paymentOptions.slice();
@@ -162,6 +163,8 @@ export default function ManagerPayments(props) {
                   managerID={managerID}
                   verified={verified}
                   setVerified={setVerified}
+                  unpaid={unpaid}
+                  setUnpaid={setUnpaid}
                 />
               )}
             </Row>
