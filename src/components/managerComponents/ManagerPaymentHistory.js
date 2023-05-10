@@ -9,10 +9,15 @@ import {
   Box,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { Fade } from "@mui/material";
 import { Container, Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import Verified from "../../icons/Verified.jpg";
+import RedReverse from "../../icons/RedReverse.svg";
 import { put } from "../../utils/api";
 import { headings, subHeading, blue, xSmall } from "../../utils/styles";
 const useStyles = makeStyles({
@@ -30,8 +35,13 @@ export default function ManagerPaymentHistory(props) {
   const [orderBy, setOrderBy] = useState("payment_date");
   const [orderIncoming, setOrderIncoming] = useState("asc");
   const [orderIncomingBy, setOrderIncomingBy] = useState("payment_date");
-  const { verified, setVerified } = props;
+  const [unpaidModalShow, setUnpaidModalShow] = useState(false);
+  const { verified, setVerified, unpaid, setUnpaid } = props;
   const managerID = props.managerID;
+
+  const hideModal = () => {
+    setUnpaidModalShow(false);
+  };
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -244,6 +254,11 @@ export default function ManagerPaymentHistory(props) {
       label: "Verify",
     },
     {
+      id: "purchase_status",
+      numeric: true,
+      label: "Mark Unpaid",
+    },
+    {
       id: "amount_paid",
       numeric: true,
       label: "Amount",
@@ -315,6 +330,43 @@ export default function ManagerPaymentHistory(props) {
     };
     const response = await put("/payments", verifyObj);
     setVerified(!verified);
+  };
+  const MarkUnpaid = async (payPurID) => {
+    console.log(payPurID);
+    let unpaidObj = {
+      purchase_uid: payPurID,
+    };
+    console.log(unpaidObj);
+    const response = await put("/MarkUnpaid", unpaidObj);
+    setUnpaid(!unpaid);
+    setUnpaidModalShow(false);
+  };
+
+  const paidModal = () => {
+    const footerStyle = {
+      border: "none",
+      backgroundColor: " #F3F3F8",
+    };
+    const bodyStyle = {
+      backgroundColor: " #F3F3F8",
+    };
+    return (
+      <Dialog
+        open={unpaidModalShow}
+        transition={Fade}
+        onClose={hideModal}
+        maxWidth="md"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title"></DialogTitle>
+        <DialogContent>
+          <div className="d-flex justify-content-center align-items-center m-5">
+            <h5>Marked as Unpaid</h5>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
   };
   return (
     <div className="payment-history">
@@ -513,6 +565,7 @@ export default function ManagerPaymentHistory(props) {
                               objectFit: "contain",
                               cursor: "pointer",
                             }}
+                            title="Unverify"
                             onClick={() => unverifyPayment(row.payment_uid)}
                           />
                         ) : (
@@ -527,6 +580,22 @@ export default function ManagerPaymentHistory(props) {
                             Verify
                           </button>
                         )}
+                      </TableCell>
+                      <TableCell align="center">
+                        <img
+                          src={RedReverse}
+                          style={{
+                            width: "25px",
+                            height: "25px",
+                            objectFit: "contain",
+                            cursor: "pointer",
+                          }}
+                          title="Mark Unpaid"
+                          onClick={() => {
+                            setUnpaidModalShow(true);
+                            MarkUnpaid(row.pay_purchase_id);
+                          }}
+                        />
                       </TableCell>
                       <TableCell align="right">
                         {Math.abs(row.amount).toFixed(2)}
