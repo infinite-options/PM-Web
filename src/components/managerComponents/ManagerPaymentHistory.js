@@ -16,7 +16,7 @@ import { Fade } from "@mui/material";
 import { Container, Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
-import Verified from "../../icons/Verified.jpg";
+import Verified from "../../icons/Verified.svg";
 import RedReverse from "../../icons/RedReverse.svg";
 import { put } from "../../utils/api";
 import { headings, subHeading, blue, xSmall } from "../../utils/styles";
@@ -582,20 +582,32 @@ export default function ManagerPaymentHistory(props) {
                         )}
                       </TableCell>
                       <TableCell align="center">
-                        <img
-                          src={RedReverse}
-                          style={{
-                            width: "25px",
-                            height: "25px",
-                            objectFit: "contain",
-                            cursor: "pointer",
-                          }}
-                          title="Mark Unpaid"
-                          onClick={() => {
-                            setUnpaidModalShow(true);
-                            MarkUnpaid(row.pay_purchase_id);
-                          }}
-                        />
+                        {row.payment_verify === "Verified" ? (
+                          <img
+                            src={RedReverse}
+                            style={{
+                              width: "35px",
+                              height: "35px",
+                              objectFit: "contain",
+                            }}
+                            title="Mark Unpaid Disabled"
+                          />
+                        ) : (
+                          <img
+                            src={RedReverse}
+                            style={{
+                              width: "35px",
+                              height: "35px",
+                              objectFit: "contain",
+                              cursor: "pointer",
+                            }}
+                            title="Mark Unpaid"
+                            onClick={() => {
+                              setUnpaidModalShow(true);
+                              MarkUnpaid(row.pay_purchase_id);
+                            }}
+                          />
+                        )}
                       </TableCell>
                       <TableCell align="right">
                         {Math.abs(row.amount).toFixed(2)}

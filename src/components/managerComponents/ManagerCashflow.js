@@ -5234,25 +5234,28 @@ export default function ManagerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {" "}
-                                      {(expenseSummary
-                                        .filter(
-                                          (exp) =>
-                                            exp.property_uid ===
-                                            property.property_uid
-                                        )
-                                        .find(
-                                          (expS) =>
-                                            expS.purchase_type === "UTILITY"
-                                        ).amount_due = -expenseSummary
-                                        .filter(
-                                          (exp) =>
-                                            exp.property_uid ===
-                                            property.property_uid
-                                        )
-                                        .find(
-                                          (expS) =>
-                                            expS.purchase_type === "UTILITY"
-                                        ).amount_paid).toFixed(2)}
+                                      {(
+                                        expenseSummary
+                                          .filter(
+                                            (exp) =>
+                                              exp.property_uid ===
+                                              property.property_uid
+                                          )
+                                          .find(
+                                            (expS) =>
+                                              expS.purchase_type === "UTILITY"
+                                          ).amount_due -
+                                        expenseSummary
+                                          .filter(
+                                            (exp) =>
+                                              exp.property_uid ===
+                                              property.property_uid
+                                          )
+                                          .find(
+                                            (expS) =>
+                                              expS.purchase_type === "UTILITY"
+                                          ).amount_paid
+                                      ).toFixed(2)}
                                     </TableCell>
                                   </TableRow>
                                 ) : (
