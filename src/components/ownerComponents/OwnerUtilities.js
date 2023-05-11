@@ -23,6 +23,7 @@ import SideBar from "./SideBar";
 import OwnerFooter from "./OwnerFooter";
 import AppContext from "../../AppContext";
 import StripePayment from "../StripePayment.js";
+import StripeFeesDialog from "../StripeFeesDialog";
 import ArrowDown from "../../icons/ArrowDown.svg";
 import AddIcon from "../../icons/AddIcon.svg";
 import WF_Logo from "../../icons/WF-Logo.png";
@@ -81,6 +82,7 @@ function OwnerUtilities(props) {
     useState(false);
   const [payExpense, setPayExpense] = useState(false);
   const [payExpenseOwner, setPayExpenseOwner] = useState(false);
+  const [stripeDialogShow, setStripeDialogShow] = useState(false);
   const [bankPayment, setBankPayment] = useState(false);
   const [paymentType, setPaymentType] = useState("");
   const [confirmationCode, setConfirmationCode] = useState("");
@@ -1090,6 +1092,12 @@ function OwnerUtilities(props) {
   };
   return (
     <div>
+      <StripeFeesDialog
+        stripeDialogShow={stripeDialogShow}
+        setStripeDialogShow={setStripeDialogShow}
+        toggleKeys={toggleKeys}
+        setStripePayment={setStripePayment}
+      />
       <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
@@ -2647,8 +2655,10 @@ function OwnerUtilities(props) {
                           className="mt-2 mb-2"
                           variant="outline-primary"
                           onClick={() => {
-                            toggleKeys();
-                            setStripePayment(true);
+                            //navigate("/tenant");
+                            setStripeDialogShow(true);
+                            // toggleKeys();
+                            // setStripePayment(true);
                           }}
                           style={bluePillButton}
                         >
@@ -2656,7 +2666,7 @@ function OwnerUtilities(props) {
                         </Button>
                       </Col>
                     )}
-                    {disabled ? (
+                    {/* {disabled ? (
                       <Col>
                         <Button
                           className="mt-2 mb-2"
@@ -2678,7 +2688,7 @@ function OwnerUtilities(props) {
                           Pay with PayPal
                         </Button>
                       </Col>
-                    )}
+                    )} */}
                     <Col>
                       <Button
                         className="mt-2 mb-2"
@@ -2789,9 +2799,16 @@ function OwnerUtilities(props) {
                   justifyContent: "center",
                 }}
               >
-                <Row style={headings} className="m-3">
-                  Total Payment: ${Math.round(totalSum)}
-                </Row>
+                {stripePayment ? (
+                  <Row style={headings} className="mt-2 mb-2">
+                    Total Payment: $
+                    {parseFloat(totalSum) + 0.03 * parseFloat(totalSum)}
+                  </Row>
+                ) : (
+                  <Row style={headings} className="mt-2 mb-2">
+                    Total Payment: ${totalSum}
+                  </Row>
+                )}
                 <Row className="m-3">
                   <Table
                     responsive="md"
@@ -2824,9 +2841,17 @@ function OwnerUtilities(props) {
                             <TableCell>
                               {purchase.next_payment.substring(0, 10)}
                             </TableCell>
-                            <TableCell>
-                              ${purchase.amount_due.toFixed(2)}
-                            </TableCell>
+                            {stripePayment ? (
+                              <TableCell>
+                                $
+                                {parseFloat(purchase.amount_due) +
+                                  0.03 * parseFloat(purchase.amount_due)}
+                              </TableCell>
+                            ) : (
+                              <TableCell>
+                                ${parseFloat(purchase.amount_due).toFixed(2)}
+                              </TableCell>
+                            )}
                           </TableRow>
                         </TableBody>
                       );
@@ -2968,7 +2993,7 @@ function OwnerUtilities(props) {
                           </Button>
                         </Col>
                       )}
-                      {disabled ? (
+                      {/* {disabled ? (
                         <Col>
                           <Button
                             className="mt-2 mb-2"
@@ -2990,7 +3015,7 @@ function OwnerUtilities(props) {
                             Pay with PayPal
                           </Button>
                         </Col>
-                      )}
+                      )} */}
                       <Col>
                         <Button
                           className="mt-2 mb-2"

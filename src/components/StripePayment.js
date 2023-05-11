@@ -26,7 +26,7 @@ function StripePayment(props) {
       customer_uid: user.user_uid,
       business_code: message === "PMTEST" ? message : "PM",
       payment_summary: {
-        total: parseFloat(amount),
+        total: parseFloat(amount) + 0.03 * parseFloat(amount),
       },
     };
     const response = await fetch(
@@ -61,7 +61,7 @@ function StripePayment(props) {
       newPayment = {
         pay_purchase_id: purchases[0].purchase_uid,
         //Need to make change here
-        amount: parseFloat(amount),
+        amount: parseFloat(amount) + 0.03 * parseFloat(amount),
         payment_notes: message,
         charge_id: paymentIntentID,
         payment_type: "STRIPE",
@@ -81,7 +81,9 @@ function StripePayment(props) {
         newPayment = {
           pay_purchase_id: purchase.purchase_uid,
           //Need to make change here
-          amount: parseFloat(purchase.amount_due - purchase.amount_paid),
+          amount:
+            parseFloat(purchase.amount_due - purchase.amount_paid) +
+            0.03 * parseFloat(purchase.amount_due - purchase.amount_paid),
           payment_notes: message,
           charge_id: paymentIntentID,
           payment_type: "STRIPE",
