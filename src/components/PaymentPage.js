@@ -12,15 +12,13 @@ import {
   TableRow,
   Table,
 } from "@material-ui/core";
-import PropTypes from "prop-types";
-import { visuallyHidden } from "@mui/utils";
 import { makeStyles } from "@material-ui/core/styles";
 import Header from "./Header";
 import SideBar from "./tenantComponents/SideBar";
 import TenantFooter from "./tenantComponents/TenantFooter";
 import StripePayment from "./StripePayment";
+import StripeFeesDialog from "./StripeFeesDialog";
 import PayPal from "./PayPal";
-// import ApplePay from "./ApplePay";
 import WF_Logo from "../icons/WF-Logo.png";
 import BofA_Logo from "../icons/BofA-Logo.png";
 import Chase_Logo from "../icons/Chase-Logo.png";
@@ -63,6 +61,7 @@ function PaymentPage(props) {
   const [confirmationCode, setConfirmationCode] = useState("");
   const [amount, setAmount] = useState(totalSum);
   const [allPurchases, setAllPurchases] = useState([]);
+  const [stripeDialogShow, setStripeDialogShow] = useState(false);
   const [bankPayment, setBankPayment] = useState(false);
   const [paymentType, setPaymentType] = useState("");
   const [showSpinner, setShowSpinner] = useState(false);
@@ -108,7 +107,7 @@ function PaymentPage(props) {
     setBankPayment(false);
   };
   const submit = () => {
-    cancel();
+    // cancel();
     setPaymentConfirm(true);
   };
   const submitPayment = async () => {
@@ -148,6 +147,12 @@ function PaymentPage(props) {
   // console.log(purchases);
   return (
     <div className="w-100 overflow-hidden">
+      <StripeFeesDialog
+        stripeDialogShow={stripeDialogShow}
+        setStripeDialogShow={setStripeDialogShow}
+        toggleKeys={toggleKeys}
+        setStripePayment={setStripePayment}
+      />
       <Row className="w-100 mb-5 overflow-hidden">
         {" "}
         <Col
@@ -198,9 +203,16 @@ function PaymentPage(props) {
                   <Row style={headings} className="mt-2 mb-2">
                     Payment Received{" "}
                   </Row>
-                  <Row style={headings} className="mt-2 mb-2">
-                    Total Payment: ${totalSum}
-                  </Row>
+                  {stripePayment ? (
+                    <Row style={headings} className="mt-2 mb-2">
+                      Total Payment: $
+                      {parseFloat(totalSum) + 0.03 * parseFloat(totalSum)}
+                    </Row>
+                  ) : (
+                    <Row style={headings} className="mt-2 mb-2">
+                      Total Payment: ${totalSum}
+                    </Row>
+                  )}
 
                   <Row className="m-3">
                     <Table
@@ -235,9 +247,17 @@ function PaymentPage(props) {
                               <TableCell>
                                 {purchase.next_payment.substring(0, 10)}
                               </TableCell>
-                              <TableCell>
-                                ${purchase.amount_due.toFixed(2)}
-                              </TableCell>
+                              {stripePayment ? (
+                                <TableCell>
+                                  $
+                                  {parseFloat(purchase.amount_due) +
+                                    0.03 * parseFloat(purchase.amount_due)}
+                                </TableCell>
+                              ) : (
+                                <TableCell>
+                                  ${parseFloat(purchase.amount_due).toFixed(2)}
+                                </TableCell>
+                              )}
                             </TableRow>
                           </TableBody>
                         );
@@ -254,6 +274,7 @@ function PaymentPage(props) {
                     className="mt-8 mb-2"
                     variant="outline-primary"
                     onClick={() => {
+                      cancel();
                       navigate("/tenant"); //should change the navigation to tenantDashboard
                     }}
                     style={bluePillButton}
@@ -265,9 +286,16 @@ function PaymentPage(props) {
             ) : (
               <div>
                 <Row className="m-3">
-                  <Row style={headings} className="mt-2 mb-2">
-                    Total Payment: ${totalSum}
-                  </Row>
+                  {stripePayment ? (
+                    <Row style={headings} className="mt-2 mb-2">
+                      Total Payment: $
+                      {parseFloat(totalSum) + 0.03 * parseFloat(totalSum)}
+                    </Row>
+                  ) : (
+                    <Row style={headings} className="mt-2 mb-2">
+                      Total Payment: ${totalSum}
+                    </Row>
+                  )}
                   <Row className="m-3">
                     <Table
                       responsive="md"
@@ -301,9 +329,17 @@ function PaymentPage(props) {
                               <TableCell>
                                 {purchase.next_payment.substring(0, 10)}
                               </TableCell>
-                              <TableCell>
-                                ${purchase.amount_due.toFixed(2)}
-                              </TableCell>
+                              {stripePayment ? (
+                                <TableCell>
+                                  $
+                                  {parseFloat(purchase.amount_due) +
+                                    0.03 * parseFloat(purchase.amount_due)}
+                                </TableCell>
+                              ) : (
+                                <TableCell>
+                                  ${parseFloat(purchase.amount_due).toFixed(2)}
+                                </TableCell>
+                              )}
                             </TableRow>
                           </TableBody>
                         );
@@ -421,19 +457,20 @@ function PaymentPage(props) {
                         variant="outline-primary"
                         onClick={() => {
                           //navigate("/tenant");
-                          toggleKeys();
-                          setStripePayment(true);
+                          setStripeDialogShow(true);
+                          // toggleKeys();
+                          // setStripePayment(true);
                         }}
                         style={bluePillButton}
                       >
                         Pay with Stripe
                       </Button>
-                      <PayPal
+                      {/* <PayPal
                         pay_purchase_id={purchase_uid}
                         amount={totalSum}
                         payment_notes={message}
                         payment_type={"PAYPAL"}
-                      />
+                      /> */}
                     </Col>
                   </Row>
                 </Row>

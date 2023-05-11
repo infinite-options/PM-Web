@@ -22,6 +22,7 @@ import SideBar from "./SideBar";
 import ManagerFooter from "./ManagerFooter";
 import Checkbox from "../Checkbox";
 import Header from "../Header";
+import StripeFeesDialog from "../StripeFeesDialog";
 import AppContext from "../../AppContext";
 import ArrowDown from "../../icons/ArrowDown.svg";
 import AddIcon from "../../icons/AddIcon.svg";
@@ -79,6 +80,7 @@ function ManagerUtilities(props) {
   const [expenseDetailManager, setExpenseDetailManager] = useState(false);
   const [maintenanceExpenseDetail, setMaintenanceExpenseDetail] =
     useState(false);
+  const [stripeDialogShow, setStripeDialogShow] = useState(false);
   const [payExpense, setPayExpense] = useState(false);
   const [payExpenseManager, setPayExpenseManager] = useState(false);
   const [bankPayment, setBankPayment] = useState(false);
@@ -1129,6 +1131,12 @@ function ManagerUtilities(props) {
   };
   return (
     <div>
+      <StripeFeesDialog
+        stripeDialogShow={stripeDialogShow}
+        setStripeDialogShow={setStripeDialogShow}
+        toggleKeys={toggleKeys}
+        setStripePayment={setStripePayment}
+      />
       <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
@@ -2687,8 +2695,10 @@ function ManagerUtilities(props) {
                           className="mt-2 mb-2"
                           variant="outline-primary"
                           onClick={() => {
-                            toggleKeys();
-                            setStripePayment(true);
+                            //navigate("/tenant");
+                            setStripeDialogShow(true);
+                            // toggleKeys();
+                            // setStripePayment(true);
                           }}
                           style={bluePillButton}
                         >
@@ -2696,7 +2706,7 @@ function ManagerUtilities(props) {
                         </Button>
                       </Col>
                     )}
-                    {disabled ? (
+                    {/* {disabled ? (
                       <Col>
                         <Button
                           className="mt-2 mb-2"
@@ -2718,7 +2728,7 @@ function ManagerUtilities(props) {
                           Pay with PayPal
                         </Button>
                       </Col>
-                    )}
+                    )} */}
                     <Col>
                       <Button
                         className="mt-2 mb-2"
@@ -2829,9 +2839,17 @@ function ManagerUtilities(props) {
                   justifyContent: "center",
                 }}
               >
-                <Row style={headings} className="m-3">
-                  Total Payment: ${Math.round(totalSum)}
-                </Row>
+                {stripePayment ? (
+                  <Row style={headings} className="m-2">
+                    Total Payment: $
+                    {parseFloat(totalSum) + 0.03 * parseFloat(totalSum)}
+                  </Row>
+                ) : (
+                  <Row style={headings} className="m-2">
+                    Total Payment: ${totalSum}
+                  </Row>
+                )}
+
                 <Row className="m-3">
                   <Table
                     responsive="md"
@@ -2864,9 +2882,17 @@ function ManagerUtilities(props) {
                             <TableCell>
                               {purchase.next_payment.substring(0, 10)}
                             </TableCell>
-                            <TableCell>
-                              ${purchase.amount_due.toFixed(2)}
-                            </TableCell>
+                            {stripePayment ? (
+                              <TableCell>
+                                $
+                                {parseFloat(purchase.amount_due) +
+                                  0.03 * parseFloat(purchase.amount_due)}
+                              </TableCell>
+                            ) : (
+                              <TableCell>
+                                ${parseFloat(purchase.amount_due).toFixed(2)}
+                              </TableCell>
+                            )}
                           </TableRow>
                         </TableBody>
                       );
@@ -2999,8 +3025,10 @@ function ManagerUtilities(props) {
                             className="mt-2 mb-2"
                             variant="outline-primary"
                             onClick={() => {
-                              toggleKeys();
-                              setStripePayment(true);
+                              //navigate("/tenant");
+                              setStripeDialogShow(true);
+                              // toggleKeys();
+                              // setStripePayment(true);
                             }}
                             style={bluePillButton}
                           >
@@ -3008,7 +3036,7 @@ function ManagerUtilities(props) {
                           </Button>
                         </Col>
                       )}
-                      {disabled ? (
+                      {/* {disabled ? (
                         <Col>
                           <Button
                             className="mt-2 mb-2"
@@ -3030,7 +3058,7 @@ function ManagerUtilities(props) {
                             Pay with PayPal
                           </Button>
                         </Col>
-                      )}
+                      )} */}
                       <Col>
                         <Button
                           className="mt-2 mb-2"
