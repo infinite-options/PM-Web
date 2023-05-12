@@ -128,6 +128,7 @@ export default function ManagerCashflow(props) {
     let currentRevSummary = [];
     let currentExp = [];
     let currentExpSummary = [];
+
     if (filter === false) {
       if (propertyView === false) {
         cashflowResponse.result.revenue.forEach((rev) => {
@@ -267,34 +268,41 @@ export default function ManagerCashflow(props) {
       management_buid = management_businesses[0].business_uid;
     }
 
-    const cashflowResponse = await get(
+    const cashflowResponseAll = await get(
       `/AllCashflowManager?property_id=${managerData[0].property_uid}`
     );
-    // console.log(cashflowResponse.result);
-    let alltransactions = cashflowResponse.result;
-    alltransactions
-      .slice()
-      .reverse()
-      .forEach((all, i, self) => {
-        if (i == 0) {
-          all.sum_due = all.amount_due;
-          all.sum_paid = all.amount_paid;
-        }
+    // console.log(cashflowResponseAll.result);
+    // let alltransactions = cashflowResponseAll.result;
+    // alltransactions
+    //   .slice()
+    //   .reverse()
+    //   .forEach((all, i, self) => {
+    //     if (i == 0) {
+    //       console.log(all.receiver, all.managerID);
+    //       if (all.receiver === managerID) {
+    //         all.sum_due = all.amount_due;
+    //         all.sum_paid = all.amount_paid;
+    //       } else {
+    //         all.sum_due = -all.amount_due;
+    //         all.sum_paid = -all.amount_paid;
+    //       }
+    //     }
 
-        const prev = self[i - 1];
-        if (prev !== undefined) {
-          // console.log(i, all.purchase_uid, prev.purchase_uid);
-          if (all.receiver === managerID) {
-            all.sum_due = prev.sum_due + all.amount_due;
-            all.sum_paid = prev.sum_paid + all.amount_paid;
-          } else {
-            all.sum_due = prev.sum_due - all.amount_due;
-            all.sum_paid = prev.sum_paid - all.amount_paid;
-          }
-        }
-      });
+    //     const prev = self[i - 1];
+    //     if (prev !== undefined) {
+    //       // console.log(i, all.purchase_uid, prev.purchase_uid);
+    //       if (all.receiver === managerID) {
+    //         all.sum_due = prev.sum_due + all.amount_due;
+    //         all.sum_paid = prev.sum_paid + all.amount_paid;
+    //       } else {
+    //         all.sum_due = prev.sum_due - all.amount_due;
+    //         all.sum_paid = prev.sum_paid - all.amount_paid;
+    //       }
+    //     }
+    //   });
+    // alltransactions.slice().reverse();
     // console.log(alltransactions);
-    setTransactions(alltransactions);
+    setTransactions(cashflowResponseAll.result);
   };
   const toggleProperty = (property) => {
     const shownState = propertyID.slice();
@@ -5425,7 +5433,7 @@ export default function ManagerCashflow(props) {
                               {transaction.sum_due}
                               {transactions[index] !== undefined &&
                               transactions[index + 1] !== undefined ? (
-                                transactions[index].sum_due >=
+                                transactions[index].sum_due >
                                 transactions[index + 1].sum_due ? (
                                   <img
                                     src={GreenUpArrow}
@@ -5445,7 +5453,7 @@ export default function ManagerCashflow(props) {
                               {transaction.sum_paid}
                               {transactions[index] !== undefined &&
                               transactions[index + 1] !== undefined ? (
-                                transactions[index].sum_paid >=
+                                transactions[index].sum_paid >
                                 transactions[index + 1].sum_paid ? (
                                   <img
                                     src={GreenUpArrow}

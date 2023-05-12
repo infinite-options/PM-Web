@@ -67,6 +67,20 @@ const days = (date_1, date_2) => {
   let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
   return TotalDays;
 };
+var removeByAttr = function (arr, attr, value) {
+  var i = arr.length;
+  while (i--) {
+    if (
+      arr[i] &&
+      arr[i].hasOwnProperty(attr) &&
+      arguments.length > 2 &&
+      arr[i][attr] === value
+    ) {
+      arr.splice(i, 1);
+    }
+  }
+  return arr;
+};
 export {
   MaskCharacter,
   ordinal_suffix_of,
@@ -74,4 +88,5 @@ export {
   formatSSN,
   formatEIN,
   days,
+  removeByAttr,
 };
