@@ -302,7 +302,7 @@ export default function ManagerCashflow(props) {
     //   });
     // alltransactions.slice().reverse();
     // console.log(alltransactions);
-    setTransactions(cashflowResponseAll.result);
+    setTransactions(cashflowResponseAll.result.slice().reverse());
   };
   const toggleProperty = (property) => {
     const shownState = propertyID.slice();
