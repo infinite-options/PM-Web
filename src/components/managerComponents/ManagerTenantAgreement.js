@@ -19,10 +19,13 @@ import ManagerFooter from "./ManagerFooter";
 import SideBar from "./SideBar";
 import UpdateConfirmDialog from "./UpdateConfirmDialog";
 import DocumentsUploadPost from "../DocumentsUploadPost";
+import AppContext from "../../AppContext";
+import Checkbox from "../Checkbox";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import Mail from "../../icons/Mail.svg";
-
+import EditIcon from "../../icons/EditIcon.svg";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
 import { put, post } from "../../utils/api";
 import {
   small,
@@ -35,8 +38,9 @@ import {
   subHeading,
   gray,
   sidebarStyle,
+  smallPillButton,
 } from "../../utils/styles";
-import AppContext from "../../AppContext";
+import { removeByAttr } from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -57,7 +61,7 @@ function ManagerTenantAgreement(props) {
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
-  console.log(property, agreement, acceptedTenantApplications);
+  // console.log(property, agreement, acceptedTenantApplications);
 
   const { userData, ably } = useContext(AppContext);
   const { user } = userData;
@@ -70,6 +74,7 @@ function ManagerTenantAgreement(props) {
   const [updatedAgreement, setUpdatedAgreement] = useState([]);
   const contactState = useState([]);
   const [files, setFiles] = useState([]);
+  const [filesCopy, setFilesCopy] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
   const [rentalStatus, setRentalStatus] = useState("");
   const [editingDoc, setEditingDoc] = useState(null);
@@ -79,7 +84,7 @@ function ManagerTenantAgreement(props) {
   const [lateFee, setLateFee] = useState("");
   const [lateFeePer, setLateFeePer] = useState("");
   const [available, setAvailable] = useState("");
-
+  const [newFile, setNewFile] = useState(null);
   const [adults, setAdults] = useState([]);
   const [children, setChildren] = useState([]);
   const [pets, setPets] = useState([]);
@@ -129,6 +134,7 @@ function ManagerTenantAgreement(props) {
     // console.log(agreement.rent_payments);
     contactState[1](JSON.parse(agreement.assigned_contacts));
     setFiles(JSON.parse(agreement.documents));
+    setFilesCopy(JSON.parse(agreement.docuSign));
     setAvailable(agreement.available_topay);
     setRentalStatus(agreement.rental_status);
     setDueDate(agreement.due_by);
@@ -158,6 +164,7 @@ function ManagerTenantAgreement(props) {
       vehicles: JSON.parse(agreement.vehicles),
       referred: JSON.parse(agreement.referred),
       documents: JSON.parse(agreement.documents),
+      docuSign: JSON.parse(agreement.docuSign),
     };
     setOldAgreement(newAgreement);
   };
@@ -307,6 +314,21 @@ function ManagerTenantAgreement(props) {
       delete newFiles[i].file;
     }
     newAgreement.documents = JSON.stringify(newFiles);
+
+    const newFilesShared = [...filesCopy];
+
+    for (let i = 0; i < newFilesShared.length; i++) {
+      let key = `doc_${i}`;
+      if (newFilesShared[i].file !== undefined) {
+        newAgreement[key] = newFilesShared[i].file;
+      } else {
+        newAgreement[key] = newFilesShared[i].link;
+      }
+
+      delete newFilesShared[i].file;
+    }
+    newAgreement.docuSign = JSON.stringify(newFilesShared);
+
     newAgreement.linked_application_id = JSON.stringify(
       acceptedTenantApplications.map(
         (application) => application.application_uid
@@ -501,7 +523,19 @@ function ManagerTenantAgreement(props) {
         delete newFiles[i].file;
       }
       newAgreement.documents = JSON.stringify(newFiles);
+      const newFilesShared = [...filesCopy];
 
+      for (let i = 0; i < newFilesShared.length; i++) {
+        let key = `doc_${i}`;
+        if (newFilesShared[i].file !== undefined) {
+          newAgreement[key] = newFilesShared[i].file;
+        } else {
+          newAgreement[key] = newFilesShared[i].link;
+        }
+
+        delete newFilesShared[i].file;
+      }
+      newAgreement.docuSign = JSON.stringify(newFilesShared);
       // console.log("in if");
       newAgreement.rental_uid = agreement.rental_uid;
       // console.log(newAgreement);
@@ -659,7 +693,19 @@ function ManagerTenantAgreement(props) {
         delete newFiles[i].file;
       }
       newAgreement.documents = JSON.stringify(newFiles);
+      const newFilesShared = [...filesCopy];
 
+      for (let i = 0; i < newFilesShared.length; i++) {
+        let key = `doc_${i}`;
+        if (newFilesShared[i].file !== undefined) {
+          newAgreement[key] = newFilesShared[i].file;
+        } else {
+          newAgreement[key] = newFilesShared[i].link;
+        }
+
+        delete newFilesShared[i].file;
+      }
+      newAgreement.docuSign = JSON.stringify(newFilesShared);
       // console.log("in if");
       newAgreement.rental_uid = agreement.rental_uid;
       // console.log(newAgreement);
@@ -792,6 +838,19 @@ function ManagerTenantAgreement(props) {
         delete newFiles[i].file;
       }
       newAgreement.documents = JSON.stringify(newFiles);
+      const newFilesShared = [...filesCopy];
+
+      for (let i = 0; i < newFilesShared.length; i++) {
+        let key = `doc_${i}`;
+        if (newFilesShared[i].file !== undefined) {
+          newAgreement[key] = newFilesShared[i].file;
+        } else {
+          newAgreement[key] = newFilesShared[i].link;
+        }
+
+        delete newFilesShared[i].file;
+      }
+      newAgreement.docuSign = JSON.stringify(newFilesShared);
       newAgreement.linked_application_id = JSON.stringify(
         acceptedTenantApplications.map(
           (application) => application.application_uid
@@ -829,6 +888,7 @@ function ManagerTenantAgreement(props) {
         vehicles: vehicles,
         referred: referred,
         documents: files,
+        docuSign: filesCopy,
         effective_date: effectiveDate,
       };
       const newFiles = [...files];
@@ -844,6 +904,19 @@ function ManagerTenantAgreement(props) {
         delete newFiles[i].file;
       }
       newAgreement.documents = JSON.stringify(newFiles);
+      const newFilesShared = [...filesCopy];
+
+      for (let i = 0; i < newFilesShared.length; i++) {
+        let key = `doc_${i}`;
+        if (newFilesShared[i].file !== undefined) {
+          newAgreement[key] = newFilesShared[i].file;
+        } else {
+          newAgreement[key] = newFilesShared[i].link;
+        }
+
+        delete newFilesShared[i].file;
+      }
+      newAgreement.docuSign = JSON.stringify(newFilesShared);
       newAgreement.tenant_id = JSON.stringify(
         acceptedTenantApplications.map((application) => application.tenant_id)
       );
@@ -953,6 +1026,7 @@ function ManagerTenantAgreement(props) {
       vehicles: vehicles,
       referred: referred,
       documents: files,
+      docuSign: filesCopy,
       effective_date: effectiveDate,
     };
     let up = newAgreement;
@@ -962,6 +1036,73 @@ function ManagerTenantAgreement(props) {
     setShowDialog(true);
   };
 
+  const addDocFile = (e) => {
+    const file = e.target.files[0];
+    const newFile = {
+      name: file.name,
+      description: "",
+      file: file,
+      shared: false,
+      created_date: new Date().toISOString().split("T")[0],
+    };
+    setNewFile(newFile);
+  };
+  const updateNewFile = (field, value) => {
+    const newFileCopy = { ...newFile };
+    newFileCopy[field] = value;
+    setNewFile(newFileCopy);
+  };
+  const cancelEdit = () => {
+    setNewFile(null);
+    if (editingDoc !== null) {
+      const newFiles = [...files];
+      newFiles.push(editingDoc);
+      setFiles(newFiles);
+    }
+    setEditingDoc(null);
+  };
+  const editDocument = (i) => {
+    const newFiles = [...files];
+    const file = newFiles.splice(i, 1)[0];
+    setFiles(newFiles);
+    setEditingDoc(file);
+    setNewFile({ ...file });
+  };
+
+  const editDocumentShared = (i) => {
+    const newFiles = [...files];
+    let newFilesShared = [...filesCopy];
+    const file = newFiles.splice(i, 1)[0];
+    console.log(file);
+    console.log(newFilesShared);
+    file["shared"] = !file.shared;
+    if (file["shared"]) {
+      newFilesShared.push(file);
+    } else {
+      removeByAttr(newFilesShared, "shared", false);
+    }
+
+    console.log(file);
+    console.log(newFilesShared);
+
+    setFilesCopy(newFilesShared);
+  };
+  console.log("files", files);
+  console.log("filesCopy", filesCopy);
+  const deleteDocument = (i) => {
+    const newFiles = [...files];
+    newFiles.splice(i, 1);
+    setFiles(newFiles);
+  };
+  //   save document
+  const saveNewFile = async (e) => {
+    const newFiles = [...files];
+    newFiles.push(newFile);
+    setFiles(newFiles);
+    // setFilesCopy(newFiles);
+    setAddDoc(!addDoc);
+    setNewFile(null);
+  };
   const [errorMessage, setErrorMessage] = useState("");
   const required =
     errorMessage === "Please fill out all fields" ||
@@ -1540,15 +1681,150 @@ function ManagerTenantAgreement(props) {
           >
             <h5 style={mediumBold}>Lease Documents</h5>
             <div className="mx-2">
-              {" "}
-              <DocumentsUploadPost
+              {files.length > 0 ? (
+                <Table
+                  responsive="md"
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Description</TableCell>
+                      <TableCell>Actions</TableCell>
+                      <TableCell>View</TableCell>
+                      <TableCell>Get Signature</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {files.map((file, i) => {
+                      return (
+                        <TableRow>
+                          <TableCell>{file.name}</TableCell>
+                          <TableCell>{file.description}</TableCell>
+
+                          <TableCell>
+                            {" "}
+                            <img
+                              src={EditIcon}
+                              alt="Edit"
+                              className="px-1 mx-2"
+                              onClick={() => editDocument(i)}
+                            />
+                            <img
+                              src={DeleteIcon}
+                              alt="Delete Icon"
+                              className="px-1 mx-2"
+                              onClick={() => deleteDocument(i)}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <a
+                              href={file.link}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <img
+                                src={File}
+                                alt="open document"
+                                style={{
+                                  width: "15px",
+                                  height: "15px",
+                                }}
+                              />
+                            </a>
+                          </TableCell>
+                          <TableCell>
+                            {" "}
+                            <Checkbox
+                              type="CIRCLE"
+                              checked={file.shared}
+                              onClick={() => editDocumentShared(i)}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              ) : (
+                ""
+              )}
+              {newFile !== null ? (
+                <div>
+                  <Form.Group>
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      Document Name
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      value={newFile.name}
+                      placeholder="Name"
+                      onChange={(e) => updateNewFile("name", e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      Description
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      value={newFile.description}
+                      placeholder="Description"
+                      onChange={(e) =>
+                        updateNewFile("description", e.target.value)
+                      }
+                    />
+                  </Form.Group>
+                  <div className="text-center my-3">
+                    <Button
+                      variant="outline-primary"
+                      style={smallPillButton}
+                      as="p"
+                      onClick={cancelEdit}
+                      className="mx-2"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="outline-primary"
+                      style={smallPillButton}
+                      as="p"
+                      onClick={saveNewFile}
+                      className="mx-2"
+                    >
+                      Continue
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <input
+                    id="file"
+                    type="file"
+                    accept="image/*,.pdf"
+                    onChange={addDocFile}
+                    className="d-none"
+                  />
+                  <label htmlFor="file">
+                    <Button
+                      variant="outline-primary"
+                      style={{ ...smallPillButton, marginTop: "1rem" }}
+                      as="p"
+                    >
+                      Add Document
+                    </Button>
+                  </label>
+                </div>
+              )}
+              {/* <DocumentsUploadPost
                 files={files}
                 setFiles={setFiles}
                 addDoc={addDoc}
                 setAddDoc={setAddDoc}
                 editingDoc={editingDoc}
                 setEditingDoc={setEditingDoc}
-              />
+              /> */}
             </div>
           </div>
           {showSpinner ? (

@@ -85,32 +85,15 @@ function ReviewTenantProfile(props) {
   const goToShowApplied = () => {
     navigate("/applyToProperty");
   };
-  // const updateNewFile = (i, field, value) => {
-  //   const newFileCopy = { ...files[i] };
-  //   newFileCopy[field] = value;
-  //   console.log(newFileCopy);
-  //   newFile.push(newFileCopy);
-  //   setNewFile(newFile);
-  // };
 
-  // console.log("Files", files);
-  // console.log("Files Copy", filesCopy);
-  // console.log("New Files", filesOrigignal);
   const apply = async () => {
-    // console.log(files);
-    // console.log(filesOrigignal);
     let application_docs = [];
     for (let i = 0; i < filesCopy.length; i++) {
       if (filesCopy[i].shared === true) {
         application_docs.push(filesCopy[i]);
       }
     }
-    // if (numPets > 0 && typePets === "") {
-    //   setErrorMessage("Please fill out the type of pets");
-    //   return;
-    // }
-    // console.log(application_docs);
-    // console.log(adultsApplication);
+
     const newApplication = {
       property_uid: property_uid,
       message: message,
@@ -152,8 +135,6 @@ function ReviewTenantProfile(props) {
       }
     }
 
-    // console.log(update_tenant_docs);
-
     for (let i = 0; i < update_tenant_docs.length; i++) {
       let key = `doc_${i}`;
       if (update_tenant_docs[i].file !== undefined) {
@@ -175,22 +156,11 @@ function ReviewTenantProfile(props) {
     goToShowApplied();
   };
 
-  //   const updateNewFile = (field, value) => {
-  //     const newFileCopy = {...newFile};
-  //     newFileCopy[field] = value;
-  //     setNewFile(newFileCopy);
-  //   }
-
   const editDocument = (i) => {
     const newFiles = [...filesCopy];
     const file = newFiles.splice(i, 1)[0];
-    // console.log(file);
     file["shared"] = !file.shared;
-    // console.log(file);
     setFiles(newFiles);
-    // setNewFile({ ...file });
-    // newFile.push(file);
-    // setNewFile(newFile);
   };
 
   const fetchProfileInfo = async () => {
@@ -269,14 +239,7 @@ function ReviewTenantProfile(props) {
         : [reference, ...nums]
     );
   };
-  // console.log("adultsApplication", adultsApplication);
-  // function handleDocumentClick(i){
-  //   console.log("clicked");
-  //   const temp = documentClick;
-  //   temp[i] = !temp[i];
-  //   setDocumentClick(temp);
-  // }
-  // console.log(documentClick);
+
   return (
     <div className="w-100 overflow-hidden">
       <Row className="w-100 mb-5 overflow-hidden">
