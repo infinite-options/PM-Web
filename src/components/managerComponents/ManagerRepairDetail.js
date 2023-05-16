@@ -989,12 +989,12 @@ function ManagerRepairDetail(props) {
                             hidden={morePictures}
                             onClick={() => setMorePictures(!morePictures)}
                           >
-                            Request more pictures
+                            Request more pictures or additional information
                           </Button>
                         </div>
                       ) : repair.request_status === "INFO" ? (
                         <div className="pt-1 mb-2" style={subHeading}>
-                          Requested more pictures from tenant
+                          Requested more pictures/information from tenant
                         </div>
                       ) : (
                         ""
@@ -1009,9 +1009,9 @@ function ManagerRepairDetail(props) {
                     >
                       <Row className="pt-1 mb-4" hidden={!morePictures}>
                         <div className="pt-1 mb-2" style={subHeading}>
-                          Request more pictures
-                        </div>
-
+                          Request more pictures or additional information
+                        </div>{" "}
+                        (Limit: 1000 characters)
                         <Form.Group className="mt-3 mb-4">
                           <Form.Label
                             style={formLabel}
@@ -1023,7 +1023,7 @@ function ManagerRepairDetail(props) {
                           <Form.Control
                             style={squareForm}
                             value={morePicturesNotes}
-                            placeholder="Can you please share more pictures regarding the request?"
+                            placeholder="Can you please share more pictures/information regarding the request?"
                             onChange={(e) =>
                               setMorePicturesNotes(e.target.value)
                             }
