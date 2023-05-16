@@ -267,42 +267,13 @@ export default function ManagerCashflow(props) {
     if (management_businesses.length >= 1) {
       management_buid = management_businesses[0].business_uid;
     }
+    if (propertyView) {
+      const cashflowResponseAll = await get(
+        `/AllCashflowManager?property_id=${managerData[0].property_uid}`
+      );
 
-    const cashflowResponseAll = await get(
-      `/AllCashflowManager?property_id=${managerData[0].property_uid}`
-    );
-    // console.log(cashflowResponseAll.result);
-    // let alltransactions = cashflowResponseAll.result;
-    // alltransactions
-    //   .slice()
-    //   .reverse()
-    //   .forEach((all, i, self) => {
-    //     if (i == 0) {
-    //       console.log(all.receiver, all.managerID);
-    //       if (all.receiver === managerID) {
-    //         all.sum_due = all.amount_due;
-    //         all.sum_paid = all.amount_paid;
-    //       } else {
-    //         all.sum_due = -all.amount_due;
-    //         all.sum_paid = -all.amount_paid;
-    //       }
-    //     }
-
-    //     const prev = self[i - 1];
-    //     if (prev !== undefined) {
-    //       // console.log(i, all.purchase_uid, prev.purchase_uid);
-    //       if (all.receiver === managerID) {
-    //         all.sum_due = prev.sum_due + all.amount_due;
-    //         all.sum_paid = prev.sum_paid + all.amount_paid;
-    //       } else {
-    //         all.sum_due = prev.sum_due - all.amount_due;
-    //         all.sum_paid = prev.sum_paid - all.amount_paid;
-    //       }
-    //     }
-    //   });
-    // alltransactions.slice().reverse();
-    // console.log(alltransactions);
-    setTransactions(cashflowResponseAll.result.slice().reverse());
+      setTransactions(cashflowResponseAll.result.slice().reverse());
+    }
   };
   const toggleProperty = (property) => {
     const shownState = propertyID.slice();
