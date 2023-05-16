@@ -379,10 +379,14 @@ function ManagerCreateAnnouncement(props) {
     const newText = {
       announcement_msg: new_announcement.announcement_msg,
       announcement_title: new_announcement.announcement_title,
+      id: response["id"],
       name: response["name"],
       pno: response["pno"],
+      email: response["email"],
+      sender_id: management_businesses[0]["business_uid"],
       sender_name: management_businesses[0]["business_name"],
       sender_phone: management_businesses[0]["business_phone_number"],
+      sender_email: management_businesses[0]["business_email"],
     };
     // console.log(newText);
     const responseText = await post("/messageGroupText", newText);
@@ -391,9 +395,13 @@ function ManagerCreateAnnouncement(props) {
     const newMail = {
       announcement_msg: new_announcement.announcement_msg,
       announcement_title: new_announcement.announcement_title,
+      id: response["id"],
       name: response["name"],
+      pno: response["pno"],
       email: response["email"],
+      sender_id: management_businesses[0]["business_uid"],
       sender_name: management_businesses[0]["business_name"],
+      sender_phone: management_businesses[0]["business_phone_number"],
       sender_email: management_businesses[0]["business_email"],
     };
     // console.log(newMail);

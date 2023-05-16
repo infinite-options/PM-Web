@@ -131,6 +131,7 @@ function ManagerRepairDetail(props) {
   const [reDate, setReDate] = useState("");
   const [reTime, setReTime] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [allLinkedMessages, setAllLinkedMessages] = useState("");
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -200,6 +201,10 @@ function ManagerRepairDetail(props) {
     const response = await get(
       `/maintenanceQuotes?linked_request_uid=${repairState.maintenance_request_uid}`
     );
+    const resMessage = await get(
+      `/messageText?request_linked_id=${repairState.maintenance_request_uid}`
+    );
+    setAllLinkedMessages(resMessage.result);
     console.log(request_response.result);
     setRepair(request_response.result[0]);
     if (businesses_request.msg === "Token has expired") {
@@ -582,6 +587,7 @@ function ManagerRepairDetail(props) {
       message_status: "PENDING",
       receiver_email: repair.rentalInfo[0].tenant_email,
       receiver_phone: repair.rentalInfo[0].tenant_phone_number,
+      request_linked_id: repair.maintenance_request_uid,
     };
     // console.log(newMessage);
     const responseText = await post("/messageText", newMessage);
@@ -589,6 +595,7 @@ function ManagerRepairDetail(props) {
     setMorePictures(false);
     fetchBusinesses();
   };
+  console.log(repair);
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -981,25 +988,18 @@ function ManagerRepairDetail(props) {
                         opacity: 1,
                       }}
                     >
-                      {repair.request_status === "NEW" ? (
-                        <div className="pt-1 mb-2">
-                          <Button
-                            style={pillButton}
-                            variant="outline-primary"
-                            hidden={morePictures}
-                            onClick={() => setMorePictures(!morePictures)}
-                          >
-                            Request more pictures
-                          </Button>
-                        </div>
-                      ) : repair.request_status === "INFO" ? (
-                        <div className="pt-1 mb-2" style={subHeading}>
-                          Requested more pictures from tenant
-                        </div>
-                      ) : (
-                        ""
-                      )}
+                      <div className="pt-1 mb-2">
+                        <Button
+                          style={pillButton}
+                          variant="outline-primary"
+                          hidden={morePictures}
+                          onClick={() => setMorePictures(!morePictures)}
+                        >
+                          Request more pictures or additional information
+                        </Button>
+                      </div>
                     </Row>
+
                     <Row
                       style={{
                         background: "#F3F3F3 0% 0% no-repeat padding-box",
@@ -1009,9 +1009,9 @@ function ManagerRepairDetail(props) {
                     >
                       <Row className="pt-1 mb-4" hidden={!morePictures}>
                         <div className="pt-1 mb-2" style={subHeading}>
-                          Request more pictures
-                        </div>
-
+                          Request more pictures or additional information
+                        </div>{" "}
+                        (Limit: 1000 characters)
                         <Form.Group className="mt-3 mb-4">
                           <Form.Label
                             style={formLabel}
@@ -1023,7 +1023,7 @@ function ManagerRepairDetail(props) {
                           <Form.Control
                             style={squareForm}
                             value={morePicturesNotes}
-                            placeholder="Can you please share more pictures regarding the request?"
+                            placeholder="Can you please share more pictures/information regarding the request?"
                             onChange={(e) =>
                               setMorePicturesNotes(e.target.value)
                             }
@@ -1061,6 +1061,29 @@ function ManagerRepairDetail(props) {
                         </Row>
                       </Row>
                     </Row>
+                    {allLinkedMessages.length > 0 ? (
+                      <Row
+                        className="pt-1 mb-4"
+                        style={{
+                          background: "#F3F3F3 0% 0% no-repeat padding-box",
+                          borderRadius: "10px",
+                          opacity: 1,
+                        }}
+                      >
+                        <div style={subHeading} className="pt-1 mb-2">
+                          Messages Sent
+                        </div>
+                        {allLinkedMessages.map((message) => {
+                          return (
+                            <li>
+                              <div>{message.message_details}</div>
+                            </li>
+                          );
+                        })}
+                      </Row>
+                    ) : (
+                      ""
+                    )}
 
                     <Row
                       className="pt-1 mb-4"

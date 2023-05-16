@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import {
   Table,
@@ -7,7 +8,7 @@ import {
   TableBody,
   TableHead,
 } from "@material-ui/core";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import Header from "../Header";
@@ -24,9 +25,10 @@ import Checkbox from "../Checkbox";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import Mail from "../../icons/Mail.svg";
+import File from "../../icons/File.svg";
 import EditIcon from "../../icons/EditIcon.svg";
 import DeleteIcon from "../../icons/DeleteIcon.svg";
-import { put, post } from "../../utils/api";
+import { get, put, post } from "../../utils/api";
 import {
   small,
   hidden,
@@ -62,7 +64,21 @@ function ManagerTenantAgreement(props) {
     e.stopPropagation();
   };
   // console.log(property, agreement, acceptedTenantApplications);
+  var fragmentString = useLocation().hash.substring(1);
 
+  // Parse query string to see if page request is coming from OAuth 2.0 server.
+  var params = {};
+  var regex = /([^&=]+)=([^&]*)/g,
+    m;
+  while ((m = regex.exec(fragmentString))) {
+    params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+  }
+  if (Object.keys(params).length > 0) {
+    localStorage.setItem("oauth2-test-params", JSON.stringify(params));
+    if (params["state"] && params["state"] == "try_sample_request") {
+      // sendLease();
+    }
+  }
   const { userData, ably } = useContext(AppContext);
   const { user } = userData;
   const [tenantID, setTenantID] = useState("");
@@ -75,6 +91,8 @@ function ManagerTenantAgreement(props) {
   const contactState = useState([]);
   const [files, setFiles] = useState([]);
   const [filesCopy, setFilesCopy] = useState([]);
+  const [filesBase64, setFilesBase64] = useState([]);
+  const [filesBase64Copy, setFilesBase64Copy] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
   const [rentalStatus, setRentalStatus] = useState("");
   const [editingDoc, setEditingDoc] = useState(null);
@@ -85,6 +103,7 @@ function ManagerTenantAgreement(props) {
   const [lateFeePer, setLateFeePer] = useState("");
   const [available, setAvailable] = useState("");
   const [newFile, setNewFile] = useState(null);
+  const [newFileBase64, setNewFileBase64] = useState(null);
   const [adults, setAdults] = useState([]);
   const [children, setChildren] = useState([]);
   const [pets, setPets] = useState([]);
@@ -189,6 +208,7 @@ function ManagerTenantAgreement(props) {
     if (acceptedTenantApplications[0].referred) {
       setReferences(JSON.parse(acceptedTenantApplications[0].referred));
     }
+    setSelectedTenant(acceptedTenantApplications[0]);
   }, []);
 
   // first time lease creation
@@ -1038,6 +1058,14 @@ function ManagerTenantAgreement(props) {
 
   const addDocFile = (e) => {
     const file = e.target.files[0];
+    // let base64 = getBase64(e.target.files[0]);
+    console.log("before");
+    var base = getBase64(e.target.files[0]).then(function (result) {
+      console.log(result.split(["base64,"])[1]);
+      setNewFileBase64(result.split(["base64,"][1]));
+    });
+    console.log("after");
+
     const newFile = {
       name: file.name,
       description: "",
@@ -1045,6 +1073,7 @@ function ManagerTenantAgreement(props) {
       shared: false,
       created_date: new Date().toISOString().split("T")[0],
     };
+
     setNewFile(newFile);
   };
   const updateNewFile = (field, value) => {
@@ -1072,23 +1101,24 @@ function ManagerTenantAgreement(props) {
   const editDocumentShared = (i) => {
     const newFiles = [...files];
     let newFilesShared = [...filesCopy];
+    const newFilesBase64 = [...filesBase64];
+    let newFilesBase64Shared = [...filesBase64Copy];
     const file = newFiles.splice(i, 1)[0];
-    console.log(file);
-    console.log(newFilesShared);
+    const fileBase64 = newFilesBase64.splice(i, 1)[0][0];
+    // console.log(fileBase64);
+    // console.log(newFilesBase64Shared);
     file["shared"] = !file.shared;
     if (file["shared"]) {
       newFilesShared.push(file);
+      newFilesBase64Shared.push(fileBase64);
     } else {
       removeByAttr(newFilesShared, "shared", false);
+      newFilesBase64Shared.pop(i);
     }
 
-    console.log(file);
-    console.log(newFilesShared);
-
+    setFilesBase64Copy(newFilesBase64Shared);
     setFilesCopy(newFilesShared);
   };
-  console.log("files", files);
-  console.log("filesCopy", filesCopy);
   const deleteDocument = (i) => {
     const newFiles = [...files];
     newFiles.splice(i, 1);
@@ -1097,12 +1127,25 @@ function ManagerTenantAgreement(props) {
   //   save document
   const saveNewFile = async (e) => {
     const newFiles = [...files];
+    const newFileBase64Copy = [...filesBase64];
     newFiles.push(newFile);
+    newFileBase64Copy.push(newFileBase64);
     setFiles(newFiles);
+    setFilesBase64(newFileBase64Copy);
     // setFilesCopy(newFiles);
     setAddDoc(!addDoc);
     setNewFile(null);
+    setNewFileBase64(null);
   };
+  // Convert file to base64 string
+  const getBase64 = async (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
   const [errorMessage, setErrorMessage] = useState("");
   const required =
     errorMessage === "Please fill out all fields" ||
@@ -1113,6 +1156,7 @@ function ManagerTenantAgreement(props) {
     ) : (
       ""
     );
+
   return (
     <Row className="w-100 mb-5 overflow-hidden">
       <MailDialogTenant
@@ -1122,9 +1166,9 @@ function ManagerTenantAgreement(props) {
         senderEmail={user.email}
         senderName={user.first_name + " " + user.last_name}
         requestCreatedBy={user.user_uid}
-        userMessaged={selectedTenant.tenantID}
-        receiverEmail={selectedTenant.tenantEmail}
-        receiverPhone={selectedTenant.tenantPhoneNumber}
+        userMessaged={selectedTenant.tenant_id}
+        receiverEmail={selectedTenant.tenant_email}
+        receiverPhone={selectedTenant.tenant_phone_number}
         onCancel={onCancelMail}
       />
       <MessageDialogTenant
@@ -1134,9 +1178,9 @@ function ManagerTenantAgreement(props) {
         senderEmail={user.email}
         senderName={user.first_name + " " + user.last_name}
         requestCreatedBy={user.user_uid}
-        userMessaged={selectedTenant.tenantID}
-        receiverEmail={selectedTenant.tenantEmail}
-        receiverPhone={selectedTenant.tenantPhoneNumber}
+        userMessaged={selectedTenant.tenant_id}
+        receiverEmail={selectedTenant.tenant_email}
+        receiverPhone={selectedTenant.tenant_phone_number}
         onCancel={onCancelMessage}
       />
       <UpdateConfirmDialog
@@ -1217,19 +1261,6 @@ function ManagerTenantAgreement(props) {
                           </a>
                         </Col>
                       </Row>
-                      {/* <div className="d-flex  justify-content-end ">
-                        <div
-                          style={application.tenant_id ? {} : hidden}
-                          onClick={stopPropagation}
-                        >
-                          <a href={`tel:${application.tenant_phone_number}`}>
-                            <img src={Phone} alt="Phone" style={smallImg} />
-                          </a>
-                          <a href={`mailto:${application.tenant_email}`}>
-                            <img src={Message} alt="Message" style={smallImg} />
-                          </a>
-                        </div>
-                      </div> */}
                     </Col>
                   </Row>
                   <Row>
