@@ -32,8 +32,9 @@ import {
   subText,
   pillButton,
   sidebarStyle,
+  small,
 } from "../../utils/styles";
-import { get, put } from "../../utils/api";
+import { get, put, post } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
 import RescheduleRepair from "../maintenanceComponents/RescheduleRepair";
 const useStyles = makeStyles((theme) => ({
@@ -98,6 +99,8 @@ function TenantRepairDetails(props) {
   const [issueType, setIssueType] = useState("Plumbing");
   const [requestQuote, setRequestQuote] = useState(false);
   const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
+  const [morePictures, setMorePictures] = useState(false);
+  const [morePicturesNotes, setMorePicturesNotes] = useState("");
   const [finishMaintenance, setFinishMaintenance] = useState(false);
   const [businesses, setBusinesses] = useState([]);
   const [quotes, setQuotes] = useState([]);
@@ -110,6 +113,7 @@ function TenantRepairDetails(props) {
 
   const [reDate, setReDate] = useState("");
   const [reTime, setReTime] = useState("");
+  const [allLinkedMessages, setAllLinkedMessages] = useState("");
   const repair = location.state.repair;
 
   const fetchBusinesses = async () => {
@@ -124,6 +128,10 @@ function TenantRepairDetails(props) {
     const request_response = await get(
       `/maintenanceRequests?maintenance_request_uid=${repair.maintenance_request_uid}`
     );
+    const resMessage = await get(
+      `/messageText?request_linked_id=${repair.maintenance_request_uid}`
+    );
+    setAllLinkedMessages(resMessage.result);
     if (businesses_request.msg === "Token has expired") {
       refresh();
       return;
@@ -135,6 +143,7 @@ function TenantRepairDetails(props) {
     }));
     // console.log(repair)
     // console.log(businesses)
+    setAllLinkedMessages(resMessage.result);
     setBusinesses(businesses);
     // console.log(request_response.result[0]);
     setRepairsDetail(request_response.result[0]);
@@ -171,7 +180,20 @@ function TenantRepairDetails(props) {
     setIsLoading(false);
   };
 
-  useEffect(fetchBusinesses, [access_token]);
+  const [maintenanceStatus, setMaintenanceStatus] = useState("");
+  useEffect(() => {
+    async function maintenance_message() {
+      await channel_maintenance.subscribe((message) => {
+        // console.log(message);
+        setMaintenanceStatus(message.data.te);
+      });
+    }
+    maintenance_message();
+    fetchBusinesses();
+    return function cleanup() {
+      channel_maintenance.unsubscribe();
+    };
+  }, [access_token, , maintenanceStatus]);
   const updateRepair = async () => {
     let newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
@@ -318,6 +340,42 @@ function TenantRepairDetails(props) {
     channel_maintenance.publish({ data: { te: body } });
     fetchBusinesses();
   };
+  console.log(repair);
+  const requestMorePictures = async (quote) => {
+    const newRepair = {
+      maintenance_request_uid: repair.maintenance_request_uid,
+      request_status: "PROCESSING",
+      notes: morePicturesNotes,
+    };
+
+    // console.log("Repair Object to be updated");
+    // console.log(newRepair);
+    setShowSpinner(true);
+    const response = await put("/RequestMorePictures", newRepair);
+    channel_maintenance.publish({ data: { te: newRepair } });
+    const newMessage = {
+      receiver_email: repair.managerInfo[0].business_email,
+      receiver_phone: repair.managerInfo[0].business_phone_number,
+      message_subject: "Additional info for " + repair.title,
+      message_details: morePicturesNotes,
+      message_created_by: repair.rentalInfo[0].tenant_id,
+      user_messaged: repair.managerInfo[0].business_uid,
+      message_status: "PENDING",
+      sender_name:
+        repair.rentalInfo[0].tenant_first_name +
+        " " +
+        repair.rentalInfo[0].tenant_last_name,
+      sender_email: repair.rentalInfo[0].tenant_email,
+      sender_phone: repair.rentalInfo[0].tenant_phone_number,
+      request_linked_id: repair.maintenance_request_uid,
+    };
+    // console.log(newMessage);
+    const responseText = await post("/messageText", newMessage);
+    setShowSpinner(false);
+    setMorePictures(false);
+    channel_maintenance.publish({ data: { te: newMessage } });
+    fetchBusinesses();
+  };
 
   return (
     <div className="w-100 overflow-hidden">
@@ -362,7 +420,7 @@ function TenantRepairDetails(props) {
                       borderRadius: "5px",
                     }}
                   >
-                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                    <Form.Label style={subHeading} className="ms-1 mb-0">
                       Property
                     </Form.Label>
 
@@ -616,68 +674,60 @@ function TenantRepairDetails(props) {
                       ""
                     )}
                   </Row>
-                  <Form.Group
+                  <Row
                     className="p-2"
                     style={{
                       background: "#F3F3F3 0% 0% no-repeat padding-box",
                       borderRadius: "5px",
                     }}
                   >
-                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                    <div style={subHeading} className="ms-1 mb-0">
                       Property
-                    </Form.Label>
+                    </div>
 
-                    <Row style={formLabel} as="h5" className="ms-1 mb-0">
+                    <Row style={subHeading} className="ms-1 mb-0">
                       {repair.address} {repair.unit}
                       ,&nbsp;
                       {repair.city}
                       ,&nbsp;
                       {repair.state}&nbsp; {repair.zip}
                     </Row>
-                  </Form.Group>
-                  <Form.Group
+                  </Row>
+                  <Row
                     className="mt-3 mb-4 p-2"
                     style={{
                       background: "#F3F3F3 0% 0% no-repeat padding-box",
                       borderRadius: "5px",
                     }}
                   >
-                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                    <div style={subHeading} className="ms-1 mb-0">
                       Issue Type
-                    </Form.Label>
+                    </div>
                     <div className="ms-1 mb-0"> {issueType}</div>
-                  </Form.Group>
+                  </Row>
                   <Form>
-                    <Form.Group
+                    <Row
                       className="mt-3 mb-4 p-2"
                       style={{
                         background: "#F3F3F3 0% 0% no-repeat padding-box",
                         borderRadius: "5px",
                       }}
                     >
-                      <Form.Label
-                        style={formLabel}
-                        as="h5"
-                        className="ms-1 mb-0"
-                      >
+                      <div style={subHeading} className="ms-1 mb-0">
                         Title
-                      </Form.Label>
+                      </div>
                       <div className="ms-1 mb-0"> {title}</div>
-                    </Form.Group>
-                    <Form.Group
+                    </Row>
+                    <Row
                       className="mt-3 mb-4 p-2"
                       style={{
                         background: "#F3F3F3 0% 0% no-repeat padding-box",
                         borderRadius: "5px",
                       }}
                     >
-                      <Form.Label
-                        style={formLabel}
-                        as="h5"
-                        className="mt-2 mb-1"
-                      >
+                      <div style={subHeading} className="mt-2 mb-1">
                         Tags
-                      </Form.Label>
+                      </div>
                       <Row
                         className="mt-2 ms-1 mb-0"
                         style={{ padding: "7px 0px" }}
@@ -692,26 +742,159 @@ function TenantRepairDetails(props) {
                           )}
                         </Col>
                       </Row>
-                    </Form.Group>
-                    <Form.Group
+                    </Row>
+                    <Row
                       className="mt-3 mb-4 p-2"
                       style={{
                         background: "#F3F3F3 0% 0% no-repeat padding-box",
                         borderRadius: "5px",
                       }}
                     >
-                      <Form.Label
-                        style={formLabel}
-                        as="h5"
-                        className="ms-1 mb-0"
-                      >
+                      <div style={subHeading} className="ms-1 mb-0">
                         Description
-                      </Form.Label>
+                      </div>
                       <div className="ms-1 mb-0">{description}</div>
-                    </Form.Group>
+                    </Row>
                   </Form>
+                  {allLinkedMessages.length > 0 ? (
+                    <Row
+                      className="mt-3 mb-4 p-2"
+                      style={{
+                        background: "#F3F3F3 0% 0% no-repeat padding-box",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      <div style={subHeading} className="mt-2 mb-1">
+                        Messages History Logs
+                      </div>
+                      {allLinkedMessages.map((message) => {
+                        return (
+                          <Row
+                            style={{
+                              display: "flex",
+                              justifyContent:
+                                message.message_created_by ===
+                                user.tenant_id[0].tenant_id
+                                  ? "right"
+                                  : "left",
+                              alignItems:
+                                message.message_created_by ===
+                                user.tenant_id[0].tenant_id
+                                  ? "right"
+                                  : "left",
+                            }}
+                          >
+                            <div
+                              className="p-3 m-1"
+                              style={{
+                                flexDirection: "column",
+                                borderRadius: "50px",
+                                width: "max-content",
+                                textAlign:
+                                  message.message_created_by ===
+                                  user.tenant_id[0].tenant_id
+                                    ? "right"
+                                    : "left",
+                                backgroundColor:
+                                  message.message_created_by ===
+                                  user.tenant_id[0].tenant_id
+                                    ? "#007aff"
+                                    : "grey",
+                              }}
+                            >
+                              {message.message_details}
+                              <div
+                                style={{
+                                  fontSize: "x-small",
+                                  textAlign: "right",
+                                }}
+                              >
+                                {message.message_created_at}
+                              </div>
+                            </div>
+                          </Row>
+                        );
+                      })}
+                      <div className="pt-1 mb-2 d-flex justify-content-center">
+                        <Button
+                          style={pillButton}
+                          variant="outline-primary"
+                          hidden={morePictures}
+                          onClick={() => setMorePictures(!morePictures)}
+                        >
+                          Send additional information
+                        </Button>
+                      </div>
+                    </Row>
+                  ) : (
+                    <div className="pt-1 mb-2 d-flex justify-content-center">
+                      <Button
+                        style={pillButton}
+                        variant="outline-primary"
+                        hidden={morePictures}
+                        onClick={() => setMorePictures(!morePictures)}
+                      >
+                        Send additional information
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
+              <Row
+                style={{
+                  background: "#F3F3F3 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <Row className="pt-1 mb-4" hidden={!morePictures}>
+                  <div className="pt-1 mb-2" style={subHeading}>
+                    Request more pictures or additional information
+                  </div>{" "}
+                  (Limit: 1000 characters)
+                  <Form.Group className="mt-3 mb-4">
+                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                      Description of the request
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      value={morePicturesNotes}
+                      placeholder="Can you please share more pictures/information regarding the request?"
+                      onChange={(e) => setMorePicturesNotes(e.target.value)}
+                      as="textarea"
+                    />
+                  </Form.Group>
+                  {showSpinner ? (
+                    <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                      <ReactBootStrap.Spinner
+                        animation="border"
+                        role="status"
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  <Row className="pt-1 mb-2">
+                    <Col className="d-flex flex-row justify-content-evenly">
+                      <Button
+                        style={pillButton}
+                        variant="outline-primary"
+                        onClick={() => setMorePictures(false)}
+                      >
+                        Cancel
+                      </Button>
+                    </Col>
+                    <Col className="d-flex flex-row justify-content-evenly">
+                      <Button
+                        style={bluePillButton}
+                        onClick={requestMorePictures}
+                      >
+                        Send
+                      </Button>
+                    </Col>
+                  </Row>
+                </Row>
+              </Row>
             </div>
           )}
 
