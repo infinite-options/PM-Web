@@ -340,7 +340,6 @@ function TenantRepairDetails(props) {
     channel_maintenance.publish({ data: { te: body } });
     fetchBusinesses();
   };
-  console.log(repair);
   const requestMorePictures = async (quote) => {
     const newRepair = {
       maintenance_request_uid: repair.maintenance_request_uid,
@@ -859,7 +858,7 @@ function TenantRepairDetails(props) {
                     <Form.Control
                       style={squareForm}
                       value={morePicturesNotes}
-                      placeholder="Can you please share more pictures/information regarding the request?"
+                      placeholder="Please Enter Additional Information"
                       onChange={(e) => setMorePicturesNotes(e.target.value)}
                       as="textarea"
                     />

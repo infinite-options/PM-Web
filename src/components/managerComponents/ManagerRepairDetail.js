@@ -594,7 +594,10 @@ function ManagerRepairDetail(props) {
       sender_email: managerInfo.business_email,
       sender_phone: managerInfo.business_phone_number,
       message_subject: "More info requested for " + repair.title,
-      message_details: morePicturesNotes,
+      message_details:
+        morePicturesNotes +
+        " " +
+        "Kindly response from https://manifestmy.space",
       message_created_by: managerInfo.business_uid,
       user_messaged: repair.rentalInfo[0].tenant_id,
       message_status: "PENDING",
@@ -610,7 +613,6 @@ function ManagerRepairDetail(props) {
     channel_maintenance.publish({ data: { te: newRepair } });
     fetchBusinesses();
   };
-  console.log(repair);
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -984,17 +986,21 @@ function ManagerRepairDetail(props) {
                       <div style={subHeading}>Description</div>
                       <div style={subText}>{description}</div>
                     </Row>
-                    <Row
-                      className="pt-1 mb-4"
-                      style={{
-                        background: "#F3F3F3 0% 0% no-repeat padding-box",
-                        borderRadius: "10px",
-                        opacity: 1,
-                      }}
-                    >
-                      <div style={subHeading}>Notes</div>
-                      <div style={subText}>{notes}</div>
-                    </Row>
+                    {notes !== null ? (
+                      <Row
+                        className="pt-1 mb-4"
+                        style={{
+                          background: "#F3F3F3 0% 0% no-repeat padding-box",
+                          borderRadius: "10px",
+                          opacity: 1,
+                        }}
+                      >
+                        <div style={subHeading}>Notes</div>
+                        <div style={subText}>{notes}</div>
+                      </Row>
+                    ) : (
+                      ""
+                    )}
 
                     {allLinkedMessages.length > 0 ? (
                       <Row
