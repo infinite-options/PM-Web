@@ -282,7 +282,20 @@ function ManagerRepairDetail(props) {
     setIsLoading(false);
   };
 
-  useEffect(fetchBusinesses, [access_token]);
+  const [maintenanceStatus, setMaintenanceStatus] = useState("");
+  useEffect(() => {
+    async function maintenance_message() {
+      await channel_maintenance.subscribe((message) => {
+        // console.log(message);
+        setMaintenanceStatus(message.data.te);
+      });
+    }
+    maintenance_message();
+    fetchBusinesses();
+    return function cleanup() {
+      channel_maintenance.unsubscribe();
+    };
+  }, [access_token, , maintenanceStatus]);
 
   const toggleBusiness = (index) => {
     const newBusinesses = [...businesses];
@@ -581,7 +594,10 @@ function ManagerRepairDetail(props) {
       sender_email: managerInfo.business_email,
       sender_phone: managerInfo.business_phone_number,
       message_subject: "More info requested for " + repair.title,
-      message_details: morePicturesNotes,
+      message_details:
+        morePicturesNotes +
+        " " +
+        "Kindly response from https://manifestmy.space",
       message_created_by: managerInfo.business_uid,
       user_messaged: repair.rentalInfo[0].tenant_id,
       message_status: "PENDING",
@@ -593,9 +609,10 @@ function ManagerRepairDetail(props) {
     const responseText = await post("/messageText", newMessage);
     setShowSpinner(false);
     setMorePictures(false);
+
+    channel_maintenance.publish({ data: { te: newRepair } });
     fetchBusinesses();
   };
-  console.log(repair);
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -969,18 +986,105 @@ function ManagerRepairDetail(props) {
                       <div style={subHeading}>Description</div>
                       <div style={subText}>{description}</div>
                     </Row>
-                    <Row
-                      className="pt-1 mb-4"
-                      style={{
-                        background: "#F3F3F3 0% 0% no-repeat padding-box",
-                        borderRadius: "10px",
-                        opacity: 1,
-                      }}
-                    >
-                      <div style={subHeading}>Notes</div>
-                      <div style={subText}>{notes}</div>
-                    </Row>
-                    <Row
+                    {notes !== null ? (
+                      <Row
+                        className="pt-1 mb-4"
+                        style={{
+                          background: "#F3F3F3 0% 0% no-repeat padding-box",
+                          borderRadius: "10px",
+                          opacity: 1,
+                        }}
+                      >
+                        <div style={subHeading}>Notes</div>
+                        <div style={subText}>{notes}</div>
+                      </Row>
+                    ) : (
+                      ""
+                    )}
+
+                    {allLinkedMessages.length > 0 ? (
+                      <Row
+                        className="mt-3 mb-4 p-2"
+                        style={{
+                          background: "#F3F3F3 0% 0% no-repeat padding-box",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        <div style={subHeading} className="mt-2 mb-1">
+                          Messages History Logs
+                        </div>
+                        {allLinkedMessages.map((message) => {
+                          return (
+                            <Row
+                              style={{
+                                display: "flex",
+                                justifyContent:
+                                  message.message_created_by ===
+                                  managerInfo.business_uid
+                                    ? "right"
+                                    : "left",
+                                alignItems:
+                                  message.message_created_by ===
+                                  managerInfo.business_uid
+                                    ? "right"
+                                    : "left",
+                              }}
+                            >
+                              <div
+                                className="p-3 m-1"
+                                style={{
+                                  flexDirection: "column",
+                                  borderRadius: "50px",
+                                  width: "max-content",
+                                  textAlign:
+                                    message.message_created_by ===
+                                    managerInfo.business_uid
+                                      ? "right"
+                                      : "left",
+                                  backgroundColor:
+                                    message.message_created_by ===
+                                    managerInfo.business_uid
+                                      ? "#007aff"
+                                      : "grey",
+                                }}
+                              >
+                                {message.message_details}
+                                <div
+                                  style={{
+                                    fontSize: "x-small",
+                                    textAlign: "right",
+                                  }}
+                                >
+                                  {message.message_created_at}
+                                </div>
+                              </div>
+                            </Row>
+                          );
+                        })}
+                        <div className="pt-1 mb-2 d-flex justify-content-center">
+                          <Button
+                            style={pillButton}
+                            variant="outline-primary"
+                            hidden={morePictures}
+                            onClick={() => setMorePictures(!morePictures)}
+                          >
+                            Request additional pictures or information
+                          </Button>
+                        </div>
+                      </Row>
+                    ) : (
+                      <div className="pt-1 mb-2 d-flex justify-content-center">
+                        <Button
+                          style={pillButton}
+                          variant="outline-primary"
+                          hidden={morePictures}
+                          onClick={() => setMorePictures(!morePictures)}
+                        >
+                          Request additional pictures or information
+                        </Button>
+                      </div>
+                    )}
+                    {/* <Row
                       className="pt-1 mb-4"
                       style={{
                         background: "#F3F3F3 0% 0% no-repeat padding-box",
@@ -998,7 +1102,7 @@ function ManagerRepairDetail(props) {
                           Request more pictures or additional information
                         </Button>
                       </div>
-                    </Row>
+                    </Row> */}
 
                     <Row
                       style={{
@@ -1055,35 +1159,12 @@ function ManagerRepairDetail(props) {
                               style={bluePillButton}
                               onClick={requestMorePictures}
                             >
-                              Send Request
+                              Send
                             </Button>
                           </Col>
                         </Row>
                       </Row>
                     </Row>
-                    {allLinkedMessages.length > 0 ? (
-                      <Row
-                        className="pt-1 mb-4"
-                        style={{
-                          background: "#F3F3F3 0% 0% no-repeat padding-box",
-                          borderRadius: "10px",
-                          opacity: 1,
-                        }}
-                      >
-                        <div style={subHeading} className="pt-1 mb-2">
-                          Messages Sent
-                        </div>
-                        {allLinkedMessages.map((message) => {
-                          return (
-                            <li>
-                              <div>{message.message_details}</div>
-                            </li>
-                          );
-                        })}
-                      </Row>
-                    ) : (
-                      ""
-                    )}
 
                     <Row
                       className="pt-1 mb-4"
