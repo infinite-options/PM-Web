@@ -597,7 +597,7 @@ function ManagerRepairDetail(props) {
       message_details:
         morePicturesNotes +
         " " +
-        "Kindly response from https://manifestmy.space",
+        "Please respond using https://manifestmy.space",
       message_created_by: managerInfo.business_uid,
       user_messaged: repair.rentalInfo[0].tenant_id,
       message_status: "PENDING",
