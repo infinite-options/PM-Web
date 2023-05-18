@@ -23,6 +23,12 @@ import RepairImg from "../../icons/RepairImg.svg";
 import { get } from "../../utils/api";
 import { green, red, blue, xSmall, sidebarStyle } from "../../utils/styles";
 import { days } from "../../utils/helper";
+
+import {
+  descendingComparator as descendingComparatorMaintenance,
+  getComparator as getComparatorMaintenance,
+  stableSort as stableSortMaintenance,
+} from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -178,34 +184,6 @@ function MaintenanceDashboard(props) {
     setOrderMaintenance(isAsc ? "desc" : "asc");
     setOrderMaintenanceBy(property);
   };
-
-  function descendingComparatorMaintenance(a, b, orderMaintenanceBy) {
-    if (b[orderMaintenanceBy] < a[orderMaintenanceBy]) {
-      return -1;
-    }
-    if (b[orderMaintenanceBy] > a[orderMaintenanceBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparatorMaintenance(orderMaintenance, orderMaintenanceBy) {
-    return orderMaintenance === "desc"
-      ? (a, b) => descendingComparatorMaintenance(a, b, orderMaintenanceBy)
-      : (a, b) => -descendingComparatorMaintenance(a, b, orderMaintenanceBy);
-  }
-
-  function stableSortMaintenance(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const orderMaintenance = comparator(a[0], b[0]);
-      if (orderMaintenance !== 0) {
-        return orderMaintenance;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
 
   const maintenancesHeadCell = [
     {

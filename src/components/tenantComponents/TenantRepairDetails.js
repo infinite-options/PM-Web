@@ -814,7 +814,7 @@ function TenantRepairDetails(props) {
                           </Row>
                         );
                       })}
-                      <div className="pt-1 mb-2 d-flex justify-content-center">
+                      <div className="pt-1 m-2 d-flex justify-content-center">
                         <Button
                           style={pillButton}
                           variant="outline-primary"

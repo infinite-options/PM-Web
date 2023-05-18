@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Form } from "react-bootstrap";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -28,7 +28,25 @@ import PropertyIcon from "../../icons/PropertyIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import CopyIcon from "../../icons/CopyIcon.png";
 import { get, post } from "../../utils/api";
-import { green, red, blue, xSmall, sidebarStyle } from "../../utils/styles";
+import {
+  green,
+  red,
+  blue,
+  xSmall,
+  sidebarStyle,
+  squareForm,
+} from "../../utils/styles";
+import { days } from "../../utils/helper";
+import {
+  descendingComparator as descendingComparator,
+  getComparator as getComparator,
+  stableSort as stableSort,
+} from "../../utils/helper";
+import {
+  descendingComparator as descendingComparatorMaintenance,
+  getComparator as getComparatorMaintenance,
+  stableSort as stableSortMaintenance,
+} from "../../utils/helper";
 
 const useStyles = makeStyles({
   customTable: {
@@ -63,6 +81,7 @@ export default function ManagerDashboard() {
   const [managementStatus, setManagementStatus] = useState("");
   const [maintenanceStatus, setMaintenanceStatus] = useState("");
   const [applicationStatus, setApplicationStatus] = useState("");
+  const [daysCompleted, setDaysCompleted] = useState("0");
 
   const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
@@ -227,6 +246,7 @@ export default function ManagerDashboard() {
         });
       }
     });
+
     setMaintenanceRequests(requests);
   };
   const duplicate_request = async (request) => {
@@ -265,6 +285,90 @@ export default function ManagerDashboard() {
     setCopied(false);
     fetchManagerDashboard();
   };
+  const filterRequests = () => {
+    let requests = [];
+    if (parseInt(daysCompleted) > 0) {
+      managerData.forEach((res) => {
+        if (res.maintenanceRequests.length > 0) {
+          res.maintenanceRequests.forEach((mr) => {
+            if (
+              days(new Date(mr.request_closed_date), new Date()) ==
+                parseInt(daysCompleted) &&
+              mr.request_status === "COMPLETED"
+            ) {
+            } else {
+              requests.push(mr);
+              mr.new_quotes = mr.quotes.filter(
+                (a) => a.quote_status === "REQUESTED"
+              );
+              mr.sent_quotes = mr.quotes.filter(
+                (a) => a.quote_status === "SENT"
+              );
+              mr.accepted_quotes = mr.quotes.filter(
+                (a) =>
+                  a.quote_status === "ACCEPTED" &&
+                  mr.request_status === "PROCESSING"
+              );
+
+              mr.schedule_quotes = mr.quotes.filter(
+                (a) =>
+                  a.quote_status === "ACCEPTED" &&
+                  mr.request_status === "SCHEDULE"
+              );
+              mr.reschedule_quotes = mr.quotes.filter(
+                (a) =>
+                  a.quote_status === "ACCEPTED" &&
+                  mr.request_status === "RESCHEDULE"
+              );
+              mr.scheduled_quotes = mr.quotes.filter(
+                (a) =>
+                  a.quote_status === "AGREED" &&
+                  mr.request_status === "SCHEDULED"
+              );
+              mr.paid_quotes = mr.quotes.filter(
+                (a) => a.quote_status === "PAID"
+              );
+            }
+          });
+        }
+      });
+    } else {
+      managerData.forEach((res) => {
+        if (res.maintenanceRequests.length > 0) {
+          res.maintenanceRequests.forEach((mr) => {
+            requests.push(mr);
+            mr.new_quotes = mr.quotes.filter(
+              (a) => a.quote_status === "REQUESTED"
+            );
+            mr.sent_quotes = mr.quotes.filter((a) => a.quote_status === "SENT");
+            mr.accepted_quotes = mr.quotes.filter(
+              (a) =>
+                a.quote_status === "ACCEPTED" &&
+                mr.request_status === "PROCESSING"
+            );
+
+            mr.schedule_quotes = mr.quotes.filter(
+              (a) =>
+                a.quote_status === "ACCEPTED" &&
+                mr.request_status === "SCHEDULE"
+            );
+            mr.reschedule_quotes = mr.quotes.filter(
+              (a) =>
+                a.quote_status === "ACCEPTED" &&
+                mr.request_status === "RESCHEDULE"
+            );
+            mr.scheduled_quotes = mr.quotes.filter(
+              (a) =>
+                a.quote_status === "AGREED" && mr.request_status === "SCHEDULED"
+            );
+            mr.paid_quotes = mr.quotes.filter((a) => a.quote_status === "PAID");
+          });
+        }
+      });
+    }
+
+    setMaintenanceRequests(requests);
+  };
 
   const channel = ably.channels.get("management_status");
   const channel_application = ably.channels.get("application_status");
@@ -299,6 +403,9 @@ export default function ManagerDashboard() {
       channel_maintenance.unsubscribe();
     };
   }, [access_token, managementStatus, applicationStatus, maintenanceStatus]);
+  useEffect(() => {
+    filterRequests();
+  }, [daysCompleted]);
 
   // console.log(managerData);
   const fetchTenantDetails = async (tenant_id) => {
@@ -327,40 +434,6 @@ export default function ManagerDashboard() {
     fetchManagerDashboard();
     setStage("LIST");
   };
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
-  function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparator(order, orderBy) {
-    return order === "desc"
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
-  }
-
-  function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) {
-        return order;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
 
   const propertiesHeadCell = [
     {
@@ -450,6 +523,12 @@ export default function ManagerDashboard() {
       label: "Size",
     },
   ];
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
   function EnhancedTableHeadProperties(props) {
     const { order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
@@ -498,40 +577,6 @@ export default function ManagerDashboard() {
   };
 
   // console.log(channel);
-
-  const handleRequestSortMaintenance = (event, property) => {
-    const isAsc = orderMaintenanceBy === property && orderMaintenance === "asc";
-    setOrderMaintenance(isAsc ? "desc" : "asc");
-    setOrderMaintenanceBy(property);
-  };
-
-  function descendingComparatorMaintenance(a, b, orderMaintenanceBy) {
-    if (b[orderMaintenanceBy] < a[orderMaintenanceBy]) {
-      return -1;
-    }
-    if (b[orderMaintenanceBy] > a[orderMaintenanceBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparatorMaintenance(orderMaintenance, orderMaintenanceBy) {
-    return orderMaintenance === "desc"
-      ? (a, b) => descendingComparatorMaintenance(a, b, orderMaintenanceBy)
-      : (a, b) => -descendingComparatorMaintenance(a, b, orderMaintenanceBy);
-  }
-
-  function stableSortMaintenance(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const orderMaintenance = comparator(a[0], b[0]);
-      if (orderMaintenance !== 0) {
-        return orderMaintenance;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
 
   const maintenancesHeadCell = [
     {
@@ -604,6 +649,11 @@ export default function ManagerDashboard() {
       label: "Cost",
     },
   ];
+  const handleRequestSortMaintenance = (event, property) => {
+    const isAsc = orderMaintenanceBy === property && orderMaintenance === "asc";
+    setOrderMaintenance(isAsc ? "desc" : "asc");
+    setOrderMaintenanceBy(property);
+  };
   function EnhancedTableHeadMaintenance(props) {
     const { orderMaintenance, orderMaintenanceBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
@@ -1891,7 +1941,22 @@ export default function ManagerDashboard() {
                 <Col>
                   <h3>Maintenance and Repairs</h3>
                 </Col>
-                <Col>
+                <Col xs={4}>
+                  Hide Completed Requests from{" "}
+                  <input
+                    style={{
+                      borderRadius: "5px",
+                      border: "1px solid #707070",
+                      width: "6rem",
+                    }}
+                    value={daysCompleted}
+                    onChange={(e) => {
+                      setDaysCompleted(e.target.value);
+                    }}
+                  />{" "}
+                  days
+                </Col>
+                <Col xs={2}>
                   <img
                     src={AddIcon}
                     alt="Add Icon"
@@ -2031,18 +2096,24 @@ export default function ManagerDashboard() {
                               }}
                             >
                               {request.request_status}
-                              <div className="d-flex">
-                                <div className="d-flex align-items-end">
-                                  <p
-                                    style={{ ...blue, ...xSmall }}
-                                    className="mb-0"
-                                  >
-                                    {request.request_status === "INFO"
-                                      ? request.notes
-                                      : ""}
-                                  </p>
+                              {request.request_status === "COMPLETED" ? (
+                                <div className="d-flex">
+                                  <div className="d-flex justify-content-right">
+                                    <p
+                                      style={{ ...blue, ...xSmall }}
+                                      className="mb-0"
+                                    >
+                                      {days(
+                                        new Date(request.request_closed_date),
+                                        new Date()
+                                      )}{" "}
+                                      days
+                                    </p>
+                                  </div>
                                 </div>
-                              </div>
+                              ) : (
+                                ""
+                              )}
                             </TableCell>
                             <TableCell
                               padding="none"
