@@ -48,6 +48,21 @@ import {
   sidebarStyle,
 } from "../../utils/styles";
 import DocumentsUploadPost from "../DocumentsUploadPost.js";
+import {
+  descendingComparator as descendingComparator,
+  getComparator as getComparator,
+  stableSort as stableSort,
+} from "../../utils/helper";
+import {
+  descendingComparator as descendingComparatorManager,
+  getComparator as getComparatorManager,
+  stableSort as stableSortManager,
+} from "../../utils/helper";
+import {
+  descendingComparator as descendingComparatorTenant,
+  getComparator as getComparatorTenant,
+  stableSort as stableSortTenant,
+} from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -766,34 +781,6 @@ function ManagerUtilities(props) {
     setOrderManagerBy(property);
   };
 
-  function descendingComparatorManager(a, b, orderManagerBy) {
-    if (b[orderManagerBy] < a[orderManagerBy]) {
-      return -1;
-    }
-    if (b[orderManagerBy] > a[orderManagerBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparatorManager(orderManager, orderManagerBy) {
-    return orderManager === "desc"
-      ? (a, b) => descendingComparatorManager(a, b, orderManagerBy)
-      : (a, b) => -descendingComparatorManager(a, b, orderManagerBy);
-  }
-
-  function stableSortManager(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const orderManager = comparator(a[0], b[0]);
-      if (orderManager !== 0) {
-        return orderManager;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
-
   const headCellsManager = [
     {
       id: "bill_utility_type",
@@ -891,34 +878,6 @@ function ManagerUtilities(props) {
     setOrderTenantBy(property);
   };
 
-  function descendingComparatorTenant(a, b, orderTenantBy) {
-    if (b[orderTenantBy] < a[orderTenantBy]) {
-      return -1;
-    }
-    if (b[orderTenantBy] > a[orderTenantBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparatorTenant(orderTenant, orderTenantBy) {
-    return orderTenant === "desc"
-      ? (a, b) => descendingComparatorTenant(a, b, orderTenantBy)
-      : (a, b) => -descendingComparatorTenant(a, b, orderTenantBy);
-  }
-
-  function stableSortTenant(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const orderTenant = comparator(a[0], b[0]);
-      if (orderTenant !== 0) {
-        return orderTenant;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
-
   const headCellsTenant = [
     {
       id: "bill_utility_type",
@@ -1013,34 +972,6 @@ function ManagerUtilities(props) {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-
-  function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparator(order, orderBy) {
-    return order === "desc"
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
-  }
-
-  function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) {
-        return order;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
 
   const headCells = [
     {

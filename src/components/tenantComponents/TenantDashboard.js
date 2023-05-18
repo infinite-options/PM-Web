@@ -34,6 +34,21 @@ import PropertyIcon from "../../icons/PropertyIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import { get } from "../../utils/api";
 import {
+  descendingComparator as descendingComparator,
+  getComparator as getComparator,
+  stableSort as stableSort,
+} from "../../utils/helper";
+import {
+  descendingComparator as descendingComparatorMaintenance,
+  getComparator as getComparatorMaintenance,
+  stableSort as stableSortMaintenance,
+} from "../../utils/helper";
+import {
+  descendingComparator as descendingComparatorApplications,
+  getComparator as getComparatorApplications,
+  stableSort as stableSortApplications,
+} from "../../utils/helper";
+import {
   xSmall,
   blue,
   mediumBold,
@@ -342,35 +357,6 @@ export default function TenantDashboard() {
     setOrderBy(property);
   };
 
-  function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparator(order, orderBy) {
-    return order === "desc"
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
-  }
-  // console.log(tenantData);
-
-  function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) {
-        return order;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
-
   const propertiesHeadCell = [
     {
       id: "images",
@@ -467,34 +453,6 @@ export default function TenantDashboard() {
     setOrderMaintenance(isAsc ? "desc" : "asc");
     setOrderMaintenanceBy(property);
   };
-
-  function descendingComparatorMaintenance(a, b, orderMaintenanceBy) {
-    if (b[orderMaintenanceBy] < a[orderMaintenanceBy]) {
-      return -1;
-    }
-    if (b[orderMaintenanceBy] > a[orderMaintenanceBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparatorMaintenance(orderMaintenance, orderMaintenanceBy) {
-    return orderMaintenance === "desc"
-      ? (a, b) => descendingComparatorMaintenance(a, b, orderMaintenanceBy)
-      : (a, b) => -descendingComparatorMaintenance(a, b, orderMaintenanceBy);
-  }
-
-  function stableSortMaintenance(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const orderMaintenance = comparator(a[0], b[0]);
-      if (orderMaintenance !== 0) {
-        return orderMaintenance;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
 
   const maintenancesHeadCell = [
     {
@@ -612,34 +570,6 @@ export default function TenantDashboard() {
     setOrderApplications(isAsc ? "desc" : "asc");
     setOrderApplicationsBy(property);
   };
-
-  function descendingComparatorApplications(a, b, orderApplicationsBy) {
-    if (b[orderApplicationsBy] < a[orderApplicationsBy]) {
-      return -1;
-    }
-    if (b[orderApplicationsBy] > a[orderApplicationsBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparatorApplications(orderApplications, orderApplicationsBy) {
-    return orderApplications === "desc"
-      ? (a, b) => descendingComparatorApplications(a, b, orderApplicationsBy)
-      : (a, b) => -descendingComparatorApplications(a, b, orderApplicationsBy);
-  }
-
-  function stableSortApplications(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const orderApplications = comparator(a[0], b[0]);
-      if (orderApplications !== 0) {
-        return orderApplications;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
 
   const applicationsHeadCell = [
     {

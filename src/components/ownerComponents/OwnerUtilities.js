@@ -48,6 +48,21 @@ import {
   sidebarStyle,
 } from "../../utils/styles";
 import DocumentsUploadPost from "../DocumentsUploadPost";
+import {
+  descendingComparator as descendingComparator,
+  getComparator as getComparator,
+  stableSort as stableSort,
+} from "../../utils/helper";
+import {
+  descendingComparator as descendingComparatorOwner,
+  getComparator as getComparatorOwner,
+  stableSort as stableSortOwner,
+} from "../../utils/helper";
+import {
+  descendingComparator as descendingComparatorTenant,
+  getComparator as getComparatorTenant,
+  stableSort as stableSortTenant,
+} from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -731,34 +746,6 @@ function OwnerUtilities(props) {
     setOrderOwnerBy(property);
   };
 
-  function descendingComparatorOwner(a, b, orderOwnerBy) {
-    if (b[orderOwnerBy] < a[orderOwnerBy]) {
-      return -1;
-    }
-    if (b[orderOwnerBy] > a[orderOwnerBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparatorOwner(orderOwner, orderOwnerBy) {
-    return orderOwner === "desc"
-      ? (a, b) => descendingComparatorOwner(a, b, orderOwnerBy)
-      : (a, b) => -descendingComparatorOwner(a, b, orderOwnerBy);
-  }
-
-  function stableSortOwner(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const orderOwner = comparator(a[0], b[0]);
-      if (orderOwner !== 0) {
-        return orderOwner;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
-
   const headCellsOwner = [
     {
       id: "bill_utility_type",
@@ -851,34 +838,6 @@ function OwnerUtilities(props) {
     setOrderTenant(isAsc ? "desc" : "asc");
     setOrderTenantBy(property);
   };
-
-  function descendingComparatorTenant(a, b, orderTenantBy) {
-    if (b[orderTenantBy] < a[orderTenantBy]) {
-      return -1;
-    }
-    if (b[orderTenantBy] > a[orderTenantBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparatorTenant(orderTenant, orderTenantBy) {
-    return orderTenant === "desc"
-      ? (a, b) => descendingComparatorTenant(a, b, orderTenantBy)
-      : (a, b) => -descendingComparatorTenant(a, b, orderTenantBy);
-  }
-
-  function stableSortTenant(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const orderTenant = comparator(a[0], b[0]);
-      if (orderTenant !== 0) {
-        return orderTenant;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
 
   const headCellsTenant = [
     {
@@ -974,34 +933,6 @@ function OwnerUtilities(props) {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-
-  function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparator(order, orderBy) {
-    return order === "desc"
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
-  }
-
-  function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) {
-        return order;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
 
   const headCells = [
     {

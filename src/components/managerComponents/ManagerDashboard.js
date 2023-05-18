@@ -37,6 +37,16 @@ import {
   squareForm,
 } from "../../utils/styles";
 import { days } from "../../utils/helper";
+import {
+  descendingComparator as descendingComparator,
+  getComparator as getComparator,
+  stableSort as stableSort,
+} from "../../utils/helper";
+import {
+  descendingComparator as descendingComparatorMaintenance,
+  getComparator as getComparatorMaintenance,
+  stableSort as stableSortMaintenance,
+} from "../../utils/helper";
 
 const useStyles = makeStyles({
   customTable: {
@@ -425,40 +435,6 @@ export default function ManagerDashboard() {
     setStage("LIST");
   };
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
-  function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparator(order, orderBy) {
-    return order === "desc"
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
-  }
-
-  function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) {
-        return order;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
-
   const propertiesHeadCell = [
     {
       id: "images",
@@ -547,6 +523,12 @@ export default function ManagerDashboard() {
       label: "Size",
     },
   ];
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
   function EnhancedTableHeadProperties(props) {
     const { order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
@@ -595,40 +577,6 @@ export default function ManagerDashboard() {
   };
 
   // console.log(channel);
-
-  const handleRequestSortMaintenance = (event, property) => {
-    const isAsc = orderMaintenanceBy === property && orderMaintenance === "asc";
-    setOrderMaintenance(isAsc ? "desc" : "asc");
-    setOrderMaintenanceBy(property);
-  };
-
-  function descendingComparatorMaintenance(a, b, orderMaintenanceBy) {
-    if (b[orderMaintenanceBy] < a[orderMaintenanceBy]) {
-      return -1;
-    }
-    if (b[orderMaintenanceBy] > a[orderMaintenanceBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparatorMaintenance(orderMaintenance, orderMaintenanceBy) {
-    return orderMaintenance === "desc"
-      ? (a, b) => descendingComparatorMaintenance(a, b, orderMaintenanceBy)
-      : (a, b) => -descendingComparatorMaintenance(a, b, orderMaintenanceBy);
-  }
-
-  function stableSortMaintenance(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const orderMaintenance = comparator(a[0], b[0]);
-      if (orderMaintenance !== 0) {
-        return orderMaintenance;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
 
   const maintenancesHeadCell = [
     {
@@ -701,6 +649,11 @@ export default function ManagerDashboard() {
       label: "Cost",
     },
   ];
+  const handleRequestSortMaintenance = (event, property) => {
+    const isAsc = orderMaintenanceBy === property && orderMaintenance === "asc";
+    setOrderMaintenance(isAsc ? "desc" : "asc");
+    setOrderMaintenanceBy(property);
+  };
   function EnhancedTableHeadMaintenance(props) {
     const { orderMaintenance, orderMaintenanceBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
