@@ -33,6 +33,7 @@ import {
   formatPhoneNumber,
   formatSSN,
   MaskCharacter,
+  formatEIN,
 } from "../../utils/helper";
 import ServicesProvided from "../ServicesProvided";
 
@@ -283,19 +284,7 @@ function MaintenanceProfile(props) {
     navigate("/");
     window.scrollTo(0, 0);
   };
-  function formatEIN(value) {
-    if (!value) return value;
 
-    const ein = value.replace(/[^\d]/g, "");
-
-    const einLength = ein.length;
-
-    if (einLength < 4) return ein;
-    if (einLength < 10) {
-      return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
-    }
-    return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
-  }
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">

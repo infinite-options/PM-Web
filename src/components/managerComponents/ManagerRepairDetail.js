@@ -100,9 +100,7 @@ function ManagerRepairDetail(props) {
   };
 
   const [morePictures, setMorePictures] = useState(false);
-  const [morePicturesNotes, setMorePicturesNotes] = useState(
-    "Can you please share more pictures regarding the request?"
-  );
+  const [morePicturesNotes, setMorePicturesNotes] = useState("");
 
   const [managerInfo, setManagerInfo] = useState("");
   const [message, setMessage] = useState("");
@@ -1061,7 +1059,7 @@ function ManagerRepairDetail(props) {
                             </Row>
                           );
                         })}
-                        <div className="pt-1 mb-2 d-flex justify-content-center">
+                        <div className="pt-1 m-2 d-flex justify-content-center">
                           <Button
                             style={pillButton}
                             variant="outline-primary"
