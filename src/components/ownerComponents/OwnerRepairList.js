@@ -112,6 +112,12 @@ function OwnerRepairList(props) {
       return;
     }
     const response = await get("/ownerDashboard", access_token);
+    if (response.msg === "Token has expired") {
+      // console.log("here msg");
+      refresh();
+
+      return;
+    }
     const maint_response = await get(
       `/maintenanceRequestsandQuotes?owner_id=${user.user_uid}`
     );

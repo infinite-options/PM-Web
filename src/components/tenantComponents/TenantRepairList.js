@@ -71,6 +71,13 @@ function TenantRepairList(props) {
   };
   const fetchProperties = async () => {
     const responseProperties = await get("/tenantDashboard", access_token);
+    if (responseProperties.msg === "Token has expired") {
+      // console.log("here msg");
+      refresh();
+
+      return;
+    }
+
     const response = await get(
       `/maintenanceRequestsandQuotes?tenant_id=${user.tenant_id[0].tenant_id}`
     );

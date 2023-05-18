@@ -45,7 +45,6 @@ export default function TenantDuePayments(props) {
     const response = await get("/tenantDashboard", access_token);
     // console.log("second");
     // console.log(response);
-    setIsLoading(false);
 
     if (response.msg === "Token has expired") {
       // console.log("here msg");
@@ -53,6 +52,7 @@ export default function TenantDuePayments(props) {
 
       return;
     }
+    setIsLoading(false);
     setPropertyData(response);
     let upcoming = [];
     response.result[0].properties.forEach((res) => {
