@@ -19,6 +19,7 @@ import TenantFooter from "./tenantComponents/TenantFooter";
 import StripePayment from "./StripePayment";
 import StripeFeesDialog from "./StripeFeesDialog";
 import PayPal from "./PayPal";
+import CreditCard from "../icons/CreditCard.png";
 import WF_Logo from "../icons/WF-Logo.png";
 import BofA_Logo from "../icons/BofA-Logo.png";
 import Chase_Logo from "../icons/Chase-Logo.png";
@@ -144,7 +145,17 @@ function PaymentPage(props) {
     setShowSpinner(false);
     submit();
   };
-  // console.log(purchases);
+  const selectPaymentType = (id) => {
+    var childImages = document.getElementById("payment").children;
+
+    var i;
+
+    // clear any other borders that might be set
+    for (i = 0; i < childImages.length; i++) {
+      childImages[i].style.border = "";
+    }
+    document.getElementById(id).style.border = "1px solid black";
+  };
   return (
     <div className="w-100 overflow-hidden">
       <StripeFeesDialog
@@ -360,7 +371,7 @@ function PaymentPage(props) {
                       onChange={(e) => setMessage(e.target.value)}
                     />
                   </Form.Group>
-                  <Row className="text-center mt-5">
+                  <Row className="text-center mt-5" id="payment">
                     <Col>
                       <a
                         href="https://www.bankofamerica.com"
@@ -368,9 +379,11 @@ function PaymentPage(props) {
                         rel="noreferrer"
                       >
                         <img
+                          id="bofa"
                           onClick={() => {
                             setBankPayment(true);
                             setPaymentType("BANK OF AMERICA");
+                            selectPaymentType("bofa");
                           }}
                           src={BofA_Logo}
                           style={{
@@ -388,9 +401,11 @@ function PaymentPage(props) {
                         rel="noreferrer"
                       >
                         <img
+                          id="chase"
                           onClick={() => {
                             setBankPayment(true);
                             setPaymentType("CHASE");
+                            selectPaymentType("chase");
                           }}
                           src={Chase_Logo}
                           style={{
@@ -408,9 +423,11 @@ function PaymentPage(props) {
                         rel="noreferrer"
                       >
                         <img
+                          id="citi"
                           onClick={() => {
                             setBankPayment(true);
                             setPaymentType("CITI");
+                            selectPaymentType("citi");
                           }}
                           src={Citi_Logo}
                           style={{
@@ -428,9 +445,11 @@ function PaymentPage(props) {
                         rel="noreferrer"
                       >
                         <img
+                          id="wf"
                           onClick={() => {
                             setBankPayment(true);
                             setPaymentType("WELLS FARGO");
+                            selectPaymentType("wf");
                           }}
                           src={WF_Logo}
                           style={{
@@ -440,6 +459,22 @@ function PaymentPage(props) {
                           }}
                         />
                       </a>
+                    </Col>
+                    <Col>
+                      <img
+                        id="stripe"
+                        onClick={() => {
+                          setPaymentType("STRIPE");
+                          selectPaymentType("stripe");
+                        }}
+                        src={CreditCard}
+                        style={{
+                          width: "160px",
+                          height: "100px",
+                          objectFit: "contain",
+                        }}
+                      />
+                      3% convenience fee
                     </Col>
                   </Row>
                   <Row
@@ -463,7 +498,7 @@ function PaymentPage(props) {
                         }}
                         style={bluePillButton}
                       >
-                        Pay with Stripe
+                        Pay
                       </Button>
                       {/* <PayPal
                         pay_purchase_id={purchase_uid}
