@@ -24,6 +24,7 @@ import ImageModal from "./ImageModal";
 import AddIcon from "../icons/AddIcon.svg";
 import File from "../icons/File.svg";
 import UploadIcon from "../icons/UploadIcon.png";
+import UploadDoneIcon from "../icons/UploadDoneIcon.svg";
 import ImgIcon from "../icons/ImgIcon.png";
 import LinkIcon from "../icons/LinkIcon.svg";
 import DocIcon from "../icons/DocIcon.png";
@@ -93,6 +94,7 @@ function PropertyAppliances(props) {
   const [showSpinnerParts, setShowSpinnerParts] = useState(false);
   const [openImage, setOpenImage] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
+  const [uploadDone, setUploadDone] = useState(false);
 
   const toggleAppliance = (appliance) => {
     const newApplianceState = { ...applianceState };
@@ -110,6 +112,7 @@ function PropertyAppliances(props) {
     setImageSrc(null);
   };
   const hideModal = () => {
+    setShowSpinner(false);
     setAddDetailsModalShow(false);
     cancelAppliance(applianceType);
     setApplianceImgModalShow(false);
@@ -119,14 +122,15 @@ function PropertyAppliances(props) {
   const getPartsList = () => {
     axios
       .post(
-        "https://tn5e0l3yok.execute-api.us-west-1.amazonaws.com/dev/api/v2/Insertparts",
+        "https://wanrucwrdg.execute-api.us-west-2.amazonaws.com/v1/insertparts",
         {
-          model: [applianceModelNum],
+          model: applianceModelNum,
         }
       )
       .then((response) => {
         console.log(response);
         setShowSpinnerParts(false);
+        setUploadDone(true);
       });
   };
   const hideNewModal = () => {
@@ -441,18 +445,33 @@ function PropertyAppliances(props) {
               />
             </Col>
             <Col>
-              <img
-                title="Upload Model Number to get parts list"
-                onClick={() => {
-                  setShowSpinnerParts(true);
-                  getPartsList();
-                }}
-                src={UploadIcon}
-                style={{
-                  width: "15px",
-                  height: "15px",
-                }}
-              />
+              {uploadDone ? (
+                <img
+                  title="Uploaded"
+                  // onClick={() => {
+                  //   setShowSpinnerParts(true);
+                  //   getPartsList();
+                  // }}
+                  src={UploadDoneIcon}
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                  }}
+                />
+              ) : (
+                <img
+                  title="Upload Model Number to get parts list"
+                  onClick={() => {
+                    setShowSpinnerParts(true);
+                    getPartsList();
+                  }}
+                  src={UploadIcon}
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                  }}
+                />
+              )}
             </Col>
             {console.log(showSpinnerParts)}
             <Col>
@@ -814,6 +833,7 @@ function PropertyAppliances(props) {
     );
   };
   const showApplianceDetail = (appliance) => {
+    setUploadDone(false);
     setApplianceType(appliance);
     // setShowDetails(!showDetails);
     setAddDetailsModalShow(!addDetailsModalShow);

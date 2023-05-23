@@ -81,7 +81,7 @@ export default function ManagerDashboard() {
   const [managementStatus, setManagementStatus] = useState("");
   const [maintenanceStatus, setMaintenanceStatus] = useState("");
   const [applicationStatus, setApplicationStatus] = useState("");
-  const [daysCompleted, setDaysCompleted] = useState("0");
+  const [daysCompleted, setDaysCompleted] = useState("10");
 
   const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
@@ -215,37 +215,85 @@ export default function ManagerDashboard() {
     setIsLoading(false);
 
     let requests = [];
-    properties_unique.forEach((res) => {
-      if (res.maintenanceRequests.length > 0) {
-        res.maintenanceRequests.forEach((mr) => {
-          requests.push(mr);
-          mr.new_quotes = mr.quotes.filter(
-            (a) => a.quote_status === "REQUESTED"
-          );
-          mr.sent_quotes = mr.quotes.filter((a) => a.quote_status === "SENT");
-          mr.accepted_quotes = mr.quotes.filter(
-            (a) =>
-              a.quote_status === "ACCEPTED" &&
-              mr.request_status === "PROCESSING"
-          );
+    if (parseInt(daysCompleted) > 0) {
+      properties_unique.forEach((res) => {
+        if (res.maintenanceRequests.length > 0) {
+          res.maintenanceRequests.forEach((mr) => {
+            if (
+              days(new Date(mr.request_closed_date), new Date()) >=
+                parseInt(daysCompleted) &&
+              mr.request_status === "COMPLETED"
+            ) {
+            } else {
+              requests.push(mr);
+              mr.new_quotes = mr.quotes.filter(
+                (a) => a.quote_status === "REQUESTED"
+              );
+              mr.sent_quotes = mr.quotes.filter(
+                (a) => a.quote_status === "SENT"
+              );
+              mr.accepted_quotes = mr.quotes.filter(
+                (a) =>
+                  a.quote_status === "ACCEPTED" &&
+                  mr.request_status === "PROCESSING"
+              );
 
-          mr.schedule_quotes = mr.quotes.filter(
-            (a) =>
-              a.quote_status === "ACCEPTED" && mr.request_status === "SCHEDULE"
-          );
-          mr.reschedule_quotes = mr.quotes.filter(
-            (a) =>
-              a.quote_status === "ACCEPTED" &&
-              mr.request_status === "RESCHEDULE"
-          );
-          mr.scheduled_quotes = mr.quotes.filter(
-            (a) =>
-              a.quote_status === "AGREED" && mr.request_status === "SCHEDULED"
-          );
-          mr.paid_quotes = mr.quotes.filter((a) => a.quote_status === "PAID");
-        });
-      }
-    });
+              mr.schedule_quotes = mr.quotes.filter(
+                (a) =>
+                  a.quote_status === "ACCEPTED" &&
+                  mr.request_status === "SCHEDULE"
+              );
+              mr.reschedule_quotes = mr.quotes.filter(
+                (a) =>
+                  a.quote_status === "ACCEPTED" &&
+                  mr.request_status === "RESCHEDULE"
+              );
+              mr.scheduled_quotes = mr.quotes.filter(
+                (a) =>
+                  a.quote_status === "AGREED" &&
+                  mr.request_status === "SCHEDULED"
+              );
+              mr.paid_quotes = mr.quotes.filter(
+                (a) => a.quote_status === "PAID"
+              );
+            }
+          });
+        }
+      });
+    } else {
+      properties_unique.forEach((res) => {
+        if (res.maintenanceRequests.length > 0) {
+          res.maintenanceRequests.forEach((mr) => {
+            requests.push(mr);
+            mr.new_quotes = mr.quotes.filter(
+              (a) => a.quote_status === "REQUESTED"
+            );
+            mr.sent_quotes = mr.quotes.filter((a) => a.quote_status === "SENT");
+            mr.accepted_quotes = mr.quotes.filter(
+              (a) =>
+                a.quote_status === "ACCEPTED" &&
+                mr.request_status === "PROCESSING"
+            );
+
+            mr.schedule_quotes = mr.quotes.filter(
+              (a) =>
+                a.quote_status === "ACCEPTED" &&
+                mr.request_status === "SCHEDULE"
+            );
+            mr.reschedule_quotes = mr.quotes.filter(
+              (a) =>
+                a.quote_status === "ACCEPTED" &&
+                mr.request_status === "RESCHEDULE"
+            );
+            mr.scheduled_quotes = mr.quotes.filter(
+              (a) =>
+                a.quote_status === "AGREED" && mr.request_status === "SCHEDULED"
+            );
+            mr.paid_quotes = mr.quotes.filter((a) => a.quote_status === "PAID");
+          });
+        }
+      });
+    }
 
     setMaintenanceRequests(requests);
   };
@@ -292,7 +340,7 @@ export default function ManagerDashboard() {
         if (res.maintenanceRequests.length > 0) {
           res.maintenanceRequests.forEach((mr) => {
             if (
-              days(new Date(mr.request_closed_date), new Date()) ==
+              days(new Date(mr.request_closed_date), new Date()) >=
                 parseInt(daysCompleted) &&
               mr.request_status === "COMPLETED"
             ) {
@@ -1942,12 +1990,12 @@ export default function ManagerDashboard() {
                   <h3>Maintenance and Repairs</h3>
                 </Col>
                 <Col xs={4}>
-                  Hide Completed Requests from{" "}
+                  Hide requests completed <span>&#62;</span>{" "}
                   <input
                     style={{
                       borderRadius: "5px",
                       border: "1px solid #707070",
-                      width: "6rem",
+                      width: "2rem",
                     }}
                     value={daysCompleted}
                     onChange={(e) => {
