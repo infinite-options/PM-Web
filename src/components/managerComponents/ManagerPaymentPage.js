@@ -502,7 +502,8 @@ function ManagerPaymentPage(props) {
                           objectFit: "contain",
                         }}
                       />
-                      3% convenience fee
+                      <br></br>
+                      3% stripe convenience fee
                     </Col>
                   </Row>
                   <Row

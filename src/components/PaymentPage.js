@@ -474,7 +474,8 @@ function PaymentPage(props) {
                           objectFit: "contain",
                         }}
                       />
-                      3% convenience fee
+                      <br />
+                      3% stripe convenience fee
                     </Col>
                   </Row>
                   <Row

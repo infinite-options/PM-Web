@@ -359,7 +359,7 @@ export default function TenantDashboard() {
   const filterRequests = () => {
     let requests = [];
     if (parseInt(daysCompleted) >= 0) {
-      tenantData.properties.forEach((res) => {
+      tenantData.forEach((res) => {
         if (res.maintenanceRequests.length > 0) {
           res.maintenanceRequests.forEach((mr) => {
             if (
@@ -374,7 +374,7 @@ export default function TenantDashboard() {
         }
       });
     } else {
-      tenantData.properties.forEach((res) => {
+      tenantData.forEach((res) => {
         if (res.maintenanceRequests.length > 0) {
           res.maintenanceRequests.forEach((mr) => {
             requests.push(mr);
