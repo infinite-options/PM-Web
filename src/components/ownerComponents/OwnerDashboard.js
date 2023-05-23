@@ -31,6 +31,7 @@ import { get, post } from "../../utils/api";
 import { blue, sidebarStyle, xSmall } from "../../utils/styles";
 import CopyDialog from "../CopyDialog";
 import {
+  days,
   descendingComparator as descendingComparator,
   getComparator as getComparator,
   stableSort as stableSort,
@@ -72,7 +73,7 @@ export default function OwnerDashboard2() {
   const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("days_open");
   const [managementStatus, setManagementStatus] = useState("");
   const [maintenanceStatus, setMaintenanceStatus] = useState("");
-
+  const [daysCompleted, setDaysCompleted] = useState("10");
   const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
@@ -144,13 +145,31 @@ export default function OwnerDashboard2() {
     setOwnerData(pu);
 
     let requests = [];
-    response.result.forEach((res) => {
-      if (res.maintenanceRequests.length > 0) {
-        res.maintenanceRequests.forEach((mr) => {
-          requests.push(mr);
-        });
-      }
-    });
+    if (parseInt(daysCompleted) > 0) {
+      response.result.forEach((res) => {
+        if (res.maintenanceRequests.length > 0) {
+          res.maintenanceRequests.forEach((mr) => {
+            if (
+              days(new Date(mr.request_closed_date), new Date()) >=
+                parseInt(daysCompleted) &&
+              mr.request_status === "COMPLETED"
+            ) {
+            } else {
+              requests.push(mr);
+            }
+          });
+        }
+      });
+    } else {
+      response.result.forEach((res) => {
+        if (res.maintenanceRequests.length > 0) {
+          res.maintenanceRequests.forEach((mr) => {
+            requests.push(mr);
+          });
+        }
+      });
+    }
+
     setMaintenanceRequests(requests);
     setIsLoading(false);
   };
@@ -178,7 +197,9 @@ export default function OwnerDashboard2() {
       channel_maintenance.unsubscribe();
     };
   }, [access_token, managementStatus, maintenanceStatus]);
-
+  useEffect(() => {
+    filterRequests();
+  }, [daysCompleted]);
   const duplicate_request = async (request) => {
     let selectedRequest = request;
     // console.log(selectedRequest);
@@ -215,6 +236,35 @@ export default function OwnerDashboard2() {
     await post("/maintenanceRequests", newRequest, null, files);
     setCopied(false);
     fetchOwnerDashboard();
+  };
+  const filterRequests = () => {
+    let requests = [];
+    if (parseInt(daysCompleted) > 0) {
+      ownerData.forEach((res) => {
+        if (res.maintenanceRequests.length > 0) {
+          res.maintenanceRequests.forEach((mr) => {
+            if (
+              days(new Date(mr.request_closed_date), new Date()) >=
+                parseInt(daysCompleted) &&
+              mr.request_status === "COMPLETED"
+            ) {
+            } else {
+              requests.push(mr);
+            }
+          });
+        }
+      });
+    } else {
+      ownerData.forEach((res) => {
+        if (res.maintenanceRequests.length > 0) {
+          res.maintenanceRequests.forEach((mr) => {
+            requests.push(mr);
+          });
+        }
+      });
+    }
+
+    setMaintenanceRequests(requests);
   };
 
   const addProperty = () => {
@@ -848,7 +898,22 @@ export default function OwnerDashboard2() {
                 <Col>
                   <h3>Maintenance and Repairs</h3>
                 </Col>
-                <Col>
+                <Col xs={4}>
+                  Hide requests completed <span>&#62;</span>{" "}
+                  <input
+                    style={{
+                      borderRadius: "5px",
+                      border: "1px solid #707070",
+                      width: "2rem",
+                    }}
+                    value={daysCompleted}
+                    onChange={(e) => {
+                      setDaysCompleted(e.target.value);
+                    }}
+                  />{" "}
+                  days
+                </Col>
+                <Col xs={2}>
                   <img
                     src={AddIcon}
                     alt="Add Icon"
@@ -984,18 +1049,24 @@ export default function OwnerDashboard2() {
                               }}
                             >
                               {request.request_status}
-                              <div className="d-flex">
-                                <div className="d-flex align-items-end">
-                                  <p
-                                    style={{ ...blue, ...xSmall }}
-                                    className="mb-0"
-                                  >
-                                    {request.request_status === "INFO"
-                                      ? request.notes
-                                      : ""}
-                                  </p>
+                              {request.request_status === "COMPLETED" ? (
+                                <div className="d-flex">
+                                  <div className="d-flex justify-content-right">
+                                    <p
+                                      style={{ ...blue, ...xSmall }}
+                                      className="mb-0"
+                                    >
+                                      {days(
+                                        new Date(request.request_closed_date),
+                                        new Date()
+                                      )}{" "}
+                                      days
+                                    </p>
+                                  </div>
                                 </div>
-                              </div>
+                              ) : (
+                                ""
+                              )}
                             </TableCell>
                             <TableCell
                               padding="none"

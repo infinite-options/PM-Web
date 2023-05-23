@@ -35,7 +35,7 @@ export default function CopyDialog(props) {
             setStripeDialogShow(false);
           }}
         >
-          Continue with Stripe
+          Continue
         </Button>
         <Button onClick={() => setStripeDialogShow(false)}>Cancel</Button>
       </DialogActions>

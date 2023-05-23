@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, HashRouter, Routes, Route } from "react-router-dom";
 import AppContext from "./AppContext";
 import Landing from "./pages/LandingNavbar";
 import Login from "./pages/Login";
@@ -116,22 +116,23 @@ function App() {
   };
   // console.log(userData);
   return (
-    <AppContext.Provider
-      value={{
-        userData,
-        updateUserData,
-        logout,
-        refresh,
-        ably,
-        timeLoggedIn,
-        setTimeLoggedIn,
-      }}
-    >
-      <BrowserRouter>
+    <HashRouter>
+      <AppContext.Provider
+        value={{
+          userData,
+          updateUserData,
+          logout,
+          refresh,
+          ably,
+          timeLoggedIn,
+          setTimeLoggedIn,
+        }}
+      >
+        {" "}
         <LandingNavbar />
         <Routes>
           <Route path="/">
-            <Route index element={<Homepage />} />
+            <Route path="/" element={<Homepage />} />
             <Route
               path="/.well-known/apple-developer-merchantid-domain-association.txt"
               render={() => (
@@ -141,7 +142,8 @@ function App() {
                 />
               )}
             />
-            <Route path="login" element={<Login />} />
+
+            <Route path="/login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route path="signupexisting" element={<SignupExisting />} />
             <Route path="modifyexisiting" element={<ModifyExisiting />} />
@@ -321,8 +323,8 @@ function App() {
           <Route path="owner-cashflow" element={<OwnerCashflow />} />
           <Route path="manager-cashflow" element={<ManagerCashflow />} />
         </Routes>
-      </BrowserRouter>
-    </AppContext.Provider>
+      </AppContext.Provider>
+    </HashRouter>
   );
 }
 

@@ -34,6 +34,7 @@ import PropertyIcon from "../../icons/PropertyIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import { get } from "../../utils/api";
 import {
+  days,
   descendingComparator as descendingComparator,
   getComparator as getComparator,
   stableSort as stableSort,
@@ -87,6 +88,7 @@ export default function TenantDashboard() {
   const [selectedManager, setSelectedManager] = useState("");
   const [showMessageFormManager, setShowMessageFormManager] = useState(false);
   const [showMailFormManager, setShowMailFormManager] = useState(false);
+  const [daysCompleted, setDaysCompleted] = useState("10");
   const onCancelManagerMail = () => {
     setShowMailFormManager(false);
   };
@@ -251,13 +253,31 @@ export default function TenantDashboard() {
     setTenantData(properties_unique);
     setIsLoading(false);
     let requests = [];
-    response.result[0].properties.forEach((res) => {
-      if (res.maintenanceRequests.length > 0) {
-        res.maintenanceRequests.forEach((mr) => {
-          requests.push(mr);
-        });
-      }
-    });
+    if (parseInt(daysCompleted) >= 0) {
+      response.result[0].properties.forEach((res) => {
+        if (res.maintenanceRequests.length > 0) {
+          res.maintenanceRequests.forEach((mr) => {
+            if (
+              days(new Date(mr.request_closed_date), new Date()) >=
+                parseInt(daysCompleted) &&
+              mr.request_status === "COMPLETED"
+            ) {
+            } else {
+              requests.push(mr);
+            }
+          });
+        }
+      });
+    } else {
+      response.result[0].properties.forEach((res) => {
+        if (res.maintenanceRequests.length > 0) {
+          res.maintenanceRequests.forEach((mr) => {
+            requests.push(mr);
+          });
+        }
+      });
+    }
+
     setMaintenanceRequests(requests);
 
     let announcements = [];
@@ -333,6 +353,38 @@ export default function TenantDashboard() {
     maintenanceStatus,
     announcementsArrival,
   ]);
+  useEffect(() => {
+    filterRequests();
+  }, [daysCompleted]);
+  const filterRequests = () => {
+    let requests = [];
+    if (parseInt(daysCompleted) >= 0) {
+      tenantData.properties.forEach((res) => {
+        if (res.maintenanceRequests.length > 0) {
+          res.maintenanceRequests.forEach((mr) => {
+            if (
+              days(new Date(mr.request_closed_date), new Date()) >=
+                parseInt(daysCompleted) &&
+              mr.request_status === "COMPLETED"
+            ) {
+            } else {
+              requests.push(mr);
+            }
+          });
+        }
+      });
+    } else {
+      tenantData.properties.forEach((res) => {
+        if (res.maintenanceRequests.length > 0) {
+          res.maintenanceRequests.forEach((mr) => {
+            requests.push(mr);
+          });
+        }
+      });
+    }
+
+    setMaintenanceRequests(requests);
+  };
 
   const addProperty = () => {
     fetchTenantDashboard();
@@ -1217,7 +1269,22 @@ export default function TenantDashboard() {
                 <Col>
                   <h3>Maintenance and Repairs</h3>
                 </Col>
-                <Col>
+                <Col xs={4}>
+                  Hide requests completed <span>&#62;</span>{" "}
+                  <input
+                    style={{
+                      borderRadius: "5px",
+                      border: "1px solid #707070",
+                      width: "2rem",
+                    }}
+                    value={daysCompleted}
+                    onChange={(e) => {
+                      setDaysCompleted(e.target.value);
+                    }}
+                  />{" "}
+                  days
+                </Col>
+                <Col xs={2}>
                   <img
                     src={AddIcon}
                     alt="Add Icon"
@@ -1334,18 +1401,24 @@ export default function TenantDashboard() {
                               }}
                             >
                               {request.request_status}
-                              <div className="d-flex">
-                                <div className="d-flex align-items-end">
-                                  <p
-                                    style={{ ...blue, ...xSmall }}
-                                    className="mb-0"
-                                  >
-                                    {request.request_status === "INFO"
-                                      ? request.notes
-                                      : ""}
-                                  </p>
+                              {request.request_status === "COMPLETED" ? (
+                                <div className="d-flex">
+                                  <div className="d-flex justify-content-right">
+                                    <p
+                                      style={{ ...blue, ...xSmall }}
+                                      className="mb-0"
+                                    >
+                                      {days(
+                                        new Date(request.request_closed_date),
+                                        new Date()
+                                      )}{" "}
+                                      days
+                                    </p>
+                                  </div>
                                 </div>
-                              </div>
+                              ) : (
+                                ""
+                              )}
                             </TableCell>
                             <TableCell
                               padding="none"

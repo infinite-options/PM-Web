@@ -50,11 +50,14 @@ const post = async (path, body, token = null, files = null) => {
   if (token !== null) {
     headers.Authorization = `Bearer ${token}`;
   }
-  const response = await fetch(baseURL + path, {
-    method: "POST",
-    headers: headers,
-    body: requestBody,
-  });
+  const response = await timeoutPromise(
+    10 * 60 * 1000,
+    fetch(baseURL + path, {
+      method: "POST",
+      headers: headers,
+      body: requestBody,
+    })
+  );
   const data = await response.json();
   return data;
 };
@@ -74,11 +77,15 @@ const put = async (path, body, token = null, files = null) => {
   if (token !== null) {
     headers.Authorization = `Bearer ${token}`;
   }
-  const response = await fetch(baseURL + path, {
-    method: "PUT",
-    headers: headers,
-    body: requestBody,
-  });
+  const response = await timeoutPromise(
+    10 * 60 * 1000,
+    fetch(baseURL + path, {
+      method: "PUT",
+      headers: headers,
+      body: requestBody,
+    })
+  );
+
   const data = await response.json();
   return data;
 };

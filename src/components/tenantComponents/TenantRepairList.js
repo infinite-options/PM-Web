@@ -22,9 +22,10 @@ import AppContext from "../../AppContext";
 import AddIcon from "../../icons/AddIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import { get } from "../../utils/api";
-import { sidebarStyle } from "../../utils/styles";
+import { sidebarStyle, blue, xSmall } from "../../utils/styles";
 import { Divider } from "@mui/material";
 import {
+  days,
   descendingComparator as descendingComparator,
   getComparator as getComparator,
   stableSort as stableSort,
@@ -49,8 +50,7 @@ function TenantRepairList(props) {
 
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
   const [stage, setStage] = useState("LIST");
-  // search variables
-  const [search, setSearch] = useState("");
+  const [daysCompleted, setDaysCompleted] = useState("10");
   // sorting variables
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("days_open");
@@ -83,9 +83,27 @@ function TenantRepairList(props) {
     );
     const properties = responseProperties.result[0].properties;
     setProperties(properties);
-    let repairs = response.result;
+    let repairs = [];
+    let requests = [];
     // console.log(repairs);
-    setMaintenanceRequests(response.result);
+    if (parseInt(daysCompleted) >= 0) {
+      response.result.forEach((mr) => {
+        if (
+          days(new Date(mr.request_closed_date), new Date()) >=
+            parseInt(daysCompleted) &&
+          mr.request_status === "COMPLETED"
+        ) {
+        } else {
+          requests.push(mr);
+        }
+      });
+      setMaintenanceRequests(requests);
+      repairs = requests;
+    } else {
+      setMaintenanceRequests(response.result);
+      repairs = response.result;
+    }
+
     repairs.forEach((repair, i) => {
       const request_created_date = new Date(
         Date.parse(repair.request_created_date)
@@ -128,7 +146,7 @@ function TenantRepairList(props) {
         item.request_status === "SCHEDULE"
     );
     const completed_repairs = repairs_sorted.filter(
-      (item) => item.request_status === "COMPLETE"
+      (item) => item.request_status === "COMPLETED"
     );
 
     setRepairIter([
@@ -147,6 +165,84 @@ function TenantRepairList(props) {
     }
     fetchProperties();
   }, [access_token]);
+  useEffect(() => {
+    filterRequests();
+  }, [daysCompleted]);
+  const filterRequests = () => {
+    let repairs = [];
+    let requests = [];
+    // console.log(repairs);
+    if (parseInt(daysCompleted) > 0) {
+      maintenanceRequests.forEach((mr) => {
+        if (
+          days(new Date(mr.request_closed_date), new Date()) >=
+            parseInt(daysCompleted) &&
+          mr.request_status === "COMPLETED"
+        ) {
+        } else {
+          requests.push(mr);
+        }
+      });
+      setMaintenanceRequests(requests);
+      repairs = requests;
+    } else {
+      setMaintenanceRequests(maintenanceRequests);
+      repairs = maintenanceRequests;
+    }
+
+    repairs.forEach((repair, i) => {
+      const request_created_date = new Date(
+        Date.parse(repair.request_created_date)
+      );
+      const current_date = new Date();
+      repairs[i].days_since = Math.ceil(
+        (current_date.getTime() - request_created_date.getTime()) /
+          (1000 * 3600 * 24)
+      );
+      repairs[i].quotes_to_review = repair.quotes.filter(
+        (quote) => quote.quote_status === "SENT"
+      ).length;
+
+      repair.priority_n = 0;
+      if (repair.priority.toLowerCase() === "high") {
+        repair.priority_n = 3;
+      } else if (repair.priority.toLowerCase() === "medium") {
+        repair.priority_n = 2;
+      } else if (repair.priority.toLowerCase() === "low") {
+        repair.priority_n = 1;
+      }
+    });
+
+    let repairs_sorted = sort_repairs(repairs);
+    // console.log(repairs_sorted);
+
+    const new_repairs = repairs_sorted.filter(
+      (item) => item.request_status === "NEW"
+    );
+    const info_repairs = repairs.filter(
+      (item) => item.request_status === "INFO"
+    );
+    const processing_repairs = repairs_sorted.filter(
+      (item) => item.request_status === "PROCESSING"
+    );
+    const scheduled_repairs = repairs_sorted.filter(
+      (item) =>
+        item.request_status === "SCHEDULED" ||
+        item.request_status === "RESCHEDULE" ||
+        item.request_status === "SCHEDULE"
+    );
+    const completed_repairs = repairs_sorted.filter(
+      (item) => item.request_status === "COMPLETED"
+    );
+
+    setRepairIter([
+      { title: "New", repairs_list: new_repairs },
+      { title: "Info Requested", repairs_list: info_repairs },
+      { title: "Processing", repairs_list: processing_repairs },
+      { title: "Upcoming, Scheduled", repairs_list: scheduled_repairs },
+      { title: "Completed", repairs_list: completed_repairs },
+    ]);
+  };
 
   const sort_repairs = (repairs) => {
     const repairs_with_quotes = repairs.filter(
@@ -168,13 +264,6 @@ function TenantRepairList(props) {
     repairs.forEach((repair, i) => {
       // console.log("");
     });
-  };
-
-  // console.log(repairIter);
-  const days = (date_1, date_2) => {
-    let difference = date_2.getTime() - date_1.getTime();
-    let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
-    return TotalDays;
   };
 
   const handleRequestSort = (event, property) => {
@@ -317,8 +406,22 @@ function TenantRepairList(props) {
                 {" "}
                 <h3>Maintenance and Repairs </h3>
               </Col>
-
-              <Col>
+              <Col xs={4}>
+                Hide requests completed <span>&#62;</span>{" "}
+                <input
+                  style={{
+                    borderRadius: "5px",
+                    border: "1px solid #707070",
+                    width: "2rem",
+                  }}
+                  value={daysCompleted}
+                  onChange={(e) => {
+                    setDaysCompleted(e.target.value);
+                  }}
+                />{" "}
+                days
+              </Col>
+              <Col xs={2}>
                 <img
                   src={AddIcon}
                   alt="Add Icon"
@@ -416,6 +519,24 @@ function TenantRepairList(props) {
                                 align="center"
                               >
                                 {row.title}
+                                {row.title == "Completed" ? (
+                                  <div className="d-flex">
+                                    <div className="d-flex justify-content-right">
+                                      <p
+                                        style={{ ...blue, ...xSmall }}
+                                        className="mb-0"
+                                      >
+                                        {days(
+                                          new Date(repair.request_closed_date),
+                                          new Date()
+                                        )}{" "}
+                                        days
+                                      </p>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  ""
+                                )}
                               </TableCell>
                               <TableCell
                                 padding="none"
