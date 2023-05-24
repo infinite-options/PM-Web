@@ -35,22 +35,24 @@ import ManagerPropertyForm from "./ManagerPropertyForm";
 import ManagerTenantAgreement from "./ManagerTenantAgreement";
 import ManagerCashflow from "./ManagerCashflow";
 import SideBar from "./SideBar";
+import Appliances from "../tenantComponents/Appliances";
+import CopyDialog from "../CopyDialog";
 import EditIconNew from "../../icons/EditIconNew.svg";
 import AddIcon from "../../icons/AddIcon.svg";
 import CopyIcon from "../../icons/CopyIcon.png";
 import PropertyIcon from "../../icons/PropertyIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import { get, put, post } from "../../utils/api";
-import { days } from "../../utils/helper";
-import "react-multi-carousel/lib/styles.css";
-import { sidebarStyle } from "../../utils/styles";
-import Appliances from "../tenantComponents/Appliances";
-import CopyDialog from "../CopyDialog";
+import { sidebarStyle, blue, xSmall } from "../../utils/styles";
 import {
+  days,
   descendingComparator as descendingComparator,
   getComparator as getComparator,
   stableSort as stableSort,
 } from "../../utils/helper";
+
+import "react-multi-carousel/lib/styles.css";
+
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -84,6 +86,8 @@ function ManagerPropertyView(props) {
   const [openImage, setOpenImage] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
 
+  const [maintenanceRequests, setMaintenanceRequests] = useState([]);
+  const [daysCompleted, setDaysCompleted] = useState("10");
   const [editAppliances, setEditAppliances] = useState(false);
   const responsive = {
     superLargeDesktop: {
@@ -354,6 +358,25 @@ function ManagerPropertyView(props) {
     }
     // console.log(property_details);
     setProperty(property_details);
+    let requests = [];
+    if (parseInt(daysCompleted) >= 0) {
+      response.result[0].maintenanceRequests.forEach((res) => {
+        if (
+          days(new Date(res.request_closed_date), new Date()) >=
+            parseInt(daysCompleted) &&
+          res.request_status === "COMPLETED"
+        ) {
+        } else {
+          requests.push(res);
+        }
+      });
+    } else {
+      response.result[0].maintenanceRequests.forEach((res) => {
+        requests.push(res);
+      });
+    }
+
+    setMaintenanceRequests(requests);
     if (
       property_details.management_status === "ACCEPTED" ||
       property_details.management_status === "END EARLY" ||
@@ -441,7 +464,34 @@ function ManagerPropertyView(props) {
         : navigate("../manager");
     }
   };
+  useEffect(() => {
+    filterRequests();
+  }, [daysCompleted]);
+  const filterRequests = () => {
+    let requests = [];
+    if (Object.keys(property).length > 1) {
+      if (property.maintenanceRequests.length > 0) {
+        if (parseInt(daysCompleted) >= 0) {
+          property.maintenanceRequests.forEach((res) => {
+            if (
+              days(new Date(res.request_closed_date), new Date()) >=
+                parseInt(daysCompleted) &&
+              res.request_status === "COMPLETED"
+            ) {
+            } else {
+              requests.push(res);
+            }
+          });
+        } else {
+          property.maintenanceRequests.forEach((res) => {
+            requests.push(res);
+          });
+        }
 
+        setMaintenanceRequests(requests);
+      }
+    }
+  };
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [
@@ -1116,6 +1166,21 @@ function ManagerPropertyView(props) {
                     <Col>
                       <h3>Maintenance and Repair Requests</h3>
                     </Col>
+                    <Col xs={4}>
+                      Hide requests completed <span>&#62;</span>{" "}
+                      <input
+                        style={{
+                          borderRadius: "5px",
+                          border: "1px solid #707070",
+                          width: "2rem",
+                        }}
+                        value={daysCompleted}
+                        onChange={(e) => {
+                          setDaysCompleted(e.target.value);
+                        }}
+                      />{" "}
+                      days
+                    </Col>
                     {property.management_status === "ACCEPTED" ? (
                       <Col xs={2}>
                         {" "}
@@ -1136,7 +1201,7 @@ function ManagerPropertyView(props) {
                     )}
                   </Row>
                   <Row className="m-3">
-                    {property.maintenanceRequests.length > 0 &&
+                    {maintenanceRequests.length > 0 &&
                     property.management_status === "ACCEPTED" ? (
                       <div style={{ overflow: "hidden" }}>
                         <Table
@@ -1148,11 +1213,11 @@ function ManagerPropertyView(props) {
                             order={order}
                             orderBy={orderBy}
                             onRequestSort={handleRequestSort}
-                            rowCount={property.maintenanceRequests.length}
+                            rowCount={maintenanceRequests.length}
                           />{" "}
                           <TableBody>
                             {stableSort(
-                              property.maintenanceRequests,
+                              maintenanceRequests,
                               getComparator(order, orderBy)
                             ).map((request, index) => {
                               return (
@@ -1234,7 +1299,27 @@ function ManagerPropertyView(props) {
                                           : "black",
                                     }}
                                   >
-                                    {request.request_status}
+                                    {request.request_status}{" "}
+                                    {request.request_status === "COMPLETED" ? (
+                                      <div className="d-flex">
+                                        <div className="d-flex justify-content-right">
+                                          <p
+                                            style={{ ...blue, ...xSmall }}
+                                            className="mb-0"
+                                          >
+                                            {days(
+                                              new Date(
+                                                request.request_closed_date
+                                              ),
+                                              new Date()
+                                            )}{" "}
+                                            days
+                                          </p>
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      ""
+                                    )}
                                   </TableCell>
                                   <TableCell
                                     padding="none"

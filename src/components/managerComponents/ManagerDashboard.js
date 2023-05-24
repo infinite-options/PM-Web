@@ -215,7 +215,7 @@ export default function ManagerDashboard() {
     setIsLoading(false);
 
     let requests = [];
-    if (parseInt(daysCompleted) > 0) {
+    if (parseInt(daysCompleted) >= 0) {
       properties_unique.forEach((res) => {
         if (res.maintenanceRequests.length > 0) {
           res.maintenanceRequests.forEach((mr) => {
@@ -335,7 +335,7 @@ export default function ManagerDashboard() {
   };
   const filterRequests = () => {
     let requests = [];
-    if (parseInt(daysCompleted) > 0) {
+    if (parseInt(daysCompleted) >= 0) {
       managerData.forEach((res) => {
         if (res.maintenanceRequests.length > 0) {
           res.maintenanceRequests.forEach((mr) => {

@@ -23,9 +23,10 @@ import AddIcon from "../../icons/AddIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import CopyIcon from "../../icons/CopyIcon.png";
 import { get, post } from "../../utils/api";
-import { sidebarStyle } from "../../utils/styles";
+import { sidebarStyle, blue, xSmall } from "../../utils/styles";
 import CopyDialog from "../CopyDialog";
 import {
+  days,
   descendingComparator as descendingComparator,
   getComparator as getComparator,
   stableSort as stableSort,
@@ -47,6 +48,8 @@ function OwnerRepairList(props) {
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [repairIter, setRepairIter] = useState([]);
+
+  const [maintenanceRequests, setMaintenanceRequests] = useState([]);
   const [stage, setStage] = useState("LIST");
   const [copied, setCopied] = useState(false);
   // search variables
@@ -55,6 +58,7 @@ function OwnerRepairList(props) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("days_open");
   const [isLoading, setIsLoading] = useState(true);
+  const [daysCompleted, setDaysCompleted] = useState("10");
   const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
@@ -166,10 +170,31 @@ function OwnerRepairList(props) {
     let processingrepairs = "";
     let scheduledrepairs = "";
     let completedrepairs = "";
+    setMaintenanceRequests(maint_response.result);
+
     for (let r = 0; r < maint_response.result.length; r++) {
       // console.log(maint_response.result[r]);
+      let before = maint_response.result[r].maintenanceRequests;
+      let repairs = [];
+      let requests = [];
+      if (parseInt(daysCompleted) >= 0) {
+        before.forEach((mr) => {
+          if (
+            days(new Date(mr.request_closed_date), new Date()) >=
+              parseInt(daysCompleted) &&
+            mr.request_status === "COMPLETED"
+          ) {
+          } else {
+            requests.push(mr);
+          }
+        });
 
-      let repairs = maint_response.result[r].maintenanceRequests;
+        repairs = requests;
+      } else {
+        repairs = before;
+      }
+
+      // console.log("repairs unsorted", repairs);
       repairs.forEach((repair, i) => {
         // console.log(repair);
         const request_created_date = new Date(
@@ -193,9 +218,7 @@ function OwnerRepairList(props) {
           repair.priority_n = 1;
         }
       });
-      // console.log("repairs unsorted", repairs);
       let repairs_sorted = sort_repairs(repairs);
-      sort_repairs_address(repairs);
       // console.log("repairs sorted", repairs_sorted);
 
       repairs_sorted.forEach((repair_sorted, i) => {
@@ -230,23 +253,24 @@ function OwnerRepairList(props) {
         { title: "Upcoming, Scheduled", repairs_list: scheduled_repairs },
         { title: "Completed", repairs_list: completed_repairs },
       ];
-      // console.log(repairI);
       repairIT.push(repairI);
-      // setRepairIter(repairI.push(repairI));
     }
-    // console.log("repairs_sorted", repairI, repairIT);
     setRepairIter(repairI);
 
     setIsLoading(false);
 
     setProperties(properties_unique);
   };
+
   useEffect(() => {
     if (access_token === null) {
       navigate("/");
     }
     fetchProperties();
   }, [access_token]);
+  useEffect(() => {
+    filterRequests();
+  }, [daysCompleted]);
 
   const sort_repairs = (repairs) => {
     const repairs_with_quotes = repairs.filter(
@@ -264,10 +288,104 @@ function OwnerRepairList(props) {
     return [...repairs_with_quotes, ...repairs_without_quotes];
   };
 
-  const sort_repairs_address = (repairs) => {
-    repairs.forEach((repair, i) => {
-      // console.log("");
-    });
+  const filterRequests = () => {
+    let repairI = [];
+    let repairIT = [];
+    let new_repairs = [];
+    let info_repairs = [];
+    let processing_repairs = [];
+    let scheduled_repairs = [];
+    let completed_repairs = [];
+    let newrepairs = "";
+    let inforepairs = "";
+    let processingrepairs = "";
+    let scheduledrepairs = "";
+    let completedrepairs = "";
+    for (let r = 0; r < maintenanceRequests.length; r++) {
+      // console.log(maintenanceRequests[r]);
+
+      let before_repairs = maintenanceRequests[r].maintenanceRequests;
+      let repairs = [];
+      let requests = [];
+      if (parseInt(daysCompleted) >= 0) {
+        before_repairs.forEach((mr) => {
+          if (
+            days(new Date(mr.request_closed_date), new Date()) >=
+              parseInt(daysCompleted) &&
+            mr.request_status === "COMPLETED"
+          ) {
+          } else {
+            requests.push(mr);
+          }
+        });
+
+        repairs = requests;
+      } else {
+        repairs = before_repairs;
+      }
+
+      // console.log("repairs unsorted", repairs);
+      repairs.forEach((repair, i) => {
+        // console.log(repair);
+        const request_created_date = new Date(
+          Date.parse(repair.request_created_date)
+        );
+        const current_date = new Date();
+        repairs[i].days_since = Math.ceil(
+          (current_date.getTime() - request_created_date.getTime()) /
+            (1000 * 3600 * 24)
+        );
+        repairs[i].quotes_to_review = repair.quotes.filter(
+          (quote) => quote.quote_status === "SENT"
+        ).length;
+
+        repair.priority_n = 0;
+        if (repair.priority.toLowerCase() === "high") {
+          repair.priority_n = 3;
+        } else if (repair.priority.toLowerCase() === "medium") {
+          repair.priority_n = 2;
+        } else if (repair.priority.toLowerCase() === "low") {
+          repair.priority_n = 1;
+        }
+      });
+      let repairs_sorted = sort_repairs(repairs);
+      // console.log("repairs sorted", repairs_sorted);
+
+      repairs_sorted.forEach((repair_sorted, i) => {
+        // console.log("repairs sorted in for each ", i, repair_sorted);
+
+        if (repair_sorted.request_status === "NEW") {
+          newrepairs = repair_sorted;
+          new_repairs.push(newrepairs);
+        } else if (repair_sorted.request_status === "INFO") {
+          inforepairs = repair_sorted;
+          info_repairs.push(inforepairs);
+        } else if (repair_sorted.request_status === "PROCESSING") {
+          processingrepairs = repair_sorted;
+          processing_repairs.push(processingrepairs);
+        } else if (
+          repair_sorted.request_status === "SCHEDULED" ||
+          repair_sorted.request_status === "RESCHEDULE" ||
+          repair_sorted.request_status === "SCHEDULE"
+        ) {
+          scheduledrepairs = repair_sorted;
+          scheduled_repairs.push(scheduledrepairs);
+        } else {
+          completedrepairs = repair_sorted;
+          completed_repairs.push(completedrepairs);
+        }
+      });
+
+      repairI = [
+        { title: "New", repairs_list: new_repairs },
+        { title: "Info Requested", repairs_list: info_repairs },
+        { title: "Processing", repairs_list: processing_repairs },
+        { title: "Upcoming, Scheduled", repairs_list: scheduled_repairs },
+        { title: "Completed", repairs_list: completed_repairs },
+      ];
+      repairIT.push(repairI);
+    }
+    setRepairIter(repairI);
   };
 
   const handleRequestSort = (event, property) => {
@@ -404,8 +522,22 @@ function OwnerRepairList(props) {
                 {" "}
                 <h3>Maintenance and Repairs </h3>
               </Col>
-
-              <Col>
+              <Col xs={4}>
+                Hide requests completed <span>&#62;</span>{" "}
+                <input
+                  style={{
+                    borderRadius: "5px",
+                    border: "1px solid #707070",
+                    width: "2rem",
+                  }}
+                  value={daysCompleted}
+                  onChange={(e) => {
+                    setDaysCompleted(e.target.value);
+                  }}
+                />{" "}
+                days
+              </Col>
+              <Col xs={2}>
                 <img
                   src={AddIcon}
                   alt="Add Icon"
@@ -521,7 +653,25 @@ function OwnerRepairList(props) {
                                     row.title === "New" ? "green" : "black",
                                 }}
                               >
-                                {row.title}
+                                {row.title}{" "}
+                                {row.title === "Completed" ? (
+                                  <div className="d-flex">
+                                    <div className="d-flex justify-content-right">
+                                      <p
+                                        style={{ ...blue, ...xSmall }}
+                                        className="mb-0"
+                                      >
+                                        {days(
+                                          new Date(repair.request_closed_date),
+                                          new Date()
+                                        )}{" "}
+                                        days
+                                      </p>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  ""
+                                )}
                               </TableCell>
                               <TableCell
                                 padding="none"

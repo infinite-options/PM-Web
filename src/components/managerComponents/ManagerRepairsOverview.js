@@ -23,7 +23,7 @@ import RepairImg from "../../icons/RepairImg.svg";
 import AddIcon from "../../icons/AddIcon.svg";
 import CopyIcon from "../../icons/CopyIcon.png";
 import { get, post } from "../../utils/api";
-import { sidebarStyle } from "../../utils/styles";
+import { sidebarStyle, blue, xSmall } from "../../utils/styles";
 import { days } from "../../utils/helper";
 import CopyDialog from "../CopyDialog";
 import {
@@ -52,6 +52,7 @@ function ManagerRepairsOverview(props) {
   const [managerID, setManagerID] = useState("");
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("days_open");
+  const [daysCompleted, setDaysCompleted] = useState("10");
   const [width, setWindowWidth] = useState(1024);
   useEffect(() => {
     updateDimensions();
@@ -170,58 +171,143 @@ function ManagerRepairsOverview(props) {
     );
 
     let repairs = response.result;
+    let repairs_sorted = [];
     // console.log(repairs);
-    repairs.forEach((repair, i) => {
-      const request_created_date = new Date(
-        Date.parse(repair.request_created_date)
-      );
-      const current_date = new Date();
-      repairs[i].days_since = Math.ceil(
-        (current_date.getTime() - request_created_date.getTime()) /
-          (1000 * 3600 * 24)
-      );
-      repairs[i].quotes_to_review = repair.quotes.filter(
-        (quote) => quote.quote_status === "SENT"
-      ).length;
+    if (parseInt(daysCompleted) >= 0) {
+      repairs.forEach((repair, i) => {
+        if (
+          days(new Date(repair.request_closed_date), new Date()) >=
+            parseInt(daysCompleted) &&
+          repair.request_status === "COMPLETED"
+        ) {
+        } else {
+          const request_created_date = new Date(
+            Date.parse(repair.request_created_date)
+          );
+          const current_date = new Date();
+          repairs[i].days_since = Math.ceil(
+            (current_date.getTime() - request_created_date.getTime()) /
+              (1000 * 3600 * 24)
+          );
+          repairs[i].quotes_to_review = repair.quotes.filter(
+            (quote) => quote.quote_status === "SENT"
+          ).length;
 
-      repair.priority_n = 0;
-      if (repair.priority.toLowerCase() === "high") {
-        repair.priority_n = 3;
-      } else if (repair.priority.toLowerCase() === "medium") {
-        repair.priority_n = 2;
-      } else if (repair.priority.toLowerCase() === "low") {
-        repair.priority_n = 1;
-      }
-    });
+          repair.priority_n = 0;
+          if (repair.priority.toLowerCase() === "high") {
+            repair.priority_n = 3;
+          } else if (repair.priority.toLowerCase() === "medium") {
+            repair.priority_n = 2;
+          } else if (repair.priority.toLowerCase() === "low") {
+            repair.priority_n = 1;
+          }
+          repairs_sorted = sort_repairs(repairs);
+          // console.log(repairs_sorted);
+        }
+      });
+    } else {
+      repairs.forEach((repair, i) => {
+        const request_created_date = new Date(
+          Date.parse(repair.request_created_date)
+        );
+        const current_date = new Date();
+        repairs[i].days_since = Math.ceil(
+          (current_date.getTime() - request_created_date.getTime()) /
+            (1000 * 3600 * 24)
+        );
+        repairs[i].quotes_to_review = repair.quotes.filter(
+          (quote) => quote.quote_status === "SENT"
+        ).length;
 
-    let repairs_sorted = sort_repairs(repairs);
-    // console.log(repairs_sorted);
+        repair.priority_n = 0;
+        if (repair.priority.toLowerCase() === "high") {
+          repair.priority_n = 3;
+        } else if (repair.priority.toLowerCase() === "medium") {
+          repair.priority_n = 2;
+        } else if (repair.priority.toLowerCase() === "low") {
+          repair.priority_n = 1;
+        }
+      });
 
-    const new_repairs = repairs_sorted.filter(
-      (item) => item.request_status === "NEW"
-    );
-    const info_repairs = repairs.filter(
-      (item) => item.request_status === "INFO"
-    );
-    const processing_repairs = repairs_sorted.filter(
-      (item) => item.request_status === "PROCESSING"
-    );
-    const scheduled_repairs = repairs_sorted.filter(
-      (item) =>
-        item.request_status === "SCHEDULED" ||
-        item.request_status === "RESCHEDULE" ||
-        item.request_status === "SCHEDULE"
-    );
-    const completed_repairs = repairs_sorted.filter(
-      (item) => item.request_status === "COMPLETE"
-    );
+      repairs_sorted = sort_repairs(repairs);
+      // console.log(repairs_sorted);
+    }
 
     setRepairIter(repairs_sorted);
     setIsLoading(false);
   };
 
+  const filterRequests = () => {
+    let repairs = repairIter;
+    let repairs_sorted = [];
+    if (parseInt(daysCompleted) >= 0) {
+      repairs.forEach((repair, i) => {
+        if (
+          days(new Date(repair.request_closed_date), new Date()) >=
+            parseInt(daysCompleted) &&
+          repair.request_status === "COMPLETED"
+        ) {
+        } else {
+          const request_created_date = new Date(
+            Date.parse(repair.request_created_date)
+          );
+          const current_date = new Date();
+          repairs[i].days_since = Math.ceil(
+            (current_date.getTime() - request_created_date.getTime()) /
+              (1000 * 3600 * 24)
+          );
+          repairs[i].quotes_to_review = repair.quotes.filter(
+            (quote) => quote.quote_status === "SENT"
+          ).length;
+
+          repair.priority_n = 0;
+          if (repair.priority.toLowerCase() === "high") {
+            repair.priority_n = 3;
+          } else if (repair.priority.toLowerCase() === "medium") {
+            repair.priority_n = 2;
+          } else if (repair.priority.toLowerCase() === "low") {
+            repair.priority_n = 1;
+          }
+          repairs_sorted = sort_repairs(repairs);
+          // console.log(repairs_sorted);
+        }
+      });
+    } else {
+      repairs.forEach((repair, i) => {
+        const request_created_date = new Date(
+          Date.parse(repair.request_created_date)
+        );
+        const current_date = new Date();
+        repairs[i].days_since = Math.ceil(
+          (current_date.getTime() - request_created_date.getTime()) /
+            (1000 * 3600 * 24)
+        );
+        repairs[i].quotes_to_review = repair.quotes.filter(
+          (quote) => quote.quote_status === "SENT"
+        ).length;
+
+        repair.priority_n = 0;
+        if (repair.priority.toLowerCase() === "high") {
+          repair.priority_n = 3;
+        } else if (repair.priority.toLowerCase() === "medium") {
+          repair.priority_n = 2;
+        } else if (repair.priority.toLowerCase() === "low") {
+          repair.priority_n = 1;
+        }
+      });
+
+      repairs_sorted = sort_repairs(repairs);
+      // console.log(repairs_sorted);
+    }
+
+    setRepairIter(repairs_sorted);
+  };
   useEffect(fetchRepairs, [access_token]);
   // console.log(repairIter);
+
+  useEffect(() => {
+    filterRequests();
+  }, [daysCompleted]);
 
   const addRequest = () => {
     fetchRepairs();
@@ -345,7 +431,22 @@ function ManagerRepairsOverview(props) {
             <Col>
               <h3>Maintenance and Repairs</h3>
             </Col>
-            <Col>
+            <Col xs={4}>
+              Hide requests completed <span>&#62;</span>{" "}
+              <input
+                style={{
+                  borderRadius: "5px",
+                  border: "1px solid #707070",
+                  width: "2rem",
+                }}
+                value={daysCompleted}
+                onChange={(e) => {
+                  setDaysCompleted(e.target.value);
+                }}
+              />{" "}
+              days
+            </Col>
+            <Col xs={2}>
               <img
                 src={AddIcon}
                 alt="Add Icon"
@@ -455,7 +556,25 @@ function ManagerRepairsOverview(props) {
                                   : "black",
                             }}
                           >
-                            {repair.request_status}
+                            {repair.request_status}{" "}
+                            {repair.request_status === "COMPLETED" ? (
+                              <div className="d-flex">
+                                <div className="d-flex justify-content-right">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {days(
+                                      new Date(repair.request_closed_date),
+                                      new Date()
+                                    )}{" "}
+                                    days
+                                  </p>
+                                </div>
+                              </div>
+                            ) : (
+                              ""
+                            )}
                           </TableCell>
                           <TableCell
                             onClick={() => {
