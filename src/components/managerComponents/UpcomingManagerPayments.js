@@ -67,6 +67,10 @@ export default function UpcomingManagerPayments(props) {
   const [paymentType, setPaymentType] = useState("");
   const rents = props.data; //array of objects
   const { deleted, setDeleted, paid, setPaid } = props;
+  // search variables
+  const [searchOutgoing, setSearchOutgoing] = useState("");
+  const [searchIncoming, setSearchIncoming] = useState("");
+  // sorting variables
   const managerID = props.managerID;
   const goToPayment = () => {
     navigate("/manager-payments");
@@ -629,6 +633,24 @@ export default function UpcomingManagerPayments(props) {
             <h5> Outgoing Payments</h5>
           </Col>
         </Row>
+        <Row className="w-100 m-3">
+          <Col xs={2}> Search by</Col>
+
+          <Col>
+            <input
+              type="text"
+              placeholder="Search"
+              onChange={(event) => {
+                setSearchOutgoing(event.target.value);
+              }}
+              style={{
+                width: "400px",
+                border: "1px solid black",
+                padding: "5px",
+              }}
+            />
+          </Col>
+        </Row>
         <Row className="m-3" style={subHeading}>
           <Col xs={1}>
             <h5> Pay All</h5>
@@ -656,8 +678,19 @@ export default function UpcomingManagerPayments(props) {
             />{" "}
             <TableBody>
               {rents.length !== 0
-                ? stableSort(rents, getComparator(order, orderBy)).map(
-                    (row, index) => {
+                ? stableSort(rents, getComparator(order, orderBy))
+                    // for filtering
+                    .filter((val) => {
+                      const query = searchOutgoing.toLowerCase();
+
+                      return (
+                        val.address.toLowerCase().indexOf(query) >= 0 ||
+                        String(val.unit).toLowerCase().indexOf(query) >= 0 ||
+                        val.city.toLowerCase().indexOf(query) >= 0 ||
+                        val.zip.toLowerCase().indexOf(query) >= 0
+                      );
+                    })
+                    .map((row, index) => {
                       return (row.purchase_status === "UNPAID" &&
                         row.receiver !== managerID) ||
                         (row.purchase_status === "UNPAID" &&
@@ -728,39 +761,7 @@ export default function UpcomingManagerPayments(props) {
                           >
                             {row.next_payment.substring(0, 10)}
                           </TableCell>
-                          {/* <TableCell align="center" style={{ width: "83px" }}>
-                            {props.type ? (
-                              <button
-                                style={{
-                                  backgroundColor:
-                                    new Date(row.next_payment) < new Date()
-                                      ? "red"
-                                      : "green",
-                                  color: "white",
-                                  border: "none",
-                                }}
-                                onClick={goToPayment}
-                              >
-                                Pay
-                              </button>
-                            ) : (
-                              <label>
-                                <input
-                                  className="check"
-                                  type="checkbox"
-                                  name="check"
-                                  onClick={(event) =>
-                                    handleCheck(
-                                      event,
-                                      row,
-                                      row.amount_due,
-                                      row.purchase_uid
-                                    )
-                                  }
-                                />
-                              </label>
-                            )}
-                          </TableCell> */}
+
                           <TableCell align="right">
                             {row.amount_due.toFixed(2)}
                           </TableCell>
@@ -768,8 +769,7 @@ export default function UpcomingManagerPayments(props) {
                       ) : (
                         ""
                       );
-                    }
-                  )
+                    })
                 : "No upcoming payments"}
             </TableBody>
           </Table>
@@ -805,6 +805,24 @@ export default function UpcomingManagerPayments(props) {
           {" "}
           <h5> Incoming Payments</h5>
         </Row>
+        <Row className="w-100 m-3">
+          <Col xs={2}> Search by</Col>
+
+          <Col>
+            <input
+              type="text"
+              placeholder="Search"
+              onChange={(event) => {
+                setSearchIncoming(event.target.value);
+              }}
+              style={{
+                width: "400px",
+                border: "1px solid black",
+                padding: "5px",
+              }}
+            />
+          </Col>
+        </Row>
         <Row className="m-3" style={{ overflow: "scroll" }}>
           <Table
             responsive="md"
@@ -822,86 +840,104 @@ export default function UpcomingManagerPayments(props) {
                 ? stableSortIncoming(
                     rents,
                     getComparatorIncoming(orderIncoming, orderIncomingBy)
-                  ).map((row, index) => {
-                    return (row.purchase_status === "UNPAID" &&
-                      row.receiver === managerID &&
-                      !row.payer.includes(row.owner_id)) ||
-                      (row.purchase_status === "UNPAID" &&
-                        row.receiver !== managerID &&
-                        row.amount_due < 0) ? (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                        <TableCell align="left">{row.purchase_uid}</TableCell>
-                        <TableCell align="left">
-                          {row.address +
-                            " " +
-                            row.unit +
-                            "," +
-                            row.city +
-                            ", " +
-                            row.state +
-                            " " +
-                            row.zip}
-                        </TableCell>
-                        <TableCell align="left"> {row.payer}</TableCell>
+                  )
+                    .filter((val) => {
+                      const query = searchIncoming.toLowerCase();
 
-                        <TableCell align="left">
-                          {row.description}{" "}
-                          <div className="d-flex">
-                            <div className="d-flex align-items-end">
-                              <p
-                                style={{ ...blue, ...xSmall }}
-                                className="mb-0"
-                              >
-                                {row.purchase_notes}
-                              </p>
-                            </div>
-                          </div>
-                        </TableCell>
-
-                        <TableCell align="right">{row.purchase_type}</TableCell>
-                        <TableCell align="center">
-                          {row.linked_bill_id === null ? "No" : "Yes"}
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          style={{
-                            color:
-                              new Date(row.next_payment) < new Date()
-                                ? "red"
-                                : "green",
-                          }}
+                      return (
+                        val.address.toLowerCase().indexOf(query) >= 0 ||
+                        String(val.unit).toLowerCase().indexOf(query) >= 0 ||
+                        val.city.toLowerCase().indexOf(query) >= 0 ||
+                        val.zip.toLowerCase().indexOf(query) >= 0
+                      );
+                    })
+                    .map((row, index) => {
+                      return (row.purchase_status === "UNPAID" &&
+                        row.receiver === managerID &&
+                        !row.payer.includes(row.owner_id)) ||
+                        (row.purchase_status === "UNPAID" &&
+                          row.receiver !== managerID &&
+                          row.amount_due < 0) ? (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={index}
                         >
-                          {row.next_payment.substring(0, 10)}
-                        </TableCell>
-                        <TableCell align="center" style={{ width: "83px" }}>
-                          <img
-                            src={DeleteIcon}
-                            alt="Delete Icon"
-                            className="px-1 mx-2"
-                            style={{ cursor: "pointer" }}
-                            onClick={() => deletePurchase(row.purchase_uid)}
-                          />
-                        </TableCell>
-                        <TableCell align="right">
-                          {row.amount_due.toFixed(2)}
-                        </TableCell>
-                        <TableCell align="center" style={{ width: "83px" }}>
-                          <img
-                            src={confirmCheck}
-                            alt="Mark as Paid"
-                            style={{ width: "30px", cursor: "pointer" }}
-                            className="px-1 mx-2"
-                            onClick={() => {
-                              setPaidModalShow(true);
-                              setSelectedPayment(row);
+                          <TableCell align="left">{row.purchase_uid}</TableCell>
+                          <TableCell align="left">
+                            {row.address +
+                              " " +
+                              row.unit +
+                              "," +
+                              row.city +
+                              ", " +
+                              row.state +
+                              " " +
+                              row.zip}
+                          </TableCell>
+                          <TableCell align="left"> {row.payer}</TableCell>
+
+                          <TableCell align="left">
+                            {row.description}{" "}
+                            <div className="d-flex">
+                              <div className="d-flex align-items-end">
+                                <p
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
+                                >
+                                  {row.purchase_notes}
+                                </p>
+                              </div>
+                            </div>
+                          </TableCell>
+
+                          <TableCell align="right">
+                            {row.purchase_type}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.linked_bill_id === null ? "No" : "Yes"}
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            style={{
+                              color:
+                                new Date(row.next_payment) < new Date()
+                                  ? "red"
+                                  : "green",
                             }}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      ""
-                    );
-                  })
+                          >
+                            {row.next_payment.substring(0, 10)}
+                          </TableCell>
+                          <TableCell align="center" style={{ width: "83px" }}>
+                            <img
+                              src={DeleteIcon}
+                              alt="Delete Icon"
+                              className="px-1 mx-2"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => deletePurchase(row.purchase_uid)}
+                            />
+                          </TableCell>
+                          <TableCell align="right">
+                            {row.amount_due.toFixed(2)}
+                          </TableCell>
+                          <TableCell align="center" style={{ width: "83px" }}>
+                            <img
+                              src={confirmCheck}
+                              alt="Mark as Paid"
+                              style={{ width: "30px", cursor: "pointer" }}
+                              className="px-1 mx-2"
+                              onClick={() => {
+                                setPaidModalShow(true);
+                                setSelectedPayment(row);
+                              }}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        ""
+                      );
+                    })
                 : "No upcoming payments"}
             </TableBody>
           </Table>
