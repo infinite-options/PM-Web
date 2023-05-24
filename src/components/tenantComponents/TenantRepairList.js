@@ -85,6 +85,7 @@ function TenantRepairList(props) {
     setProperties(properties);
     let repairs = [];
     let requests = [];
+    setMaintenanceRequests(response.result);
     // console.log(repairs);
     if (parseInt(daysCompleted) >= 0) {
       response.result.forEach((mr) => {
@@ -97,10 +98,9 @@ function TenantRepairList(props) {
           requests.push(mr);
         }
       });
-      setMaintenanceRequests(requests);
+
       repairs = requests;
     } else {
-      setMaintenanceRequests(response.result);
       repairs = response.result;
     }
 
@@ -169,11 +169,12 @@ function TenantRepairList(props) {
     filterRequests();
   }, [daysCompleted]);
   const filterRequests = () => {
+    let before = maintenanceRequests;
     let repairs = [];
     let requests = [];
     // console.log(repairs);
-    if (parseInt(daysCompleted) > 0) {
-      maintenanceRequests.forEach((mr) => {
+    if (parseInt(daysCompleted) >= 0) {
+      before.forEach((mr) => {
         if (
           days(new Date(mr.request_closed_date), new Date()) >=
             parseInt(daysCompleted) &&
@@ -183,11 +184,10 @@ function TenantRepairList(props) {
           requests.push(mr);
         }
       });
-      setMaintenanceRequests(requests);
+
       repairs = requests;
     } else {
-      setMaintenanceRequests(maintenanceRequests);
-      repairs = maintenanceRequests;
+      repairs = before;
     }
 
     repairs.forEach((repair, i) => {
@@ -195,11 +195,11 @@ function TenantRepairList(props) {
         Date.parse(repair.request_created_date)
       );
       const current_date = new Date();
-      repairs[i].days_since = Math.ceil(
+      repair.days_since = Math.ceil(
         (current_date.getTime() - request_created_date.getTime()) /
           (1000 * 3600 * 24)
       );
-      repairs[i].quotes_to_review = repair.quotes.filter(
+      repair.quotes_to_review = repair.quotes.filter(
         (quote) => quote.quote_status === "SENT"
       ).length;
 

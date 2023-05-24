@@ -54,10 +54,13 @@ import {
   redPillButton,
   smallImg,
   sidebarStyle,
+  blue,
+  xSmall,
 } from "../../utils/styles";
 import "react-multi-carousel/lib/styles.css";
 import Appliances from "../tenantComponents/Appliances";
 import {
+  days,
   descendingComparator as descendingComparator,
   getComparator as getComparator,
   stableSort as stableSort,
@@ -89,7 +92,9 @@ function OwnerPropertyView(props) {
   const [property, setProperty] = useState({
     images: "[]",
   });
+  const [maintenanceRequests, setMaintenanceRequests] = useState([]);
   const [copied, setCopied] = useState(false);
+  const [daysCompleted, setDaysCompleted] = useState("10");
   const [imagesProperty, setImagesProperty] = useState([]);
   const [showAddRequest, setShowAddRequest] = useState(false);
   const [showControls, setShowControls] = useState(true);
@@ -308,6 +313,25 @@ function OwnerPropertyView(props) {
     );
 
     setProperty(response.result[0]);
+    let requests = [];
+    if (parseInt(daysCompleted) >= 0) {
+      response.result[0].maintenanceRequests.forEach((res) => {
+        if (
+          days(new Date(res.request_closed_date), new Date()) >=
+            parseInt(daysCompleted) &&
+          res.request_status === "COMPLETED"
+        ) {
+        } else {
+          requests.push(res);
+        }
+      });
+    } else {
+      response.result[0].maintenanceRequests.forEach((res) => {
+        requests.push(res);
+      });
+    }
+
+    setMaintenanceRequests(requests);
     setImagesProperty(JSON.parse(response.result[0].images));
     let show = JSON.parse(response.result[0].images).length < 5 ? false : true;
     setShowControls(show);
@@ -367,7 +391,34 @@ function OwnerPropertyView(props) {
   useEffect(() => {
     fetchProperty();
   }, []);
+  useEffect(() => {
+    filterRequests();
+  }, [daysCompleted]);
+  const filterRequests = () => {
+    let requests = [];
+    if (Object.keys(property).length > 1) {
+      if (property.maintenanceRequests.length > 0) {
+        if (parseInt(daysCompleted) >= 0) {
+          property.maintenanceRequests.forEach((res) => {
+            if (
+              days(new Date(res.request_closed_date), new Date()) >=
+                parseInt(daysCompleted) &&
+              res.request_status === "COMPLETED"
+            ) {
+            } else {
+              requests.push(res);
+            }
+          });
+        } else {
+          property.maintenanceRequests.forEach((res) => {
+            requests.push(res);
+          });
+        }
 
+        setMaintenanceRequests(requests);
+      }
+    }
+  };
   const [pmID, setPmID] = useState("");
   const [currentImg, setCurrentImg] = useState(0);
   const [editProperty, setEditProperty] = useState(false);
@@ -1305,7 +1356,22 @@ function OwnerPropertyView(props) {
                       <Col>
                         <h3>Maintenance and Repairs</h3>
                       </Col>
-                      <Col>
+                      <Col xs={4}>
+                        Hide requests completed <span>&#62;</span>{" "}
+                        <input
+                          style={{
+                            borderRadius: "5px",
+                            border: "1px solid #707070",
+                            width: "2rem",
+                          }}
+                          value={daysCompleted}
+                          onChange={(e) => {
+                            setDaysCompleted(e.target.value);
+                          }}
+                        />{" "}
+                        days
+                      </Col>
+                      <Col xs={2}>
                         {" "}
                         <img
                           src={AddIcon}
@@ -1324,7 +1390,7 @@ function OwnerPropertyView(props) {
                       </Col>
                     </Row>
                     <Row className="m-3">
-                      {property.maintenanceRequests.length > 0 ? (
+                      {maintenanceRequests.length > 0 ? (
                         <div style={{ overflow: "scroll" }}>
                           <Table
                             classes={{ root: classes.customTable }}
@@ -1335,11 +1401,11 @@ function OwnerPropertyView(props) {
                               order={order}
                               orderBy={orderBy}
                               onRequestSort={handleRequestSort}
-                              rowCount={property.maintenanceRequests.length}
+                              rowCount={maintenanceRequests.length}
                             />{" "}
                             <TableBody>
                               {stableSort(
-                                property.maintenanceRequests,
+                                maintenanceRequests,
                                 getComparator(order, orderBy)
                               ).map((request, index) => {
                                 return (
@@ -1423,7 +1489,28 @@ function OwnerPropertyView(props) {
                                             : "black",
                                       }}
                                     >
-                                      {request.request_status}
+                                      {request.request_status}{" "}
+                                      {request.request_status ===
+                                      "COMPLETED" ? (
+                                        <div className="d-flex">
+                                          <div className="d-flex justify-content-right">
+                                            <p
+                                              style={{ ...blue, ...xSmall }}
+                                              className="mb-0"
+                                            >
+                                              {days(
+                                                new Date(
+                                                  request.request_closed_date
+                                                ),
+                                                new Date()
+                                              )}{" "}
+                                              days
+                                            </p>
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        ""
+                                      )}
                                     </TableCell>
                                     <TableCell
                                       padding="none"

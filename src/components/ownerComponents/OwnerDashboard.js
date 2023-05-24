@@ -145,7 +145,7 @@ export default function OwnerDashboard2() {
     setOwnerData(pu);
 
     let requests = [];
-    if (parseInt(daysCompleted) > 0) {
+    if (parseInt(daysCompleted) >= 0) {
       response.result.forEach((res) => {
         if (res.maintenanceRequests.length > 0) {
           res.maintenanceRequests.forEach((mr) => {
@@ -239,7 +239,7 @@ export default function OwnerDashboard2() {
   };
   const filterRequests = () => {
     let requests = [];
-    if (parseInt(daysCompleted) > 0) {
+    if (parseInt(daysCompleted) >= 0) {
       ownerData.forEach((res) => {
         if (res.maintenanceRequests.length > 0) {
           res.maintenanceRequests.forEach((mr) => {

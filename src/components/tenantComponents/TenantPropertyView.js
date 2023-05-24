@@ -45,6 +45,8 @@ import {
   redPillButton,
   hidden,
   small,
+  blue,
+  xSmall,
   sidebarStyle,
 } from "../../utils/styles";
 import {
@@ -81,6 +83,8 @@ function TenantPropertyView(props) {
   const property_uid = location.state.property_uid;
   const [isLoading, setIsLoading] = useState(true);
   const [property, setProperty] = useState({ images: "[]" });
+  const [maintenanceRequests, setMaintenanceRequests] = useState([]);
+  const [daysCompleted, setDaysCompleted] = useState("10");
   const [hideEdit, setHideEdit] = useState(true);
   const [showAddRequest, setShowAddRequest] = useState(false);
   const [addDoc, setAddDoc] = useState(false);
@@ -527,6 +531,24 @@ function TenantPropertyView(props) {
     );
 
     setProperty(property_details);
+    let requests = [];
+    if (parseInt(daysCompleted) >= 0) {
+      property_details.maintenanceRequests.forEach((res) => {
+        if (
+          days(new Date(res.request_closed_date), new Date()) >=
+            parseInt(daysCompleted) &&
+          res.request_status === "COMPLETED"
+        ) {
+        } else {
+          requests.push(res);
+        }
+      });
+    } else {
+      property_details.maintenanceRequests.forEach((res) => {
+        requests.push(res);
+      });
+    }
+    setMaintenanceRequests(requests);
     property_details.rentalInfo.forEach((rental) => {
       if (rental.rental_status === "ACTIVE") {
         setSelectedAgreement(rental);
@@ -586,7 +608,34 @@ function TenantPropertyView(props) {
   useEffect(() => {
     fetchProperty();
   }, []);
+  useEffect(() => {
+    filterRequests();
+  }, [daysCompleted]);
+  const filterRequests = () => {
+    let requests = [];
+    if (Object.keys(property).length > 1) {
+      if (property.maintenanceRequests.length > 0) {
+        if (parseInt(daysCompleted) >= 0) {
+          property.maintenanceRequests.forEach((res) => {
+            if (
+              days(new Date(res.request_closed_date), new Date()) >=
+                parseInt(daysCompleted) &&
+              res.request_status === "COMPLETED"
+            ) {
+            } else {
+              requests.push(res);
+            }
+          });
+        } else {
+          property.maintenanceRequests.forEach((res) => {
+            requests.push(res);
+          });
+        }
 
+        setMaintenanceRequests(requests);
+      }
+    }
+  };
   const headerBack = () => {
     showTenantProfile
       ? setShowTenantProfile(false)
@@ -617,6 +666,12 @@ function TenantPropertyView(props) {
       id: "title",
       numeric: false,
       label: "Issue",
+    },
+
+    {
+      id: "request_status",
+      numeric: false,
+      label: "Status",
     },
     {
       id: "request_created_date",
@@ -977,6 +1032,21 @@ function TenantPropertyView(props) {
                   <Col>
                     <h3>Maintenance and Repair Requests</h3>
                   </Col>
+                  <Col xs={4}>
+                    Hide requests completed <span>&#62;</span>{" "}
+                    <input
+                      style={{
+                        borderRadius: "5px",
+                        border: "1px solid #707070",
+                        width: "2rem",
+                      }}
+                      value={daysCompleted}
+                      onChange={(e) => {
+                        setDaysCompleted(e.target.value);
+                      }}
+                    />{" "}
+                    days
+                  </Col>
                   <Col xs={2}>
                     {" "}
                     <img
@@ -993,7 +1063,7 @@ function TenantPropertyView(props) {
                   </Col>
                 </Row>
 
-                {property.maintenanceRequests.length > 0 ? (
+                {maintenanceRequests.length > 0 ? (
                   <Row className="m-3" style={{ overflow: "scroll" }}>
                     <Table
                       classes={{ root: classes.customTable }}
@@ -1004,11 +1074,11 @@ function TenantPropertyView(props) {
                         order={order}
                         orderBy={orderBy}
                         onRequestSort={handleRequestSort}
-                        rowCount={property.maintenanceRequests.length}
+                        rowCount={maintenanceRequests.length}
                       />{" "}
                       <TableBody>
                         {stableSort(
-                          property.maintenanceRequests,
+                          maintenanceRequests,
                           getComparator(order, orderBy)
                         ).map((request, index) => {
                           return (
@@ -1066,6 +1136,45 @@ function TenantPropertyView(props) {
                               >
                                 {" "}
                                 {request.title}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                                style={{
+                                  color:
+                                    request.request_status === "NEW"
+                                      ? "red"
+                                      : request.request_status === "PROCESSING"
+                                      ? "orange"
+                                      : request.request_status === "SCHEDULE"
+                                      ? "blue"
+                                      : request.request_status === "RESCHEDULE"
+                                      ? "yellow"
+                                      : request.request_status === "SCHEDULED"
+                                      ? "green"
+                                      : "black",
+                                }}
+                              >
+                                {request.request_status}{" "}
+                                {request.request_status === "COMPLETED" ? (
+                                  <div className="d-flex">
+                                    <div className="d-flex justify-content-right">
+                                      <p
+                                        style={{ ...blue, ...xSmall }}
+                                        className="mb-0"
+                                      >
+                                        {days(
+                                          new Date(request.request_closed_date),
+                                          new Date()
+                                        )}{" "}
+                                        days
+                                      </p>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  ""
+                                )}
                               </TableCell>
                               <TableCell
                                 padding="none"
