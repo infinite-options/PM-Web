@@ -80,6 +80,7 @@ function ManagerCreateAnnouncement(props) {
   const [showDialogSendingText, setShowDialogSendingText] = useState(false);
   const [showDialogSendingEmail, setShowDialogSendingEmail] = useState(false);
   const [showSendingFailed, setShowSendingFailed] = useState(false);
+  const [showSendingSuccess, setShowSendingSuccess] = useState(false);
   const [announcementDetail, setAnnouncementDetail] = useState(false);
   const [deleted, setDeleted] = useState(false);
   const [order, setOrder] = useState("asc");
@@ -425,7 +426,11 @@ function ManagerCreateAnnouncement(props) {
       }
     }
     setFailed(failedMessages);
-    setShowSendingFailed(true);
+    if (failedMessages.length > 0) {
+      setShowSendingFailed(true);
+    } else {
+      setShowSendingSuccess(true);
+    }
     setEditingAnnouncement(null);
     const newAnnouncementState = [...announcementState];
     newAnnouncementState.push({ ...newAnnouncement });
@@ -584,6 +589,22 @@ function ManagerCreateAnnouncement(props) {
       </Dialog>
     );
   };
+  const DialogSendingSuccess = () => {
+    return (
+      <Dialog
+        open={showSendingSuccess}
+        // onClose={onCancel}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Sent Successfully</DialogTitle>
+
+        <DialogActions>
+          <Button onClick={() => setShowSendingSuccess(false)}>Okay</Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -672,11 +693,252 @@ function ManagerCreateAnnouncement(props) {
     orderBy: PropTypes.string.isRequired,
     // rowCount: PropTypes.number.isRequired,
   };
+  const headCellsByProperty = [
+    { id: "address", numeric: false, label: "" },
+    {
+      id: "address",
+      numeric: false,
+      label: "Address",
+    },
+    {
+      id: "rentalInfo",
+      numeric: false,
+      label: "Tenant",
+    },
+  ];
+  function EnhancedTableHeadByProperty(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCellsByProperty.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadByProperty.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    // rowCount: PropTypes.number.isRequired,
+  };
+  EnhancedTableHead.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    // rowCount: PropTypes.number.isRequired,
+  };
+  const headCellsByTenants = [
+    { id: "address", numeric: false, label: "" },
+    {
+      id: "rentalInfo",
+      numeric: false,
+      label: "Tenant",
+    },
+    {
+      id: "address",
+      numeric: false,
+      label: "Address",
+    },
+  ];
+  function EnhancedTableHeadByTenants(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCellsByTenants.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadByTenants.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    // rowCount: PropTypes.number.isRequired,
+  };
+  const headCellsByOwners = [
+    { id: "address", numeric: false, label: "" },
+    {
+      id: "owner",
+      numeric: false,
+      label: "Owners",
+    },
+    {
+      id: "address",
+      numeric: false,
+      label: "Address",
+    },
+  ];
+  function EnhancedTableHeadByOwners(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCellsByOwners.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadByOwners.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    // rowCount: PropTypes.number.isRequired,
+  };
+  const headCellsByNewTenants = [
+    { id: "address", numeric: false, label: "" },
+    {
+      id: "tenant",
+      numeric: false,
+      label: "Tenant",
+    },
+    {
+      id: "address",
+      numeric: false,
+      label: "Address",
+    },
+  ];
+  function EnhancedTableHeadByNewTenants(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCellsByNewTenants.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadByNewTenants.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    // rowCount: PropTypes.number.isRequired,
+  };
   return (
     <div className="w-100 overflow-hidden">
       {DialogSendingText()}
       {DialogSendingEmail()}
       {DialogSendingFailed()}
+      {DialogSendingSuccess()}
       <Row className="w-100 mb-5 overflow-hidden">
         <Col
           xs={2}
@@ -688,8 +950,10 @@ function ManagerCreateAnnouncement(props) {
         <Col className="w-100 mb-5 overflow-scroll">
           <Header
             title="Announcements"
-            leftText={editingAnnouncement || announcementDetail ? "< Back" : ""}
-            leftFn={() => {
+            centerText={
+              editingAnnouncement || announcementDetail ? "< Back" : ""
+            }
+            centerFn={() => {
               setNewAnnouncement(null);
               setAnnouncementDetail(false);
               propertyState.forEach((prop) => (prop.checked = false));
@@ -898,47 +1162,51 @@ function ManagerCreateAnnouncement(props) {
                       classes={{ root: classes.customTable }}
                       size="small"
                     >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell></TableCell>
-                          <TableCell align="left">Address</TableCell>
-                          <TableCell align="left">Tenant</TableCell>
-                        </TableRow>
-                      </TableHead>
+                      <EnhancedTableHeadByProperty
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        // rowCount="4"
+                      />{" "}
                       <TableBody>
-                        {properties.map((property, i) => (
-                          <TableRow key={i}>
-                            <TableCell>
-                              <Checkbox
-                                type="BOX"
-                                checked={propertyState[i].checked}
-                                onClick={() => toggleProperty(i)}
-                              />
-                            </TableCell>
-                            <TableCell align="left">
-                              {" "}
-                              <p className="ms-1 mb-1">
-                                {property.address} {property.unit}
-                                ,&nbsp;{property.city},&nbsp;{property.state}
-                                &nbsp; {property.zip}
-                              </p>
-                            </TableCell>
-                            <TableCell align="left">
-                              {property.rentalInfo !== "Not Rented" ? (
-                                property.rentalInfo.map((tf, i) => {
-                                  return (
-                                    <div>
-                                      {tf.tenant_first_name}{" "}
-                                      {tf.tenant_last_name}
-                                    </div>
-                                  );
-                                })
-                              ) : (
-                                <div>{property.rentalInfo}</div>
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                        {stableSort(
+                          properties,
+                          getComparator(order, orderBy)
+                        ).map((property, i) => {
+                          return (
+                            <TableRow key={i}>
+                              <TableCell>
+                                <Checkbox
+                                  type="BOX"
+                                  checked={propertyState[i].checked}
+                                  onClick={() => toggleProperty(i)}
+                                />
+                              </TableCell>
+                              <TableCell align="center">
+                                {" "}
+                                <p className="ms-1 mb-1">
+                                  {property.address} {property.unit}
+                                  ,&nbsp;{property.city},&nbsp;{property.state}
+                                  &nbsp; {property.zip}
+                                </p>
+                              </TableCell>
+                              <TableCell align="center">
+                                {property.rentalInfo !== "Not Rented" ? (
+                                  property.rentalInfo.map((tf, i) => {
+                                    return (
+                                      <div>
+                                        {tf.tenant_first_name}{" "}
+                                        {tf.tenant_last_name}
+                                      </div>
+                                    );
+                                  })
+                                ) : (
+                                  <div>{property.rentalInfo}</div>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
                       </TableBody>
                     </Table>
                   </Row>
@@ -954,31 +1222,38 @@ function ManagerCreateAnnouncement(props) {
                       classes={{ root: classes.customTable }}
                       size="small"
                     >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell></TableCell>
-                          <TableCell align="left">Tenant</TableCell>
-                          <TableCell align="left">Address</TableCell>
-                        </TableRow>
-                      </TableHead>
+                      <EnhancedTableHeadByTenants
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        // rowCount="4"
+                      />{" "}
                       <TableBody>
-                        {tenants.map((tenant, i) => (
-                          <TableRow key={i}>
-                            <TableCell>
-                              <Checkbox
-                                type="BOX"
-                                checked={tenantState[i].checked}
-                                onClick={() => toggleTenant(i)}
-                              />
-                            </TableCell>
+                        {stableSort(tenants, getComparator(order, orderBy)).map(
+                          (tenant, i) => {
+                            return (
+                              <TableRow key={i}>
+                                <TableCell>
+                                  <Checkbox
+                                    type="BOX"
+                                    checked={tenantState[i].checked}
+                                    onClick={() => toggleTenant(i)}
+                                  />
+                                </TableCell>
 
-                            <TableCell align="left">
-                              <p className="ms-1 mb-1">{tenant.tenant_name}</p>
-                            </TableCell>
+                                <TableCell align="center">
+                                  <p className="ms-1 mb-1">
+                                    {tenant.tenant_name}
+                                  </p>
+                                </TableCell>
 
-                            <TableCell align="left">{tenant.address}</TableCell>
-                          </TableRow>
-                        ))}
+                                <TableCell align="center">
+                                  {tenant.address}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          }
+                        )}
                       </TableBody>
                     </Table>
                   </Row>
@@ -993,31 +1268,39 @@ function ManagerCreateAnnouncement(props) {
                       classes={{ root: classes.customTable }}
                       size="small"
                     >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell></TableCell>
-                          <TableCell align="left">Tenant</TableCell>
-                          <TableCell align="left">Address</TableCell>
-                        </TableRow>
-                      </TableHead>
+                      <EnhancedTableHeadByNewTenants
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        // rowCount="4"
+                      />{" "}
                       <TableBody>
-                        {newTenants.map((tenant, i) => (
-                          <TableRow key={i}>
-                            <TableCell>
-                              <Checkbox
-                                type="BOX"
-                                checked={newTenantsState[i].checked}
-                                onClick={() => toggleNewTenant(i)}
-                              />
-                            </TableCell>
+                        {stableSort(
+                          newTenants,
+                          getComparator(order, orderBy)
+                        ).map((tenant, i) => {
+                          return (
+                            <TableRow key={i}>
+                              <TableCell>
+                                <Checkbox
+                                  type="BOX"
+                                  checked={newTenantsState[i].checked}
+                                  onClick={() => toggleNewTenant(i)}
+                                />
+                              </TableCell>
 
-                            <TableCell align="left">
-                              <p className="ms-1 mb-1">{tenant.tenant_name}</p>
-                            </TableCell>
+                              <TableCell align="center">
+                                <p className="ms-1 mb-1">
+                                  {tenant.tenant_name}
+                                </p>
+                              </TableCell>
 
-                            <TableCell align="left">{tenant.address}</TableCell>
-                          </TableRow>
-                        ))}
+                              <TableCell align="center">
+                                {tenant.address}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
                       </TableBody>
                     </Table>
                   </Row>
@@ -1032,31 +1315,38 @@ function ManagerCreateAnnouncement(props) {
                       classes={{ root: classes.customTable }}
                       size="small"
                     >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell></TableCell>
-                          <TableCell align="left">Owners</TableCell>
-                          <TableCell align="left">Address</TableCell>
-                        </TableRow>
-                      </TableHead>
+                      <EnhancedTableHeadByOwners
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        // rowCount="4"
+                      />{" "}
                       <TableBody>
-                        {owners.map((owner, i) => (
-                          <TableRow key={i}>
-                            <TableCell>
-                              <Checkbox
-                                type="BOX"
-                                checked={ownerState[i].checked}
-                                onClick={() => toggleOwner(i)}
-                              />
-                            </TableCell>
+                        {stableSort(owners, getComparator(order, orderBy)).map(
+                          (owner, i) => {
+                            return (
+                              <TableRow key={i}>
+                                <TableCell>
+                                  <Checkbox
+                                    type="BOX"
+                                    checked={ownerState[i].checked}
+                                    onClick={() => toggleOwner(i)}
+                                  />
+                                </TableCell>
 
-                            <TableCell align="left">
-                              <p className="ms-1 mb-1">{owner.owner_name}</p>
-                            </TableCell>
+                                <TableCell align="center">
+                                  <p className="ms-1 mb-1">
+                                    {owner.owner_name}
+                                  </p>
+                                </TableCell>
 
-                            <TableCell align="left">{owner.address}</TableCell>
-                          </TableRow>
-                        ))}
+                                <TableCell align="center">
+                                  {owner.address}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          }
+                        )}
                       </TableBody>
                     </Table>
                   </Row>
