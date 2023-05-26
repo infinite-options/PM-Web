@@ -27,6 +27,7 @@ import StripeFeesDialog from "../StripeFeesDialog";
 import ArrowDown from "../../icons/ArrowDown.svg";
 import AddIcon from "../../icons/AddIcon.svg";
 import WF_Logo from "../../icons/WF-Logo.png";
+import CreditCard from "../../icons/CreditCard.png";
 import BofA_Logo from "../../icons/BofA-Logo.png";
 import Chase_Logo from "../../icons/Chase-Logo.png";
 import Citi_Logo from "../../icons/Citi-Logo.png";
@@ -2559,6 +2560,23 @@ function OwnerUtilities(props) {
                         />
                       </a>
                     </Col>
+                    <Col>
+                      <img
+                        id="stripe"
+                        onClick={() => {
+                          setPaymentType("STRIPE");
+                          setStripeDialogShow(true);
+                        }}
+                        src={CreditCard}
+                        style={{
+                          width: "160px",
+                          height: "100px",
+                          objectFit: "contain",
+                        }}
+                      />
+                      <br />
+                      3% STRIPE convenience fee will be added
+                    </Col>
                   </Row>
                   <Row
                     className="text-center mt-5"
@@ -2569,57 +2587,6 @@ function OwnerUtilities(props) {
                       justifyContent: "space-between",
                     }}
                   >
-                    {disabled ? (
-                      <Col>
-                        <Button
-                          className="mt-2 mb-2"
-                          variant="outline-primary"
-                          disabled
-                          style={bluePillButton}
-                        >
-                          Pay with Stripe
-                        </Button>
-                      </Col>
-                    ) : (
-                      <Col>
-                        <Button
-                          className="mt-2 mb-2"
-                          variant="outline-primary"
-                          onClick={() => {
-                            //navigate("/tenant");
-                            setStripeDialogShow(true);
-                            // toggleKeys();
-                            // setStripePayment(true);
-                          }}
-                          style={bluePillButton}
-                        >
-                          Pay with Stripe
-                        </Button>
-                      </Col>
-                    )}
-                    {/* {disabled ? (
-                      <Col>
-                        <Button
-                          className="mt-2 mb-2"
-                          variant="outline-primary"
-                          disabled
-                          style={pillButton}
-                        >
-                          Pay with PayPal
-                        </Button>
-                      </Col>
-                    ) : (
-                      <Col>
-                        <Button
-                          className="mt-2 mb-2"
-                          variant="outline-primary"
-                          onClick={submitForm}
-                          style={pillButton}
-                        >
-                          Pay with PayPal
-                        </Button>
-                      </Col>
-                    )} */}
                     <Col>
                       <Button
                         className="mt-2 mb-2"
@@ -2881,6 +2848,23 @@ function OwnerUtilities(props) {
                           />
                         </a>
                       </Col>
+                      <Col>
+                        <img
+                          id="stripe"
+                          onClick={() => {
+                            setPaymentType("STRIPE");
+                            setStripeDialogShow(true);
+                          }}
+                          src={CreditCard}
+                          style={{
+                            width: "160px",
+                            height: "100px",
+                            objectFit: "contain",
+                          }}
+                        />
+                        <br />
+                        3% STRIPE convenience fee will be added
+                      </Col>
                     </Row>
                     <Row
                       className="text-center mt-5"
@@ -2898,55 +2882,6 @@ function OwnerUtilities(props) {
                         </Row>
                       ) : null}
 
-                      {disabled ? (
-                        <Col>
-                          <Button
-                            className="mt-2 mb-2"
-                            variant="outline-primary"
-                            disabled
-                            style={bluePillButton}
-                          >
-                            Pay with Stripe
-                          </Button>
-                        </Col>
-                      ) : (
-                        <Col>
-                          <Button
-                            className="mt-2 mb-2"
-                            variant="outline-primary"
-                            onClick={() => {
-                              toggleKeys();
-                              setStripePayment(true);
-                            }}
-                            style={bluePillButton}
-                          >
-                            Pay with Stripe
-                          </Button>
-                        </Col>
-                      )}
-                      {/* {disabled ? (
-                        <Col>
-                          <Button
-                            className="mt-2 mb-2"
-                            variant="outline-primary"
-                            disabled
-                            style={pillButton}
-                          >
-                            Pay with PayPal
-                          </Button>
-                        </Col>
-                      ) : (
-                        <Col>
-                          <Button
-                            className="mt-2 mb-2"
-                            variant="outline-primary"
-                            onClick={submitForm}
-                            style={pillButton}
-                          >
-                            Pay with PayPal
-                          </Button>
-                        </Col>
-                      )} */}
                       <Col>
                         <Button
                           className="mt-2 mb-2"

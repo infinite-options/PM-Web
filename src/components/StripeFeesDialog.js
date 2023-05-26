@@ -28,6 +28,7 @@ export default function CopyDialog(props) {
         </div>
       </DialogContent>
       <DialogActions>
+        <Button onClick={() => setStripeDialogShow(false)}>Cancel</Button>
         <Button
           onClick={() => {
             toggleKeys();
@@ -37,7 +38,6 @@ export default function CopyDialog(props) {
         >
           Continue
         </Button>
-        <Button onClick={() => setStripeDialogShow(false)}>Cancel</Button>
       </DialogActions>
     </Dialog>
   );
