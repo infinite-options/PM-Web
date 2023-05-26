@@ -344,7 +344,12 @@ export default function UpcomingManagerPayments(props) {
     let tempPurchase = [];
     if (source.target.checked) {
       rents.forEach((row) => {
-        if (row.purchase_status === "UNPAID" && row.receiver !== managerID) {
+        if (
+          (row.purchase_status === "UNPAID" && row.receiver !== managerID) ||
+          (row.purchase_status === "UNPAID" &&
+            row.payer.includes(row.owner_id) &&
+            row.receiver === managerID)
+        ) {
           console.log(row);
           tempPurchaseUID.push(row.purchase_uid);
           tempPurchase.push(row);
@@ -633,7 +638,18 @@ export default function UpcomingManagerPayments(props) {
             <h5> Outgoing Payments</h5>
           </Col>
         </Row>
-        <Row className="w-100 m-3">
+        <Row className="m-3" style={subHeading}>
+          <Col xs={1}>
+            <h5> Pay All</h5>
+          </Col>
+          <Col>
+            <input
+              className="check"
+              type="checkbox"
+              name="selectall"
+              onClick={(source) => handleCheckAll(source)}
+            />
+          </Col>
           <Col xs={2}> Search by</Col>
 
           <Col>
@@ -648,19 +664,6 @@ export default function UpcomingManagerPayments(props) {
                 border: "1px solid black",
                 padding: "5px",
               }}
-            />
-          </Col>
-        </Row>
-        <Row className="m-3" style={subHeading}>
-          <Col xs={1}>
-            <h5> Pay All</h5>
-          </Col>
-          <Col>
-            <input
-              className="check"
-              type="checkbox"
-              name="selectall"
-              onClick={(source) => handleCheckAll(source)}
             />
           </Col>
         </Row>

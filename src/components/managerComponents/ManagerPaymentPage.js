@@ -494,6 +494,7 @@ function ManagerPaymentPage(props) {
                         onClick={() => {
                           setPaymentType("STRIPE");
                           selectPaymentType("stripe");
+                          setStripeDialogShow(true);
                         }}
                         src={CreditCard}
                         style={{
@@ -503,10 +504,10 @@ function ManagerPaymentPage(props) {
                         }}
                       />
                       <br></br>
-                      3% stripe convenience fee
+                      3% STRIPE convenience fee will be added
                     </Col>
                   </Row>
-                  <Row
+                  {/* <Row
                     className="text-center mt-5"
                     style={{
                       display: "text",
@@ -529,14 +530,8 @@ function ManagerPaymentPage(props) {
                       >
                         Pay
                       </Button>
-                      {/* <PayPal
-                        pay_purchase_id={purchase_uid}
-                        amount={totalSum}
-                        payment_notes={message}
-                        payment_type={"PAYPAL"}
-                      /> */}
                     </Col>
-                  </Row>
+                  </Row> */}
                 </Row>
 
                 <div hidden={!stripePayment}>
