@@ -5379,7 +5379,7 @@ export default function ManagerCashflow(props) {
                                     : "red",
                               }}
                             >
-                              {transaction.amount_due}
+                              {transaction.amount_due.toFixed(2)}
                             </TableCell>
 
                             <TableCell
@@ -5390,7 +5390,7 @@ export default function ManagerCashflow(props) {
                                     : "red",
                               }}
                             >
-                              {transaction.amount_paid}
+                              {transaction.amount_paid.toFixed(2)}
                             </TableCell>
                             <TableCell
                               style={{
@@ -5403,7 +5403,7 @@ export default function ManagerCashflow(props) {
                               {transaction.next_payment.split(" ")[0]}
                             </TableCell>
                             <TableCell>
-                              {transaction.sum_due}
+                              {transaction.sum_due.toFixed(2)}
                               {transactions[index] !== undefined &&
                               transactions[index + 1] !== undefined ? (
                                 transactions[index].sum_due >
@@ -5423,7 +5423,7 @@ export default function ManagerCashflow(props) {
                               )}
                             </TableCell>
                             <TableCell>
-                              {transaction.sum_paid}
+                              {transaction.sum_paid.toFixed(2)}
                               {transactions[index] !== undefined &&
                               transactions[index + 1] !== undefined ? (
                                 transactions[index].sum_paid >
