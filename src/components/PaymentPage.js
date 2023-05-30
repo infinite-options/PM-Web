@@ -108,6 +108,7 @@ function PaymentPage(props) {
   const cancel = () => {
     setStripePayment(false);
     setBankPayment(false);
+    setApplePayment(false);
   };
   const submit = () => {
     // cancel();

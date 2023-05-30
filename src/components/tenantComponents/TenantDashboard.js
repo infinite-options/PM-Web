@@ -280,15 +280,17 @@ export default function TenantDashboard() {
 
     setMaintenanceRequests(requests);
 
-    let announcements = [];
+    let ann = [];
     response.result[0].properties.forEach((res) => {
       if (res.announcements.length > 0) {
         res.announcements.forEach((mr) => {
-          announcements.push(mr);
+          if (days(new Date(mr.date_announcement), new Date()) < 30) {
+            ann.push(mr);
+          }
         });
       }
     });
-    setAnnouncements(announcements);
+    setAnnouncements(ann);
     let upcoming = [];
     response.result[0].properties.forEach((res) => {
       if (res.tenantExpenses.length > 0) {
@@ -781,7 +783,12 @@ export default function TenantDashboard() {
                             <p style={(subHeading, { textAlign: "center" })}>
                               {announce.announcement_title}
                             </p>
-                            <p style={{ textAlign: "center" }}>
+                            <p
+                              style={{
+                                textAlign: "center",
+                                margin: "1rem 5rem",
+                              }}
+                            >
                               {" "}
                               {announce.announcement_msg}
                             </p>

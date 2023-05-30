@@ -31,6 +31,7 @@ import BofA_Logo from "../../icons/BofA-Logo.png";
 import Chase_Logo from "../../icons/Chase-Logo.png";
 import Citi_Logo from "../../icons/Citi-Logo.png";
 import CreditCard from "../../icons/CreditCard.png";
+import ApplePay_Logo from "../../icons/ApplePay-Logo.png";
 import { post, get } from "../../utils/api";
 import {
   pillButton,
@@ -63,6 +64,12 @@ import {
   descendingComparator as descendingComparatorTenant,
   getComparator as getComparatorTenant,
   stableSort as stableSortTenant,
+} from "../../utils/helper";
+
+import {
+  descendingComparator as descendingComparatorOwner,
+  getComparator as getComparatorOwner,
+  stableSort as stableSortOwner,
 } from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
@@ -100,6 +107,7 @@ function ManagerUtilities(props) {
   const [payExpense, setPayExpense] = useState(false);
   const [payExpenseManager, setPayExpenseManager] = useState(false);
   const [bankPayment, setBankPayment] = useState(false);
+  const [applePayment, setApplePayment] = useState(false);
   const [paymentType, setPaymentType] = useState("");
   const [confirmationCode, setConfirmationCode] = useState("");
   const [showSpinner, setShowSpinner] = useState(false);
@@ -133,6 +141,8 @@ function ManagerUtilities(props) {
   const [orderManagerBy, setOrderManagerBy] = useState("bill_utility_type");
   const [orderTenant, setOrderTenant] = useState("asc");
   const [orderTenantBy, setOrderTenantBy] = useState("bill_utility_type");
+  const [orderOwner, setOrderOwner] = useState("asc");
+  const [orderOwnerBy, setOrderOwnerBy] = useState("bill_utility_type");
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
 
@@ -454,6 +464,7 @@ function ManagerUtilities(props) {
       bill_utility_type: newUtility.service_name,
       bill_algorithm: newUtility.split_type,
       bill_docs: files,
+      bill_requested_from: ownerPay ? "Owners" : "Tenant",
     };
     const newFiles = [...files];
 
@@ -501,7 +512,7 @@ function ManagerUtilities(props) {
         purchase_type: "UTILITY",
         description: newUtility.service_name,
         amount_due: property.charge,
-        purchase_notes: moment().format("MMMM"),
+        purchase_notes: newUtility.notes,
         purchase_date: moment().format("YYYY-MM-DD") + " 00:00:00",
         purchase_frequency: "One-time",
         next_payment: newUtility.due_date,
@@ -790,7 +801,7 @@ function ManagerUtilities(props) {
     },
     {
       id: "address",
-      numeric: false,
+      numeric: true,
       label: "Address",
     },
     {
@@ -809,8 +820,8 @@ function ManagerUtilities(props) {
       label: "Payee",
     },
     {
-      id: "amount",
-      numeric: false,
+      id: "amount_due",
+      numeric: true,
       label: "Amount",
     },
     {
@@ -887,7 +898,7 @@ function ManagerUtilities(props) {
     },
     {
       id: "address",
-      numeric: false,
+      numeric: true,
       label: "Address",
     },
     {
@@ -906,8 +917,8 @@ function ManagerUtilities(props) {
       label: "Payee",
     },
     {
-      id: "amount",
-      numeric: false,
+      id: "amount_due",
+      numeric: true,
       label: "Amount",
     },
     {
@@ -968,13 +979,14 @@ function ManagerUtilities(props) {
     orderTenantBy: PropTypes.string.isRequired,
     // rowCount: PropTypes.number.isRequired,
   };
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+
+  const handleRequestSortOwner = (event, property) => {
+    const isAsc = orderOwnerBy === property && orderOwner === "asc";
+    setOrderOwner(isAsc ? "desc" : "asc");
+    setOrderOwnerBy(property);
   };
 
-  const headCells = [
+  const headCellsOwner = [
     {
       id: "bill_utility_type",
       numeric: false,
@@ -982,7 +994,7 @@ function ManagerUtilities(props) {
     },
     {
       id: "address",
-      numeric: false,
+      numeric: true,
       label: "Address",
     },
     {
@@ -1001,8 +1013,101 @@ function ManagerUtilities(props) {
       label: "Payee",
     },
     {
-      id: "amount",
+      id: "amount_due",
+      numeric: true,
+      label: "Amount",
+    },
+    {
+      id: "purchase_date",
       numeric: false,
+      label: "Date Added",
+    },
+    {
+      id: "purchase_status",
+      numeric: false,
+      label: "Purchase Status",
+    },
+  ];
+  function EnhancedTableHeadOwner(props) {
+    const { orderOwner, orderOwnerBy, onRequestSortOwner } = props;
+    const createSortHandlerOwner = (property) => (event) => {
+      onRequestSortOwner(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCellsOwner.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={orderOwnerBy === headCell.id ? orderOwner : false}
+            >
+              <TableSortLabel
+                active={orderOwnerBy === headCell.id}
+                direction={orderOwnerBy === headCell.id ? orderOwner : "asc"}
+                onClick={createSortHandlerOwner(headCell.id)}
+              >
+                {headCell.label}
+                {orderOwnerBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {orderOwner === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadOwner.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSortOwner: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    orderOwner: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderOwnerBy: PropTypes.string.isRequired,
+    // rowCount: PropTypes.number.isRequired,
+  };
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  const headCells = [
+    {
+      id: "bill_utility_type",
+      numeric: false,
+      label: "Bill Type",
+    },
+    {
+      id: "address",
+      numeric: true,
+      label: "Address",
+    },
+    {
+      id: "bill_algorithm",
+      numeric: false,
+      label: "Split Method",
+    },
+    {
+      id: "payer",
+      numeric: false,
+      label: "Payer",
+    },
+    {
+      id: "receiver",
+      numeric: false,
+      label: "Payee",
+    },
+    {
+      id: "amount_due",
+      numeric: true,
       label: "Amount",
     },
     {
@@ -1568,65 +1673,6 @@ function ManagerUtilities(props) {
                         </TableBody>
                       </Table>
                     </Row>
-                    {/* {expenseUnique.map((expense) => {
-                    return expense.purchase_type === "UTILITY" &&
-                      expense.payer.includes(managerID) ? (
-                      <div>
-                        <Row
-                          className="my-2 p-3"
-                          style={{
-                            background: "#FFFFFF 0% 0% no-repeat padding-box",
-                            boxShadow: "0px 3px 6px #00000029",
-                            borderRadius: "5px",
-                            opacity: 1,
-                          }}
-                          onClick={() => {
-                            setExpenseDetailManager(true);
-                            setPayment(expense);
-                          }}
-                        >
-                          <Col
-                            xs={3}
-                            className="pt-4 justify-content-center align-items-center"
-                            style={
-                              (mediumBold,
-                              {
-                                color: "#007AFF",
-                                border: "4px solid #007AFF",
-                                borderRadius: "50%",
-                                height: "83px",
-                                width: "83px",
-                              })
-                            }
-                          >
-                            ${expense.amount_due.toFixed(2)}
-                          </Col>
-                          <Col style={mediumBold}>
-                            <div>
-                              {expense.description} -{" "}
-                              {new Date(
-                                String(expense.purchase_date).split(" ")[0]
-                              ).toDateString()}
-                            </div>
-                            Split Method - {expense.bill_algorithm}
-                          </Col>
-                          <Col xs={3} className="pt-4 justify-content-end">
-                            {expense.purchase_status === "UNPAID" ? (
-                              <Col className="mt-0" style={redPill}>
-                                {expense.purchase_status}
-                              </Col>
-                            ) : (
-                              <Col className="mt-0" style={greenPill}>
-                                {expense.purchase_status}
-                              </Col>
-                            )}
-                          </Col>
-                        </Row>
-                      </div>
-                    ) : (
-                      <Row></Row>
-                    );
-                  })} */}
                   </div>
                   <div
                     className="mx-3 my-3 p-2"
@@ -1682,6 +1728,7 @@ function ManagerUtilities(props) {
                           ).map((expense, index) => {
                             return expense.purchase_type === "UTILITY" &&
                               !expense.payer.includes(managerID) &&
+                              expense.payer.split("-")[0] === '["350' &&
                               expense.receiver === managerID ? (
                               <TableRow
                                 hover
@@ -1716,7 +1763,11 @@ function ManagerUtilities(props) {
                                   align="center"
                                 >
                                   {" "}
-                                  {expense.address}
+                                  {expense.address
+                                    .split(";")
+                                    .map((addressMap) => {
+                                      return <p>{addressMap}</p>;
+                                    })}
                                 </TableCell>
                                 <TableCell
                                   padding="none"
@@ -1779,70 +1830,165 @@ function ManagerUtilities(props) {
                         </TableBody>
                       </Table>
                     </Row>
-                    {/* {expenseUnique.map((expense) => {
-                    return expense.purchase_type === "UTILITY" &&
-                      !expense.payer.includes(managerID) ? (
-                      <div>
-                        <Row
-                          className="my-2 p-3"
-                          style={{
-                            background: "#FFFFFF 0% 0% no-repeat padding-box",
-                            boxShadow: "0px 3px 6px #00000029",
-                            borderRadius: "5px",
-                            opacity: 1,
-                          }}
-                          onClick={() => {
-                            setExpenseDetail(true);
-                            setPayment(expense);
-                          }}
-                        >
-                          <Col
-                            xs={3}
-                            className="pt-4 justify-content-center align-items-center"
-                            style={
-                              (mediumBold,
-                              {
-                                color: "#007AFF",
-                                border: "4px solid #007AFF",
-                                borderRadius: "50%",
-                                height: "83px",
-                                width: "83px",
-                              })
-                            }
-                          >
-                            ${expense.amount_due.toFixed(2)}
-                          </Col>
-                          <Col style={mediumBold}>
-                            <div>
-                              {expense.description} -{" "}
-                              {new Date(
-                                String(expense.purchase_date).split(" ")[0]
-                              ).toDateString()}
-                            </div>
-                            <div>
-                              {expense.address.split(",")[0]} <br />
-                              {expense.address.split(",")[1]},{" "}
-                              {expense.address.split(",")[2]}
-                            </div>
-                          </Col>
-                          <Col xs={3} className="pt-4 justify-content-end">
-                            {expense.purchase_status === "UNPAID" ? (
-                              <Col className="mt-0" style={redPill}>
-                                {expense.purchase_status}
-                              </Col>
-                            ) : (
-                              <Col className="mt-0" style={greenPill}>
-                                {expense.purchase_status}
-                              </Col>
-                            )}
-                          </Col>
-                        </Row>
-                      </div>
-                    ) : (
-                      <Row></Row>
-                    );
-                  })} */}
                   </div>
+                  <div
+                    className="mx-3 my-3 p-2"
+                    style={{
+                      background: "#E9E9E9 0% 0% no-repeat padding-box",
+                      borderRadius: "10px",
+                      opacity: 1,
+                    }}
+                  >
+                    <Row className="m-3">
+                      <Col>
+                        <h3>Utility Expenses Due From Owner </h3>
+                      </Col>
+                      <Col>
+                        <img
+                          src={AddIcon}
+                          alt="Add Icon"
+                          onClick={() => {
+                            setNewUtility({ ...emptyUtility });
+                            propertyState.forEach(
+                              (prop) => (prop.checked = false)
+                            );
+                            setPropertyState(propertyState);
+                            setTenantPay(true);
+                            setOwnerPay(false);
+                            setEditingUtility(true);
+                          }}
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            float: "right",
+                            marginRight: "5rem",
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                    <Row className="m-3" style={{ overflow: "scroll" }}>
+                      <Table
+                        responsive="md"
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                      >
+                        <EnhancedTableHeadOwner
+                          orderOwner={orderOwner}
+                          orderOwnerBy={orderOwnerBy}
+                          onRequestSortOwner={handleRequestSortOwner}
+                          // rowCount="4"
+                        />{" "}
+                        <TableBody>
+                          {stableSortOwner(
+                            expenseUnique,
+                            getComparatorOwner(orderOwner, orderOwnerBy)
+                          ).map((expense, index) => {
+                            return expense.purchase_type === "UTILITY" &&
+                              !expense.payer.includes(managerID) &&
+                              expense.payer.split("-")[0] === '["100' &&
+                              expense.receiver === managerID ? (
+                              <TableRow
+                                hover
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={index}
+                                onClick={() => {
+                                  setExpenseDetail(true);
+                                  setPayment(expense);
+                                }}
+                              >
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.bill_utility_type}
+                                  <div className="d-flex">
+                                    <div className="d-flex align-items-end">
+                                      <p
+                                        style={{ ...blue, ...xSmall }}
+                                        className="mb-0"
+                                      >
+                                        {expense.purchase_notes}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {" "}
+                                  {expense.address
+                                    .split(";")
+                                    .map((addressMap) => {
+                                      return <p>{addressMap}</p>;
+                                    })}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.bill_algorithm !== null
+                                    ? expense.bill_algorithm
+                                    : "None"}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.payer}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.receiver}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  ${expense.amount_due}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {" "}
+                                  {expense.purchase_date.split(" ")[0]}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.purchase_status === "UNPAID" ? (
+                                    <Col className="mt-0" style={redPill}>
+                                      {expense.purchase_status}
+                                    </Col>
+                                  ) : (
+                                    <Col className="mt-0" style={greenPill}>
+                                      {expense.purchase_status}
+                                    </Col>
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              <Row style={headings}></Row>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </Row>
+                  </div>
+
                   <div
                     className="mx-3 my-3 p-2"
                     style={{
@@ -2482,7 +2628,10 @@ function ManagerUtilities(props) {
                     ${payment.amount_due.toFixed(2)}
                   </Col>
                 </Row>
-                <div className="mt-3" hidden={stripePayment || bankPayment}>
+                <div
+                  className="mt-3"
+                  hidden={stripePayment || bankPayment || applePayment}
+                >
                   <Form.Group style={mediumBold}>
                     <Form.Label>Amount</Form.Label>
                     {purchaseUID.length === 1 ? (
@@ -2592,6 +2741,21 @@ function ManagerUtilities(props) {
                           }}
                         />
                       </a>
+                    </Col>
+                    <Col>
+                      <img
+                        id="ap"
+                        onClick={() => {
+                          setApplePayment(true);
+                          setPaymentType("APPLE PAY");
+                        }}
+                        src={ApplePay_Logo}
+                        style={{
+                          width: "160px",
+                          height: "100px",
+                          objectFit: "contain",
+                        }}
+                      />
                     </Col>
                     <Col>
                       <img
@@ -2798,7 +2962,10 @@ function ManagerUtilities(props) {
                   </Table>
                 </Row>
                 <Row className="m-3">
-                  <div className="mt-3" hidden={stripePayment || bankPayment}>
+                  <div
+                    className="mt-3"
+                    hidden={stripePayment || bankPayment || applePayment}
+                  >
                     <Form.Group style={mediumBold}>
                       <Form.Label>Message</Form.Label>
                       <Form.Control
@@ -2891,6 +3058,21 @@ function ManagerUtilities(props) {
                       </Col>
                       <Col>
                         <img
+                          id="ap"
+                          onClick={() => {
+                            setApplePayment(true);
+                            setPaymentType("APPLE PAY");
+                          }}
+                          src={ApplePay_Logo}
+                          style={{
+                            width: "160px",
+                            height: "100px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      </Col>
+                      <Col>
+                        <img
                           id="stripe"
                           onClick={() => {
                             setPaymentType("STRIPE");
@@ -2961,6 +3143,69 @@ function ManagerUtilities(props) {
                     >
                       <Form.Group>
                         <Form.Label>Please enter confirmation code</Form.Label>
+                        <Form.Control
+                          placeholder="Confirmation Code"
+                          style={squareForm}
+                          value={confirmationCode}
+                          onChange={(e) => setConfirmationCode(e.target.value)}
+                        />
+                      </Form.Group>
+                    </div>
+                    <div className="text-center mt-2">
+                      {showSpinner ? (
+                        <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                          <ReactBootStrap.Spinner
+                            animation="border"
+                            role="status"
+                          />
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <Row
+                        style={{
+                          display: "text",
+                          flexDirection: "row",
+                          textAlign: "center",
+                        }}
+                      >
+                        <Col>
+                          <Button
+                            variant="outline-primary"
+                            onClick={cancel}
+                            style={pillButton}
+                          >
+                            Cancel
+                          </Button>
+                        </Col>
+                        <Col>
+                          <Button
+                            variant="outline-primary"
+                            //onClick={submitForm}
+                            style={bluePillButton}
+                            onClick={submitPayment}
+                          >
+                            Pay Now
+                          </Button>
+                        </Col>
+                      </Row>
+                    </div>
+                  </div>
+                  <div hidden={!applePayment}>
+                    <div
+                      style={{
+                        border: "1px solid black",
+                        borderRadius: "10px",
+                        padding: "10px",
+                        margin: "20px",
+                      }}
+                    >
+                      <Form.Group>
+                        <Form.Label>
+                          {" "}
+                          Please go through ApplePay to make your payment and
+                          enter a confirmation code here
+                        </Form.Label>
                         <Form.Control
                           placeholder="Confirmation Code"
                           style={squareForm}

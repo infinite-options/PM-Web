@@ -31,6 +31,7 @@ import CreditCard from "../../icons/CreditCard.png";
 import BofA_Logo from "../../icons/BofA-Logo.png";
 import Chase_Logo from "../../icons/Chase-Logo.png";
 import Citi_Logo from "../../icons/Citi-Logo.png";
+import ApplePay_Logo from "../../icons/ApplePay-Logo.png";
 import { post, get } from "../../utils/api";
 import {
   pillButton,
@@ -100,6 +101,7 @@ function OwnerUtilities(props) {
   const [payExpenseOwner, setPayExpenseOwner] = useState(false);
   const [stripeDialogShow, setStripeDialogShow] = useState(false);
   const [bankPayment, setBankPayment] = useState(false);
+  const [applePayment, setApplePayment] = useState(false);
   const [paymentType, setPaymentType] = useState("");
   const [confirmationCode, setConfirmationCode] = useState("");
   const [showSpinner, setShowSpinner] = useState(false);
@@ -241,6 +243,7 @@ function OwnerUtilities(props) {
   const cancel = () => {
     setStripePayment(false);
     setBankPayment(false);
+    setApplePayment(false);
     fetchProperties();
   };
   const submit = () => {
@@ -2448,7 +2451,10 @@ function OwnerUtilities(props) {
                     ${purchase.amount_due}
                   </Col>
                 </Row>
-                <div className="mt-3" hidden={stripePayment || bankPayment}>
+                <div
+                  className="mt-3"
+                  hidden={stripePayment || bankPayment || applePayment}
+                >
                   <Form.Group style={mediumBold}>
                     {/* {console.log(purchaseUID)} */}
                     <Form.Label>Amount</Form.Label>
@@ -2560,6 +2566,22 @@ function OwnerUtilities(props) {
                         />
                       </a>
                     </Col>
+
+                    <Col>
+                      <img
+                        id="ap"
+                        onClick={() => {
+                          setApplePayment(true);
+                          setPaymentType("APPLE PAY");
+                        }}
+                        src={ApplePay_Logo}
+                        style={{
+                          width: "160px",
+                          height: "100px",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </Col>
                     <Col>
                       <img
                         id="stripe"
@@ -2623,6 +2645,69 @@ function OwnerUtilities(props) {
                   >
                     <Form.Group>
                       <Form.Label>Please enter confirmation code</Form.Label>
+                      <Form.Control
+                        placeholder="Confirmation Code"
+                        style={squareForm}
+                        value={confirmationCode}
+                        onChange={(e) => setConfirmationCode(e.target.value)}
+                      />
+                    </Form.Group>
+                  </div>
+                  <div className="text-center mt-2">
+                    {showSpinner ? (
+                      <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                        <ReactBootStrap.Spinner
+                          animation="border"
+                          role="status"
+                        />
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    <Row
+                      style={{
+                        display: "text",
+                        flexDirection: "row",
+                        textAlign: "center",
+                      }}
+                    >
+                      <Col>
+                        <Button
+                          variant="outline-primary"
+                          onClick={cancel}
+                          style={pillButton}
+                        >
+                          Cancel
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button
+                          variant="outline-primary"
+                          //onClick={submitForm}
+                          style={bluePillButton}
+                          onClick={submitPayment}
+                        >
+                          Pay Now
+                        </Button>
+                      </Col>
+                    </Row>
+                  </div>
+                </div>
+                <div hidden={!applePayment}>
+                  <div
+                    style={{
+                      border: "1px solid black",
+                      borderRadius: "10px",
+                      padding: "10px",
+                      margin: "20px",
+                    }}
+                  >
+                    <Form.Group>
+                      <Form.Label>
+                        {" "}
+                        Please go through ApplePay to make your payment and
+                        enter a confirmation code here
+                      </Form.Label>
                       <Form.Control
                         placeholder="Confirmation Code"
                         style={squareForm}
@@ -2757,7 +2842,10 @@ function OwnerUtilities(props) {
                   </Table>
                 </Row>
                 <Row className="m-3">
-                  <div className="mt-3" hidden={stripePayment || bankPayment}>
+                  <div
+                    className="mt-3"
+                    hidden={stripePayment || bankPayment || applePayment}
+                  >
                     <Form.Group style={mediumBold}>
                       <Form.Label>Message</Form.Label>
                       <Form.Control
@@ -2850,6 +2938,21 @@ function OwnerUtilities(props) {
                       </Col>
                       <Col>
                         <img
+                          id="ap"
+                          onClick={() => {
+                            setApplePayment(true);
+                            setPaymentType("APPLE PAY");
+                          }}
+                          src={ApplePay_Logo}
+                          style={{
+                            width: "160px",
+                            height: "100px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      </Col>
+                      <Col>
+                        <img
                           id="stripe"
                           onClick={() => {
                             setPaymentType("STRIPE");
@@ -2920,6 +3023,69 @@ function OwnerUtilities(props) {
                     >
                       <Form.Group>
                         <Form.Label>Please enter confirmation code</Form.Label>
+                        <Form.Control
+                          placeholder="Confirmation Code"
+                          style={squareForm}
+                          value={confirmationCode}
+                          onChange={(e) => setConfirmationCode(e.target.value)}
+                        />
+                      </Form.Group>
+                    </div>
+                    <div className="text-center mt-2">
+                      {showSpinner ? (
+                        <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                          <ReactBootStrap.Spinner
+                            animation="border"
+                            role="status"
+                          />
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <Row
+                        style={{
+                          display: "text",
+                          flexDirection: "row",
+                          textAlign: "center",
+                        }}
+                      >
+                        <Col>
+                          <Button
+                            variant="outline-primary"
+                            onClick={cancel}
+                            style={pillButton}
+                          >
+                            Cancel
+                          </Button>
+                        </Col>
+                        <Col>
+                          <Button
+                            variant="outline-primary"
+                            //onClick={submitForm}
+                            style={bluePillButton}
+                            onClick={submitPayment}
+                          >
+                            Pay Now
+                          </Button>
+                        </Col>
+                      </Row>
+                    </div>
+                  </div>
+                  <div hidden={!applePayment}>
+                    <div
+                      style={{
+                        border: "1px solid black",
+                        borderRadius: "10px",
+                        padding: "10px",
+                        margin: "20px",
+                      }}
+                    >
+                      <Form.Group>
+                        <Form.Label>
+                          {" "}
+                          Please go through ApplePay to make your payment and
+                          enter a confirmation code here
+                        </Form.Label>
                         <Form.Control
                           placeholder="Confirmation Code"
                           style={squareForm}

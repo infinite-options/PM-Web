@@ -26,6 +26,7 @@ import WF_Logo from "../../icons/WF-Logo.png";
 import BofA_Logo from "../../icons/BofA-Logo.png";
 import Chase_Logo from "../../icons/Chase-Logo.png";
 import Citi_Logo from "../../icons/Citi-Logo.png";
+import ApplePay_Logo from "../../icons/ApplePay-Logo.png";
 import CreditCard from "../../icons/CreditCard.png";
 import { get, post } from "../../utils/api";
 import {
@@ -65,6 +66,7 @@ function OwnerPaymentPage(props) {
   const [allPurchases, setAllPurchases] = useState([]);
   const [stripeDialogShow, setStripeDialogShow] = useState(false);
   const [bankPayment, setBankPayment] = useState(false);
+  const [applePayment, setApplePayment] = useState(false);
   const [paymentType, setPaymentType] = useState("");
   const [showSpinner, setShowSpinner] = useState(false);
   const [disabled, setDisabled] = useState(false);
@@ -154,6 +156,7 @@ function OwnerPaymentPage(props) {
   const cancel = () => {
     setStripePayment(false);
     setBankPayment(false);
+    setApplePayment(false);
   };
   const submit = () => {
     // cancel();
@@ -364,7 +367,7 @@ function OwnerPaymentPage(props) {
                 </Row>
                 <Row
                   className="mx-3 mt-5"
-                  hidden={stripePayment || bankPayment}
+                  hidden={stripePayment || bankPayment || applePayment}
                 >
                   <Form.Group>
                     <Form.Label>Message</Form.Label>
@@ -466,6 +469,22 @@ function OwnerPaymentPage(props) {
                     </Col>
                     <Col>
                       <img
+                        id="ap"
+                        onClick={() => {
+                          setApplePayment(true);
+                          setPaymentType("APPLE PAY");
+                          selectPaymentType("ap");
+                        }}
+                        src={ApplePay_Logo}
+                        style={{
+                          width: "160px",
+                          height: "100px",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </Col>
+                    <Col>
+                      <img
                         id="stripe"
                         onClick={() => {
                           setPaymentType("STRIPE");
@@ -532,6 +551,69 @@ function OwnerPaymentPage(props) {
                   >
                     <Form.Group>
                       <Form.Label>Please enter confirmation code</Form.Label>
+                      <Form.Control
+                        placeholder="Confirmation Code"
+                        style={squareForm}
+                        value={confirmationCode}
+                        onChange={(e) => setConfirmationCode(e.target.value)}
+                      />
+                    </Form.Group>
+                  </div>
+                  <div className="text-center mt-2">
+                    {showSpinner ? (
+                      <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                        <ReactBootStrap.Spinner
+                          animation="border"
+                          role="status"
+                        />
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    <Row
+                      style={{
+                        display: "text",
+                        flexDirection: "row",
+                        textAlign: "center",
+                      }}
+                    >
+                      <Col>
+                        <Button
+                          variant="outline-primary"
+                          onClick={cancel}
+                          style={pillButton}
+                        >
+                          Cancel
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button
+                          variant="outline-primary"
+                          //onClick={submitForm}
+                          style={bluePillButton}
+                          onClick={submitPayment}
+                        >
+                          Pay Now
+                        </Button>
+                      </Col>
+                    </Row>
+                  </div>
+                </div>
+                <div hidden={!applePayment}>
+                  <div
+                    style={{
+                      border: "1px solid black",
+                      borderRadius: "10px",
+                      padding: "10px",
+                      margin: "20px",
+                    }}
+                  >
+                    <Form.Group>
+                      <Form.Label>
+                        {" "}
+                        Please go through ApplePay to make your payment and
+                        enter a confirmation code here
+                      </Form.Label>
                       <Form.Control
                         placeholder="Confirmation Code"
                         style={squareForm}
