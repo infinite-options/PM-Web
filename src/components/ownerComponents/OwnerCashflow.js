@@ -171,7 +171,9 @@ export default function OwnerCashflow(props) {
           ) {
             resArr.push({
               address: item.address,
-              amount_due: (item.amount_due - x.amount_due).toFixed(2),
+              amount_due: (
+                parseFloat(item.amount_due) - parseFloat(x.amount_due)
+              ).toFixed(2),
               amount_paid:
                 x.purchase_status === "UNPAID"
                   ? 0
@@ -198,9 +200,12 @@ export default function OwnerCashflow(props) {
               year: item.year,
               zip: item.zip,
             });
+            console.log(resArr);
             currentExp.push({
               address: item.address,
-              amount_due: (item.amount_due - x.amount_due).toFixed(2),
+              amount_due: (
+                parseFloat(item.amount_due) - parseFloat(x.amount_due)
+              ).toFixed(2),
               amount_paid:
                 x.purchase_status === "UNPAID"
                   ? 0
@@ -1707,23 +1712,28 @@ export default function OwnerCashflow(props) {
                           <TableCell align="right">0.00</TableCell>
                         </TableRow>
                       )}
+           
                       {/* Management RENT map individual */}
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "MANAGEMENT RENT" ? (
                           <TableRow hidden={!toggleMonthlyManagementRent}>
+                           
                             <TableCell width="500px" style={semiMediumBold}>
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
                             </TableCell>
                             <TableCell align="right">
-                              {rev.amount_paid.toFixed(2)}
+                              {parseFloat(rev.amount_paid).toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2)}
+                              {parseFloat(rev.amount_due).toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
+                              {(
+                                parseFloat(rev.amount_due) -
+                                parseFloat(rev.amount_paid)
+                              ).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -1834,13 +1844,16 @@ export default function OwnerCashflow(props) {
                               {rev.zip}
                             </TableCell>
                             <TableCell align="right">
-                              {rev.amount_paid.toFixed(2)}
+                              {parseFloat(rev.amount_paid).toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2)}
+                              {parseFloat(rev.amount_due).toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
+                              {(
+                                parseFloat(rev.amount_due) -
+                                parseFloat(rev.amount_paid)
+                              ).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -1945,13 +1958,16 @@ export default function OwnerCashflow(props) {
                               {rev.zip}
                             </TableCell>
                             <TableCell align="right">
-                              {rev.amount_paid.toFixed(2)}
+                              {parseFloat(rev.amount_paid).toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due.toFixed(2)}
+                              {parseFloat(rev.amount_due).toFixed(2)}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {(rev.amount_due - rev.amount_paid).toFixed(2)}
+                              {(
+                                parseFloat(rev.amount_due) -
+                                parseFloat(rev.amount_paid)
+                              ).toFixed(2)}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -4111,20 +4127,25 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyManagement}>
-                                      <TableCell width="500px">
+                                      <TableCell
+                                        width="500px"
+                                        style={semiMediumBold}
+                                      >
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        {rev.description}
+                                        {rev.address} {rev.unit}, {rev.city},{" "}
+                                        {rev.state} {rev.zip}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {rev.amount_paid.toFixed(2)}
+                                        {parseFloat(rev.amount_paid).toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2)}
+                                        {parseFloat(rev.amount_due).toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
                                         {(
-                                          rev.amount_due - rev.amount_paid
+                                          parseFloat(rev.amount_due) -
+                                          parseFloat(rev.amount_paid)
                                         ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
@@ -4263,20 +4284,25 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyManagementRent}
                                     >
-                                      <TableCell width="500px">
+                                      <TableCell
+                                        width="500px"
+                                        style={semiMediumBold}
+                                      >
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        {rev.description}
+                                        {rev.address} {rev.unit}, {rev.city},{" "}
+                                        {rev.state} {rev.zip}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {rev.amount_paid.toFixed(2)}
+                                        {parseFloat(rev.amount_paid).toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2)}
+                                        {parseFloat(rev.amount_due).toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
                                         {(
-                                          rev.amount_due - rev.amount_paid
+                                          parseFloat(rev.amount_due) -
+                                          parseFloat(rev.amount_paid)
                                         ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
@@ -4418,20 +4444,25 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyManagementExtra}
                                     >
-                                      <TableCell width="500px">
+                                      <TableCell
+                                        width="500px"
+                                        style={semiMediumBold}
+                                      >
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        {rev.description}
+                                        {rev.address} {rev.unit}, {rev.city},{" "}
+                                        {rev.state} {rev.zip}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {rev.amount_paid.toFixed(2)}
+                                        {parseFloat(rev.amount_paid).toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2)}
+                                        {parseFloat(rev.amount_due).toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
                                         {(
-                                          rev.amount_due - rev.amount_paid
+                                          parseFloat(rev.amount_due) -
+                                          parseFloat(rev.amount_paid)
                                         ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
@@ -4571,20 +4602,25 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyManagementLate}
                                     >
-                                      <TableCell width="500px">
+                                      <TableCell
+                                        width="500px"
+                                        style={semiMediumBold}
+                                      >
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        {rev.description}
+                                        {rev.address} {rev.unit}, {rev.city},{" "}
+                                        {rev.state} {rev.zip}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {rev.amount_paid.toFixed(2)}
+                                        {parseFloat(rev.amount_paid).toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
-                                        {rev.amount_due.toFixed(2)}
+                                        {parseFloat(rev.amount_due).toFixed(2)}
                                       </TableCell>{" "}
                                       <TableCell align="right">
                                         {(
-                                          rev.amount_due - rev.amount_paid
+                                          parseFloat(rev.amount_due) -
+                                          parseFloat(rev.amount_paid)
                                         ).toFixed(2)}
                                       </TableCell>
                                     </TableRow>
