@@ -808,7 +808,9 @@ export default function UpcomingManagerPayments(props) {
           {" "}
           <h5> Incoming Payments</h5>
         </Row>
-        <Row className="w-100 m-3">
+        <Row className="m-3" style={subHeading}>
+          <Col xs={1}></Col>
+          <Col></Col>
           <Col xs={2}> Search by</Col>
 
           <Col>

@@ -48,6 +48,8 @@ export default function ManagerPaymentHistory(props) {
   const [unpaidModalShow, setUnpaidModalShow] = useState(false);
   const { verified, setVerified, unpaid, setUnpaid } = props;
   const managerID = props.managerID;
+  const [searchOutgoing, setSearchOutgoing] = useState("");
+  const [searchIncoming, setSearchIncoming] = useState("");
 
   const hideModal = () => {
     setUnpaidModalShow(false);
@@ -341,6 +343,26 @@ export default function ManagerPaymentHistory(props) {
         <Row className="m-3" style={subHeading}>
           <h5> Outgoing Payments</h5>
         </Row>
+        <Row className="m-3" style={subHeading}>
+          <Col xs={1}></Col>
+          <Col></Col>
+          <Col xs={2}> Search by</Col>
+
+          <Col>
+            <input
+              type="text"
+              placeholder="Search"
+              onChange={(event) => {
+                setSearchOutgoing(event.target.value);
+              }}
+              style={{
+                width: "400px",
+                border: "1px solid black",
+                padding: "5px",
+              }}
+            />
+          </Col>
+        </Row>
         <Row className="m-3" style={{ overflow: "scroll" }}>
           {history.filter(
             (row) =>
@@ -364,13 +386,30 @@ export default function ManagerPaymentHistory(props) {
                 rowCount={history.length}
               />{" "}
               <TableBody>
-                {stableSort(history, getComparator(order, orderBy)).map(
-                  (row, index) => {
+                {stableSort(history, getComparator(order, orderBy))
+                  .filter((val) => {
+                    const query = searchOutgoing.toLowerCase();
+
+                    return (
+                      val.address.toLowerCase().indexOf(query) >= 0 ||
+                      String(val.unit).toLowerCase().indexOf(query) >= 0 ||
+                      val.city.toLowerCase().indexOf(query) >= 0 ||
+                      val.zip.toLowerCase().indexOf(query) >= 0
+                    );
+                  })
+                  .map((row, index) => {
                     return row.purchase_status === "PAID" &&
                       row.receiver !== managerID &&
                       row.amount_paid > 0 ? (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                        <TableCell align="left">{row.purchase_uid}</TableCell>
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row.pay_purchase_id}
+                      >
+                        <TableCell align="left">
+                          {row.pay_purchase_id}
+                        </TableCell>
                         <TableCell align="left">
                           {row.address +
                             " " +
@@ -419,8 +458,7 @@ export default function ManagerPaymentHistory(props) {
                     ) : (
                       ""
                     );
-                  }
-                )}
+                  })}
               </TableBody>
             </Table>
           )}
@@ -436,6 +474,26 @@ export default function ManagerPaymentHistory(props) {
       >
         <Row className="m-3" style={subHeading}>
           <h5> Incoming Payments</h5>
+        </Row>
+        <Row className="m-3" style={subHeading}>
+          <Col xs={1}></Col>
+          <Col></Col>
+          <Col xs={2}> Search by</Col>
+
+          <Col>
+            <input
+              type="text"
+              placeholder="Search"
+              onChange={(event) => {
+                setSearchIncoming(event.target.value);
+              }}
+              style={{
+                width: "400px",
+                border: "1px solid black",
+                padding: "5px",
+              }}
+            />
+          </Col>
         </Row>
         <Row className="m-3" style={{ overflow: "scroll" }}>
           {history.filter(
@@ -466,112 +524,133 @@ export default function ManagerPaymentHistory(props) {
                 {stableSortIncoming(
                   history,
                   getComparatorIncoming(orderIncoming, orderIncomingBy)
-                ).map((row, index) => {
-                  return (row.purchase_status === "PAID" &&
-                    row.receiver === managerID &&
-                    row.amount_paid > 0) ||
-                    (row.purchase_status === "PAID" &&
-                      row.receiver !== managerID &&
-                      row.amount_paid < 0) ? (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                      <TableCell align="left">{row.purchase_uid}</TableCell>
-                      <TableCell align="left">
-                        {row.address +
-                          " " +
-                          row.unit +
-                          "," +
-                          row.city +
-                          ", " +
-                          row.state +
-                          " " +
-                          row.zip}
-                        <div className="d-flex">
-                          <div className="d-flex align-items-end">
-                            <p style={{ ...blue, ...xSmall }} className="mb-0">
-                              {row.payment_notes}
-                            </p>
-                          </div>
-                        </div>
-                      </TableCell>
+                )
+                  .filter((val) => {
+                    const query = searchIncoming.toLowerCase();
 
-                      <TableCell align="left"> {row.payer}</TableCell>
-                      <TableCell align="left">{row.description}</TableCell>
-                      <TableCell align="right">{row.purchase_type}</TableCell>
-                      <TableCell align="center">
-                        {row.linked_bill_id === null ? "No" : "Yes"}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.payment_date !== null
-                          ? row.payment_date.substring(0, 10)
-                          : "Not Available"}
-                      </TableCell>
-                      <TableCell align="right">
-                        {row.payment_type !== null
-                          ? row.payment_type
-                          : "Not Available"}
-                      </TableCell>
-                      <TableCell align="right" style={{ width: "83px" }}>
-                        {row.payment_verify === "Verified" ? (
-                          <img
-                            src={Verified}
-                            style={{
-                              width: "25px",
-                              height: "25px",
-                              objectFit: "contain",
-                              cursor: "pointer",
-                            }}
-                            title="Unverify"
-                            onClick={() => unverifyPayment(row.payment_uid)}
-                          />
-                        ) : (
-                          <button
-                            style={{
-                              backgroundColor: "red",
-                              color: "white",
-                              border: "none",
-                            }}
-                            onClick={() => verifyPayment(row.payment_uid)}
-                          >
-                            Verify
-                          </button>
-                        )}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.payment_verify === "Verified" ? (
-                          <img
-                            src={RedReverse}
-                            style={{
-                              width: "35px",
-                              height: "35px",
-                              objectFit: "contain",
-                            }}
-                            title="Mark Unpaid Disabled"
-                          />
-                        ) : (
-                          <img
-                            src={RedReverse}
-                            style={{
-                              width: "35px",
-                              height: "35px",
-                              objectFit: "contain",
-                              cursor: "pointer",
-                            }}
-                            title="Mark Unpaid"
-                            onClick={() => {
-                              setUnpaidModalShow(true);
-                              MarkUnpaid(row.pay_purchase_id);
-                            }}
-                          />
-                        )}
-                      </TableCell>
-                      <TableCell align="right">
-                        {Math.abs(row.amount).toFixed(2)}
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    ""
-                  );
-                })}
+                    return (
+                      val.address.toLowerCase().indexOf(query) >= 0 ||
+                      String(val.unit).toLowerCase().indexOf(query) >= 0 ||
+                      val.city.toLowerCase().indexOf(query) >= 0 ||
+                      val.zip.toLowerCase().indexOf(query) >= 0
+                    );
+                  })
+                  .map((row, index) => {
+                    return (row.purchase_status === "PAID" &&
+                      row.receiver === managerID &&
+                      row.amount_paid > 0) ||
+                      (row.purchase_status === "PAID" &&
+                        row.receiver !== managerID &&
+                        row.amount_paid < 0) ? (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row.pay_purchase_id}
+                      >
+                        <TableCell align="left">
+                          {row.pay_purchase_id}
+                        </TableCell>
+                        <TableCell align="left">
+                          {row.address +
+                            " " +
+                            row.unit +
+                            "," +
+                            row.city +
+                            ", " +
+                            row.state +
+                            " " +
+                            row.zip}
+                          <div className="d-flex">
+                            <div className="d-flex align-items-end">
+                              <p
+                                style={{ ...blue, ...xSmall }}
+                                className="mb-0"
+                              >
+                                {row.payment_notes}
+                              </p>
+                            </div>
+                          </div>
+                        </TableCell>
+
+                        <TableCell align="left"> {row.payer}</TableCell>
+                        <TableCell align="left">{row.description}</TableCell>
+                        <TableCell align="right">{row.purchase_type}</TableCell>
+                        <TableCell align="center">
+                          {row.linked_bill_id === null ? "No" : "Yes"}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.payment_date !== null
+                            ? row.payment_date.substring(0, 10)
+                            : "Not Available"}
+                        </TableCell>
+                        <TableCell align="right">
+                          {row.payment_type !== null
+                            ? row.payment_type
+                            : "Not Available"}
+                        </TableCell>
+                        <TableCell align="right" style={{ width: "83px" }}>
+                          {row.payment_verify === "Verified" ? (
+                            <img
+                              src={Verified}
+                              style={{
+                                width: "25px",
+                                height: "25px",
+                                objectFit: "contain",
+                                cursor: "pointer",
+                              }}
+                              title="Unverify"
+                              onClick={() => unverifyPayment(row.payment_uid)}
+                            />
+                          ) : (
+                            <button
+                              style={{
+                                backgroundColor: "red",
+                                color: "white",
+                                border: "none",
+                              }}
+                              onClick={() => verifyPayment(row.payment_uid)}
+                            >
+                              Verify
+                            </button>
+                          )}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.payment_verify === "Verified" ? (
+                            <img
+                              src={RedReverse}
+                              style={{
+                                width: "35px",
+                                height: "35px",
+                                objectFit: "contain",
+                              }}
+                              title="Mark Unpaid Disabled"
+                            />
+                          ) : (
+                            <img
+                              src={RedReverse}
+                              style={{
+                                width: "35px",
+                                height: "35px",
+                                objectFit: "contain",
+                                cursor: "pointer",
+                              }}
+                              title="Mark Unpaid"
+                              onClick={() => {
+                                setUnpaidModalShow(true);
+                                MarkUnpaid(row.pay_purchase_id);
+                              }}
+                            />
+                          )}
+                        </TableCell>
+                        <TableCell align="right">
+                          {Math.abs(row.amount).toFixed(2)}
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      ""
+                    );
+                  })}
               </TableBody>
             </Table>
           )}

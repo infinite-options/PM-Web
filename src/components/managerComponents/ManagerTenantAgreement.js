@@ -153,7 +153,7 @@ function ManagerTenantAgreement(props) {
     // console.log(agreement.rent_payments);
     contactState[1](JSON.parse(agreement.assigned_contacts));
     setFiles(JSON.parse(agreement.documents));
-    setFilesCopy(JSON.parse(agreement.docuSign));
+    // setFilesCopy(JSON.parse(agreement.docuSign));
     setAvailable(agreement.available_topay);
     setRentalStatus(agreement.rental_status);
     setDueDate(agreement.due_by);
@@ -183,7 +183,7 @@ function ManagerTenantAgreement(props) {
       vehicles: JSON.parse(agreement.vehicles),
       referred: JSON.parse(agreement.referred),
       documents: JSON.parse(agreement.documents),
-      docuSign: JSON.parse(agreement.docuSign),
+      // docuSign: JSON.parse(agreement.docuSign),
     };
     setOldAgreement(newAgreement);
   };
@@ -335,19 +335,19 @@ function ManagerTenantAgreement(props) {
     }
     newAgreement.documents = JSON.stringify(newFiles);
 
-    const newFilesShared = [...filesCopy];
+    // const newFilesShared = [...filesCopy];
 
-    for (let i = 0; i < newFilesShared.length; i++) {
-      let key = `doc_${i}`;
-      if (newFilesShared[i].file !== undefined) {
-        newAgreement[key] = newFilesShared[i].file;
-      } else {
-        newAgreement[key] = newFilesShared[i].link;
-      }
+    // for (let i = 0; i < newFilesShared.length; i++) {
+    //   let key = `doc_${i}`;
+    //   if (newFilesShared[i].file !== undefined) {
+    //     newAgreement[key] = newFilesShared[i].file;
+    //   } else {
+    //     newAgreement[key] = newFilesShared[i].link;
+    //   }
 
-      delete newFilesShared[i].file;
-    }
-    newAgreement.docuSign = JSON.stringify(newFilesShared);
+    //   delete newFilesShared[i].file;
+    // }
+    // newAgreement.docuSign = JSON.stringify(newFilesShared);
 
     newAgreement.linked_application_id = JSON.stringify(
       acceptedTenantApplications.map(
@@ -399,6 +399,7 @@ function ManagerTenantAgreement(props) {
   };
   // save
   const save = async () => {
+    console.log("in save");
     setShowSpinner(true);
     // update properties table if change in rent or deposit
     for (let i = 0; i < feeState.length; i++) {
@@ -543,19 +544,19 @@ function ManagerTenantAgreement(props) {
         delete newFiles[i].file;
       }
       newAgreement.documents = JSON.stringify(newFiles);
-      const newFilesShared = [...filesCopy];
+      // const newFilesShared = [...filesCopy];
 
-      for (let i = 0; i < newFilesShared.length; i++) {
-        let key = `doc_${i}`;
-        if (newFilesShared[i].file !== undefined) {
-          newAgreement[key] = newFilesShared[i].file;
-        } else {
-          newAgreement[key] = newFilesShared[i].link;
-        }
+      // for (let i = 0; i < newFilesShared.length; i++) {
+      //   let key = `doc_${i}`;
+      //   if (newFilesShared[i].file !== undefined) {
+      //     newAgreement[key] = newFilesShared[i].file;
+      //   } else {
+      //     newAgreement[key] = newFilesShared[i].link;
+      //   }
 
-        delete newFilesShared[i].file;
-      }
-      newAgreement.docuSign = JSON.stringify(newFilesShared);
+      //   delete newFilesShared[i].file;
+      // }
+      // newAgreement.docuSign = JSON.stringify(newFilesShared);
       // console.log("in if");
       newAgreement.rental_uid = agreement.rental_uid;
       // console.log(newAgreement);
@@ -713,19 +714,19 @@ function ManagerTenantAgreement(props) {
         delete newFiles[i].file;
       }
       newAgreement.documents = JSON.stringify(newFiles);
-      const newFilesShared = [...filesCopy];
+      // const newFilesShared = [...filesCopy];
 
-      for (let i = 0; i < newFilesShared.length; i++) {
-        let key = `doc_${i}`;
-        if (newFilesShared[i].file !== undefined) {
-          newAgreement[key] = newFilesShared[i].file;
-        } else {
-          newAgreement[key] = newFilesShared[i].link;
-        }
+      // for (let i = 0; i < newFilesShared.length; i++) {
+      //   let key = `doc_${i}`;
+      //   if (newFilesShared[i].file !== undefined) {
+      //     newAgreement[key] = newFilesShared[i].file;
+      //   } else {
+      //     newAgreement[key] = newFilesShared[i].link;
+      //   }
 
-        delete newFilesShared[i].file;
-      }
-      newAgreement.docuSign = JSON.stringify(newFilesShared);
+      //   delete newFilesShared[i].file;
+      // }
+      // newAgreement.docuSign = JSON.stringify(newFilesShared);
       // console.log("in if");
       newAgreement.rental_uid = agreement.rental_uid;
       // console.log(newAgreement);
@@ -739,6 +740,7 @@ function ManagerTenantAgreement(props) {
 
   // on lease renewal
   const renewLease = async () => {
+    console.log("in renewlease");
     if (startDate === "" || endDate === "") {
       setErrorMessage("Please fill out all fields");
       return;
@@ -858,19 +860,19 @@ function ManagerTenantAgreement(props) {
         delete newFiles[i].file;
       }
       newAgreement.documents = JSON.stringify(newFiles);
-      const newFilesShared = [...filesCopy];
+      // const newFilesShared = [...filesCopy];
 
-      for (let i = 0; i < newFilesShared.length; i++) {
-        let key = `doc_${i}`;
-        if (newFilesShared[i].file !== undefined) {
-          newAgreement[key] = newFilesShared[i].file;
-        } else {
-          newAgreement[key] = newFilesShared[i].link;
-        }
+      // for (let i = 0; i < newFilesShared.length; i++) {
+      //   let key = `doc_${i}`;
+      //   if (newFilesShared[i].file !== undefined) {
+      //     newAgreement[key] = newFilesShared[i].file;
+      //   } else {
+      //     newAgreement[key] = newFilesShared[i].link;
+      //   }
 
-        delete newFilesShared[i].file;
-      }
-      newAgreement.docuSign = JSON.stringify(newFilesShared);
+      //   delete newFilesShared[i].file;
+      // }
+      // newAgreement.docuSign = JSON.stringify(newFilesShared);
       newAgreement.linked_application_id = JSON.stringify(
         acceptedTenantApplications.map(
           (application) => application.application_uid
@@ -908,7 +910,7 @@ function ManagerTenantAgreement(props) {
         vehicles: vehicles,
         referred: referred,
         documents: files,
-        docuSign: filesCopy,
+        // docuSign: filesCopy,
         effective_date: effectiveDate,
       };
       const newFiles = [...files];
@@ -924,19 +926,19 @@ function ManagerTenantAgreement(props) {
         delete newFiles[i].file;
       }
       newAgreement.documents = JSON.stringify(newFiles);
-      const newFilesShared = [...filesCopy];
+      // const newFilesShared = [...filesCopy];
 
-      for (let i = 0; i < newFilesShared.length; i++) {
-        let key = `doc_${i}`;
-        if (newFilesShared[i].file !== undefined) {
-          newAgreement[key] = newFilesShared[i].file;
-        } else {
-          newAgreement[key] = newFilesShared[i].link;
-        }
+      // for (let i = 0; i < newFilesShared.length; i++) {
+      //   let key = `doc_${i}`;
+      //   if (newFilesShared[i].file !== undefined) {
+      //     newAgreement[key] = newFilesShared[i].file;
+      //   } else {
+      //     newAgreement[key] = newFilesShared[i].link;
+      //   }
 
-        delete newFilesShared[i].file;
-      }
-      newAgreement.docuSign = JSON.stringify(newFilesShared);
+      //   delete newFilesShared[i].file;
+      // }
+      // newAgreement.docuSign = JSON.stringify(newFilesShared);
       newAgreement.tenant_id = JSON.stringify(
         acceptedTenantApplications.map((application) => application.tenant_id)
       );
@@ -1046,7 +1048,7 @@ function ManagerTenantAgreement(props) {
       vehicles: vehicles,
       referred: referred,
       documents: files,
-      docuSign: filesCopy,
+      // docuSign: filesCopy,
       effective_date: effectiveDate,
     };
     let up = newAgreement;
@@ -1156,7 +1158,12 @@ function ManagerTenantAgreement(props) {
     ) : (
       ""
     );
-
+  console.log(
+    typeof startDate,
+    typeof oldAgreement.lease_start,
+    startDate,
+    oldAgreement.lease_start
+  );
   return (
     <Row className="w-100 mb-5 overflow-hidden">
       <MailDialogTenant
