@@ -32,7 +32,8 @@ import Chase_Logo from "../../icons/Chase-Logo.png";
 import Citi_Logo from "../../icons/Citi-Logo.png";
 import CreditCard from "../../icons/CreditCard.png";
 import ApplePay_Logo from "../../icons/ApplePay-Logo.png";
-import { post, get } from "../../utils/api";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
+import { post, get, put } from "../../utils/api";
 import {
   pillButton,
   blue,
@@ -113,6 +114,7 @@ function ManagerUtilities(props) {
   const [showSpinner, setShowSpinner] = useState(false);
   const [allPurchases, setAllPurchases] = useState([]);
   const [purchaseUIDs, setPurchaseUIDs] = useState([]);
+  const [deleted, setDeleted] = useState(false);
   const [payment, setPayment] = useState(false);
   const emptyUtility = {
     provider: "",
@@ -369,7 +371,7 @@ function ManagerUtilities(props) {
   useEffect(() => {
     // console.log("in use effect");
     fetchProperties();
-  }, []);
+  }, [deleted]);
   useEffect(() => {
     if (amount > totalSum || amount <= 0) {
       setDisabled(true);
@@ -388,7 +390,13 @@ function ManagerUtilities(props) {
     setPayExpense(false);
     setPayExpenseManager(false);
   };
-
+  const deleteUtilities = async (bill_id) => {
+    let delUtilities = {
+      bill_uid: bill_id,
+    };
+    const response = await put("/deleteUtilities", delUtilities);
+    setDeleted(!deleted);
+  };
   //group an array by property
   function groupBy(arr, property) {
     return arr.reduce(function (memo, x) {
@@ -833,6 +841,11 @@ function ManagerUtilities(props) {
       id: "purchase_status",
       numeric: false,
       label: "Purchase Status",
+    },
+    {
+      id: "",
+      numeric: false,
+      label: "Actions",
     },
   ];
   function EnhancedTableHeadManager(props) {
@@ -1577,15 +1590,15 @@ function ManagerUtilities(props) {
                                 role="checkbox"
                                 tabIndex={-1}
                                 key={index}
-                                onClick={() => {
-                                  setExpenseDetailManager(true);
-                                  setPayment(expense);
-                                }}
                               >
                                 <TableCell
                                   padding="none"
                                   size="small"
                                   align="center"
+                                  onClick={() => {
+                                    setExpenseDetailManager(true);
+                                    setPayment(expense);
+                                  }}
                                 >
                                   {expense.bill_utility_type}
                                   <div className="d-flex">
@@ -1604,6 +1617,10 @@ function ManagerUtilities(props) {
                                   padding="none"
                                   size="small"
                                   align="center"
+                                  onClick={() => {
+                                    setExpenseDetailManager(true);
+                                    setPayment(expense);
+                                  }}
                                 >
                                   {" "}
                                   {expense.address
@@ -1616,6 +1633,10 @@ function ManagerUtilities(props) {
                                   padding="none"
                                   size="small"
                                   align="center"
+                                  onClick={() => {
+                                    setExpenseDetailManager(true);
+                                    setPayment(expense);
+                                  }}
                                 >
                                   {expense.bill_algorithm !== null
                                     ? expense.bill_algorithm
@@ -1625,6 +1646,10 @@ function ManagerUtilities(props) {
                                   padding="none"
                                   size="small"
                                   align="center"
+                                  onClick={() => {
+                                    setExpenseDetailManager(true);
+                                    setPayment(expense);
+                                  }}
                                 >
                                   {expense.payer}
                                 </TableCell>
@@ -1632,6 +1657,10 @@ function ManagerUtilities(props) {
                                   padding="none"
                                   size="small"
                                   align="center"
+                                  onClick={() => {
+                                    setExpenseDetailManager(true);
+                                    setPayment(expense);
+                                  }}
                                 >
                                   {expense.receiver}
                                 </TableCell>
@@ -1639,6 +1668,10 @@ function ManagerUtilities(props) {
                                   padding="none"
                                   size="small"
                                   align="center"
+                                  onClick={() => {
+                                    setExpenseDetailManager(true);
+                                    setPayment(expense);
+                                  }}
                                 >
                                   ${expense.amount_due}
                                 </TableCell>
@@ -1646,6 +1679,10 @@ function ManagerUtilities(props) {
                                   padding="none"
                                   size="small"
                                   align="center"
+                                  onClick={() => {
+                                    setExpenseDetailManager(true);
+                                    setPayment(expense);
+                                  }}
                                 >
                                   {" "}
                                   {expense.purchase_date.split(" ")[0]}
@@ -1654,6 +1691,10 @@ function ManagerUtilities(props) {
                                   padding="none"
                                   size="small"
                                   align="center"
+                                  onClick={() => {
+                                    setExpenseDetailManager(true);
+                                    setPayment(expense);
+                                  }}
                                 >
                                   {expense.purchase_status === "UNPAID" ? (
                                     <Col className="mt-0" style={redPill}>
@@ -1664,6 +1705,20 @@ function ManagerUtilities(props) {
                                       {expense.purchase_status}
                                     </Col>
                                   )}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  <img
+                                    src={DeleteIcon}
+                                    alt="Delete Icon"
+                                    className="px-1 mx-2"
+                                    onClick={() =>
+                                      deleteUtilities(expense.bill_uid)
+                                    }
+                                  />
                                 </TableCell>
                               </TableRow>
                             ) : (
