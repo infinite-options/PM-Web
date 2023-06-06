@@ -1229,14 +1229,7 @@ export default function ManagerDashboard() {
                                   size="small"
                                   align="center"
                                 >
-                                  {property.late_date.includes("due date") ? (
-                                    <div>{property.late_date}</div>
-                                  ) : property.late_date !==
-                                    "Not Applicable" ? (
-                                    <div>{property.late_date} days</div>
-                                  ) : (
-                                    <div>{property.late_date}</div>
-                                  )}
+                                  {property.late_date}
                                 </TableCell>
                                 <TableCell
                                   padding="none"
@@ -1724,14 +1717,7 @@ export default function ManagerDashboard() {
                                   size="small"
                                   align="center"
                                 >
-                                  {property.late_date.includes("due date") ? (
-                                    <div>{property.late_date}</div>
-                                  ) : property.late_date !==
-                                    "Not Applicable" ? (
-                                    <div>{property.late_date} days</div>
-                                  ) : (
-                                    <div>{property.late_date}</div>
-                                  )}
+                                  {property.late_date}
                                 </TableCell>
                                 <TableCell
                                   padding="none"
