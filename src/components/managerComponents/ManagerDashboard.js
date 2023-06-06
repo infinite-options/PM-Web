@@ -856,9 +856,6 @@ export default function ManagerDashboard() {
                               val.zip.toLowerCase().indexOf(query) >= 0 ||
                               String(val.oldestOpenMR)
                                 .toLowerCase()
-                                .indexOf(query) >= 0 ||
-                              String(val.late_date)
-                                .toLowerCase()
                                 .indexOf(query) >= 0
                             );
                           })
@@ -1386,9 +1383,6 @@ export default function ManagerDashboard() {
                               val.zip.toLowerCase().indexOf(query) >= 0 ||
                               String(val.oldestOpenMR)
                                 .toLowerCase()
-                                .indexOf(query) >= 0 ||
-                              String(val.late_date)
-                                .toLowerCase()
                                 .indexOf(query) >= 0
                             );
                           })
@@ -1730,7 +1724,10 @@ export default function ManagerDashboard() {
                                   size="small"
                                   align="center"
                                 >
-                                  {property.late_date !== "Not Applicable" ? (
+                                  {property.late_date.includes("due date") ? (
+                                    <div>{property.late_date}</div>
+                                  ) : property.late_date !==
+                                    "Not Applicable" ? (
                                     <div>{property.late_date} days</div>
                                   ) : (
                                     <div>{property.late_date}</div>
