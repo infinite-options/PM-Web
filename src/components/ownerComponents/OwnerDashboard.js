@@ -609,9 +609,7 @@ export default function OwnerDashboard2() {
                           val.zip.toLowerCase().indexOf(query) >= 0 ||
                           String(val.oldestOpenMR)
                             .toLowerCase()
-                            .indexOf(query) >= 0 ||
-                          String(val.late_date).toLowerCase().indexOf(query) >=
-                            0
+                            .indexOf(query) >= 0
                         );
                       })
                       .map((property, index) => {

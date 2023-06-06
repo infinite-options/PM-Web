@@ -106,8 +106,7 @@ export default function TenantAvailableProperties(props) {
         val.address.toLowerCase().indexOf(query) >= 0 ||
         val.city.toLowerCase().indexOf(query) >= 0 ||
         val.zip.toLowerCase().indexOf(query) >= 0 ||
-        String(val.oldestOpenMR).toLowerCase().indexOf(query) >= 0 ||
-        String(val.late_date).toLowerCase().indexOf(query) >= 0
+        String(val.oldestOpenMR).toLowerCase().indexOf(query) >= 0
       );
     })
     .map((prop, index) => {
