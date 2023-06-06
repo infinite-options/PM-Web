@@ -41,9 +41,9 @@ const useStyles = makeStyles({
 export default function ManagerPaymentHistory(props) {
   const classes = useStyles();
   const history = props.data; //array of objects
-  const [order, setOrder] = useState("asc");
+  const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("payment_date");
-  const [orderIncoming, setOrderIncoming] = useState("asc");
+  const [orderIncoming, setOrderIncoming] = useState("desc");
   const [orderIncomingBy, setOrderIncomingBy] = useState("payment_date");
   const [unpaidModalShow, setUnpaidModalShow] = useState(false);
   const { verified, setVerified, unpaid, setUnpaid } = props;
@@ -63,7 +63,7 @@ export default function ManagerPaymentHistory(props) {
   const paymentsOutgoingHeadCell = [
     {
       id: "purchase_uid",
-      numeric: false,
+      numeric: true,
       label: "ID",
     },
     {
@@ -73,13 +73,13 @@ export default function ManagerPaymentHistory(props) {
     },
     {
       id: "receiver",
-      numeric: false,
+      numeric: true,
       label: "To",
     },
 
     {
       id: "description",
-      numeric: true,
+      numeric: false,
       label: "Description",
     },
 
@@ -101,11 +101,7 @@ export default function ManagerPaymentHistory(props) {
       label: "Date Paid",
     },
     { id: "payment_type", numeric: false, label: "Payment Type" },
-    {
-      id: "",
-      numeric: false,
-      label: "",
-    },
+
     {
       id: "amount_paid",
       numeric: true,
@@ -168,7 +164,7 @@ export default function ManagerPaymentHistory(props) {
   const paymentsIncomingHeadCell = [
     {
       id: "purchase_uid",
-      numeric: false,
+      numeric: true,
       label: "ID",
     },
     {
@@ -184,7 +180,7 @@ export default function ManagerPaymentHistory(props) {
     },
     {
       id: "description",
-      numeric: true,
+      numeric: false,
       label: "Description",
     },
 
@@ -207,12 +203,12 @@ export default function ManagerPaymentHistory(props) {
     { id: "payment_type", numeric: false, label: "Payment Type" },
     {
       id: "payment_verify",
-      numeric: true,
+      numeric: false,
       label: "Verify",
     },
     {
       id: "purchase_status",
-      numeric: true,
+      numeric: false,
       label: "Mark Unpaid",
     },
     {
@@ -236,16 +232,12 @@ export default function ManagerPaymentHistory(props) {
               key={headCell.id}
               align="center"
               size="small"
-              sortDirection={
-                orderIncomingBy === headCell.id ? orderIncoming : false
-              }
+              sortDirection={orderIncomingBy === headCell.id ? order : false}
             >
               <TableSortLabel
                 align="center"
                 active={orderIncomingBy === headCell.id}
-                direction={
-                  orderIncomingBy === headCell.id ? orderIncoming : "asc"
-                }
+                direction={orderIncomingBy === headCell.id ? order : "asc"}
                 onClick={createSortHandlerIncoming(headCell.id)}
               >
                 {headCell.label}
@@ -341,11 +333,11 @@ export default function ManagerPaymentHistory(props) {
         }}
       >
         <Row className="m-3" style={subHeading}>
-          <h5> Outgoing Payments</h5>
-        </Row>
-        <Row className="m-3" style={subHeading}>
-          <Col xs={1}></Col>
-          <Col></Col>
+          <Col xs={4}>
+            {" "}
+            <h5> Outgoing Payments</h5>
+          </Col>
+
           <Col xs={2}> Search by</Col>
 
           <Col>
@@ -363,6 +355,7 @@ export default function ManagerPaymentHistory(props) {
             />
           </Col>
         </Row>
+
         <Row className="m-3" style={{ overflow: "scroll" }}>
           {history.filter(
             (row) =>
@@ -391,10 +384,10 @@ export default function ManagerPaymentHistory(props) {
                     const query = searchOutgoing.toLowerCase();
 
                     return (
-                      val.address.toLowerCase().indexOf(query) >= 0 ||
-                      String(val.unit).toLowerCase().indexOf(query) >= 0 ||
-                      val.city.toLowerCase().indexOf(query) >= 0 ||
-                      val.zip.toLowerCase().indexOf(query) >= 0
+                      val.address.toLowerCase().includes(query) ||
+                      String(val.unit).toLowerCase().includes(query) ||
+                      val.city.toLowerCase().includes(query) ||
+                      val.zip.toLowerCase().includes(query)
                     );
                   })
                   .map((row, index) => {
@@ -405,7 +398,7 @@ export default function ManagerPaymentHistory(props) {
                         hover
                         role="checkbox"
                         tabIndex={-1}
-                        key={row.pay_purchase_id}
+                        key={row.payment_uid}
                       >
                         <TableCell align="left">
                           {row.pay_purchase_id}
@@ -438,9 +431,7 @@ export default function ManagerPaymentHistory(props) {
                           {row.linked_bill_id === null ? "No" : "Yes"}
                         </TableCell>
                         <TableCell align="center">
-                          {row.payment_date !== null
-                            ? row.payment_date.substring(0, 10)
-                            : "Not Available"}
+                          {row.payment_date.substring(0, 10)}
                         </TableCell>
                         <TableCell align="right">
                           {row.payment_type !== null
@@ -473,11 +464,10 @@ export default function ManagerPaymentHistory(props) {
         }}
       >
         <Row className="m-3" style={subHeading}>
-          <h5> Incoming Payments</h5>
-        </Row>
-        <Row className="m-3" style={subHeading}>
-          <Col xs={1}></Col>
-          <Col></Col>
+          <Col xs={4}>
+            <h5> Incoming Payments</h5>
+          </Col>
+
           <Col xs={2}> Search by</Col>
 
           <Col>
@@ -495,6 +485,7 @@ export default function ManagerPaymentHistory(props) {
             />
           </Col>
         </Row>
+
         <Row className="m-3" style={{ overflow: "scroll" }}>
           {history.filter(
             (row) =>
@@ -529,10 +520,10 @@ export default function ManagerPaymentHistory(props) {
                     const query = searchIncoming.toLowerCase();
 
                     return (
-                      val.address.toLowerCase().indexOf(query) >= 0 ||
-                      String(val.unit).toLowerCase().indexOf(query) >= 0 ||
-                      val.city.toLowerCase().indexOf(query) >= 0 ||
-                      val.zip.toLowerCase().indexOf(query) >= 0
+                      val.address.toLowerCase().includes(query) ||
+                      String(val.unit).toLowerCase().includes(query) ||
+                      val.city.toLowerCase().includes(query) ||
+                      val.zip.toLowerCase().includes(query)
                     );
                   })
                   .map((row, index) => {
@@ -542,12 +533,7 @@ export default function ManagerPaymentHistory(props) {
                       (row.purchase_status === "PAID" &&
                         row.receiver !== managerID &&
                         row.amount_paid < 0) ? (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row.pay_purchase_id}
-                      >
+                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                         <TableCell align="left">
                           {row.pay_purchase_id}
                         </TableCell>

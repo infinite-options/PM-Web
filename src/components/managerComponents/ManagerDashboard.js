@@ -939,17 +939,6 @@ export default function ManagerDashboard() {
                                   padding="none"
                                   size="small"
                                   align="center"
-                                  onClick={() => {
-                                    navigate(
-                                      `/managerPropertyDetails/${property.property_uid}`,
-                                      {
-                                        state: {
-                                          property: property,
-                                          property_uid: property.property_uid,
-                                        },
-                                      }
-                                    );
-                                  }}
                                 >
                                   {property.zip}
                                 </TableCell>
@@ -1019,17 +1008,6 @@ export default function ManagerDashboard() {
                                   padding="none"
                                   size="small"
                                   align="center"
-                                  onClick={() => {
-                                    navigate(
-                                      `/managerPropertyDetails/${property.property_uid}`,
-                                      {
-                                        state: {
-                                          property: property,
-                                          property_uid: property.property_uid,
-                                        },
-                                      }
-                                    );
-                                  }}
                                 >
                                   {property.num_apps}
                                 </TableCell>
@@ -1064,39 +1042,9 @@ export default function ManagerDashboard() {
                                     })
                                   ) : property.available_to_rent === 0 &&
                                     property.rentalInfo === "Not Rented" ? (
-                                    <div
-                                      onClick={() => {
-                                        navigate(
-                                          `/managerPropertyDetails/${property.property_uid}`,
-                                          {
-                                            state: {
-                                              property: property,
-                                              property_uid:
-                                                property.property_uid,
-                                            },
-                                          }
-                                        );
-                                      }}
-                                    >
-                                      Not Listed
-                                    </div>
+                                    <div>Not Listed</div>
                                   ) : (
-                                    <div
-                                      onClick={() => {
-                                        navigate(
-                                          `/managerPropertyDetails/${property.property_uid}`,
-                                          {
-                                            state: {
-                                              property: property,
-                                              property_uid:
-                                                property.property_uid,
-                                            },
-                                          }
-                                        );
-                                      }}
-                                    >
-                                      {property.rentalInfo}
-                                    </div>
+                                    <div>{property.rentalInfo}</div>
                                   )}
                                   <div className="d-flex">
                                     <div className="d-flex align-items-end">
@@ -1274,39 +1222,9 @@ export default function ManagerDashboard() {
                                 >
                                   {property.available_to_rent === 0 &&
                                   property.rent_status === "No Rent Info" ? (
-                                    <div
-                                      onClick={() => {
-                                        navigate(
-                                          `/managerPropertyDetails/${property.property_uid}`,
-                                          {
-                                            state: {
-                                              property: property,
-                                              property_uid:
-                                                property.property_uid,
-                                            },
-                                          }
-                                        );
-                                      }}
-                                    >
-                                      Not Listed
-                                    </div>
+                                    <div>Not Listed</div>
                                   ) : (
-                                    <div
-                                      onClick={() => {
-                                        navigate(
-                                          `/managerPropertyDetails/${property.property_uid}`,
-                                          {
-                                            state: {
-                                              property: property,
-                                              property_uid:
-                                                property.property_uid,
-                                            },
-                                          }
-                                        );
-                                      }}
-                                    >
-                                      {property.rent_status}
-                                    </div>
+                                    <div>{property.rent_status}</div>
                                   )}
                                 </TableCell>
                                 <TableCell
@@ -1314,7 +1232,10 @@ export default function ManagerDashboard() {
                                   size="small"
                                   align="center"
                                 >
-                                  {property.late_date !== "Not Applicable" ? (
+                                  {property.late_date.includes("due date") ? (
+                                    <div>{property.late_date}</div>
+                                  ) : property.late_date !==
+                                    "Not Applicable" ? (
                                     <div>{property.late_date} days</div>
                                   ) : (
                                     <div>{property.late_date}</div>
@@ -1665,39 +1586,9 @@ export default function ManagerDashboard() {
                                       );
                                     })
                                   ) : property.available_to_rent === 0 ? (
-                                    <div
-                                      onClick={() => {
-                                        navigate(
-                                          `/managerPropertyDetails/${property.property_uid}`,
-                                          {
-                                            state: {
-                                              property: property,
-                                              property_uid:
-                                                property.property_uid,
-                                            },
-                                          }
-                                        );
-                                      }}
-                                    >
-                                      Not Listed
-                                    </div>
+                                    <div>Not Listed</div>
                                   ) : (
-                                    <div
-                                      onClick={() => {
-                                        navigate(
-                                          `/managerPropertyDetails/${property.property_uid}`,
-                                          {
-                                            state: {
-                                              property: property,
-                                              property_uid:
-                                                property.property_uid,
-                                            },
-                                          }
-                                        );
-                                      }}
-                                    >
-                                      {property.rentalInfo}
-                                    </div>
+                                    <div>{property.rentalInfo}</div>
                                   )}
                                   <div className="d-flex">
                                     <div className="d-flex align-items-end">
@@ -1829,39 +1720,9 @@ export default function ManagerDashboard() {
                                   }}
                                 >
                                   {property.available_to_rent === 0 ? (
-                                    <div
-                                      onClick={() => {
-                                        navigate(
-                                          `/managerPropertyDetails/${property.property_uid}`,
-                                          {
-                                            state: {
-                                              property: property,
-                                              property_uid:
-                                                property.property_uid,
-                                            },
-                                          }
-                                        );
-                                      }}
-                                    >
-                                      Not Listed
-                                    </div>
+                                    <div>Not Listed</div>
                                   ) : (
-                                    <div
-                                      onClick={() => {
-                                        navigate(
-                                          `/managerPropertyDetails/${property.property_uid}`,
-                                          {
-                                            state: {
-                                              property: property,
-                                              property_uid:
-                                                property.property_uid,
-                                            },
-                                          }
-                                        );
-                                      }}
-                                    >
-                                      {property.rent_status}
-                                    </div>
+                                    <div>{property.rent_status}</div>
                                   )}
                                 </TableCell>
                                 <TableCell
@@ -1914,17 +1775,6 @@ export default function ManagerDashboard() {
                                   padding="none"
                                   size="small"
                                   align="center"
-                                  onClick={() => {
-                                    navigate(
-                                      `/managerPropertyDetails/${property.property_uid}`,
-                                      {
-                                        state: {
-                                          property: property,
-                                          property_uid: property.property_uid,
-                                        },
-                                      }
-                                    );
-                                  }}
                                 >
                                   {"$" + property.listed_rent}
                                 </TableCell>
@@ -1933,17 +1783,6 @@ export default function ManagerDashboard() {
                                   padding="none"
                                   size="small"
                                   align="center"
-                                  onClick={() => {
-                                    navigate(
-                                      `/managerPropertyDetails/${property.property_uid}`,
-                                      {
-                                        state: {
-                                          property: property,
-                                          property_uid: property.property_uid,
-                                        },
-                                      }
-                                    );
-                                  }}
                                 >
                                   {property.property_type}
                                 </TableCell>
@@ -1952,17 +1791,6 @@ export default function ManagerDashboard() {
                                   padding="none"
                                   size="small"
                                   align="center"
-                                  onClick={() => {
-                                    navigate(
-                                      `/managerPropertyDetails/${property.property_uid}`,
-                                      {
-                                        state: {
-                                          property: property,
-                                          property_uid: property.property_uid,
-                                        },
-                                      }
-                                    );
-                                  }}
                                 >
                                   {property.num_beds + "/" + property.num_baths}
                                 </TableCell>
