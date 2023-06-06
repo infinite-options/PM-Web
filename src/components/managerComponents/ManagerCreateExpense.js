@@ -379,96 +379,85 @@ function ManagerCreateExpense(props) {
         }}
       >
         {" "}
-        {category === "Management" ||
-        category === "Maintenance" ||
-        category === "Repairs" ? (
-          <div>
-            {/* {console.log(JSON.parse(selectedProperty))} */}
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Payer
-              </Form.Label>
-              <Row>
+        <div>
+          {/* {console.log(JSON.parse(selectedProperty))} */}
+          <Form.Group className="mx-2 my-3">
+            <Form.Label as="h6" className="mb-0 ms-2">
+              Payer
+            </Form.Label>
+            <Row>
+              <Col xs={4}>
+                {" "}
+                <Form.Check
+                  inline
+                  label="Owner"
+                  name="group1"
+                  type="radio"
+                  id="inline-radio-1"
+                  onChange={(e) => {
+                    setPayerID(JSON.parse(selectedProperty).owner_id);
+                    setPayer("OWNER");
+                  }}
+                />
+              </Col>
+
+              {JSON.parse(selectedProperty) !== null &&
+              JSON.parse(selectedProperty).rentalInfo.length !== 0 ? (
                 <Col xs={4}>
                   {" "}
                   <Form.Check
                     inline
-                    label="Owner"
+                    label="Tenant"
                     name="group1"
                     type="radio"
-                    id="inline-radio-1"
+                    id="inline-radio-2"
                     onChange={(e) => {
-                      setPayerID(JSON.parse(selectedProperty).owner_id);
-                      setPayer("OWNER");
+                      setPayerID(
+                        JSON.parse(selectedProperty).rentalInfo[0].tenant_id
+                      );
+                      setPayer("TENANT");
                     }}
                   />
                 </Col>
-
-                {JSON.parse(selectedProperty) !== null &&
-                JSON.parse(selectedProperty).rentalInfo.length !== 0 ? (
-                  <Col xs={4}>
-                    {" "}
-                    <Form.Check
-                      inline
-                      label="Tenant"
-                      name="group1"
-                      type="radio"
-                      id="inline-radio-2"
-                      onChange={(e) => {
-                        setPayerID(
-                          JSON.parse(selectedProperty).rentalInfo[0].tenant_id
-                        );
-                        setPayer("TENANT");
-                      }}
-                    />
-                  </Col>
-                ) : (
-                  ""
-                )}
-                {JSON.parse(selectedProperty) !== null ? (
-                  <Col xs={4}>
-                    <Form.Check
-                      inline
-                      name="group1"
-                      label="Property Manager"
-                      type="radio"
-                      id="inline-radio-3"
-                      onChange={(e) => {
-                        setPayerID(JSON.parse(selectedProperty).manager_id);
-                        setPayer("PROPERTY MANAGER");
-                      }}
-                    />
-                  </Col>
-                ) : (
-                  ""
-                )}
-              </Row>
-            </Form.Group>
-          </div>
-        ) : (
-          ""
-        )}
-        {category === "Management" ||
-        category === "Maintenance" ||
-        category === "Repairs" ? (
-          <div>
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Receiver
-              </Form.Label>{" "}
-              <Row>
+              ) : (
+                ""
+              )}
+              {JSON.parse(selectedProperty) !== null ? (
                 <Col xs={4}>
-                  <Form.Group className="mx-2 my-3 d-flex flex-row">
-                    <Form.Control
-                      style={
-                        (squareForm, { width: "20%", marginRight: "1rem" })
-                      }
-                      placeholder="%"
-                      value={percentageSplitOwner}
-                      onChange={(e) => setPercentageSplitOwner(e.target.value)}
-                    />
-                    Owner
-                    {/* <Form.Check
+                  <Form.Check
+                    inline
+                    name="group1"
+                    label="Property Manager"
+                    type="radio"
+                    id="inline-radio-3"
+                    onChange={(e) => {
+                      setPayerID(JSON.parse(selectedProperty).manager_id);
+                      setPayer("PROPERTY MANAGER");
+                    }}
+                  />
+                </Col>
+              ) : (
+                ""
+              )}
+            </Row>
+          </Form.Group>
+        </div>
+        <div>
+          <Form.Group className="mx-2 my-3">
+            <Form.Label as="h6" className="mb-0 ms-2">
+              Receiver
+            </Form.Label>{" "}
+            <Row>
+              <Col xs={4}>
+                <Form.Group className="mx-2 my-3 d-flex flex-row">
+                  <Form.Control
+                    style={(squareForm, { width: "20%", marginRight: "1rem" })}
+                    placeholder="%"
+                    value={percentageSplitOwner}
+                    onChange={(e) => setPercentageSplitOwner(e.target.value)}
+                  />
+                  Owner
+                  {/* <Form.Check
                     inline
                     label="Owner"
                     name="group2"
@@ -479,25 +468,23 @@ function ManagerCreateExpense(props) {
                       setReceiver("OWNER");
                     }}
                   /> */}
-                  </Form.Group>
-                </Col>
+                </Form.Group>
+              </Col>
 
-                {JSON.parse(selectedProperty) !== null &&
-                JSON.parse(selectedProperty).rentalInfo.length !== 0 ? (
-                  <Col>
-                    <Form.Group className="mx-2 my-3 d-flex flex-row">
-                      <Form.Control
-                        style={
-                          (squareForm, { width: "20%", marginRight: "1rem" })
-                        }
-                        placeholder="%"
-                        value={percentageSplitTenant}
-                        onChange={(e) =>
-                          setPercentageSplitTenant(e.target.value)
-                        }
-                      />
-                      Tenant
-                      {/* <Form.Check
+              {JSON.parse(selectedProperty) !== null &&
+              JSON.parse(selectedProperty).rentalInfo.length !== 0 ? (
+                <Col>
+                  <Form.Group className="mx-2 my-3 d-flex flex-row">
+                    <Form.Control
+                      style={
+                        (squareForm, { width: "20%", marginRight: "1rem" })
+                      }
+                      placeholder="%"
+                      value={percentageSplitTenant}
+                      onChange={(e) => setPercentageSplitTenant(e.target.value)}
+                    />
+                    Tenant
+                    {/* <Form.Check
                       inline
                       label="Tenant"
                       name="group2"
@@ -510,27 +497,27 @@ function ManagerCreateExpense(props) {
                         setReceiver("TENANT");
                       }}
                     /> */}
-                    </Form.Group>
-                  </Col>
-                ) : (
-                  ""
-                )}
+                  </Form.Group>
+                </Col>
+              ) : (
+                ""
+              )}
 
-                {JSON.parse(selectedProperty) !== null ? (
-                  <Col xs={4}>
-                    <Form.Group className="mx-2 my-3 d-flex flex-row">
-                      <Form.Control
-                        style={
-                          (squareForm, { width: "20%", marginRight: "1rem" })
-                        }
-                        placeholder="%"
-                        value={percentageSplitManager}
-                        onChange={(e) =>
-                          setPercentageSplitManager(e.target.value)
-                        }
-                      />
-                      Property Manager
-                      {/* <Form.Check
+              {JSON.parse(selectedProperty) !== null ? (
+                <Col xs={4}>
+                  <Form.Group className="mx-2 my-3 d-flex flex-row">
+                    <Form.Control
+                      style={
+                        (squareForm, { width: "20%", marginRight: "1rem" })
+                      }
+                      placeholder="%"
+                      value={percentageSplitManager}
+                      onChange={(e) =>
+                        setPercentageSplitManager(e.target.value)
+                      }
+                    />
+                    Property Manager
+                    {/* <Form.Check
                       inline
                       name="group2"
                       label="Property Manager"
@@ -541,17 +528,14 @@ function ManagerCreateExpense(props) {
                         setReceiver("PROPERTY MANAGER");
                       }}
                     /> */}
-                    </Form.Group>
-                  </Col>
-                ) : (
-                  ""
-                )}
-              </Row>
-            </Form.Group>
-          </div>
-        ) : (
-          ""
-        )}
+                  </Form.Group>
+                </Col>
+              ) : (
+                ""
+              )}
+            </Row>
+          </Form.Group>
+        </div>
       </div>
       <div
         className="mx-3 my-3 p-2"

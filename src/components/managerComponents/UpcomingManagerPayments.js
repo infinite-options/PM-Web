@@ -637,19 +637,6 @@ export default function UpcomingManagerPayments(props) {
             {" "}
             <h5> Outgoing Payments</h5>
           </Col>
-        </Row>
-        <Row className="m-3" style={subHeading}>
-          <Col xs={1}>
-            <h5> Pay All</h5>
-          </Col>
-          <Col>
-            <input
-              className="check"
-              type="checkbox"
-              name="selectall"
-              onClick={(source) => handleCheckAll(source)}
-            />
-          </Col>
           <Col xs={2}> Search by</Col>
 
           <Col>
@@ -664,6 +651,19 @@ export default function UpcomingManagerPayments(props) {
                 border: "1px solid black",
                 padding: "5px",
               }}
+            />
+          </Col>
+        </Row>
+        <Row className="m-3" style={subHeading}>
+          <Col xs={1}>
+            <h5> Pay All</h5>
+          </Col>
+          <Col>
+            <input
+              className="check"
+              type="checkbox"
+              name="selectall"
+              onClick={(source) => handleCheckAll(source)}
             />
           </Col>
         </Row>
@@ -687,10 +687,10 @@ export default function UpcomingManagerPayments(props) {
                       const query = searchOutgoing.toLowerCase();
 
                       return (
-                        val.address.toLowerCase().indexOf(query) >= 0 ||
-                        String(val.unit).toLowerCase().indexOf(query) >= 0 ||
-                        val.city.toLowerCase().indexOf(query) >= 0 ||
-                        val.zip.toLowerCase().indexOf(query) >= 0
+                        val.address.toLowerCase().includes(query) ||
+                        String(val.unit).toLowerCase().includes(query) ||
+                        val.city.toLowerCase().includes(query) ||
+                        val.zip.toLowerCase().includes(query)
                       );
                     })
                     .map((row, index) => {
@@ -805,14 +805,12 @@ export default function UpcomingManagerPayments(props) {
         }}
       >
         <Row className="m-3" style={subHeading}>
-          {" "}
-          <h5> Incoming Payments</h5>
-        </Row>
-        <Row className="m-3" style={subHeading}>
-          <Col xs={1}></Col>
-          <Col></Col>
-          <Col xs={2}> Search by</Col>
+          <Col xs={4}>
+            {" "}
+            <h5> Incoming Payments</h5>
+          </Col>
 
+          <Col xs={2}> Search by</Col>
           <Col>
             <input
               type="text"
@@ -828,6 +826,7 @@ export default function UpcomingManagerPayments(props) {
             />
           </Col>
         </Row>
+
         <Row className="m-3" style={{ overflow: "scroll" }}>
           <Table
             responsive="md"
@@ -850,10 +849,10 @@ export default function UpcomingManagerPayments(props) {
                       const query = searchIncoming.toLowerCase();
 
                       return (
-                        val.address.toLowerCase().indexOf(query) >= 0 ||
-                        String(val.unit).toLowerCase().indexOf(query) >= 0 ||
-                        val.city.toLowerCase().indexOf(query) >= 0 ||
-                        val.zip.toLowerCase().indexOf(query) >= 0
+                        val.address.toLowerCase().includes(query) ||
+                        String(val.unit).toLowerCase().includes(query) ||
+                        val.city.toLowerCase().includes(query) ||
+                        val.zip.toLowerCase().includes(query)
                       );
                     })
                     .map((row, index) => {

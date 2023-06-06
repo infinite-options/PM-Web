@@ -72,6 +72,7 @@ import {
   getComparator as getComparatorOwner,
   stableSort as stableSortOwner,
 } from "../../utils/helper";
+import { days } from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -116,6 +117,7 @@ function ManagerUtilities(props) {
   const [purchaseUIDs, setPurchaseUIDs] = useState([]);
   const [deleted, setDeleted] = useState(false);
   const [payment, setPayment] = useState(false);
+  const [daysCompleted, setDaysCompleted] = useState("10");
   const emptyUtility = {
     provider: "",
     notes: "",
@@ -163,6 +165,28 @@ function ManagerUtilities(props) {
   };
   const responsiveSidebar = {
     showSidebar: width > 1023,
+  };
+  useEffect(() => {
+    filterRequests();
+  }, [daysCompleted]);
+
+  const filterRequests = () => {
+    let requests = [];
+    if (parseInt(daysCompleted) >= 0) {
+      expenses.forEach((res) => {
+        if (
+          days(new Date(res.payment_date), new Date()) >=
+            parseInt(daysCompleted) &&
+          res.purchase_status === "PAID"
+        ) {
+        } else {
+          requests.push(res);
+        }
+      });
+      setExpenseUnique(requests);
+    } else {
+      setExpenseUnique(expenses);
+    }
   };
   const submitForm = () => {
     const requestTitle = requestTitleRef.current.value;
@@ -363,7 +387,23 @@ function ManagerUtilities(props) {
       output.push(out);
     });
     // console.log(output);
-    setExpenseUnique(output);
+
+    let requests = [];
+    if (parseInt(daysCompleted) >= 0) {
+      output.forEach((res) => {
+        if (
+          days(new Date(res.payment_date), new Date()) >=
+            parseInt(daysCompleted) &&
+          res.purchase_status === "PAID"
+        ) {
+        } else {
+          requests.push(res);
+        }
+      });
+      setExpenseUnique(requests);
+    } else {
+      setExpenseUnique(output);
+    }
 
     setExpenses(expense);
     setIsLoading(false);
@@ -1251,6 +1291,21 @@ function ManagerUtilities(props) {
                 <Col>
                   {" "}
                   <h3>Utilities </h3>
+                </Col>
+                <Col xs={4}>
+                  Hide utilities paid <span>&#62;</span>{" "}
+                  <input
+                    style={{
+                      borderRadius: "5px",
+                      border: "1px solid #707070",
+                      width: "2rem",
+                    }}
+                    value={daysCompleted}
+                    onChange={(e) => {
+                      setDaysCompleted(e.target.value);
+                    }}
+                  />{" "}
+                  days
                 </Col>
               </Row>
               {newUtility !== null &&
