@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -18,6 +18,7 @@ import SideBar from "./tenantComponents/SideBar";
 import TenantFooter from "./tenantComponents/TenantFooter";
 import StripePayment from "./StripePayment";
 import StripeFeesDialog from "./StripeFeesDialog";
+import AppContext from "../AppContext";
 import PayPal from "./PayPal";
 import CreditCard from "../icons/CreditCard.png";
 import WF_Logo from "../icons/WF-Logo.png";
@@ -49,6 +50,9 @@ const useStyles = makeStyles({
 function PaymentPage(props) {
   const classes = useStyles();
   const navigate = useNavigate();
+  const context = useContext(AppContext);
+  const { userData } = context;
+  const { access_token, user } = userData;
   const { purchase_uid } = useParams();
   const location = useLocation();
   const [totalSum, setTotalSum] = useState(location.state.amount);
@@ -127,6 +131,7 @@ function PaymentPage(props) {
         payment_notes: message,
         charge_id: confirmationCode,
         payment_type: paymentType,
+        paid_by: user.tenant_id[0].tenant_id,
       };
       await post("/payments", newPayment);
     } else {
@@ -141,6 +146,7 @@ function PaymentPage(props) {
           payment_notes: message,
           charge_id: confirmationCode,
           payment_type: paymentType,
+          paid_by: user.tenant_id[0].tenant_id,
         };
         await post("/payments", newPayment);
       }
@@ -534,6 +540,7 @@ function PaymentPage(props) {
                       purchases={allPurchases}
                       message={message}
                       amount={amount}
+                      paidBy={user.tenant_id[0].tenant_id}
                     />
                   </Elements>
                 </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -17,6 +17,7 @@ import { visuallyHidden } from "@mui/utils";
 import { makeStyles } from "@material-ui/core/styles";
 import Header from "../Header";
 import StripePayment from "../StripePayment";
+import AppContext from "../../AppContext";
 import SideBar from "./SideBar";
 import OwnerFooter from "./OwnerFooter";
 import StripeFeesDialog from "../StripeFeesDialog";
@@ -51,6 +52,9 @@ const useStyles = makeStyles({
 function OwnerPaymentPage(props) {
   const classes = useStyles();
   const navigate = useNavigate();
+  const context = useContext(AppContext);
+  const { userData } = context;
+  const { access_token, user } = userData;
   const { purchase_uid } = useParams();
   const location = useLocation();
   const [totalSum, setTotalSum] = useState(location.state.amount);
@@ -108,6 +112,7 @@ function OwnerPaymentPage(props) {
         payment_notes: message,
         charge_id: confirmationCode,
         payment_type: paymentType,
+        paid_by: user.user_uid,
       };
       await post("/payments", newPayment);
     } else {
@@ -122,6 +127,7 @@ function OwnerPaymentPage(props) {
           payment_notes: message,
           charge_id: confirmationCode,
           payment_type: paymentType,
+          paid_by: user.user_uid,
         };
         await post("/payments", newPayment);
       }
@@ -537,6 +543,7 @@ function OwnerPaymentPage(props) {
                       purchases={allPurchases}
                       message={message}
                       amount={amount}
+                      paidBy={user.user_uid}
                     />
                   </Elements>
                 </div>

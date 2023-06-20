@@ -52,13 +52,13 @@ function ManagerPaymentPage(props) {
   const classes = useStyles();
   const { ably } = useContext(AppContext);
   const navigate = useNavigate();
-  const { purchase_uid } = useParams();
   const location = useLocation();
   const channel_maintenance = ably.channels.get("maintenance_status");
   const [totalSum, setTotalSum] = useState(location.state.amount);
   const selectedProperty = location.state.selectedProperty;
   const purchaseUIDs = location.state.purchaseUIDs;
   const purchases = location.state.purchases;
+  const paidBy = location.state.paidBy;
   const [stripePayment, setStripePayment] = useState(false);
   const [paymentConfirm, setPaymentConfirm] = useState(false);
 
@@ -112,6 +112,7 @@ function ManagerPaymentPage(props) {
         payment_notes: message,
         charge_id: confirmationCode,
         payment_type: paymentType,
+        paid_by: paidBy,
       };
       await post("/payments", newPayment);
       if (allPurchases[0].linked_bill_id !== null) {
@@ -135,6 +136,7 @@ function ManagerPaymentPage(props) {
           payment_notes: message,
           charge_id: confirmationCode,
           payment_type: paymentType,
+          paid_by: paidBy,
         };
         await post("/payments", newPayment);
         if (purchase.linked_bill_id !== null) {

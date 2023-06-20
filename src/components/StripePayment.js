@@ -12,7 +12,7 @@ import { bluePillButton, pillButton } from "../utils/styles";
 import { post, put } from "../utils/api";
 
 function StripePayment(props) {
-  const { purchases, message, amount } = props;
+  const { purchases, message, amount, paidBy } = props;
   const { userData, ably } = React.useContext(AppContext);
   const channel_maintenance = ably.channels.get("maintenance_status");
   const [showSpinner, setShowSpinner] = useState(false);
@@ -65,6 +65,7 @@ function StripePayment(props) {
         payment_notes: message,
         charge_id: paymentIntentID,
         payment_type: "STRIPE",
+        paid_by: paidBy,
       };
       await post("/payments", newPayment);
       if (purchases[0].linked_bill_id !== null) {
@@ -87,6 +88,7 @@ function StripePayment(props) {
           payment_notes: message,
           charge_id: paymentIntentID,
           payment_type: "STRIPE",
+          paid_by: paidBy,
         };
         await post("/payments", newPayment);
         if (purchase.linked_bill_id !== null) {

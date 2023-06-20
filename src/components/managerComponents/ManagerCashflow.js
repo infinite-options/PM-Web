@@ -5327,7 +5327,8 @@ export default function ManagerCashflow(props) {
                       </TableCell>
                       <TableCell>Amount Due</TableCell>
                       <TableCell>Amount Paid</TableCell>
-                      <TableCell>Date Due</TableCell>
+                      <TableCell>Date Due</TableCell>{" "}
+                      <TableCell>Purchase Status</TableCell>
                       <TableCell>
                         Cumulative <br />
                         Amount Due
@@ -5401,6 +5402,17 @@ export default function ManagerCashflow(props) {
                               }}
                             >
                               {transaction.next_payment.split(" ")[0]}
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color:
+                                  transaction.receiver === managerID
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {" "}
+                              {transaction.purchase_status}
                             </TableCell>
                             <TableCell>
                               {transaction.sum_due.toFixed(2)}

@@ -207,6 +207,7 @@ function ManagerUtilities(props) {
         payment_notes: message,
         charge_id: confirmationCode,
         payment_type: paymentType,
+        paid_by: managerID,
       };
       await post("/payments", newPayment);
     } else {
@@ -221,6 +222,7 @@ function ManagerUtilities(props) {
           payment_notes: message,
           charge_id: confirmationCode,
           payment_type: paymentType,
+          paid_by: managerID,
         };
         await post("/payments", newPayment);
       }
@@ -2923,6 +2925,7 @@ function ManagerUtilities(props) {
                       purchases={[purchase]}
                       message={message}
                       amount={amount}
+                      paid_by={managerID}
                     />
                   </Elements>
                 </div>
@@ -3239,6 +3242,7 @@ function ManagerUtilities(props) {
                         purchases={allPurchases}
                         message={message}
                         amount={amount}
+                        paid_by={managerID}
                       />
                     </Elements>
                   </div>
