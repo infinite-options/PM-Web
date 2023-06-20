@@ -54,6 +54,7 @@ function ManagerRepairsOverview(props) {
   const [orderBy, setOrderBy] = useState("days_open");
   const [daysCompleted, setDaysCompleted] = useState("10");
   const [width, setWindowWidth] = useState(1024);
+  const [search, setSearch] = useState("");
   useEffect(() => {
     updateDimensions();
 
@@ -462,6 +463,24 @@ function ManagerRepairsOverview(props) {
               />
             </Col>
           </Row>
+          <Row className="m-3">
+            {" "}
+            <Col xs={2}> Search by</Col>
+            <Col>
+              <input
+                type="text"
+                placeholder="Search"
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                }}
+                style={{
+                  width: "400px",
+                  border: "1px solid black",
+                  padding: "5px",
+                }}
+              />
+            </Col>
+          </Row>
 
           {isLoading ? (
             <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
@@ -491,8 +510,21 @@ function ManagerRepairsOverview(props) {
                     // rowCount="4"
                   />{" "}
                   <TableBody>
-                    {stableSort(repairIter, getComparator(order, orderBy)).map(
-                      (repair, j) => (
+                    {stableSort(repairIter, getComparator(order, orderBy)) // for filtering
+                      .filter((val) => {
+                        const query = search.toLowerCase();
+
+                        return (
+                          val.address.toLowerCase().indexOf(query) >= 0 ||
+                          String(val.unit).toLowerCase().indexOf(query) >= 0 ||
+                          val.city.toLowerCase().indexOf(query) >= 0 ||
+                          val.zip.toLowerCase().indexOf(query) >= 0 ||
+                          String(val.oldestOpenMR)
+                            .toLowerCase()
+                            .indexOf(query) >= 0
+                        );
+                      })
+                      .map((repair, j) => (
                         <TableRow hover role="checkbox" tabIndex={-1} key={j}>
                           <TableCell
                             onClick={() => {
@@ -684,6 +716,8 @@ function ManagerRepairsOverview(props) {
                                           repair.purchase[0].purchase_uid,
                                         ],
                                         purchases: repair.purchase,
+
+                                        paidBy: managerID,
                                       },
                                     }
                                   )
@@ -712,8 +746,7 @@ function ManagerRepairsOverview(props) {
                             />
                           </TableCell>
                         </TableRow>
-                      )
-                    )}
+                      ))}
                   </TableBody>
                 </Table>
               </Row>

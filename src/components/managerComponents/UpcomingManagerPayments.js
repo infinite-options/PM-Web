@@ -87,6 +87,7 @@ export default function UpcomingManagerPayments(props) {
       payment_notes: paymentNotes,
       charge_id: chargeID,
       payment_type: paymentType,
+      paid_by: managerID,
     };
     const response = await post("/payments", newPayment);
     setShowSpinner(false);
@@ -394,6 +395,7 @@ export default function UpcomingManagerPayments(props) {
           selectedProperty: props.selectedProperty,
           purchaseUIDs: purchaseUIDs,
           purchases: purchases,
+          paidBy: managerID,
         },
       });
     }

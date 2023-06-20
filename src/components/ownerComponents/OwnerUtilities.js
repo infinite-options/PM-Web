@@ -186,6 +186,7 @@ function OwnerUtilities(props) {
         payment_notes: message,
         charge_id: confirmationCode,
         payment_type: paymentType,
+        paid_by: user.user_uid,
       };
       await post("/payments", newPayment);
     } else {
@@ -200,6 +201,7 @@ function OwnerUtilities(props) {
           payment_notes: message,
           charge_id: confirmationCode,
           payment_type: paymentType,
+          paid_by: user.user_uid,
         };
         await post("/payments", newPayment);
       }
@@ -2631,6 +2633,7 @@ function OwnerUtilities(props) {
                       purchases={[purchase]}
                       message={message}
                       amount={amount}
+                      paidBy={user.user_uid}
                     />
                   </Elements>
                 </div>
@@ -3009,6 +3012,7 @@ function OwnerUtilities(props) {
                         purchases={allPurchases}
                         message={message}
                         amount={amount}
+                        paidBy={user.user_uid}
                       />
                     </Elements>
                   </div>
