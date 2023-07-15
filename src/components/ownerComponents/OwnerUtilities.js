@@ -1425,7 +1425,7 @@ function OwnerUtilities(props) {
                           style={{
                             width: "30px",
                             height: "30px",
-                            float: "center",
+                            float: "right",
                             // marginRight: "5rem",
                           }}
                         />
@@ -1676,7 +1676,7 @@ function OwnerUtilities(props) {
                           style={{
                             width: "30px",
                             height: "30px",
-                            float: "center",
+                            float: "right",
                             // marginRight: "5rem",
                           }}
                         />
@@ -2101,7 +2101,7 @@ function OwnerUtilities(props) {
                       style={{
                         width: "30px",
                         height: "30px",
-                        float: "center",
+                        float: "right",
                         // marginRight: "5rem",
                       }}
                     />
