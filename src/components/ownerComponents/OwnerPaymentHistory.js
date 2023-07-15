@@ -31,6 +31,7 @@ export default function OwnerPaymentHistory(props) {
 
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("payment_date");
+  const [searchOutgoing, setSearchOutgoing] = useState("");
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -143,6 +144,22 @@ export default function OwnerPaymentHistory(props) {
         <Col>
           <h3>Payment History (Last 30 Days)</h3>
         </Col>
+        <Col xs={2}> Search by</Col>
+
+        <Col>
+          <input
+            type="text"
+            placeholder="Search"
+            onChange={(event) => {
+              setSearchOutgoing(event.target.value);
+            }}
+            style={{
+              width: "400px",
+              border: "1px solid black",
+              padding: "5px",
+            }}
+          />
+        </Col>
       </Row>
 
       <div
@@ -172,8 +189,18 @@ export default function OwnerPaymentHistory(props) {
                 rowCount={history.length}
               />{" "}
               <TableBody>
-                {stableSort(history, getComparator(order, orderBy)).map(
-                  (row, index) => {
+                {stableSort(history, getComparator(order, orderBy))
+                  .filter((val) => {
+                    const query = searchOutgoing.toLowerCase();
+
+                    return (
+                      val.address.toLowerCase().includes(query) ||
+                      String(val.unit).toLowerCase().includes(query) ||
+                      val.city.toLowerCase().includes(query) ||
+                      val.zip.toLowerCase().includes(query)
+                    );
+                  })
+                  .map((row, index) => {
                     return row.purchase_status === "PAID" ? (
                       <TableRow
                         hover
@@ -230,8 +257,7 @@ export default function OwnerPaymentHistory(props) {
                     ) : (
                       ""
                     );
-                  }
-                )}
+                  })}
               </TableBody>
             </Table>
           )}
