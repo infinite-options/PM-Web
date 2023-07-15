@@ -250,12 +250,18 @@ function OwnerUtilities(props) {
     setStripePayment(false);
     setBankPayment(false);
     setApplePayment(false);
+    setPaymentType("");
+    setConfirmationCode("");
+    setMessage("");
     fetchProperties();
   };
   const submit = () => {
     cancel();
     setPayExpense(false);
     setPayExpenseOwner(false);
+    setStripePayment(false);
+    setBankPayment(false);
+    setApplePayment(false);
     setPaymentType("");
     setConfirmationCode("");
     setMessage("");

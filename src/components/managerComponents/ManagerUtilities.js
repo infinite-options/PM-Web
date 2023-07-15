@@ -430,12 +430,19 @@ function ManagerUtilities(props) {
   const cancel = () => {
     setStripePayment(false);
     setBankPayment(false);
+    setApplePayment(false);
+    setPaymentType("");
+    setConfirmationCode("");
+    setMessage("");
     fetchProperties();
   };
   const submit = () => {
     cancel();
     setPayExpense(false);
     setPayExpenseManager(false);
+    setStripePayment(false);
+    setBankPayment(false);
+    setApplePayment(false);
     setPaymentType("");
     setConfirmationCode("");
     setMessage("");
