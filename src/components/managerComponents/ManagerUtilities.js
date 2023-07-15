@@ -86,6 +86,11 @@ function ManagerUtilities(props) {
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [stripePromise, setStripePromise] = useState(null);
+  // search variables
+  const [search, setSearch] = useState("");
+  const [searchManager, setSearchManager] = useState("");
+  const [searchOwner, setSearchOwner] = useState("");
+  const [searchTenant, setSearchTenant] = useState("");
 
   const [properties, setProperties] = useState([]);
   const [expenses, setExpenses] = useState([]);
@@ -715,7 +720,7 @@ function ManagerUtilities(props) {
         purchase_type: "UTILITY",
         description: newUtility.service_name,
         amount_due: property.charge,
-        purchase_notes: moment().format("MMMM"),
+        purchase_notes: newUtility.notes,
         purchase_date: moment().format("YYYY-MM-DD") + " 00:00:00",
         purchase_frequency: "One-time",
         next_payment: newUtility.due_date,
@@ -1598,8 +1603,23 @@ function ManagerUtilities(props) {
                     <Row className="m-3">
                       <Col>
                         <h3>Utility Expenses Due From Manager </h3>
+                      </Col>{" "}
+                      <Col xs={2}> Search by</Col>
+                      <Col xs={3}>
+                        <input
+                          type="text"
+                          placeholder="Search"
+                          onChange={(event) => {
+                            setSearchManager(event.target.value);
+                          }}
+                          style={{
+                            // width: "400px",
+                            border: "1px solid black",
+                            padding: "5px",
+                          }}
+                        />
                       </Col>
-                      <Col>
+                      <Col xs={2}>
                         <img
                           src={AddIcon}
                           alt="Add Icon"
@@ -1638,150 +1658,163 @@ function ManagerUtilities(props) {
                           {stableSortManager(
                             expenseUnique,
                             getComparatorManager(orderManager, orderManagerBy)
-                          ).map((expense, index) => {
-                            return expense.purchase_type === "UTILITY" &&
-                              expense.payer.includes(managerID) &&
-                              expense.receiver !== managerID ? (
-                              <TableRow
-                                hover
-                                role="checkbox"
-                                tabIndex={-1}
-                                key={index}
-                              >
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                  onClick={() => {
-                                    setExpenseDetailManager(true);
-                                    setPayment(expense);
-                                  }}
-                                >
-                                  {expense.bill_utility_type}
-                                  <div className="d-flex">
-                                    <div className="d-flex align-items-end">
-                                      <p
-                                        style={{ ...blue, ...xSmall }}
-                                        className="mb-0"
-                                      >
-                                        {expense.purchase_notes}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </TableCell>
+                          )
+                            .filter((val) => {
+                              const query = searchManager.toLowerCase();
 
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                  onClick={() => {
-                                    setExpenseDetailManager(true);
-                                    setPayment(expense);
-                                  }}
+                              return (
+                                val.address.toLowerCase().includes(query) ||
+                                String(val.unit)
+                                  .toLowerCase()
+                                  .includes(query) ||
+                                val.city.toLowerCase().includes(query) ||
+                                val.zip.toLowerCase().includes(query)
+                              );
+                            })
+                            .map((expense, index) => {
+                              return expense.purchase_type === "UTILITY" &&
+                                expense.payer.includes(managerID) &&
+                                expense.receiver !== managerID ? (
+                                <TableRow
+                                  hover
+                                  role="checkbox"
+                                  tabIndex={-1}
+                                  key={index}
                                 >
-                                  {" "}
-                                  {expense.address
-                                    .split(";")
-                                    .map((addressMap) => {
-                                      return <p>{addressMap}</p>;
-                                    })}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                  onClick={() => {
-                                    setExpenseDetailManager(true);
-                                    setPayment(expense);
-                                  }}
-                                >
-                                  {expense.bill_algorithm !== null
-                                    ? expense.bill_algorithm
-                                    : "None"}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                  onClick={() => {
-                                    setExpenseDetailManager(true);
-                                    setPayment(expense);
-                                  }}
-                                >
-                                  {expense.payer}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                  onClick={() => {
-                                    setExpenseDetailManager(true);
-                                    setPayment(expense);
-                                  }}
-                                >
-                                  {expense.receiver}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                  onClick={() => {
-                                    setExpenseDetailManager(true);
-                                    setPayment(expense);
-                                  }}
-                                >
-                                  ${expense.amount_due}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                  onClick={() => {
-                                    setExpenseDetailManager(true);
-                                    setPayment(expense);
-                                  }}
-                                >
-                                  {" "}
-                                  {expense.purchase_date.split(" ")[0]}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                  onClick={() => {
-                                    setExpenseDetailManager(true);
-                                    setPayment(expense);
-                                  }}
-                                >
-                                  {expense.purchase_status === "UNPAID" ? (
-                                    <Col className="mt-0" style={redPill}>
-                                      {expense.purchase_status}
-                                    </Col>
-                                  ) : (
-                                    <Col className="mt-0" style={greenPill}>
-                                      {expense.purchase_status}
-                                    </Col>
-                                  )}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  <img
-                                    src={DeleteIcon}
-                                    alt="Delete Icon"
-                                    className="px-1 mx-2"
-                                    onClick={() =>
-                                      deleteUtilities(expense.bill_uid)
-                                    }
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            ) : (
-                              <Row style={headings}></Row>
-                            );
-                          })}
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                    onClick={() => {
+                                      setExpenseDetailManager(true);
+                                      setPayment(expense);
+                                    }}
+                                  >
+                                    {expense.bill_utility_type}
+                                    <div className="d-flex">
+                                      <div className="d-flex align-items-end">
+                                        <p
+                                          style={{ ...blue, ...xSmall }}
+                                          className="mb-0"
+                                        >
+                                          {expense.purchase_notes}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </TableCell>
+
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                    onClick={() => {
+                                      setExpenseDetailManager(true);
+                                      setPayment(expense);
+                                    }}
+                                  >
+                                    {" "}
+                                    {expense.address
+                                      .split(";")
+                                      .map((addressMap) => {
+                                        return <p>{addressMap}</p>;
+                                      })}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                    onClick={() => {
+                                      setExpenseDetailManager(true);
+                                      setPayment(expense);
+                                    }}
+                                  >
+                                    {expense.bill_algorithm !== null
+                                      ? expense.bill_algorithm
+                                      : "None"}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                    onClick={() => {
+                                      setExpenseDetailManager(true);
+                                      setPayment(expense);
+                                    }}
+                                  >
+                                    {expense.payer}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                    onClick={() => {
+                                      setExpenseDetailManager(true);
+                                      setPayment(expense);
+                                    }}
+                                  >
+                                    {expense.receiver}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                    onClick={() => {
+                                      setExpenseDetailManager(true);
+                                      setPayment(expense);
+                                    }}
+                                  >
+                                    ${expense.amount_due}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                    onClick={() => {
+                                      setExpenseDetailManager(true);
+                                      setPayment(expense);
+                                    }}
+                                  >
+                                    {" "}
+                                    {expense.purchase_date.split(" ")[0]}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                    onClick={() => {
+                                      setExpenseDetailManager(true);
+                                      setPayment(expense);
+                                    }}
+                                  >
+                                    {expense.purchase_status === "UNPAID" ? (
+                                      <Col className="mt-0" style={redPill}>
+                                        {expense.purchase_status}
+                                      </Col>
+                                    ) : (
+                                      <Col className="mt-0" style={greenPill}>
+                                        {expense.purchase_status}
+                                      </Col>
+                                    )}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    <img
+                                      src={DeleteIcon}
+                                      alt="Delete Icon"
+                                      className="px-1 mx-2"
+                                      onClick={() =>
+                                        deleteUtilities(expense.bill_uid)
+                                      }
+                                    />
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                <Row style={headings}></Row>
+                              );
+                            })}
                         </TableBody>
                       </Table>
                     </Row>
@@ -1797,8 +1830,23 @@ function ManagerUtilities(props) {
                     <Row className="m-3">
                       <Col>
                         <h3>Utility Expenses Due From Tenant </h3>
+                      </Col>{" "}
+                      <Col xs={2}> Search by</Col>
+                      <Col xs={3}>
+                        <input
+                          type="text"
+                          placeholder="Search"
+                          onChange={(event) => {
+                            setSearchTenant(event.target.value);
+                          }}
+                          style={{
+                            // width: "400px",
+                            border: "1px solid black",
+                            padding: "5px",
+                          }}
+                        />
                       </Col>
-                      <Col>
+                      <Col xs={2}>
                         <img
                           src={AddIcon}
                           alt="Add Icon"
@@ -1837,108 +1885,121 @@ function ManagerUtilities(props) {
                           {stableSortTenant(
                             expenseUnique,
                             getComparatorTenant(orderTenant, orderTenantBy)
-                          ).map((expense, index) => {
-                            return expense.purchase_type === "UTILITY" &&
-                              !expense.payer.includes(managerID) &&
-                              expense.payer.split("-")[0] === '["350' &&
-                              expense.receiver === managerID ? (
-                              <TableRow
-                                hover
-                                role="checkbox"
-                                tabIndex={-1}
-                                key={index}
-                                onClick={() => {
-                                  setExpenseDetail(true);
-                                  setPayment(expense);
-                                }}
-                              >
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
+                          )
+                            .filter((val) => {
+                              const query = searchTenant.toLowerCase();
+
+                              return (
+                                val.address.toLowerCase().includes(query) ||
+                                String(val.unit)
+                                  .toLowerCase()
+                                  .includes(query) ||
+                                val.city.toLowerCase().includes(query) ||
+                                val.zip.toLowerCase().includes(query)
+                              );
+                            })
+                            .map((expense, index) => {
+                              return expense.purchase_type === "UTILITY" &&
+                                !expense.payer.includes(managerID) &&
+                                expense.payer.split("-")[0] === '["350' &&
+                                expense.receiver === managerID ? (
+                                <TableRow
+                                  hover
+                                  role="checkbox"
+                                  tabIndex={-1}
+                                  key={index}
+                                  onClick={() => {
+                                    setExpenseDetail(true);
+                                    setPayment(expense);
+                                  }}
                                 >
-                                  {expense.bill_utility_type}
-                                  <div className="d-flex">
-                                    <div className="d-flex align-items-end">
-                                      <p
-                                        style={{ ...blue, ...xSmall }}
-                                        className="mb-0"
-                                      >
-                                        {expense.purchase_notes}
-                                      </p>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.bill_utility_type}
+                                    <div className="d-flex">
+                                      <div className="d-flex align-items-end">
+                                        <p
+                                          style={{ ...blue, ...xSmall }}
+                                          className="mb-0"
+                                        >
+                                          {expense.purchase_notes}
+                                        </p>
+                                      </div>
                                     </div>
-                                  </div>
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {" "}
-                                  {expense.address
-                                    .split(";")
-                                    .map((addressMap) => {
-                                      return <p>{addressMap}</p>;
-                                    })}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.bill_algorithm !== null
-                                    ? expense.bill_algorithm
-                                    : "None"}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.payer}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.receiver}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  ${expense.amount_due}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {" "}
-                                  {expense.purchase_date.split(" ")[0]}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.purchase_status === "UNPAID" ? (
-                                    <Col className="mt-0" style={redPill}>
-                                      {expense.purchase_status}
-                                    </Col>
-                                  ) : (
-                                    <Col className="mt-0" style={greenPill}>
-                                      {expense.purchase_status}
-                                    </Col>
-                                  )}
-                                </TableCell>
-                              </TableRow>
-                            ) : (
-                              <Row style={headings}></Row>
-                            );
-                          })}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {" "}
+                                    {expense.address
+                                      .split(";")
+                                      .map((addressMap) => {
+                                        return <p>{addressMap}</p>;
+                                      })}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.bill_algorithm !== null
+                                      ? expense.bill_algorithm
+                                      : "None"}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.payer}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.receiver}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    ${expense.amount_due}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {" "}
+                                    {expense.purchase_date.split(" ")[0]}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.purchase_status === "UNPAID" ? (
+                                      <Col className="mt-0" style={redPill}>
+                                        {expense.purchase_status}
+                                      </Col>
+                                    ) : (
+                                      <Col className="mt-0" style={greenPill}>
+                                        {expense.purchase_status}
+                                      </Col>
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                <Row style={headings}></Row>
+                              );
+                            })}
                         </TableBody>
                       </Table>
                     </Row>
@@ -1955,7 +2016,22 @@ function ManagerUtilities(props) {
                       <Col>
                         <h3>Utility Expenses Due From Owner </h3>
                       </Col>
-                      <Col>
+                      <Col xs={2}> Search by</Col>
+                      <Col xs={3}>
+                        <input
+                          type="text"
+                          placeholder="Search"
+                          onChange={(event) => {
+                            setSearchOwner(event.target.value);
+                          }}
+                          style={{
+                            // width: "400px",
+                            border: "1px solid black",
+                            padding: "5px",
+                          }}
+                        />
+                      </Col>
+                      <Col xs={2}>
                         <img
                           src={AddIcon}
                           alt="Add Icon"
@@ -1994,108 +2070,121 @@ function ManagerUtilities(props) {
                           {stableSortOwner(
                             expenseUnique,
                             getComparatorOwner(orderOwner, orderOwnerBy)
-                          ).map((expense, index) => {
-                            return expense.purchase_type === "UTILITY" &&
-                              !expense.payer.includes(managerID) &&
-                              expense.payer.split("-")[0] === '["100' &&
-                              expense.receiver === managerID ? (
-                              <TableRow
-                                hover
-                                role="checkbox"
-                                tabIndex={-1}
-                                key={index}
-                                onClick={() => {
-                                  setExpenseDetail(true);
-                                  setPayment(expense);
-                                }}
-                              >
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
+                          )
+                            .filter((val) => {
+                              const query = searchOwner.toLowerCase();
+
+                              return (
+                                val.address.toLowerCase().includes(query) ||
+                                String(val.unit)
+                                  .toLowerCase()
+                                  .includes(query) ||
+                                val.city.toLowerCase().includes(query) ||
+                                val.zip.toLowerCase().includes(query)
+                              );
+                            })
+                            .map((expense, index) => {
+                              return expense.purchase_type === "UTILITY" &&
+                                !expense.payer.includes(managerID) &&
+                                expense.payer.split("-")[0] === '["100' &&
+                                expense.receiver === managerID ? (
+                                <TableRow
+                                  hover
+                                  role="checkbox"
+                                  tabIndex={-1}
+                                  key={index}
+                                  onClick={() => {
+                                    setExpenseDetail(true);
+                                    setPayment(expense);
+                                  }}
                                 >
-                                  {expense.bill_utility_type}
-                                  <div className="d-flex">
-                                    <div className="d-flex align-items-end">
-                                      <p
-                                        style={{ ...blue, ...xSmall }}
-                                        className="mb-0"
-                                      >
-                                        {expense.purchase_notes}
-                                      </p>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.bill_utility_type}
+                                    <div className="d-flex">
+                                      <div className="d-flex align-items-end">
+                                        <p
+                                          style={{ ...blue, ...xSmall }}
+                                          className="mb-0"
+                                        >
+                                          {expense.purchase_notes}
+                                        </p>
+                                      </div>
                                     </div>
-                                  </div>
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {" "}
-                                  {expense.address
-                                    .split(";")
-                                    .map((addressMap) => {
-                                      return <p>{addressMap}</p>;
-                                    })}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.bill_algorithm !== null
-                                    ? expense.bill_algorithm
-                                    : "None"}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.payer}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.receiver}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  ${expense.amount_due}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {" "}
-                                  {expense.purchase_date.split(" ")[0]}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.purchase_status === "UNPAID" ? (
-                                    <Col className="mt-0" style={redPill}>
-                                      {expense.purchase_status}
-                                    </Col>
-                                  ) : (
-                                    <Col className="mt-0" style={greenPill}>
-                                      {expense.purchase_status}
-                                    </Col>
-                                  )}
-                                </TableCell>
-                              </TableRow>
-                            ) : (
-                              <Row style={headings}></Row>
-                            );
-                          })}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {" "}
+                                    {expense.address
+                                      .split(";")
+                                      .map((addressMap) => {
+                                        return <p>{addressMap}</p>;
+                                      })}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.bill_algorithm !== null
+                                      ? expense.bill_algorithm
+                                      : "None"}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.payer}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.receiver}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    ${expense.amount_due}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {" "}
+                                    {expense.purchase_date.split(" ")[0]}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.purchase_status === "UNPAID" ? (
+                                      <Col className="mt-0" style={redPill}>
+                                        {expense.purchase_status}
+                                      </Col>
+                                    ) : (
+                                      <Col className="mt-0" style={greenPill}>
+                                        {expense.purchase_status}
+                                      </Col>
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                <Row style={headings}></Row>
+                              );
+                            })}
                         </TableBody>
                       </Table>
                     </Row>
@@ -2112,6 +2201,21 @@ function ManagerUtilities(props) {
                     <Row className="m-3">
                       <Col>
                         <h3>Maintenance Payments</h3>{" "}
+                      </Col>
+                      <Col xs={2}> Search by</Col>
+                      <Col xs={3}>
+                        <input
+                          type="text"
+                          placeholder="Search"
+                          onChange={(event) => {
+                            setSearch(event.target.value);
+                          }}
+                          style={{
+                            // width: "400px",
+                            border: "1px solid black",
+                            padding: "5px",
+                          }}
+                        />
                       </Col>
                     </Row>
                     <Row className="m-3" style={{ overflow: "scroll" }}>
@@ -2130,99 +2234,112 @@ function ManagerUtilities(props) {
                           {stableSort(
                             expenseUnique,
                             getComparator(order, orderBy)
-                          ).map((expense, index) => {
-                            return expense.purchase_type === "MAINTENANCE" ||
-                              expense.purchase_type === "REPAIRS" ? (
-                              <TableRow
-                                hover
-                                role="checkbox"
-                                tabIndex={-1}
-                                key={expense.purchase_uid}
-                                onClick={() => {
-                                  setExpenseDetail(true);
-                                  setPayment(expense);
-                                }}
-                              >
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
+                          )
+                            .filter((val) => {
+                              const query = search.toLowerCase();
+
+                              return (
+                                val.address.toLowerCase().includes(query) ||
+                                String(val.unit)
+                                  .toLowerCase()
+                                  .includes(query) ||
+                                val.city.toLowerCase().includes(query) ||
+                                val.zip.toLowerCase().includes(query)
+                              );
+                            })
+                            .map((expense, index) => {
+                              return expense.purchase_type === "MAINTENANCE" ||
+                                expense.purchase_type === "REPAIRS" ? (
+                                <TableRow
+                                  hover
+                                  role="checkbox"
+                                  tabIndex={-1}
+                                  key={expense.purchase_uid}
+                                  onClick={() => {
+                                    setExpenseDetail(true);
+                                    setPayment(expense);
+                                  }}
                                 >
-                                  {expense.purchase_type}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.description}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {" "}
-                                  {expense.address}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.bill_algorithm !== null
-                                    ? expense.bill_algorithm
-                                    : "None"}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.payer}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.receiver}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  ${expense.amount_due}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {" "}
-                                  {expense.purchase_date.split(" ")[0]}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {expense.purchase_status === "UNPAID" ? (
-                                    <Col className="mt-0" style={redPill}>
-                                      {expense.purchase_status}
-                                    </Col>
-                                  ) : (
-                                    <Col className="mt-0" style={greenPill}>
-                                      {expense.purchase_status}
-                                    </Col>
-                                  )}
-                                </TableCell>
-                              </TableRow>
-                            ) : (
-                              <Row style={headings}></Row>
-                            );
-                          })}
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.purchase_type}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.description}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {" "}
+                                    {expense.address}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.bill_algorithm !== null
+                                      ? expense.bill_algorithm
+                                      : "None"}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.payer}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.receiver}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    ${expense.amount_due}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {" "}
+                                    {expense.purchase_date.split(" ")[0]}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {expense.purchase_status === "UNPAID" ? (
+                                      <Col className="mt-0" style={redPill}>
+                                        {expense.purchase_status}
+                                      </Col>
+                                    ) : (
+                                      <Col className="mt-0" style={greenPill}>
+                                        {expense.purchase_status}
+                                      </Col>
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                <Row style={headings}></Row>
+                              );
+                            })}
                         </TableBody>
                       </Table>
                     </Row>

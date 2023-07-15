@@ -37,6 +37,8 @@ export default function UpcomingOwnerPayments(props) {
   const [purchaseUIDs, setPurchaseUIDs] = useState([]); //figure out which payment is being payed for
   const [purchases, setPurchases] = useState([]); //figure out which payment is being payed for
   const rents = props.data; //array of objects
+  // search variables
+  const [searchOutgoing, setSearchOutgoing] = useState("");
   const goToPayment = () => {
     navigate("/owner-payments");
     // <PaymentComponent data = {rents}/>
@@ -234,6 +236,22 @@ export default function UpcomingOwnerPayments(props) {
         <Col>
           <h3>Upcoming Payments</h3>
         </Col>
+        <Col xs={2}> Search by</Col>
+
+        <Col>
+          <input
+            type="text"
+            placeholder="Search"
+            onChange={(event) => {
+              setSearchOutgoing(event.target.value);
+            }}
+            style={{
+              width: "400px",
+              border: "1px solid black",
+              padding: "5px",
+            }}
+          />
+        </Col>
       </Row>
       <Row className="m-3" style={subHeading}>
         <Col xs={1}>
@@ -270,8 +288,18 @@ export default function UpcomingOwnerPayments(props) {
             />{" "}
             <TableBody>
               {rents.length !== 0
-                ? stableSort(rents, getComparator(order, orderBy)).map(
-                    (row, index) => {
+                ? stableSort(rents, getComparator(order, orderBy)) // for filtering
+                    .filter((val) => {
+                      const query = searchOutgoing.toLowerCase();
+
+                      return (
+                        val.address.toLowerCase().includes(query) ||
+                        String(val.unit).toLowerCase().includes(query) ||
+                        val.city.toLowerCase().includes(query) ||
+                        val.zip.toLowerCase().includes(query)
+                      );
+                    })
+                    .map((row, index) => {
                       return row.purchase_status === "UNPAID" ? (
                         <TableRow
                           hover
@@ -376,8 +404,7 @@ export default function UpcomingOwnerPayments(props) {
                       ) : (
                         ""
                       );
-                    }
-                  )
+                    })
                 : "No upcoming payments"}
             </TableBody>
           </Table>
