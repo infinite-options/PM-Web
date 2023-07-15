@@ -256,6 +256,9 @@ function OwnerUtilities(props) {
     cancel();
     setPayExpense(false);
     setPayExpenseOwner(false);
+    setPaymentType("");
+    setConfirmationCode("");
+    setMessage("");
   };
 
   //group an array by property
@@ -1416,8 +1419,8 @@ function OwnerUtilities(props) {
                           style={{
                             width: "30px",
                             height: "30px",
-                            float: "right",
-                            marginRight: "5rem",
+                            float: "center",
+                            // marginRight: "5rem",
                           }}
                         />
                       </Col>
@@ -1667,8 +1670,8 @@ function OwnerUtilities(props) {
                           style={{
                             width: "30px",
                             height: "30px",
-                            float: "right",
-                            marginRight: "5rem",
+                            float: "center",
+                            // marginRight: "5rem",
                           }}
                         />
                       </Col>
@@ -2092,8 +2095,8 @@ function OwnerUtilities(props) {
                       style={{
                         width: "30px",
                         height: "30px",
-                        float: "right",
-                        marginRight: "5rem",
+                        float: "center",
+                        // marginRight: "5rem",
                       }}
                     />
                   </Col>

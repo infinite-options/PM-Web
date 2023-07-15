@@ -436,6 +436,9 @@ function ManagerUtilities(props) {
     cancel();
     setPayExpense(false);
     setPayExpenseManager(false);
+    setPaymentType("");
+    setConfirmationCode("");
+    setMessage("");
   };
   const deleteUtilities = async (bill_id) => {
     let delUtilities = {
@@ -1636,8 +1639,8 @@ function ManagerUtilities(props) {
                           style={{
                             width: "30px",
                             height: "30px",
-                            float: "right",
-                            marginRight: "5rem",
+                            float: "center",
+                            // marginRight: "5rem",
                           }}
                         />
                       </Col>
@@ -1863,8 +1866,8 @@ function ManagerUtilities(props) {
                           style={{
                             width: "30px",
                             height: "30px",
-                            float: "right",
-                            marginRight: "5rem",
+                            float: "center",
+                            // marginRight: "5rem",
                           }}
                         />
                       </Col>
@@ -2048,8 +2051,8 @@ function ManagerUtilities(props) {
                           style={{
                             width: "30px",
                             height: "30px",
-                            float: "right",
-                            marginRight: "5rem",
+                            float: "center",
+                            // marginRight: "5rem",
                           }}
                         />
                       </Col>
@@ -2415,8 +2418,8 @@ function ManagerUtilities(props) {
                       style={{
                         width: "30px",
                         height: "30px",
-                        float: "right",
-                        marginRight: "5rem",
+                        float: "center",
+                        // marginRight: "5rem",
                       }}
                     />
                   </Col>
