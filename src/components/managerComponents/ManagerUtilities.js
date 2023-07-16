@@ -1723,7 +1723,7 @@ function ManagerUtilities(props) {
                                     }}
                                   >
                                     {" "}
-                                    {expense.address
+                                    {expense.full_address
                                       .split(";")
                                       .map((addressMap) => {
                                         return <p>{addressMap}</p>;
@@ -1946,7 +1946,7 @@ function ManagerUtilities(props) {
                                     align="center"
                                   >
                                     {" "}
-                                    {expense.address
+                                    {expense.full_address
                                       .split(";")
                                       .map((addressMap) => {
                                         return <p>{addressMap}</p>;
@@ -2131,7 +2131,7 @@ function ManagerUtilities(props) {
                                     align="center"
                                   >
                                     {" "}
-                                    {expense.address
+                                    {expense.full_address
                                       .split(";")
                                       .map((addressMap) => {
                                         return <p>{addressMap}</p>;
@@ -2290,7 +2290,7 @@ function ManagerUtilities(props) {
                                     align="center"
                                   >
                                     {" "}
-                                    {expense.address}
+                                    {expense.full_address}
                                   </TableCell>
                                   <TableCell
                                     padding="none"
@@ -2482,7 +2482,7 @@ function ManagerUtilities(props) {
               <Row className="my-2 mx-2" style={mediumBold}>
                 Properties Billed:
               </Row>
-              {payment.address.split(";").map((address) => {
+              {payment.full_address.split(";").map((address) => {
                 return (
                   <Row
                     className="my-2 mx-2 p-1"
@@ -2500,6 +2500,14 @@ function ManagerUtilities(props) {
                   Expense type:
                 </Col>
                 <Col className="d-flex p-0 justify-content-end">Utility</Col>
+              </Row>
+              <Row className="d-flex my-2 mx-2" style={mediumBold}>
+                <Col className="d-flex p-0 justify-content-left">
+                  Purchase notes:
+                </Col>
+                <Col className="d-flex p-0 justify-content-end">
+                  {Capitalize(payment.purchase_notes)}
+                </Col>
               </Row>
               <Row className="d-flex my-2 mx-2" style={mediumBold}>
                 <Col className="d-flex p-0 justify-content-left">
@@ -2616,7 +2624,7 @@ function ManagerUtilities(props) {
               <Row className="my-2 mx-2" style={mediumBold}>
                 Properties Billed:
               </Row>
-              {payment.address.split(";").map((address) => {
+              {payment.full_address.split(";").map((address) => {
                 return (
                   <Row
                     className="my-2 mx-2 p-1"
@@ -2634,6 +2642,14 @@ function ManagerUtilities(props) {
                   Expense type:
                 </Col>
                 <Col className="d-flex p-0 justify-content-end">Utility</Col>
+              </Row>
+              <Row className="d-flex my-2 mx-2" style={mediumBold}>
+                <Col className="d-flex p-0 justify-content-left">
+                  Purchase notes:
+                </Col>
+                <Col className="d-flex p-0 justify-content-end">
+                  {Capitalize(payment.purchase_notes)}
+                </Col>
               </Row>
               <Row className="d-flex my-2 mx-2" style={mediumBold}>
                 <Col className="d-flex p-0 justify-content-left">
@@ -2757,7 +2773,7 @@ function ManagerUtilities(props) {
                   { border: "1px solid #707070", borderRadius: "5px" })
                 }
               >
-                {payment.address}
+                {payment.full_address}
               </Row>
               <Row className="d-flex my-2 mx-2" style={mediumBold}>
                 <Col className="d-flex p-0 justify-content-left">
@@ -2765,6 +2781,14 @@ function ManagerUtilities(props) {
                 </Col>
                 <Col className="d-flex p-0 justify-content-end">
                   {Capitalize(payment.purchase_type)}
+                </Col>
+              </Row>
+              <Row className="d-flex my-2 mx-2" style={mediumBold}>
+                <Col className="d-flex p-0 justify-content-left">
+                  Purchase notes:
+                </Col>
+                <Col className="d-flex p-0 justify-content-end">
+                  {Capitalize(payment.purchase_notes)}
                 </Col>
               </Row>
               <Row className="d-flex my-2 mx-2" style={mediumBold}>
