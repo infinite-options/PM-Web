@@ -904,11 +904,11 @@ function ManagerTenantAgreement(props) {
         late_by: lateAfter,
         late_fee: lateFee,
         perDay_late_fee: lateFeePer,
-        adults: adults,
-        children: children,
-        pets: pets,
-        vehicles: vehicles,
-        referred: referred,
+        adults: JSON.stringify(adults),
+        children: JSON.stringify(children),
+        pets: JSON.stringify(pets),
+        vehicles: JSON.stringify(vehicles),
+        referred: JSON.stringify(referred),
         documents: files,
         // docuSign: filesCopy,
         effective_date: effectiveDate,
@@ -1885,9 +1885,7 @@ function ManagerTenantAgreement(props) {
               </Button>
             </Col>
           </Row>
-          {acceptedTenantApplications !== [] &&
-          acceptedTenantApplications[0] !== undefined &&
-          agreement !== null ? (
+          {acceptedTenantApplications[0] !== undefined && agreement !== null ? (
             <Row className="pt-1 mt-3 mb-2">
               <div
                 className="text-center"
