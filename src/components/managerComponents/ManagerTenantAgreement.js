@@ -1885,9 +1885,7 @@ function ManagerTenantAgreement(props) {
               </Button>
             </Col>
           </Row>
-          {acceptedTenantApplications[] !== [] &&
-          acceptedTenantApplications[0] !== undefined &&
-          agreement !== null ? (
+          {acceptedTenantApplications[0] !== undefined && agreement !== null ? (
             <Row className="pt-1 mt-3 mb-2">
               <div
                 className="text-center"
