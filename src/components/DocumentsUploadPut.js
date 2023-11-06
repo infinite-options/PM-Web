@@ -240,22 +240,28 @@ function DocumentsUploadPut(props) {
         </div>
       ) : (
         <div>
-          <input
-            id="file"
-            type="file"
-            accept="image/*,.pdf"
-            onChange={addFile}
-            className="d-none"
-          />
-          <label htmlFor="file">
-            <Button
-              variant="outline-primary"
-              style={{ ...smallPillButton, marginTop: "1rem" }}
-              as="p"
-            >
-              Add Document
-            </Button>
-          </label>
+          {endpoint == "/rentals" ? (
+            <div> </div>
+          ) : (
+            <div>
+              <input
+                id="file"
+                type="file"
+                accept="image/*,.pdf"
+                onChange={addFile}
+                className="d-none"
+              />
+              <label htmlFor="file">
+                <Button
+                  variant="outline-primary"
+                  style={{ ...smallPillButton, marginTop: "1rem" }}
+                  as="p"
+                >
+                  Add Document
+                </Button>
+              </label>
+            </div>
+          )}
         </div>
       )}
     </Row>

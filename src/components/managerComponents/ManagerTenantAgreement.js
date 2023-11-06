@@ -544,23 +544,9 @@ function ManagerTenantAgreement(props) {
         delete newFiles[i].file;
       }
       newAgreement.documents = JSON.stringify(newFiles);
-      // const newFilesShared = [...filesCopy];
-
-      // for (let i = 0; i < newFilesShared.length; i++) {
-      //   let key = `doc_${i}`;
-      //   if (newFilesShared[i].file !== undefined) {
-      //     newAgreement[key] = newFilesShared[i].file;
-      //   } else {
-      //     newAgreement[key] = newFilesShared[i].link;
-      //   }
-
-      //   delete newFilesShared[i].file;
-      // }
-      // newAgreement.docuSign = JSON.stringify(newFilesShared);
-      // console.log("in if");
       newAgreement.rental_uid = agreement.rental_uid;
-      // console.log(newAgreement);
-      const response = await put(`/rentals`, newAgreement, null, newFiles);
+      console.log(newAgreement);
+      const response = await put("/rentals", newAgreement, null, newFiles);
 
       setShowSpinner(false);
 
@@ -958,6 +944,7 @@ function ManagerTenantAgreement(props) {
         (a) => a.application_status === "RENTED"
       );
       let extendObject = {};
+      console.log(apps);
       if (
         apps[0].application_uid ==
         acceptedTenantApplications.map(
@@ -1731,7 +1718,6 @@ function ManagerTenantAgreement(props) {
                       <TableCell>Description</TableCell>
                       <TableCell>Actions</TableCell>
                       <TableCell>View</TableCell>
-                      <TableCell>Get Signature</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -1771,14 +1757,6 @@ function ManagerTenantAgreement(props) {
                                 }}
                               />
                             </a>
-                          </TableCell>
-                          <TableCell>
-                            {" "}
-                            <Checkbox
-                              type="CIRCLE"
-                              checked={file.shared}
-                              onClick={() => editDocumentShared(i)}
-                            />
                           </TableCell>
                         </TableRow>
                       );
